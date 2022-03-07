@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d758148e182ad364bba1ce8b986be9f2, type: 3}
+  m_Name: Cutlass
+  m_EditorClassIdentifier: 
+  icon: {fileID: -6763620941933801878, guid: 4d8281c45ade0444bb561c5d33ea8411, type: 3}
+  itemDescription: A pirate's favorite, sweeps in a circle around the player.
+  pickupablePrefab: {fileID: 6629683821985329659, guid: 64786d906cdd91940af4f0b0a350f1f0, type: 3}
+  itemStats:
+    damage: 25
+    knockBack: 0.2
+    duration: 0.5
+    size: 1.5
+    speed: 2
+    critChance: 0
+    cooldown: 2
+    projectiles: 1
+    pierceCount: 0
+  upgradeStats:
+    damage: 2.5
+    knockBack: 0
+    duration: 0
+    size: 0
+    speed: 0.25
+    critChance: 0
+    cooldown: 0
+    projectiles: 0
+    pierceCount: 0
