@@ -86,15 +86,15 @@ public abstract class Equipment : Item
             pierceCount = PierceCount
         };
     }
-    public int Damage { get => Mathf.RoundToInt(itemStats.damage.Value); }
-    public float Knockback { get => Mathf.Max(0f, itemStats.knockBack.Value); }
-    public float Duration { get => Mathf.Max(0f, itemStats.duration.Value); }
-    public float Size { get => Mathf.Max(0.1f, itemStats.size.Value); }
-    public float Speed { get => Mathf.Max(0.1f, itemStats.speed.Value); }
-    public float CritChance { get => Mathf.Max(0f, itemStats.critChance.Value); }
-    public float Cooldown { get => Mathf.Max(0.5f, itemStats.cooldown.Value); }
-    public int ProjectileCount { get => Mathf.Max(1, Mathf.RoundToInt(itemStats.projectiles.Value)); }
-    public int PierceCount { get => Mathf.Max(1, Mathf.RoundToInt(itemStats.pierceCount.Value)); }
+    public int Damage { get => Mathf.RoundToInt(itemStats.damage.Value + GameManager.Instance.Damage); }
+    public float Knockback { get => Mathf.Max(0f, itemStats.knockBack.Value + GameManager.Instance.KnockBack); }
+    public float Duration { get => Mathf.Max(0f, itemStats.duration.Value + GameManager.Instance.Duration); }
+    public float Size { get => Mathf.Max(0.1f, itemStats.size.Value + GameManager.Instance.Size); }
+    public float Speed { get => Mathf.Max(0.1f, itemStats.speed.Value + GameManager.Instance.Speed); }
+    public float CritChance { get => Mathf.Max(0f, itemStats.critChance.Value + GameManager.Instance.CritChance); }
+    public float Cooldown { get => Mathf.Max(0.5f, itemStats.cooldown.Value + GameManager.Instance.CritDamage); }
+    public int ProjectileCount { get => Mathf.Max(1, Mathf.RoundToInt(itemStats.projectiles.Value + GameManager.Instance.Projectiles)); }
+    public int PierceCount { get => Mathf.Max(1, Mathf.RoundToInt(itemStats.pierceCount.Value + GameManager.Instance.PierceCount)); }
     #endregion
 
     #region Physics Casting

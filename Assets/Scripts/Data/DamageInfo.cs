@@ -13,6 +13,7 @@ public struct DamageReport
     public Entity attacker;
     public Entity victim;
     public int damageDealt;
+    public bool crit;
     public int damageBlocked;
     public bool isDead;
 }

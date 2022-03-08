@@ -68,6 +68,7 @@ public abstract class Entity : MonoBehaviour
         {
             attacker = damageInfo.attacker,
             victim = this,
+            crit = isCrit,
             damageDealt = damage,
             damageBlocked = Defense,
             isDead = false

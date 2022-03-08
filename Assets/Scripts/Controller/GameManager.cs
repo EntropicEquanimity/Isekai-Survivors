@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour
     {
         if (gameState != GameState.Normal) { return; }
 
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.LeftShift))
         {
             Time.timeScale = 4f;
         }
@@ -105,11 +105,50 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Stats
-    public float Damage { get; set; }
-    public float MoveSpeed { get; set; }
-    public int Defense { get; set; }
-    public int Projectiles { get; set; }
-    public float PickupRadius { get; set; }
+    public float Damage { get => damage.Value;}
+    public float KnockBack { get => knockBack.Value;}
+    public float Duration { get => duration.Value;}
+    public float Size { get => size.Value;}
+    public float Speed { get => speed.Value;}
+    public float CritChance { get => critChance.Value;}
+    public float CritDamage { get => critDamage.Value;}
+    public int Projectiles { get => Mathf.RoundToInt(projectiles.Value); }
+    public int PierceCount { get => Mathf.RoundToInt(pierceCount.Value); }
+    public float MoveSpeed { get => moveSpeed.Value; }
+    public int Defense { get => Mathf.RoundToInt(projectiles.Value); }
+    public int Health { get => Mathf.RoundToInt(health.Value); }
+    public float PickupRadius { get => pickupRadius.Value; }
+
+    [Foldout("Stats")] public CharacterStat damage;
+    [Foldout("Stats")] public CharacterStat knockBack;
+    [Foldout("Stats")] public CharacterStat duration;
+    [Foldout("Stats")] public CharacterStat size;
+    [Foldout("Stats")] public CharacterStat speed;
+    [Foldout("Stats")] public CharacterStat critChance;
+    [Foldout("Stats")] public CharacterStat critDamage;
+    [Foldout("Stats")] public CharacterStat projectiles;
+    [Foldout("Stats")] public CharacterStat pierceCount;
+    [Foldout("Stats")] public CharacterStat moveSpeed;
+    [Foldout("Stats")] public CharacterStat defense;
+    [Foldout("Stats")] public CharacterStat health;
+    [Foldout("Stats")] public CharacterStat pickupRadius; 
+
+    public void ResetGameStats()
+    {
+        damage = new CharacterStat();
+        knockBack = new CharacterStat();
+        duration = new CharacterStat();
+        size = new CharacterStat();
+        speed = new CharacterStat();
+        critChance = new CharacterStat();
+        critDamage = new CharacterStat();
+        projectiles = new CharacterStat();
+        pierceCount = new CharacterStat();
+        moveSpeed = new CharacterStat();
+        defense = new CharacterStat();
+        health = new CharacterStat();
+        pickupRadius = new CharacterStat();
+    }
     #endregion
 
     #region Events 

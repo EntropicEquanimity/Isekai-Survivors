@@ -138,7 +138,7 @@ public class InterfaceController : MonoBehaviour
     }
     public void UpdatePlayerLevel(int level)
     {
-        playerLevel.text = level.ToString();
+        playerLevel.text = "LVL " + level.ToString();
     }
     #endregion
 }

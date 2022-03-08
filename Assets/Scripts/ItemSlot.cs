@@ -46,6 +46,7 @@ public class ItemSlot : MonoBehaviour
     {
         if (equipment == null) { return; }
         UpdateCooldown(equipment.CurrentCooldown, equipment.Cooldown);
+        itemLevelText.text = equipment.ItemLevel.ToString();
 
         if (cooldownFillSprite.fillAmount == 0)
         {

@@ -33,7 +33,7 @@ public class Projectile : MonoBehaviour
         {
             transform.rotation = Quaternion.Euler(0, 0, 0);
             float speed = rotationSpeedAffectedByWeaponSpeed == true ? rotationSpeed * projectileStats.weaponStats.speed : rotationSpeed;
-            _rotateTween = transform.DOLocalRotate(new Vector3(0, 0, speed), 1f).SetEase(Ease.Linear).SetLoops(-1, LoopType.Incremental);
+            _rotateTween = transform.DORotate(new Vector3(0, 0, speed), 1f).SetEase(Ease.Linear).SetLoops(-1, LoopType.Incremental);
             if (clearTargets == ClearTargetsFlag.OnRotate360) { _rotateTween.onStepComplete += delegate { targets.Clear(); }; }
         }
         else
@@ -44,7 +44,10 @@ public class Projectile : MonoBehaviour
         {
             _rb.AddForce(projectileStats.direction * projectileStats.weaponStats.speed, ForceMode2D.Impulse);
         }
-
+    }
+    public void ShowDamageNumber(int damage, bool crit, Vector2 pos)
+    {
+        NumberPopupManager.Instance.DamageNumber(damage, crit, pos);
     }
     public virtual void FixedUpdate()
     {
@@ -67,12 +70,17 @@ public class Projectile : MonoBehaviour
                     SimpleEnemy enemy = target.GetComponent<SimpleEnemy>();
                     if (enemy != null)
                     {
-                        damageSource.DamageRecord.AddStats(enemy.TakeDamageWithForce(new DamageInfo()
+                        DamageReport report = enemy.TakeDamageWithForce(new DamageInfo()
                         {
                             attacker = GameManager.Instance.player,
                             damage = Mathf.RoundToInt(projectileStats.weaponStats.damage),
                             critChance = projectileStats.weaponStats.critChance
-                        }, (enemy.transform.position - damageSource.transform.position).normalized, projectileStats.weaponStats.knockBack));
+                        }, (enemy.transform.position - damageSource.transform.position).normalized, projectileStats.weaponStats.knockBack);
+                        damageSource.DamageRecord.AddStats(report);
+                        if (report.victim != null)
+                        {
+                            ShowDamageNumber(report.damageDealt, report.crit, report.victim.transform.position);
+                        }
                     }
                 }
                 _constantDamageCooldown = constantDamageIntervals;
@@ -97,12 +105,18 @@ public class Projectile : MonoBehaviour
             durabilityRemaining--;
             if (targets.Contains(enemy)) { return; }
             targets.Add(enemy);
-            damageSource.DamageRecord.AddStats(enemy.TakeDamageWithForce(new DamageInfo()
+            DamageReport report = enemy.TakeDamageWithForce(new DamageInfo()
             {
                 attacker = GameManager.Instance.player,
                 damage = Mathf.RoundToInt(projectileStats.weaponStats.damage),
                 critChance = projectileStats.weaponStats.critChance
-            }, (collision.transform.position - damageSource.transform.position).normalized, projectileStats.weaponStats.knockBack));
+            }, (collision.transform.position - damageSource.transform.position).normalized, projectileStats.weaponStats.knockBack);
+
+            if(report.victim != null)
+            {
+                ShowDamageNumber(report.damageDealt, report.crit, report.victim.transform.position);
+            }
+            damageSource.DamageRecord.AddStats(report);
         }
         if (durabilityRemaining <= 0) { GameManager.Instance.OnProjectileDestroyed?.Invoke(projectileStats); gameObject.SetActive(false); }
     }

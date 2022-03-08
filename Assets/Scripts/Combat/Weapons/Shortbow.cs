@@ -27,11 +27,11 @@ public class Shortbow : Equipment
         //if (GetRandomInRadius(Range + 2f) == null) { return; }
         for (int i = 0; i < ProjectileCount; i++)
         {
-            StartCoroutine(SpawnSpearStabs(i * 0.1f, direction + Random.insideUnitCircle * 0.25f));
+            StartCoroutine(SpawnArrows(i * 0.05f, direction + Random.insideUnitCircle * 0.25f));
         }
         CurrentCooldown = Cooldown;
     }
-    private IEnumerator SpawnSpearStabs(float delay, Vector2 direction)
+    private IEnumerator SpawnArrows(float delay, Vector2 direction)
     {
         yield return new WaitForSeconds(delay);
 

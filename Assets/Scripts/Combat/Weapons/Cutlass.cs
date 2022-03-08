@@ -40,7 +40,7 @@ public class Cutlass : Equipment
         projectile.transform.SetParent(GameManager.Instance.player.transform);
         projectile.transform.localPosition = Vector3.zero;
         projectile.transform.localScale = Vector3.one * Size;
-        projectile.transform.localRotation = Quaternion.Euler(Vector3.zero);
-        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), Vector2.up, Mathf.RoundToInt(Mathf.Infinity), false, false), this);
+        projectile.transform.rotation = Quaternion.Euler(Vector3.zero);
+        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), Vector2.zero, Mathf.RoundToInt(Mathf.Infinity), false, false), this);
     }
 }
