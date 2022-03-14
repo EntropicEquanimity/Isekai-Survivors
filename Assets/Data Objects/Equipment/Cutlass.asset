@@ -26,12 +26,12 @@ MonoBehaviour:
     projectiles: 1
     pierceCount: 0
   upgradeStats:
-    damage: 2.5
+    damage: 3
     knockBack: 0
     duration: 0
     size: 0
-    speed: 0.25
+    speed: 0.05
     critChance: 0
-    cooldown: 0
+    cooldown: -0.1
     projectiles: 0
     pierceCount: 0

@@ -11,16 +11,16 @@ public class Tesseract : Equipment
 
     public override void OnEquip()
     {
-        GameManager.Instance.projectiles.AddModifier(new StatModifier(1 * ItemLevel, StatModType.Flat));
+        GameManager.Instance.projectiles.AddModifier(new StatModifier(1 * ItemLevel, StatModType.Flat, this));
     }
 
     public override void StopItem()
     {
-        throw new System.NotImplementedException();
+        GameManager.Instance.projectiles.RemoveAllModifiersFromSource(this);
     }
 
     public override void UseItem()
     {
-        throw new System.NotImplementedException();
+        
     }
 }

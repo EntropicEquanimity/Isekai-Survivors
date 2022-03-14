@@ -21,16 +21,16 @@ MonoBehaviour:
     duration: 5
     size: 1
     speed: 10
-    critChance: 0
+    critChance: 0.5
     cooldown: 8
     projectiles: 2
     pierceCount: 0
   upgradeStats:
     damage: 5
     knockBack: 0
-    duration: 0.25
+    duration: 0.2
     size: 0.1
-    speed: 5
+    speed: 0
     critChance: 0
     cooldown: 0
     projectiles: 0

@@ -16,7 +16,7 @@ MonoBehaviour:
   itemDescription: Sunders all unholy elements that attempt to encroach!
   pickupablePrefab: {fileID: 8428698085090688984, guid: 8d5e508fddc62434fa80f2546a3f4b39, type: 3}
   itemStats:
-    damage: 5
+    damage: 10
     knockBack: 0
     duration: 99999
     size: 1
@@ -26,7 +26,7 @@ MonoBehaviour:
     projectiles: 0
     pierceCount: 99999
   upgradeStats:
-    damage: 1
+    damage: 2
     knockBack: 0
     duration: 0
     size: 0.1

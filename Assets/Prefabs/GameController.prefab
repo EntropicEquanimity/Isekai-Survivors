@@ -1098,7 +1098,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 27.795, y: 0}
+  m_AnchoredPosition: {x: 27.79, y: 0}
   m_SizeDelta: {x: 0, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5083022254588761117
@@ -2684,7 +2684,7 @@ GameObject:
   - component: {fileID: 2782564037764628672}
   - component: {fileID: 3802168961284520114}
   - component: {fileID: 1434411655181867827}
-  - component: {fileID: 327210133726986901}
+  - component: {fileID: 2451963851310809024}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -2870,7 +2870,7 @@ MonoBehaviour:
   maxSpawnAtOnce: 50
   spawnInterval: 0.5
   spawnCooldown: 0
---- !u!114 &327210133726986901
+--- !u!114 &2451963851310809024
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2882,7 +2882,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba8bbc98f6f333745ae6c93e688e0fd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 8615614968124419757, guid: 4c57583acebd3de4094c35be2e140050, type: 3}
+  prefab: {fileID: 682396439465795681, guid: 9e4a250fb29b0b24dae13a8b6def3199, type: 3}
+  normalFontSize: 8
+  critFontSize: 12
+  duration: 1
+  critColor: {r: 0.49056602, g: 0, b: 0, a: 1}
+  normalColor: {r: 0, g: 0, b: 0, a: 1}
   numberPopups: []
 --- !u!1 &5918914203785530691
 GameObject:
@@ -4428,7 +4433,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 31.795, y: 0}
+  m_AnchoredPosition: {x: 31.79, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4257886185855578220

@@ -104,6 +104,7 @@ MonoBehaviour:
   - {fileID: -6564579147891151752, guid: 12105856021079745ac6b5ed1ea2bf6a, type: 3}
   framesPerSecond: 10
   playOnEnable: 1
+  looping: 0
   disableOnComplete: 0
   destroyOnComplete: 0
 --- !u!1 &2152762838311306415
@@ -196,8 +197,8 @@ MonoBehaviour:
   m_AssetsPPU: 32
   m_RefResolutionX: 640
   m_RefResolutionY: 360
-  m_UpscaleRT: 1
-  m_PixelSnapping: 0
+  m_UpscaleRT: 0
+  m_PixelSnapping: 1
   m_CropFrameX: 0
   m_CropFrameY: 0
   m_StretchFill: 0
