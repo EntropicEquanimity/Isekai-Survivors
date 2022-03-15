@@ -11,6 +11,7 @@ public class FadeManager : MonoBehaviour
     public Image fadeIn;
     public Image fadeOut;
     public float fadeSpeed = 2f;
+    public float fadeInOutPause = 0.5f;
     public static FadeManager Instance;
     private bool currentlyFading;
     private void Awake()
@@ -23,12 +24,19 @@ public class FadeManager : MonoBehaviour
         currentlyFading = false;
     }
     [Button]
-    public void StartFade(Action OnFadeIn = null, Action OnFadeOut = null)
+    public void StartFadeIn(Action OnFadeIn = null, Action OnFadeOut = null)
     {
-        if (currentlyFading) { Debug.LogWarning("Already fading! Make sure not to call this twice!"); return; }
+        //if (currentlyFading) { Debug.LogWarning("Already fading! Make sure not to call this twice!"); return; }
         ToggleCanvasGroup(true);
         currentlyFading = true;
         StartCoroutine(FadeIn(OnFadeIn, OnFadeOut));
+    }
+    public void StartFadeOut(Action OnFadeIn = null, Action OnFadeOut = null)
+    {
+        ToggleCanvasGroup(true);
+        currentlyFading = true;
+        OnFadeIn?.Invoke();
+        StartCoroutine(FadeOut(OnFadeOut));
     }
     private void ToggleCanvasGroup(bool active)
     {
@@ -45,17 +53,17 @@ public class FadeManager : MonoBehaviour
             num -= Time.deltaTime * fadeSpeed;
             yield return new WaitForEndOfFrame();
         }
+        Debug.Log("Finished fading in!");
         OnComplete?.Invoke();
 
         //Do something interesting;
-
-        yield return new WaitForSeconds(0.5f);
         StartCoroutine(FadeOut(OnFadeOut));
     }
     private IEnumerator FadeOut(Action OnComplete)
     {
         fadeOut.material.SetFloat("_FadeAmount", -0.1f);
         fadeIn.material.SetFloat("_FadeAmount", 1f);
+        yield return new WaitForSeconds(fadeInOutPause);
         float num = -0.1f;
         while (num < 1f)
         {
@@ -65,6 +73,7 @@ public class FadeManager : MonoBehaviour
         }
         ToggleCanvasGroup(false);
 
+        Debug.Log("Finished fading out!");
         OnComplete?.Invoke();
 
         currentlyFading = false;

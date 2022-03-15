@@ -10,7 +10,7 @@ public abstract class Entity : MonoBehaviour
     [BoxGroup("Stats")] [Expandable] public EntitySO baseStats;
     [Required] public SpriteRenderer entitySprite;
 
-    [BoxGroup("Settings")] public bool flashRedOnTakeDamage = false;
+    [BoxGroup("Settings")] public SettingsSO settings;
 
     #region Stats
     public int MaxHP { get; set; }
@@ -58,7 +58,7 @@ public abstract class Entity : MonoBehaviour
         damage -= Defense;
         HP -= damage;
 
-        if (flashRedOnTakeDamage)
+        if (settings.colorFlashOnTakeDamage)
         {
             if (_damageColorCoroutine != null) { StopCoroutine(_damageColorCoroutine); }
             _damageColorCoroutine = StartCoroutine(TakeDamageColor());
@@ -90,7 +90,7 @@ public abstract class Entity : MonoBehaviour
     private Coroutine _damageColorCoroutine;
     private IEnumerator TakeDamageColor()
     {
-        entitySprite.color = Color.red;
+        entitySprite.color = settings.takeDamageColor;
         while (entitySprite.color != Color.white)
         {
             entitySprite.color = Color.Lerp(Color.white, entitySprite.color, 0.96f);

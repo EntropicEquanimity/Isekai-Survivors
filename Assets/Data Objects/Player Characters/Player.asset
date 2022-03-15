@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8545fb79fa1d2940995e9d85a9297b8, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
+  entitySprite: {fileID: -557450005631253508, guid: 12105856021079745ac6b5ed1ea2bf6a, type: 3}
   entityStats:
     health: 100
     damage: 0

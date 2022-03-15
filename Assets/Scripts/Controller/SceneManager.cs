@@ -48,7 +48,7 @@ public class SceneManager : ScriptableObject
         Debug.Log("<b>SceneManager</b> switching scene to " + targetScene + " from " + UnityEngine.SceneManagement.SceneManager.GetActiveScene());
         if (FadeManager.Instance != null && useFade)
         {
-            FadeManager.Instance.StartFade(()=>UnityEngine.SceneManagement.SceneManager.LoadScene(targetScene, LoadSceneMode.Single), OnFadeOut);
+            FadeManager.Instance.StartFadeIn(()=>UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(targetScene, LoadSceneMode.Single), OnFadeOut);
         }
         else
         {

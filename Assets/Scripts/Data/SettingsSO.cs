@@ -10,6 +10,8 @@ public class SettingsSO : ScriptableObject
     [BoxGroup("Gameplay")] public bool showHealingNumbers = true;
     [BoxGroup("Gameplay")] public bool animatedFloatingText = true;
     [BoxGroup("Gameplay")] public float textSizeMultiplier = 1f;
+    [BoxGroup("Gameplay")] public bool colorFlashOnTakeDamage = true;
+    [BoxGroup("Gameplay")] public Color takeDamageColor = Color.red;
 
     [BoxGroup("Audio")] public float mainVolume = 1;
     [BoxGroup("Audio")] public float gameVolume = 1;

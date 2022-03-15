@@ -2825,8 +2825,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29956f713ae679b4c9d8bc72f47bb330, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxWeaponSlots: 3
-  maxEquipmentSlots: 3
+  maxWeaponSlots: 1
+  maxEquipmentSlots: 0
   itemSlotPrefab: {fileID: 3927570046955098456, guid: cb3d238fe9706bf4aaf7e61de0ad71ea, type: 3}
   weaponSlotsParent: {fileID: 6236714946141089046}
   equipmentSlotsParent: {fileID: 1758154673746450761}
