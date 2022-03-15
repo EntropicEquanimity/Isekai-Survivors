@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [BoxGroup("Enemies")] public GameObject enemyPrefab;
+    [BoxGroup("Enemies")] public GameObject[] enemyPrefabs;
     [BoxGroup("Enemies")] [ReadOnly] public List<SimpleEnemy> enemies = new List<SimpleEnemy>();
     [BoxGroup("Enemies")] [SerializeField] protected int _maxSize;
     [BoxGroup("Enemies")] public int maxSpawnAtOnce;
@@ -30,7 +30,7 @@ public class EnemySpawner : MonoBehaviour
                 int spawnNum = Mathf.Min(MaxSize - enemies.Count, maxSpawnAtOnce);
                 for (int i = 0; i < spawnNum; i++)
                 {
-                    SimpleEnemy enemy = Instantiate(enemyPrefab, transform).GetComponent<SimpleEnemy>();
+                    SimpleEnemy enemy = Instantiate(enemyPrefabs[Random.Range(0, enemyPrefabs.Length)], transform).GetComponent<SimpleEnemy>();
                     enemy.Initialize(enemy.baseStats.entityStats);
                     enemy.transform.position = GameManager.Instance.player.transform.position + (Vector3)Random.insideUnitCircle.normalized * 10f;
                     enemies.Add(enemy);

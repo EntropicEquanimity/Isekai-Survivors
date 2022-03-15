@@ -9,7 +9,7 @@ public class NumberPopup : MonoBehaviour
     public TMP_Text numText;
     public Ease animationEase;
 
-    public void Initialize(string text, Color textColor, float duration, int fontSize = 12, bool animated = true)
+    public void Initialize(string text, Color textColor, float duration, float fontSize = 12, bool animated = true)
     {
         numText.text = text;
         numText.color = textColor;

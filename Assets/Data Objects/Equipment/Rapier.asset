@@ -16,7 +16,7 @@ MonoBehaviour:
   itemDescription: Pierces deep into enemy lines.
   pickupablePrefab: {fileID: 5547767482929306542, guid: 75e9e2e862ffb8342b4b7908e7135432, type: 3}
   itemStats:
-    damage: 45
+    damage: 75
     knockBack: 1
     duration: 2
     size: 1
@@ -26,7 +26,7 @@ MonoBehaviour:
     projectiles: 1
     pierceCount: 0
   upgradeStats:
-    damage: 5
+    damage: 15
     knockBack: 0
     duration: 0
     size: 0.2

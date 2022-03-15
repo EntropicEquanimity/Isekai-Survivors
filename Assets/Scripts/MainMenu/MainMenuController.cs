@@ -4,15 +4,31 @@ using UnityEngine;
 
 public class MainMenuController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public SettingsSO settings;
+
+    #region Settings
+    //Gameplay
+    public void ToggleDamageNumbers(bool active)
     {
-        
+        settings.showDamageNumbers = active;
+    }
+    public void ToggleHealingNumbers(bool active)
+    {
+        settings.showHealingNumbers = active;
+    }
+    public void ToggleAnimatedText(bool active)
+    {
+        settings.animatedFloatingText = active;
+    }
+    public void ChangeFloatingTextSizeMultiplier(float size)
+    {
+        settings.textSizeMultiplier = size;
     }
 
-    // Update is called once per frame
-    void Update()
+    //Sound
+    public void ChangeMainVolume(float volume)
     {
-        
+
     }
+    #endregion
 }

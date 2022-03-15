@@ -382,8 +382,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Isekai Survivors
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 231aad41bdc4d2743974cb4f3b284ac0, type: 2}
-  m_sharedMaterial: {fileID: -661406868640687818, guid: 231aad41bdc4d2743974cb4f3b284ac0, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8e76099f2cb16ed4e87dc841a80d014f, type: 2}
+  m_sharedMaterial: {fileID: -661406868640687818, guid: 8e76099f2cb16ed4e87dc841a80d014f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -671,6 +671,7 @@ GameObject:
   - component: {fileID: 7429435060112590438}
   - component: {fileID: 7429435060112590437}
   - component: {fileID: 7429435060112590441}
+  - component: {fileID: 7429435060112590442}
   m_Layer: 5
   m_Name: MainMenu
   m_TagString: Untagged
@@ -772,3 +773,16 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &7429435060112590442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7429435060112590436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a4667e4e5632b4eb73238f1483dd7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settings: {fileID: 0}

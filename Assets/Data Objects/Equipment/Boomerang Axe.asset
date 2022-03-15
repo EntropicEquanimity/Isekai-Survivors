@@ -16,8 +16,8 @@ MonoBehaviour:
   itemDescription: Is it a boomerang? Or is it an axe?
   pickupablePrefab: {fileID: 8992764434393712520, guid: a1a9cf793b5a3ac40878e388c1dceb57, type: 3}
   itemStats:
-    damage: 50
-    knockBack: 1.1
+    damage: 60
+    knockBack: 3.5
     duration: 5
     size: 1
     speed: 10

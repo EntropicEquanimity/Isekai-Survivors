@@ -1,21 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using NaughtyAttributes;
 
 [RequireComponent(typeof(CircleCollider2D))]
 [RequireComponent(typeof(Rigidbody2D))]
 public class SimpleEnemy : Entity
 {
-    public Vector2Int expDrop;
-    public int essenceDrop;
+    [BoxGroup("Drops")] public Vector2Int expDrop;
+    [BoxGroup("Drops")] public int essenceDrop;
 
-    public Player target;
+    [BoxGroup("Enemy Behavior")] public float attackCooldown = 0.5f;
+    [BoxGroup("Enemy Behavior")] public OnBecameInvisibleBehavior onBecameInvisibleBehavior;
+
+    [ReadOnly] [BoxGroup("Read Only")] public Player target;
+    [ReadOnly] [BoxGroup("Read Only")] public float range;
+
     private Rigidbody2D _rb;
-
-    public OnBecameInvisibleBehavior onBecameInvisibleBehavior;
     private float _lastTimeDamageDealt;
     private float _timeBeforeDisabling;
     private bool _invisible;
+    public override void Initialize(EntityStats entityStats)
+    {
+        base.Initialize(entityStats);
+        range = GetComponent<CircleCollider2D>().radius * transform.localScale.magnitude;
+    }
+
     public override void OnEnable()
     {
         base.OnEnable();
@@ -31,7 +41,7 @@ public class SimpleEnemy : Entity
     public void FixedUpdate()
     {
         Move();
-
+        Attack();
         if (_invisible)
         {
             _timeBeforeDisabling -= Time.deltaTime;
@@ -61,28 +71,36 @@ public class SimpleEnemy : Entity
     }
     public override void Move()
     {
-        if (HP <= 0) { return; }
+        if (HP <= 0 || DistanceToTarget < range) { return; }
 
-        _rb.MovePosition(DirectionToTarget * MoveSpeed * Time.fixedDeltaTime + (Vector2)transform.position);
+        _rb.MovePosition(MoveSpeed * Time.fixedDeltaTime * DirectionToTarget + (Vector2)transform.position);
 
         entitySprite.flipX = target.transform.position.x < transform.position.x;
     }
-    public virtual void OnCollisionEnter2D(Collision2D collision)
+    public void Attack()
     {
-        if (collision.transform.CompareTag("Player"))
+        if(DistanceToTarget <= range && AttackOffCooldown)
         {
-            collision.transform.GetComponent<Player>().TakeDamage(new DamageInfo() { damage = Damage, critChance = 0 });
+            target.TakeDamage(new DamageInfo() { damage = Damage });
             _lastTimeDamageDealt = Time.realtimeSinceStartup;
         }
     }
-    public virtual void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.transform.CompareTag("Player") && Time.realtimeSinceStartup - _lastTimeDamageDealt > 0.5f)
-        {
-            collision.transform.GetComponent<Player>().TakeDamage(new DamageInfo() { damage = Damage, critChance = 0 });
-            _lastTimeDamageDealt = Time.realtimeSinceStartup;
-        }
-    }
+    //public virtual void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    if (collision.transform.CompareTag("Player"))
+    //    {
+    //        collision.transform.GetComponent<Player>().TakeDamage(new DamageInfo() { damage = Damage, critChance = 0 });
+    //        _lastTimeDamageDealt = Time.realtimeSinceStartup;
+    //    }
+    //}
+    //public virtual void OnCollisionStay2D(Collision2D collision)
+    //{
+    //    if (collision.transform.CompareTag("Player") && Time.realtimeSinceStartup - _lastTimeDamageDealt > 0.5f)
+    //    {
+    //        collision.transform.GetComponent<Player>().TakeDamage(new DamageInfo() { damage = Damage, critChance = 0 });
+    //        _lastTimeDamageDealt = Time.realtimeSinceStartup;
+    //    }
+    //}
     public override void Die()
     {
         GameManager.Instance.PlayerKills++;
@@ -106,6 +124,8 @@ public class SimpleEnemy : Entity
         gameObject.SetActive(false);
     }
     public Vector2 DirectionToTarget => (target.transform.position - transform.position).normalized;
+    public float DistanceToTarget => Vector2.Distance(transform.position, target.transform.position);
+    public bool AttackOffCooldown => Time.realtimeSinceStartup - _lastTimeDamageDealt > attackCooldown;
 }
 public enum OnBecameInvisibleBehavior
 {

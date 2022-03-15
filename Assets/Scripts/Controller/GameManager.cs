@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     [BoxGroup("Current Session Stats")] [ReadOnly] [SerializeField] protected int playerKills;
     [BoxGroup("Current Session Stats")] [ReadOnly] [SerializeField] protected int playerEssence;
     [BoxGroup("Current Session Stats")] [ReadOnly] public float gameTime = 0;
-    [BoxGroup("Current Session Stats")] [ReadOnly] public GameState gameState;
+    [BoxGroup("Current Session Stats")] [ReadOnly] public GameState GameState;
 
     [BoxGroup("Player")] [ReadOnly] public Player player;
     [BoxGroup("Player")] public GameObject selectedPlayerPrefab;
@@ -27,18 +27,20 @@ public class GameManager : MonoBehaviour
     #region Player
     public void LevelUp()
     {
+        GameState = GameState.Lottery;
         _interfaceController.OpenChooseItemPanel(LootController.Instance.GetItems(3), delegate
         {
             playerExp -= ExpRequired;
             playerLevel++;
             _interfaceController.UpdatePlayerLevel(playerLevel);
+            GameState = GameState.Normal;
 
             if (playerExp >= ExpRequired) { LevelUp(); }
         });
     }
     public void PlayerDeath()
     {
-
+        GameState = GameState.GameOver;
     }
     #endregion
 
@@ -54,7 +56,7 @@ public class GameManager : MonoBehaviour
         playerExp = 0;
         gameTime = 0;
         playerLevel = 0;
-        gameState = GameState.Normal;
+        GameState = GameState.Normal;
 
         _interfaceController = GetComponent<InterfaceController>();
         _interfaceController.UpdateExpBar(playerExp, ExpRequired);
@@ -66,7 +68,7 @@ public class GameManager : MonoBehaviour
     }
     public void Update()
     {
-        if (gameState != GameState.Normal) { return; }
+        if (GameState != GameState.Normal) { return; }
 
         if (Input.GetKey(KeyCode.LeftShift))
         {
@@ -159,5 +161,6 @@ public enum GameState
 {
     Normal,
     Paused,
-    Lottery
+    Lottery,
+    GameOver
 }

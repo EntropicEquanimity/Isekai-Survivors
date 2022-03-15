@@ -27,7 +27,7 @@ public class InterfaceController : MonoBehaviour
     public static InterfaceController Instance;
     void Update()
     {
-        if (GameManager.Instance.gameState != GameState.Normal) { return; }
+        if (GameManager.Instance.GameState != GameState.Normal) { return; }
 
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab))
         {
@@ -94,12 +94,12 @@ public class InterfaceController : MonoBehaviour
     public void Pause()
     {
         Time.timeScale = 0;
-        GameManager.Instance.gameState = GameState.Paused;
+        GameManager.Instance.GameState = GameState.Paused;
     }
     public void Resume()
     {
         Time.timeScale = 1;
-        GameManager.Instance.gameState = GameState.Normal;
+        GameManager.Instance.GameState = GameState.Normal;
     }
     public void OpenPauseMenu()
     {

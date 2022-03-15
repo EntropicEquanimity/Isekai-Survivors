@@ -12,6 +12,7 @@ public class FadeManager : MonoBehaviour
     public Image fadeOut;
     public float fadeSpeed = 2f;
     public static FadeManager Instance;
+    private bool currentlyFading;
     private void Awake()
     {
         if(Instance == null) { Instance = this; DontDestroyOnLoad(this); }
@@ -19,12 +20,14 @@ public class FadeManager : MonoBehaviour
         fadeIn.material.SetFloat("_FadeAmount", 1f);
         fadeOut.material.SetFloat("_FadeAmount", 1f);
         ToggleCanvasGroup(false);
+        currentlyFading = false;
     }
     [Button]
     public void StartFade(Action OnFadeIn = null, Action OnFadeOut = null)
     {
+        if (currentlyFading) { Debug.LogWarning("Already fading! Make sure not to call this twice!"); return; }
         ToggleCanvasGroup(true);
-
+        currentlyFading = true;
         StartCoroutine(FadeIn(OnFadeIn, OnFadeOut));
     }
     private void ToggleCanvasGroup(bool active)
@@ -43,6 +46,9 @@ public class FadeManager : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         OnComplete?.Invoke();
+
+        //Do something interesting;
+
         yield return new WaitForSeconds(0.5f);
         StartCoroutine(FadeOut(OnFadeOut));
     }
@@ -60,5 +66,7 @@ public class FadeManager : MonoBehaviour
         ToggleCanvasGroup(false);
 
         OnComplete?.Invoke();
+
+        currentlyFading = false;
     }
 }

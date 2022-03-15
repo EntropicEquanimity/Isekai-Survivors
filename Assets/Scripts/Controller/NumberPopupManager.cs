@@ -7,8 +7,9 @@ public class NumberPopupManager : MonoBehaviour
 {
     public static NumberPopupManager Instance;
     public GameObject prefab;
-    [BoxGroup("Settings")] public int normalFontSize = 16;
-    [BoxGroup("Settings")] public int critFontSize = 24;
+    public SettingsSO settings;
+    [BoxGroup("Settings")] public float normalFontSize = 16;
+    [BoxGroup("Settings")] public float critFontSize = 24;
     [BoxGroup("Settings")] public float duration = 0.5f;
     [BoxGroup("Settings")] public Color critColor = Color.red;
     [BoxGroup("Settings")] public Color normalColor = Color.black;
@@ -23,7 +24,7 @@ public class NumberPopupManager : MonoBehaviour
     {
         NumberPopup popup = GetNumberPopup();
         popup.transform.position = position;
-        popup.Initialize(damage.ToString(), crit ? critColor : normalColor, duration, crit ? critFontSize : normalFontSize);
+        popup.Initialize(damage.ToString(), crit ? critColor : normalColor, duration, crit ? critFontSize * settings.textSizeMultiplier : normalFontSize * settings.textSizeMultiplier, settings.animatedFloatingText);
     }
     public NumberPopup GetNumberPopup()
     {

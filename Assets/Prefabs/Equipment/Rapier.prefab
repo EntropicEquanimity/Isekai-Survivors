@@ -120,7 +120,7 @@ MonoBehaviour:
       BaseValue: 0
     pierceCount:
       BaseValue: 0
-  pullsPlayerForward: 1
+  pullsPlayerForward: 0
 --- !u!114 &5547767482929306541
 MonoBehaviour:
   m_ObjectHideFlags: 0

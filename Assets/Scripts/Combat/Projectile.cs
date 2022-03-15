@@ -20,7 +20,7 @@ public class Projectile : MonoBehaviour
     protected Tween _rotateTween;
     protected Rigidbody2D _rb;
     private float _constantDamageCooldown;
-    private bool _enemyInRange;
+
     public virtual void Initialize(ProjectileStats projectileStats, Equipment damageSource)
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -86,6 +86,7 @@ public class Projectile : MonoBehaviour
                 _constantDamageCooldown = constantDamageIntervals;
             }
         }
+        if(_rb.velocity.magnitude <= 0.1f && clearTargets == ClearTargetsFlag.OnBoomerangReturn) { targets.Clear(); }
     }
     public virtual void OnDisable()
     {
