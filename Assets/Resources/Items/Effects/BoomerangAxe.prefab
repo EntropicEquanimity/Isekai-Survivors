@@ -174,7 +174,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   clearTargets: 3
-  rotationSpeed: -1440
+  rotationSpeed: 360
   rotatesOnAxis: 1
   rotationSpeedAffectedByWeaponSpeed: 0
   constantDamageIntervals: 0

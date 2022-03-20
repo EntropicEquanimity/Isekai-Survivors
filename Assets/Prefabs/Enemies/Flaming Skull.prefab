@@ -153,11 +153,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseStats: {fileID: 11400000, guid: 73da317c29f5b37438acfa59ff0c0842, type: 2}
   entitySprite: {fileID: 498872031918539500}
-  flashRedOnTakeDamage: 1
+  settings: {fileID: 11400000, guid: 43be9781a9947624796c212527175348, type: 2}
   expDrop: {x: 5, y: 15}
   essenceDrop: 0
-  target: {fileID: 0}
+  attackCooldown: 0.5
   onBecameInvisibleBehavior: 0
+  target: {fileID: 0}
+  range: 0
   explosionEffect: {fileID: 8946634070377217577, guid: cd3927b3c86d70a4781bd55205b68e8f, type: 3}
   explosionRadius: 0.75
   explosionDamage: 30

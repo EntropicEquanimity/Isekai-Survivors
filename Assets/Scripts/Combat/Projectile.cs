@@ -29,14 +29,7 @@ public class Projectile : MonoBehaviour
         durationRemaining = projectileStats.weaponStats.duration;
         durabilityRemaining = projectileStats.pierceCount;
 
-        if (rotatesOnAxis)
-        {
-            transform.rotation = Quaternion.Euler(0, 0, 0);
-            float speed = rotationSpeedAffectedByWeaponSpeed == true ? rotationSpeed * projectileStats.weaponStats.speed : rotationSpeed;
-            _rotateTween = transform.DORotate(new Vector3(0, 0, speed), 1f).SetEase(Ease.Linear).SetLoops(-1, LoopType.Incremental);
-            if (clearTargets == ClearTargetsFlag.OnRotate360) { _rotateTween.onStepComplete += delegate { targets.Clear(); }; }
-        }
-        else
+        if (!rotatesOnAxis)
         {
             transform.up = projectileStats.direction;
         }
@@ -54,6 +47,14 @@ public class Projectile : MonoBehaviour
         if (durationRemaining > 0f) { durationRemaining -= Time.fixedDeltaTime; }
         if (durationRemaining <= 0f) { gameObject.SetActive(false); }
 
+        if (rotatesOnAxis)
+        {
+            float speed = rotationSpeedAffectedByWeaponSpeed == true ? rotationSpeed * projectileStats.weaponStats.speed : rotationSpeed;
+            transform.RotateAround(transform.position, Vector3.forward, speed * Time.fixedDeltaTime);
+            Debug.Log(speed * Time.fixedDeltaTime);
+            //_rotateTween = transform.DORotate(new Vector3(0, 0, speed), 1f).SetEase(Ease.Linear).SetLoops(-1, LoopType.Incremental);
+            //if (clearTargets == ClearTargetsFlag.OnRotate360) { _rotateTween.onStepComplete += delegate { targets.Clear(); }; }
+        }
         if (projectileStats.constantDamage)
         {
             if (_constantDamageCooldown >= 0f) { _constantDamageCooldown -= Time.fixedDeltaTime; }
@@ -86,7 +87,7 @@ public class Projectile : MonoBehaviour
                 _constantDamageCooldown = constantDamageIntervals;
             }
         }
-        if(_rb.velocity.magnitude <= 0.1f && clearTargets == ClearTargetsFlag.OnBoomerangReturn) { targets.Clear(); }
+        if (_rb.velocity.magnitude <= 0.1f && clearTargets == ClearTargetsFlag.OnBoomerangReturn) { targets.Clear(); }
     }
     public virtual void OnDisable()
     {
@@ -113,7 +114,7 @@ public class Projectile : MonoBehaviour
                 critChance = projectileStats.weaponStats.critChance
             }, (collision.transform.position - damageSource.transform.position).normalized, projectileStats.weaponStats.knockBack);
 
-            if(report.victim != null)
+            if (report.victim != null)
             {
                 ShowDamageNumber(report.damageDealt, report.crit, report.victim.transform.position);
             }
