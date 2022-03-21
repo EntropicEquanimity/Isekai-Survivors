@@ -48,14 +48,6 @@ public class LootController : MonoBehaviour
     {
 
     }
-    [Button]
-    public void GetThreeItems()
-    {
-        foreach (var item in GetItems(3))
-        {
-            Debug.Log(item.name + ": " + item.itemDescription);
-        }
-    }
     public void RemoveItemFromPool(ItemSO item)
     {
         if (itemsInPool.Contains(item))
@@ -66,16 +58,54 @@ public class LootController : MonoBehaviour
     }
     public List<ItemSO> GetItems(int numberToPull)
     {
+        Debug.Log(numberToPull);
         if (numberToPull >= itemsInPool.Count) { return new List<ItemSO>(itemsInPool); }
 
         List<ItemSO> _allItems = new List<ItemSO>(itemsInPool);
         List<ItemSO> selectedItems = new List<ItemSO>();
-        for (int i = 0; i < numberToPull; i++)
+
+        for (int n = 0; n < numberToPull; n++)
         {
-            int index = Random.Range(0, _allItems.Count);
-            selectedItems.Add(_allItems[index]);
-            _allItems.RemoveAt(index);
+            int totalWeight = GetItemWeight(_allItems);
+            int roll = Random.Range(0, totalWeight);
+            for (int i = 0; i < _allItems.Count; i++)
+            {
+                roll -= _allItems[i].dropWeight;
+                if (roll < 0)
+                {
+                    selectedItems.Add(_allItems[i]);
+                    _allItems.RemoveAt(i);
+                    break;
+                }
+            }
         }
+        //for (int i = 0; i < numberToPull; i++)
+        //{
+        //    int index = Random.Range(0, _allItems.Count);
+        //    selectedItems.Add(_allItems[index]);
+        //    _allItems.RemoveAt(index);
+        //}
         return selectedItems;
+    }
+    public int GetItemWeight(List<ItemSO> items)
+    {
+        int totalWeight = 0;
+        for (int i = 0; i < items.Count; i++)
+        {
+            totalWeight += items[i].dropWeight;
+        }
+        return totalWeight;
+    }
+    [Button]
+    public void AttractEverything()
+    {
+        Player player = GameManager.Instance.player;
+        for (int i = 0; i < expPickups.Count; i++)
+        {
+            if (expPickups[i].gameObject.activeInHierarchy)
+            {
+                expPickups[i].target = player;
+            }
+        }
     }
 }

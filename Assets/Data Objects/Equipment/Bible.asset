@@ -15,6 +15,7 @@ MonoBehaviour:
   icon: {fileID: 3653258361786527596, guid: 4d8281c45ade0444bb561c5d33ea8411, type: 3}
   itemDescription: Sunders all unholy elements that attempt to encroach!
   pickupablePrefab: {fileID: 8428698085090688984, guid: 8d5e508fddc62434fa80f2546a3f4b39, type: 3}
+  dropWeight: 120
   itemStats:
     damage: 10
     knockBack: 1

@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
     public void LevelUp()
     {
         GameState = GameState.Lottery;
-        _interfaceController.OpenChooseItemPanel(LootController.Instance.GetItems(3), delegate
+        _interfaceController.OpenChooseItemPanel(LootController.Instance.GetItems(LootChoices), delegate
         {
             playerExp -= ExpRequired;
             playerLevel++;
@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Stats
-    public float Damage { get => damage.Value;}
+    public int Damage { get => Mathf.RoundToInt(damage.Value);}
     public float KnockBack { get => knockBack.Value;}
     public float Duration { get => duration.Value;}
     public float Size { get => size.Value;}
@@ -120,6 +120,7 @@ public class GameManager : MonoBehaviour
     public int Defense { get => Mathf.RoundToInt(projectiles.Value); }
     public int Health { get => Mathf.RoundToInt(health.Value); }
     public float PickupRadius { get => pickupRadius.Value; }
+    public int LootChoices { get => Mathf.RoundToInt(lootChoices.Value); }
 
     [Foldout("Stats")] public CharacterStat damage;
     [Foldout("Stats")] public CharacterStat knockBack;
@@ -133,7 +134,8 @@ public class GameManager : MonoBehaviour
     [Foldout("Stats")] public CharacterStat moveSpeed;
     [Foldout("Stats")] public CharacterStat defense;
     [Foldout("Stats")] public CharacterStat health;
-    [Foldout("Stats")] public CharacterStat pickupRadius; 
+    [Foldout("Stats")] public CharacterStat pickupRadius;
+    [Foldout("Stats")] public CharacterStat lootChoices = new CharacterStat() { BaseValue = 1 };
 
     public void ResetGameStats()
     {

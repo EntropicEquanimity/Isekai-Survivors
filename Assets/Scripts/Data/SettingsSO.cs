@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
 
-[CreateAssetMenu(menuName = "Settings")]
+[CreateAssetMenu(menuName = "Settings/Settings")]
 public class SettingsSO : ScriptableObject
 {
     [BoxGroup("Gameplay")] public bool showDamageNumbers = true;

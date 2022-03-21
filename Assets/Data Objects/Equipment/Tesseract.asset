@@ -15,6 +15,7 @@ MonoBehaviour:
   icon: {fileID: -1965184042450674564, guid: 4d8281c45ade0444bb561c5d33ea8411, type: 3}
   itemDescription: With the power of the Iron Briefs bestowed upon me...
   pickupablePrefab: {fileID: 3661095768174272947, guid: fe7a4badfc630e34c93e932b7e13b410, type: 3}
+  dropWeight: 20
   itemStats:
     damage: 0
     knockBack: 0

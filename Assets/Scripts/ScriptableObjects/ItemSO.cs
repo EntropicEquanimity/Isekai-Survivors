@@ -8,4 +8,5 @@ public abstract class ItemSO : ScriptableObject
     [BoxGroup("Item")] public Sprite icon;
     [BoxGroup("Item")] [ResizableTextArea] public string itemDescription;
     [BoxGroup("Item")] public GameObject pickupablePrefab;
+    [BoxGroup("Item")] public int dropWeight;
 }

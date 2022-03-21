@@ -51,7 +51,6 @@ public class Projectile : MonoBehaviour
         {
             float speed = rotationSpeedAffectedByWeaponSpeed == true ? rotationSpeed * projectileStats.weaponStats.speed : rotationSpeed;
             transform.RotateAround(transform.position, Vector3.forward, speed * Time.fixedDeltaTime);
-            Debug.Log(speed * Time.fixedDeltaTime);
             //_rotateTween = transform.DORotate(new Vector3(0, 0, speed), 1f).SetEase(Ease.Linear).SetLoops(-1, LoopType.Incremental);
             //if (clearTargets == ClearTargetsFlag.OnRotate360) { _rotateTween.onStepComplete += delegate { targets.Clear(); }; }
         }

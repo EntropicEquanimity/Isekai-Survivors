@@ -15,18 +15,19 @@ MonoBehaviour:
   icon: {fileID: 3536865724434752150, guid: 4d8281c45ade0444bb561c5d33ea8411, type: 3}
   itemDescription: Is it a boomerang? Or is it an axe?
   pickupablePrefab: {fileID: 8992764434393712520, guid: a1a9cf793b5a3ac40878e388c1dceb57, type: 3}
+  dropWeight: 100
   itemStats:
-    damage: 60
+    damage: 50
     knockBack: 3.5
     duration: 5
     size: 1
     speed: 10
-    critChance: 0.5
+    critChance: 0
     cooldown: 8
     projectiles: 2
     pierceCount: 0
   upgradeStats:
-    damage: 5
+    damage: 10
     knockBack: 0
     duration: 0.2
     size: 0.1

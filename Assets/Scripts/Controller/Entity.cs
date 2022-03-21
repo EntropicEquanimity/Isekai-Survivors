@@ -8,17 +8,17 @@ using UnityEngine.Events;
 public abstract class Entity : MonoBehaviour
 {
     [BoxGroup("Stats")] [Expandable] public EntitySO baseStats;
-    [Required] public SpriteRenderer entitySprite;
+    [Required] public SpriteRenderer entitySpriteRenderer;
 
     [BoxGroup("Settings")] public SettingsSO settings;
 
     #region Stats
-    public int MaxHP { get; set; }
+    public virtual int MaxHP { get; set; }
     public int HP { get; set; }
-    public int Damage { get; set; }
-    public float MoveSpeed { get; set; }
-    public int Defense { get; set; }
-    public int KnockBackResistance { get; set; }
+    public virtual int Damage { get; set; }
+    public virtual float MoveSpeed { get; set; }
+    public virtual int Defense { get; set; }
+    public virtual float KnockBackResistance { get; set; }
     #endregion
 
     private bool _initialized = false;
@@ -31,7 +31,7 @@ public abstract class Entity : MonoBehaviour
         if (_damageColorCoroutine != null)
         {
             StopAllCoroutines();
-            entitySprite.color = Color.white;
+            entitySpriteRenderer.color = Color.white;
         }
     }
     public virtual void Initialize(EntityStats entityStats)
@@ -56,6 +56,7 @@ public abstract class Entity : MonoBehaviour
         bool isCrit = Random.Range(0f, 1f) < damageInfo.critChance;
         int damage = isCrit == true ? damageInfo.damage * 2 : damageInfo.damage;
         damage -= Defense;
+        damage = Mathf.Max(0, damage);
         HP -= damage;
 
         if (settings.colorFlashOnTakeDamage)
@@ -90,10 +91,10 @@ public abstract class Entity : MonoBehaviour
     private Coroutine _damageColorCoroutine;
     private IEnumerator TakeDamageColor()
     {
-        entitySprite.color = settings.takeDamageColor;
-        while (entitySprite.color != Color.white)
+        entitySpriteRenderer.color = settings.takeDamageColor;
+        while (entitySpriteRenderer.color != Color.white)
         {
-            entitySprite.color = Color.Lerp(Color.white, entitySprite.color, 0.96f);
+            entitySpriteRenderer.color = Color.Lerp(Color.white, entitySpriteRenderer.color, 0.96f);
             yield return new WaitForEndOfFrame();
         }
     }

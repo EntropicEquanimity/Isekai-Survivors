@@ -84,7 +84,7 @@ public class ExpPickup : Pickup
     }
     public override void OnPickup()
     {
-        Debug.Log("Picking up " + expAmount);
+        //Debug.Log("Picking up " + expAmount);
         gameObject.SetActive(false);
         GameManager.Instance.PlayerExperience += expAmount;
     }

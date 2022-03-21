@@ -151,8 +151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a3303f386a31e846bf2a134a223c66d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseStats: {fileID: 11400000, guid: 73da317c29f5b37438acfa59ff0c0842, type: 2}
-  entitySprite: {fileID: 498872031918539500}
+  baseStats: {fileID: 11400000, guid: aaecb5a34df4f21449ba6e5cc88dbbea, type: 2}
+  entitySpriteRenderer: {fileID: 498872031918539500}
   settings: {fileID: 11400000, guid: 43be9781a9947624796c212527175348, type: 2}
   expDrop: {x: 5, y: 15}
   essenceDrop: 0

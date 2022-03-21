@@ -31,7 +31,7 @@ public class SimpleEnemy : Entity
         base.OnEnable();
         GetComponent<CircleCollider2D>().enabled = true;
         _rb = GetComponent<Rigidbody2D>();
-        entitySprite.material.SetFloat("_FadeAmount", -0.15f);
+        entitySpriteRenderer.material.SetFloat("_FadeAmount", -0.15f);
     }
     private void Start()
     {
@@ -75,7 +75,7 @@ public class SimpleEnemy : Entity
 
         _rb.MovePosition(MoveSpeed * Time.fixedDeltaTime * DirectionToTarget + (Vector2)transform.position);
 
-        entitySprite.flipX = target.transform.position.x < transform.position.x;
+        entitySpriteRenderer.flipX = target.transform.position.x < transform.position.x;
     }
     public void Attack()
     {
@@ -118,7 +118,7 @@ public class SimpleEnemy : Entity
         while (fadeAmount < 1f)
         {
             fadeAmount += Time.fixedDeltaTime * 2f;
-            entitySprite.material.SetFloat("_FadeAmount", fadeAmount);
+            entitySpriteRenderer.material.SetFloat("_FadeAmount", fadeAmount);
             yield return new WaitForFixedUpdate();
         }
         gameObject.SetActive(false);

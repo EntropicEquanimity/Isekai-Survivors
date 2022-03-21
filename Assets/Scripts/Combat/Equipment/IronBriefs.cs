@@ -35,9 +35,9 @@ public class IronBriefs : Equipment
     private IEnumerator HandleInvulnerability(float duration)
     {
         player.CanTakeDamage = false;
-        player.entitySprite.material = invulnerabilityMaterial;
+        player.entitySpriteRenderer.material = invulnerabilityMaterial;
         yield return new WaitForSeconds(duration);
-        player.entitySprite.material = defaultMaterial;
+        player.entitySpriteRenderer.material = defaultMaterial;
         player.CanTakeDamage = true;
     }
     public override void UseItem()

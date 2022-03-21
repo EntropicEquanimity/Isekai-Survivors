@@ -11,29 +11,34 @@ public class Player : Entity
     private InterfaceController _hud;
     [BoxGroup("ReadOnly")] [ReadOnly] public Vector2 moveVector;
 
-    private void Start()
+    public override int MaxHP { get => base.MaxHP + GameManager.Instance.Health; set => base.MaxHP = value; }
+    public override int Damage { get => base.Damage + GameManager.Instance.Damage; set => base.Damage = value; }
+    public override int Defense { get => base.Defense + GameManager.Instance.Defense; set => base.Defense = value; }
+    public override float MoveSpeed { get => base.MoveSpeed + GameManager.Instance.MoveSpeed; set => base.MoveSpeed = value; }
+    public override float KnockBackResistance { get => base.KnockBackResistance + GameManager.Instance.KnockBack; set => base.KnockBackResistance = value; }
+
+    public virtual void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
         _hud = GameManager.Instance.GetComponent<InterfaceController>();
         Initialize(playerData.entityStats);
     }
-    void Update()
+    public virtual void Update()
     {
         moveVector = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
     }
-    private void FixedUpdate()
+    public virtual void FixedUpdate()
     {
         Move();
 
         _hud.UpdateHealthBar(HP, MaxHP);
     }
-
     public override void Move()
     {
         if (moveVector != Vector2.zero && _rb.velocity.magnitude < 0.5f)
         {
-            _rb.MovePosition(moveVector * MoveSpeed * Time.fixedDeltaTime + (Vector2)transform.position);
-            if (moveVector.x != 0) entitySprite.flipX = moveVector.x < 0;
+            _rb.MovePosition(moveVector * (MoveSpeed + GameManager.Instance.MoveSpeed) * Time.fixedDeltaTime + (Vector2)transform.position);
+            if (moveVector.x != 0) entitySpriteRenderer.flipX = moveVector.x < 0;
         }
     }
     public override void Die()

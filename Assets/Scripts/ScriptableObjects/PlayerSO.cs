@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Player Character")]
+[CreateAssetMenu(menuName = "Data/Player Character")]
 public class PlayerSO : EntitySO
 {
     public EquipmentSO startingWeapon;

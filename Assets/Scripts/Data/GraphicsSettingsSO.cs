@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Graphic Settings")]
+[CreateAssetMenu(menuName = "Settings/Graphics")]
 public class GraphicsSettingsSO : ScriptableObject
 {
     [BoxGroup("Colors")] public Color weaponTint = Color.red, equipmentTint = Color.green;

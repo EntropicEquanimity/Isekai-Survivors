@@ -15,8 +15,9 @@ MonoBehaviour:
   icon: {fileID: -5063555655813669412, guid: 4d8281c45ade0444bb561c5d33ea8411, type: 3}
   itemDescription: 'Shoots arrows. Surprise surprise. '
   pickupablePrefab: {fileID: 7730069951237586602, guid: 07d3e41512c2902439f5773d44791494, type: 3}
+  dropWeight: 100
   itemStats:
-    damage: 55
+    damage: 50
     knockBack: 0.2
     duration: 3
     size: 1
@@ -26,7 +27,7 @@ MonoBehaviour:
     projectiles: 4
     pierceCount: 1
   upgradeStats:
-    damage: 8
+    damage: 10
     knockBack: 0
     duration: 0
     size: 0
