@@ -122,6 +122,7 @@ public class SimpleEnemy : Entity
             yield return new WaitForFixedUpdate();
         }
         gameObject.SetActive(false);
+        EnemyManager.Instance.EnemyDeath(this);
     }
     public Vector2 DirectionToTarget => (target.transform.position - transform.position).normalized;
     public float DistanceToTarget => Vector2.Distance(transform.position, target.transform.position);

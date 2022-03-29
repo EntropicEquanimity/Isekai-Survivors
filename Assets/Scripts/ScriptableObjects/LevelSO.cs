@@ -12,14 +12,13 @@ public class LevelSO : ScriptableObject
 public struct EnemyWaveData
 {
     public int maxEnemyCount;
-    public int enemySpawnInterval;
+    public float enemySpawnInterval;
     public int maxBatchSpawnCount;
     public List<EnemyUnitData> enemies;
 }
 [System.Serializable]
 public struct EnemyUnitData
 {
-    public bool unlimitedSpawn;
-    [HideIf("unlimitedSpawn")] public int spawnCount;
+    public int spawnWeight;
     public EnemySO unitInfo;
 }
