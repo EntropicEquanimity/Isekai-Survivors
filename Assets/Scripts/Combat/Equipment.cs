@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
+using System.Text;
 
 public abstract class Equipment : Item
 {
@@ -17,33 +18,51 @@ public abstract class Equipment : Item
         ItemLevel = 1;
         RecalculateItemStats();
     }
+
+    #region Leveling / Stats
+    public virtual void Upgrade()
+    {
+        if (IsMaxLevel) { return; }
+        ItemLevel++;
+        RecalculateItemStats();
+        UseItem();
+    }
     [Button]
     public void RecalculateItemStats()
     {
         itemStats = new SessionItemStats(itemData.itemStats);
 
-        itemStats.damage.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.damage;
-        itemStats.knockBack.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.knockBack;
-        itemStats.duration.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.duration;
-        itemStats.size.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.size;
-        itemStats.speed.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.speed;
-        itemStats.critChance.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.critChance;
-        itemStats.cooldown.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.cooldown;
-        itemStats.projectiles.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.projectiles;
-        itemStats.pierceCount.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.pierceCount;
+        //itemStats.damage.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.damage;
+        //itemStats.knockBack.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.knockBack;
+        //itemStats.duration.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.duration;
+        //itemStats.size.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.size;
+        //itemStats.speed.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.speed;
+        //itemStats.critChance.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.critChance;
+        //itemStats.cooldown.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.cooldown;
+        //itemStats.projectiles.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.projectiles;
+        //itemStats.pierceCount.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.pierceCount;
+
+        for (int i = 0; i < UpgradeValues.Count; i++)
+        {
+            if (ItemLevel - 1 >= i)
+            {
+                itemStats.damage.BaseValue += UpgradeValues[i].damage;
+                itemStats.knockBack.BaseValue += UpgradeValues[i].knockBack;
+                itemStats.duration.BaseValue += UpgradeValues[i].duration;
+                itemStats.size.BaseValue += UpgradeValues[i].size;
+                itemStats.speed.BaseValue += UpgradeValues[i].speed;
+                itemStats.critChance.BaseValue += UpgradeValues[i].critChance;
+                itemStats.cooldown.BaseValue += UpgradeValues[i].cooldown;
+                itemStats.projectiles.BaseValue += UpgradeValues[i].projectiles;
+                itemStats.pierceCount.BaseValue += UpgradeValues[i].pierceCount;
+            }
+        }
+        Debug.Log(BuildLevelUpStatsString());
     }
-    public virtual void Upgrade()
-    {
-        ItemLevel++;
-        RecalculateItemStats();
-        UseItem();
-    }
-    public virtual void UnEquip()
-    {
-        itemSlot.ResetToEmpty();
-        StopItem();
-        Destroy(gameObject);
-    }
+    public abstract List<ItemStats> UpgradeValues { get; }
+    #endregion
+
+    #region Public
     public abstract void UseItem();
     public abstract void StopItem();
     public virtual void TickCooldown(float time)
@@ -54,21 +73,13 @@ public abstract class Equipment : Item
             UseItem();
         }
     }
-    public GameObject GetPrefab()
+    public virtual void UnEquip()
     {
-        for (int i = 0; i < EffectPrefabs.Count; i++)
-        {
-            if (!EffectPrefabs[i].activeInHierarchy)
-            {
-                EffectPrefabs[i].SetActive(true);
-                EffectPrefabs[i].transform.localScale = Vector3.one;
-                return EffectPrefabs[i];
-            }
-        }
-        GameObject obj = Instantiate(EffectPrefab);
-        EffectPrefabs.Add(obj);
-        return obj;
+        itemSlot.ResetToEmpty();
+        StopItem();
+        Destroy(gameObject);
     }
+    #endregion
 
     #region Getters
     public ItemStats GetEquipmentStats()
@@ -95,6 +106,43 @@ public abstract class Equipment : Item
     public float Cooldown { get => Mathf.Max(0.5f, itemStats.cooldown.Value + GameManager.Instance.CritDamage); }
     public int ProjectileCount { get => Mathf.Max(1, Mathf.RoundToInt(itemStats.projectiles.Value + GameManager.Instance.Projectiles)); }
     public int PierceCount { get => Mathf.Max(1, Mathf.RoundToInt(itemStats.pierceCount.Value + GameManager.Instance.PierceCount)); }
+
+    public GameObject GetPrefab()
+    {
+        for (int i = 0; i < EffectPrefabs.Count; i++)
+        {
+            if (!EffectPrefabs[i].activeInHierarchy)
+            {
+                EffectPrefabs[i].SetActive(true);
+                EffectPrefabs[i].transform.localScale = Vector3.one;
+                return EffectPrefabs[i];
+            }
+        }
+        GameObject obj = Instantiate(EffectPrefab);
+        EffectPrefabs.Add(obj);
+        return obj;
+    }
+    public string BuildLevelUpStatsString()
+    {
+        if (IsMaxLevel) { Debug.LogWarning(this.name + " is already at max level!"); return "Max Level"; }
+        ItemStats nextLevelStats = UpgradeValues[ItemLevel];
+
+        StringBuilder sb = new StringBuilder();
+        
+        if(nextLevelStats.damage != 0f) { sb.Append("Damage +" + nextLevelStats.damage).AppendLine(); }
+        if(nextLevelStats.knockBack != 0f) { sb.Append("Knockback +" + nextLevelStats.knockBack).AppendLine(); }
+        if(nextLevelStats.duration != 0f) { sb.Append("Duration " + nextLevelStats.duration).AppendLine(); }
+        if(nextLevelStats.size != 0f) { sb.Append("Size +" + nextLevelStats.size).AppendLine(); }
+        if(nextLevelStats.speed != 0f) { sb.Append("Speed +" + nextLevelStats.speed).AppendLine(); }
+        if(nextLevelStats.critChance != 0f) { sb.Append("Crit Chance +" + nextLevelStats.critChance).AppendLine(); }
+        if(nextLevelStats.cooldown != 0f) { sb.Append("Cooldown " + nextLevelStats.cooldown).AppendLine(); }
+        if(nextLevelStats.projectiles != 0f) { sb.Append("Projectiles +" + nextLevelStats.projectiles).AppendLine(); }
+        if(nextLevelStats.pierceCount != 0f) { sb.Append("Piercing +" + nextLevelStats.pierceCount).AppendLine(); }
+
+        return sb.ToString();
+    }
+    public int MaxLevel => UpgradeValues.Count;
+    public bool IsMaxLevel => ItemLevel >= MaxLevel;
     #endregion
 
     #region Physics Casting

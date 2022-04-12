@@ -12,6 +12,11 @@ public class Cutlass : Equipment
 
     protected override string EffectPrefabName => "Cutlass_Swing";
 
+    public override List<ItemStats> UpgradeValues => new List<ItemStats>
+    {
+        new ItemStats(){ }
+    };
+
     public override void OnEquip()
     {
         Debug.Log("Equip not implemented yet!");

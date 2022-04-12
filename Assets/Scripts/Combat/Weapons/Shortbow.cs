@@ -10,6 +10,11 @@ public class Shortbow : Equipment
 
     protected override string EffectPrefabName => "Shortbow_Arrow";
 
+    public override List<ItemStats> UpgradeValues => new List<ItemStats>
+    {
+        new ItemStats(){ }
+    };
+
     public override void OnEquip()
     {
         Debug.Log("Equip not implemented yet!");

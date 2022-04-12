@@ -15,6 +15,11 @@ public class IronBriefs : Equipment
 
     protected override string EffectPrefabName => throw new System.NotImplementedException();
 
+    public override List<ItemStats> UpgradeValues => new List<ItemStats>
+    {
+        new ItemStats(){ }
+    };
+
     public override void TickCooldown(float time)
     {
         if (CurrentCooldown > 0f) { CurrentCooldown -= time; }

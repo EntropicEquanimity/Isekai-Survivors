@@ -12,6 +12,20 @@ public class BoomerangAxe : Equipment
 
     protected override string EffectPrefabName => "BoomerangAxe";
 
+    public override List<ItemStats> UpgradeValues => new List<ItemStats>
+    {
+        new ItemStats(){ damage = 15 },
+        new ItemStats(){ duration = 1f, damage = 5},
+        new ItemStats(){ cooldown = -1f, critChance = 0.1f },
+        new ItemStats(){ projectiles = 1},
+        new ItemStats(){ damage = 15 },
+        new ItemStats(){ size = 0.2f, speed = 1f },
+        new ItemStats(){ projectiles = 1 },
+        new ItemStats(){ damage = 10, critChance = 0.1f},
+        new ItemStats(){ damage = 5, knockBack = 1f },
+        new ItemStats(){ damage = 25, cooldown = -0.5f, duration = 1f }
+    };
+
     public override void OnEquip()
     {
         Debug.Log("Equip not implemented yet!");

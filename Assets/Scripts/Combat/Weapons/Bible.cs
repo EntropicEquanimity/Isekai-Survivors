@@ -11,6 +11,11 @@ public class Bible : Equipment
 
     protected override string EffectPrefabName => "Bible_Effect";
 
+    public override List<ItemStats> UpgradeValues => new List<ItemStats>
+    {
+        new ItemStats(){ }
+    };
+
     public override void OnEquip()
     {
         RecalculateItemStats();

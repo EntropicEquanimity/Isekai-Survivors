@@ -9,6 +9,11 @@ public class Tesseract : Equipment
 
     protected override string EffectPrefabName => throw new System.NotImplementedException();
 
+    public override List<ItemStats> UpgradeValues => new List<ItemStats>
+    {
+        new ItemStats(){ }
+    };
+
     public override void OnEquip()
     {
         GameManager.Instance.projectiles.AddModifier(new StatModifier(1 * ItemLevel, StatModType.Flat, this));
