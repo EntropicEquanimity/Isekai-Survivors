@@ -129,15 +129,15 @@ public abstract class Equipment : Item
 
         StringBuilder sb = new StringBuilder();
         
-        if(nextLevelStats.damage != 0f) { sb.Append("Damage +" + nextLevelStats.damage).AppendLine(); }
-        if(nextLevelStats.knockBack != 0f) { sb.Append("Knockback +" + nextLevelStats.knockBack).AppendLine(); }
-        if(nextLevelStats.duration != 0f) { sb.Append("Duration " + nextLevelStats.duration).AppendLine(); }
-        if(nextLevelStats.size != 0f) { sb.Append("Size +" + nextLevelStats.size).AppendLine(); }
-        if(nextLevelStats.speed != 0f) { sb.Append("Speed +" + nextLevelStats.speed).AppendLine(); }
-        if(nextLevelStats.critChance != 0f) { sb.Append("Crit Chance +" + nextLevelStats.critChance).AppendLine(); }
-        if(nextLevelStats.cooldown != 0f) { sb.Append("Cooldown " + nextLevelStats.cooldown).AppendLine(); }
-        if(nextLevelStats.projectiles != 0f) { sb.Append("Projectiles +" + nextLevelStats.projectiles).AppendLine(); }
-        if(nextLevelStats.pierceCount != 0f) { sb.Append("Piercing +" + nextLevelStats.pierceCount).AppendLine(); }
+        if(nextLevelStats.damage != 0f) { sb.Append("Damage +").Append(nextLevelStats.damage).AppendLine(); }
+        if(nextLevelStats.knockBack != 0f) { sb.Append("Knockback +").Append(nextLevelStats.knockBack).AppendLine(); }
+        if(nextLevelStats.duration != 0f) { sb.Append("Duration +").Append(nextLevelStats.duration).Append("s").AppendLine(); }
+        if(nextLevelStats.size != 0f) { sb.Append("Size +").Append(nextLevelStats.size * 100).Append("%").AppendLine(); }
+        if(nextLevelStats.speed != 0f) { sb.Append("Speed +").Append(nextLevelStats.speed).AppendLine(); }
+        if(nextLevelStats.critChance != 0f) { sb.Append("Crit Chance +").Append(nextLevelStats.critChance * 100).Append("%").AppendLine(); }
+        if(nextLevelStats.cooldown != 0f) { sb.Append("Cooldown ").Append(nextLevelStats.cooldown * 100).Append("%").AppendLine(); }
+        if(nextLevelStats.projectiles != 0f) { sb.Append("Projectiles +").Append(nextLevelStats.projectiles).AppendLine(); }
+        if(nextLevelStats.pierceCount != 0f) { sb.Append("Piercing +").Append(nextLevelStats.pierceCount).AppendLine(); }
 
         return sb.ToString();
     }

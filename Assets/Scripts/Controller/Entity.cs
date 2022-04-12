@@ -94,7 +94,7 @@ public abstract class Entity : MonoBehaviour
         entitySpriteRenderer.color = settings.takeDamageColor;
         while (entitySpriteRenderer.color != Color.white)
         {
-            entitySpriteRenderer.color = Color.Lerp(Color.white, entitySpriteRenderer.color, 0.96f);
+            entitySpriteRenderer.color = Color.Lerp(Color.white, entitySpriteRenderer.color, 0.99f);
             yield return new WaitForEndOfFrame();
         }
     }

@@ -58,7 +58,6 @@ public class LootController : MonoBehaviour
     }
     public List<ItemSO> GetItems(int numberToPull)
     {
-        Debug.Log(numberToPull);
         if (numberToPull >= itemsInPool.Count) { return new List<ItemSO>(itemsInPool); }
 
         List<ItemSO> _allItems = new List<ItemSO>(itemsInPool);

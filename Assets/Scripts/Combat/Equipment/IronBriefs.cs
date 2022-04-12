@@ -17,7 +17,14 @@ public class IronBriefs : Equipment
 
     public override List<ItemStats> UpgradeValues => new List<ItemStats>
     {
-        new ItemStats(){ }
+        new ItemStats(){ cooldown = -0.25f},
+        new ItemStats(){ duration = 0.05f},
+        new ItemStats(){ cooldown = -0.25f},
+        new ItemStats(){ duration = 0.05f},
+        new ItemStats(){ cooldown = -0.25f},
+        new ItemStats(){ duration = 0.05f},
+        new ItemStats(){ cooldown = -0.25f},
+        new ItemStats(){ duration = 0.1f, cooldown = -0.5f}
     };
 
     public override void TickCooldown(float time)

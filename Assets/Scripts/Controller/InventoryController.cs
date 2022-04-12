@@ -73,6 +73,17 @@ public class InventoryController : MonoBehaviour
             Debug.Log("Player does not possess this piece of equipment!");
         }
     }
+    public bool HasItem(ItemSO item)
+    {
+        for (int i = 0; i < equippedItems.Count; i++)
+        {
+            if(equippedItems[i].Name == item.name)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     #region Inventory UI
     public void AddEquipmentUI(Equipment equipment)
     {

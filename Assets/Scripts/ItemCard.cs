@@ -34,12 +34,14 @@ public class ItemCard : MonoBehaviour
             if (InventoryController.Instance.equippedItems[i].itemData == item)
             {
                 newItem = false;
+                itemDescription.text = InventoryController.Instance.equippedItems[i].BuildLevelUpStatsString();
             }
         }
         itemImage.sprite = item.icon;
         itemTypeTint.color = item.pickupablePrefab.GetComponent<Equipment>().ItemType == ItemType.Weapon ? graphicsSettings.weaponTint : graphicsSettings.equipmentTint;
         itemName.text = item.name;
-        itemDescription.text = item.itemDescription;
+
+        if (newItem) { itemDescription.text = item.itemDescription; }
 
         GetComponent<Button>().onClick.AddListener(OnSelectCard);
     }

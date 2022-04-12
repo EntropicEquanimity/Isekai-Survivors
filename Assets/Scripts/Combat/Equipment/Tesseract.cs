@@ -11,7 +11,10 @@ public class Tesseract : Equipment
 
     public override List<ItemStats> UpgradeValues => new List<ItemStats>
     {
-        new ItemStats(){ }
+        new ItemStats(){ projectiles = 0.5f},
+        new ItemStats(){ projectiles = 0.5f},
+        new ItemStats(){ projectiles = 1},
+        new ItemStats(){ projectiles = 1}
     };
 
     public override void OnEquip()

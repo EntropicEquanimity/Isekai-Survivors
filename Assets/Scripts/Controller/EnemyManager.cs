@@ -47,7 +47,6 @@ public class EnemyManager : MonoBehaviour
                 for (int i = 0; i < spawnNum; i++)
                 {
                     EnemyUnitData enemyData = GetEnemyToSpawn();
-                    Debug.Log(enemyData);
                     SimpleEnemy enemy = Instantiate(enemyData.unitInfo.unitPrefab, transform).GetComponent<SimpleEnemy>();
                     enemy.Initialize(enemy.baseStats.entityStats);
                     enemy.transform.position = GameManager.Instance.player.transform.position + spawnPoints[Random.Range(0, spawnPoints.Length)].position;
