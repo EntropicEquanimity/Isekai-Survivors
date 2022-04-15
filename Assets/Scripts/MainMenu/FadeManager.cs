@@ -16,7 +16,7 @@ public class FadeManager : MonoBehaviour
     private bool currentlyFading;
     private void Awake()
     {
-        if(Instance == null) { Instance = this; DontDestroyOnLoad(this); }
+        if (Instance == null) { Instance = this; DontDestroyOnLoad(this); }
         else { Destroy(gameObject); }
         fadeIn.material.SetFloat("_FadeAmount", 1f);
         fadeOut.material.SetFloat("_FadeAmount", 1f);
@@ -26,13 +26,14 @@ public class FadeManager : MonoBehaviour
     [Button]
     public void StartFadeIn(Action OnFadeIn = null, Action OnFadeOut = null)
     {
-        //if (currentlyFading) { Debug.LogWarning("Already fading! Make sure not to call this twice!"); return; }
+        if (currentlyFading) { Debug.LogWarning("Already fading! Make sure not to call this twice!"); return; }
         ToggleCanvasGroup(true);
         currentlyFading = true;
         StartCoroutine(FadeIn(OnFadeIn, OnFadeOut));
     }
     public void StartFadeOut(Action OnFadeIn = null, Action OnFadeOut = null)
     {
+        if (currentlyFading) { Debug.LogWarning("Already fading! Make sure not to call this twice!"); return; }
         ToggleCanvasGroup(true);
         currentlyFading = true;
         OnFadeIn?.Invoke();
@@ -47,13 +48,13 @@ public class FadeManager : MonoBehaviour
     private IEnumerator FadeIn(Action OnComplete, Action OnFadeOut)
     {
         float num = 1f;
-        while(num > -0.1f)
+        while (num > -0.1f)
         {
             fadeIn.material.SetFloat("_FadeAmount", num);
             num -= Time.deltaTime * fadeSpeed;
             yield return new WaitForEndOfFrame();
         }
-        Debug.Log("Finished fading in!");
+        //Debug.Log("Finished fading in!");
         OnComplete?.Invoke();
 
         //Do something interesting;
@@ -73,7 +74,7 @@ public class FadeManager : MonoBehaviour
         }
         ToggleCanvasGroup(false);
 
-        Debug.Log("Finished fading out!");
+        //Debug.Log("Finished fading out!");
         OnComplete?.Invoke();
 
         currentlyFading = false;

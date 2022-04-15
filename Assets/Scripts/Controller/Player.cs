@@ -50,8 +50,12 @@ public class Player : Entity
 [System.Serializable]
 public class PlayerStats
 {
-    public ItemStats baseWeaponStats;
-    public float pickupRadius = 1f;
-    public float essenceGain = 0;
-    public float goldGain = 0;
+    public ItemStats levelupStats;
+    public int levelStatsIntervals = 5;
+
+    public float pickupRadius = 1;
+    public float essenceGain = 1;
+    public float goldGain = 1;
+    public int maxWeapons = 5;
+    public int maxTools = 5;
 }

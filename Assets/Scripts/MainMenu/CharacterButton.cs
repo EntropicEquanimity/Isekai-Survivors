@@ -11,15 +11,17 @@ public class CharacterButton : MonoBehaviour
 
     public Image image;
     public TMP_Text text;
-    
+
     public void UpdateButtonView(PlayerSO characterData)
     {
         this.characterData = characterData;
         image.sprite = characterData.entitySprite;
         text.text = characterData.name;
+        image.SetNativeSize();
     }
     [Button]
-    public void UpdateButtonView(){
+    public void UpdateButtonView()
+    {
         UpdateButtonView(characterData);
     }
 }

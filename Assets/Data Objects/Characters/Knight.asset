@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8545fb79fa1d2940995e9d85a9297b8, type: 3}
+  m_Name: Knight
+  m_EditorClassIdentifier: 
+  entitySprite: {fileID: -557450005631253508, guid: 12105856021079745ac6b5ed1ea2bf6a, type: 3}
+  entityStats:
+    health: 120
+    damage: 0
+    moveSpeed: 3
+    defense: 2
+    knockBackResistance: 1
+  characterDescription: An armored knight with more survivability than the average
+    joe.
+  startingWeapon: {fileID: 11400000, guid: 5ffa243392c175d4cac0121dab88b2cf, type: 2}
+  playerStats:
+    levelupStats:
+      damage: 0
+      knockBack: 0
+      duration: 0
+      size: 0
+      speed: 0
+      critChance: 0
+      cooldown: 0
+      projectiles: 0
+      pierceCount: 0
+    levelStatsIntervals: 5
+    pickupRadius: 1
+    essenceGain: 1
+    goldGain: 1
+    maxWeapons: 5
+    maxTools: 5

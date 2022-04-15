@@ -130,7 +130,8 @@ MonoBehaviour:
   fadeCanvas: {fileID: 5132794755971374520}
   fadeIn: {fileID: 5132794756329966839}
   fadeOut: {fileID: 5132794756566640415}
-  fadeSpeed: 2
+  fadeSpeed: 2.5
+  fadeInOutPause: 0.1
 --- !u!1 &5132794756329966834
 GameObject:
   m_ObjectHideFlags: 0
@@ -190,7 +191,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: 70568b322041560419f45a0d1efd0acf, type: 2}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.2924528, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -282,7 +283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: 7c40a6368a5c5684d8f85016c95d3cdc, type: 2}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.2924528, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

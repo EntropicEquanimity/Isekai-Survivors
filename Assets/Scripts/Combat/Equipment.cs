@@ -15,7 +15,7 @@ public abstract class Equipment : Item
     public void Awake()
     {
         DamageRecord = new DamageRecord();
-        ItemLevel = 1;
+        ItemLevel = 0;
         RecalculateItemStats();
     }
 
@@ -26,6 +26,11 @@ public abstract class Equipment : Item
         ItemLevel++;
         RecalculateItemStats();
         UseItem();
+
+        if (IsMaxLevel)
+        {
+            LootController.Instance.RemoveItemFromPool(itemData);
+        }
     }
     [Button]
     public void RecalculateItemStats()
@@ -128,16 +133,16 @@ public abstract class Equipment : Item
         ItemStats nextLevelStats = UpgradeValues[ItemLevel];
 
         StringBuilder sb = new StringBuilder();
-        
-        if(nextLevelStats.damage != 0f) { sb.Append("Damage +").Append(nextLevelStats.damage).AppendLine(); }
-        if(nextLevelStats.knockBack != 0f) { sb.Append("Knockback +").Append(nextLevelStats.knockBack).AppendLine(); }
-        if(nextLevelStats.duration != 0f) { sb.Append("Duration +").Append(nextLevelStats.duration).Append("s").AppendLine(); }
-        if(nextLevelStats.size != 0f) { sb.Append("Size +").Append(nextLevelStats.size * 100).Append("%").AppendLine(); }
-        if(nextLevelStats.speed != 0f) { sb.Append("Speed +").Append(nextLevelStats.speed).AppendLine(); }
-        if(nextLevelStats.critChance != 0f) { sb.Append("Crit Chance +").Append(nextLevelStats.critChance * 100).Append("%").AppendLine(); }
-        if(nextLevelStats.cooldown != 0f) { sb.Append("Cooldown ").Append(nextLevelStats.cooldown * 100).Append("%").AppendLine(); }
-        if(nextLevelStats.projectiles != 0f) { sb.Append("Projectiles +").Append(nextLevelStats.projectiles).AppendLine(); }
-        if(nextLevelStats.pierceCount != 0f) { sb.Append("Piercing +").Append(nextLevelStats.pierceCount).AppendLine(); }
+
+        if (nextLevelStats.damage != 0f) { sb.Append("Damage +").Append(nextLevelStats.damage).AppendLine(); }
+        if (nextLevelStats.knockBack != 0f) { sb.Append("Knockback +").Append(nextLevelStats.knockBack).AppendLine(); }
+        if (nextLevelStats.duration != 0f) { sb.Append("Duration +").Append(nextLevelStats.duration).Append("s").AppendLine(); }
+        if (nextLevelStats.size != 0f) { sb.Append("Size +").Append(nextLevelStats.size * 100).Append("%").AppendLine(); }
+        if (nextLevelStats.speed != 0f) { sb.Append("Speed +").Append(nextLevelStats.speed).AppendLine(); }
+        if (nextLevelStats.critChance != 0f) { sb.Append("Crit Chance +").Append(nextLevelStats.critChance * 100).Append("%").AppendLine(); }
+        if (nextLevelStats.cooldown != 0f) { sb.Append("Cooldown ").Append(nextLevelStats.cooldown).Append("s").AppendLine(); }
+        if (nextLevelStats.projectiles != 0f) { sb.Append("Projectiles +").Append(nextLevelStats.projectiles).AppendLine(); }
+        if (nextLevelStats.pierceCount != 0f) { sb.Append("Piercing +").Append(nextLevelStats.pierceCount).AppendLine(); }
 
         return sb.ToString();
     }

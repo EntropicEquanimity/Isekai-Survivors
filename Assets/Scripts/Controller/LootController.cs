@@ -53,7 +53,17 @@ public class LootController : MonoBehaviour
         if (itemsInPool.Contains(item))
         {
             itemsInPool.Remove(item);
-            InventoryController.Instance.AddEquipment(item);
+            //InventoryController.Instance.AddEquipment(item);
+        }
+    }
+    public void RemoveItemFromPool(string name)
+    {
+        for (int i = 0; i < itemsInPool.Count; i++)
+        {
+            if (itemsInPool[i].name == name)
+            {
+                RemoveItemFromPool(itemsInPool[i]);
+            }
         }
     }
     public List<ItemSO> GetItems(int numberToPull)

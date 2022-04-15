@@ -15,7 +15,16 @@ public class Rapier : Equipment
 
     public override List<ItemStats> UpgradeValues => new List<ItemStats>
     {
-        new ItemStats(){ }
+        new ItemStats(){ size = 0.2f },
+        new ItemStats(){ damage = 10 },
+        new ItemStats(){ cooldown = -0.5f },
+        new ItemStats(){ damage = 10 },
+        new ItemStats(){ projectiles = 1 },
+        new ItemStats(){ size = 0.2f },
+        new ItemStats(){ cooldown = -0.5f },
+        new ItemStats(){ damage = 10 },
+        new ItemStats(){ critChance = 0.1f },
+        new ItemStats(){ damage = 20, projectiles = 1, critChance = 0.2f }
     };
 
     public override void OnEquip()

@@ -46,7 +46,15 @@ public class ItemSlot : MonoBehaviour
     {
         if (equipment == null) { return; }
         UpdateCooldown(equipment.CurrentCooldown, equipment.Cooldown);
-        itemLevelText.text = equipment.ItemLevel.ToString();
+
+        if (equipment.ItemLevel < equipment.MaxLevel)
+        {
+            itemLevelText.text = equipment.ItemLevel.ToString();
+        }
+        else
+        {
+            itemLevelText.text = "MAX";
+        }
 
         if (cooldownFillSprite.fillAmount == 0)
         {

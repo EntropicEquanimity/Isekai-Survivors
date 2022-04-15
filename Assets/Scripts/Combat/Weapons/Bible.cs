@@ -13,7 +13,16 @@ public class Bible : Equipment
 
     public override List<ItemStats> UpgradeValues => new List<ItemStats>
     {
-        new ItemStats(){ }
+        new ItemStats(){ damage = 3 },
+        new ItemStats(){ size = 0.2f },
+        new ItemStats(){ damage = 3 },
+        new ItemStats(){ knockBack = 0.1f, damage = 1 },
+        new ItemStats(){ size = 0.2f },
+        new ItemStats(){ damage = 3 },
+        new ItemStats(){ damage = 1, knockBack = 0.1f },
+        new ItemStats(){ size = 0.1f, damage = 1 },
+        new ItemStats(){ size = 0.1f, damage = 1 },
+        new ItemStats(){ damage = 10, size = 0.3f }
     };
 
     public override void OnEquip()

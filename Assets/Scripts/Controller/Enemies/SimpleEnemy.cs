@@ -79,7 +79,7 @@ public class SimpleEnemy : Entity
     }
     public void Attack()
     {
-        if(DistanceToTarget <= range && AttackOffCooldown)
+        if (DistanceToTarget <= range && AttackOffCooldown)
         {
             target.TakeDamage(new DamageInfo() { damage = Damage });
             _lastTimeDamageDealt = Time.realtimeSinceStartup;

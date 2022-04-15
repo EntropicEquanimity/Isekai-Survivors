@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenuController : MonoBehaviour
 {
@@ -19,20 +20,27 @@ public class MainMenuController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (!fightPanel.activeInHierarchy && !creditsPanel.activeInHierarchy && !upgradesPanel.activeInHierarchy)
-            {
-                GiveUp();
-            }
-            else
-            {
-                ToggleFightMenu(false);
-                ToggleUpgradesMenu(false);
-                ToggleCreditsMenu(false);
-            }
+            OnPressEscape();
         }
     }
+
+    private void OnPressEscape()
+    {
+        if (!fightPanel.activeInHierarchy && !creditsPanel.activeInHierarchy && !upgradesPanel.activeInHierarchy)
+        {
+            GiveUp();
+        }
+        else
+        {
+            ToggleFightMenu(false);
+            ToggleUpgradesMenu(false);
+            ToggleCreditsMenu(false);
+        }
+    }
+
     public void ToggleFightMenu(bool active)
     {
+        if (fightPanel.activeInHierarchy == active) { return; }
         FadeManager.Instance.StartFadeIn(delegate
         {
             if (active)
@@ -47,6 +55,7 @@ public class MainMenuController : MonoBehaviour
     }
     public void ToggleUpgradesMenu(bool active)
     {
+        if (upgradesPanel.activeInHierarchy == active) { return; }
         FadeManager.Instance.StartFadeIn(delegate
         {
             if (active)
@@ -61,6 +70,7 @@ public class MainMenuController : MonoBehaviour
     }
     public void ToggleCreditsMenu(bool active)
     {
+        if (creditsPanel.activeInHierarchy == active) { return; }
         FadeManager.Instance.StartFadeIn(delegate
         {
             if (active)
@@ -77,5 +87,9 @@ public class MainMenuController : MonoBehaviour
     {
         Debug.Log("Closing the game!");
         Application.Quit();
+    }
+    public void GoToCombatScene()
+    {
+        SceneManager.Instance.ChangeScene(Scene.Game, null);
     }
 }

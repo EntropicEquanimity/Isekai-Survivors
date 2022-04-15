@@ -13,7 +13,6 @@ public class Tesseract : Equipment
     {
         new ItemStats(){ projectiles = 0.5f},
         new ItemStats(){ projectiles = 0.5f},
-        new ItemStats(){ projectiles = 1},
         new ItemStats(){ projectiles = 1}
     };
 
@@ -29,6 +28,6 @@ public class Tesseract : Equipment
 
     public override void UseItem()
     {
-        
+
     }
 }
