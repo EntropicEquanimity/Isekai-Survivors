@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Green Pastures
   m_EditorClassIdentifier: 
   enemyWaves:
-  - maxEnemyCount: 100
+  - maxEnemyCount: 50
     enemySpawnInterval: 3
-    maxBatchSpawnCount: 50
+    maxBatchSpawnCount: 10
     enemies:
-    - spawnWeight: 0
+    - spawnWeight: 20
       unitInfo: {fileID: 11400000, guid: bb69a7b3539932e429961b43fe979eb9, type: 2}
   - maxEnemyCount: 100
     enemySpawnInterval: 3
@@ -27,9 +27,17 @@ MonoBehaviour:
       unitInfo: {fileID: 11400000, guid: bb69a7b3539932e429961b43fe979eb9, type: 2}
     - spawnWeight: 1
       unitInfo: {fileID: 11400000, guid: 1ab6181c9932a2345a2d2d835444b090, type: 2}
-  - maxEnemyCount: 100
+  - maxEnemyCount: 150
     enemySpawnInterval: 3
     maxBatchSpawnCount: 50
     enemies:
     - spawnWeight: 1
       unitInfo: {fileID: 11400000, guid: 1ab6181c9932a2345a2d2d835444b090, type: 2}
+  - maxEnemyCount: 200
+    enemySpawnInterval: 3
+    maxBatchSpawnCount: 50
+    enemies:
+    - spawnWeight: 5
+      unitInfo: {fileID: 11400000, guid: 1ab6181c9932a2345a2d2d835444b090, type: 2}
+    - spawnWeight: 1
+      unitInfo: {fileID: 11400000, guid: 04cde5a72d237964dafdfdff582b6964, type: 2}

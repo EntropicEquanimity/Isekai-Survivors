@@ -105,7 +105,7 @@ public class Projectile : MonoBehaviour
         {
             durabilityRemaining--;
             if (targets.Contains(enemy)) { return; }
-            targets.Add(enemy);
+            if (clearTargets != ClearTargetsFlag.Always) { targets.Add(enemy); }
             DamageReport report = enemy.TakeDamageWithForce(new DamageInfo()
             {
                 attacker = GameManager.Instance.player,
@@ -142,6 +142,7 @@ public struct ProjectileStats
 public enum ClearTargetsFlag
 {
     Never,
+    Always,
     OnRotate360,
     OnBounce,
     OnBoomerangReturn

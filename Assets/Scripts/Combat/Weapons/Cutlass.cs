@@ -14,7 +14,16 @@ public class Cutlass : Equipment
 
     public override List<ItemStats> UpgradeValues => new List<ItemStats>
     {
-        new ItemStats(){ }
+        new ItemStats(){ duration = 0.2f },
+        new ItemStats(){ cooldown = -0.2f },
+        new ItemStats(){ damage = 5, speed = 0.25f },
+        new ItemStats(){ damage = 5, duration = 0.1f},
+        new ItemStats(){ cooldown = -0.1f, speed = 0.25f },
+        new ItemStats(){ damage = 10},
+        new ItemStats(){ cooldown = -0.1f },
+        new ItemStats(){ duration = 0.1f },
+        new ItemStats(){ damage = 10 },
+        new ItemStats(){ damage = 20, size = 0.25f}
     };
 
     public override void OnEquip()

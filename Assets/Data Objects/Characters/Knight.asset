@@ -39,3 +39,4 @@ MonoBehaviour:
     goldGain: 1
     maxWeapons: 5
     maxTools: 5
+  characterPrefab: {fileID: 2152762838893216242, guid: 6c74774bef3e41b4398eec0b21be582d, type: 3}

@@ -9,4 +9,5 @@ public class PlayerSO : EntitySO
     [ResizableTextArea] public string characterDescription;
     public EquipmentSO startingWeapon;
     public PlayerStats playerStats;
+    public GameObject characterPrefab;
 }

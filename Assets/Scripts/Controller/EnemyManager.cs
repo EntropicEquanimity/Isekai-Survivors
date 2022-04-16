@@ -29,7 +29,7 @@ public class EnemyManager : MonoBehaviour
     private void FixedUpdate()
     {
         spawnCooldown -= Time.fixedDeltaTime;
-        if(currentWave != GetCurrentWave())
+        if (currentWave != GetCurrentWave())
         {
             enemies.Clear();
             currentWave = GetCurrentWave();
@@ -81,13 +81,13 @@ public class EnemyManager : MonoBehaviour
         for (int i = 0; i < currentWaveData.enemies.Count; i++)
         {
             totalWeight -= currentWaveData.enemies[i].spawnWeight;
-            if(roll <= 0)
+            if (roll <= 0)
             {
                 return currentWaveData.enemies[i];
             }
         }
-        Debug.LogError("Error calculating weights for choosing enemy to spawn!");
-        return new EnemyUnitData();
+        //Debug.LogError("Error calculating weights for choosing enemy to spawn!");
+        return currentWaveData.enemies[0];
     }
     public void EnemyDeath(SimpleEnemy enemy)
     {
@@ -111,11 +111,11 @@ public class EnemyManager : MonoBehaviour
     }
     public int GetCurrentWave()
     {
-        return Mathf.FloorToInt(GameManager.Instance.gameTime / 60) + 1;
+        return Mathf.FloorToInt(GameManager.Instance.gameTime / levelData.waveDuration) + 1;
     }
     public void CheckIfAllWavesCompleted()
     {
-        if(levelData.enemyWaves.Count <= GetCurrentWave())
+        if (levelData.enemyWaves.Count <= GetCurrentWave())
         {
             ///Out of waves.
             for (int i = 0; i < enemies.Count; i++)

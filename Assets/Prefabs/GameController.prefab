@@ -4599,8 +4599,7 @@ MonoBehaviour:
   gameTime: 0
   GameState: 0
   player: {fileID: 0}
-  selectedPlayerPrefab: {fileID: 2152762838893216242, guid: 6c74774bef3e41b4398eec0b21be582d, type: 3}
-  enemyHealthScaling: 0.1
+  settings: {fileID: 11400000, guid: 80108157f9f17c648b4802e8f0bce050, type: 2}
   expCurve:
     serializedVersion: 2
     m_Curve:
@@ -4615,7 +4614,7 @@ MonoBehaviour:
       outWeight: 0.0679718
     - serializedVersion: 3
       time: 100
-      value: 15000
+      value: 10000
       inSlope: 23.40501
       outSlope: 23.40501
       tangentMode: 0
@@ -4625,6 +4624,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  enemyHealthScaling: 0.1
   damage:
     BaseValue: 0
   knockBack:
@@ -4689,8 +4689,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29956f713ae679b4c9d8bc72f47bb330, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxWeaponSlots: 1
-  maxEquipmentSlots: 0
+  settings: {fileID: 11400000, guid: 80108157f9f17c648b4802e8f0bce050, type: 2}
   itemSlotPrefab: {fileID: 3927570046955098456, guid: cb3d238fe9706bf4aaf7e61de0ad71ea, type: 3}
   weaponSlotsParent: {fileID: 6236714946141089046}
   equipmentSlotsParent: {fileID: 1758154673746450761}

@@ -6,7 +6,8 @@ using NaughtyAttributes;
 
 public class InventoryController : MonoBehaviour
 {
-    [BoxGroup("Inventory")] public int maxWeaponSlots, maxEquipmentSlots;
+    [BoxGroup("Settings")] public SessionSettingsSO settings;
+
     [BoxGroup("Inventory")] public GameObject itemSlotPrefab;
     [BoxGroup("Inventory")] public Transform weaponSlotsParent, equipmentSlotsParent;
     [BoxGroup("Inventory")] public List<ItemSlot> weaponItemSlots, equipmentItemSlots;
@@ -24,14 +25,14 @@ public class InventoryController : MonoBehaviour
         weaponItemSlots = new List<ItemSlot>();
         equipmentItemSlots = new List<ItemSlot>();
 
-        for (int i = 0; i < maxWeaponSlots; i++)
+        for (int i = 0; i < settings.selectedPlayerCharacter.playerStats.maxWeapons; i++)
         {
             ItemSlot itemSlot = Instantiate(itemSlotPrefab).GetComponent<ItemSlot>();
             weaponItemSlots.Add(itemSlot);
             itemSlot.transform.SetParent(weaponSlotsParent);
             itemSlot.transform.localScale = Vector3.one;
         }
-        for (int i = 0; i < maxEquipmentSlots; i++)
+        for (int i = 0; i < settings.selectedPlayerCharacter.playerStats.maxTools; i++)
         {
             ItemSlot itemSlot = Instantiate(itemSlotPrefab).GetComponent<ItemSlot>();
             equipmentItemSlots.Add(itemSlot);
@@ -77,7 +78,7 @@ public class InventoryController : MonoBehaviour
     {
         for (int i = 0; i < equippedItems.Count; i++)
         {
-            if(equippedItems[i].Name == item.name)
+            if (equippedItems[i].Name == item.name)
             {
                 return true;
             }

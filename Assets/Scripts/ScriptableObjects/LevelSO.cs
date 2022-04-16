@@ -6,6 +6,8 @@ using NaughtyAttributes;
 [CreateAssetMenu(menuName = "Data/Level")]
 public class LevelSO : ScriptableObject
 {
+    [Dropdown("_waveLengths")] public int waveDuration = 60;
+    private int[] _waveLengths = new[] { 30, 60 };
     public List<EnemyWaveData> enemyWaves;
 }
 [System.Serializable]

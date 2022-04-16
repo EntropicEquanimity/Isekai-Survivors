@@ -134,6 +134,8 @@ public abstract class Equipment : Item
 
         StringBuilder sb = new StringBuilder();
 
+        if (ItemLevel + 1 == MaxLevel) { sb.Append("(MAX LVL)").AppendLine(); }
+
         if (nextLevelStats.damage != 0f) { sb.Append("Damage +").Append(nextLevelStats.damage).AppendLine(); }
         if (nextLevelStats.knockBack != 0f) { sb.Append("Knockback +").Append(nextLevelStats.knockBack).AppendLine(); }
         if (nextLevelStats.duration != 0f) { sb.Append("Duration +").Append(nextLevelStats.duration).Append("s").AppendLine(); }

@@ -15,15 +15,15 @@ public class BoomerangAxe : Equipment
     public override List<ItemStats> UpgradeValues => new List<ItemStats>
     {
         new ItemStats(){ damage = 15 },
-        new ItemStats(){ duration = 0.5f, damage = 5},
-        new ItemStats(){ cooldown = -0.5f, critChance = 0.1f },
+        new ItemStats(){ cooldown = -0.5f, damage = 10},
         new ItemStats(){ projectiles = 1},
+        new ItemStats(){ cooldown = -0.5f, pierceCount = 2 },
         new ItemStats(){ damage = 15 },
-        new ItemStats(){ size = 0.2f, speed = 1f },
+        new ItemStats(){ size = 0.2f, cooldown = -0.5f },
         new ItemStats(){ projectiles = 1 },
-        new ItemStats(){ damage = 10, critChance = 0.1f},
-        new ItemStats(){ damage = 5, speed = 1f },
-        new ItemStats(){ damage = 25, cooldown = -1f, duration = 1f }
+        new ItemStats(){ damage = 15, pierceCount = 2},
+        new ItemStats(){ damage = 15, cooldown = -0.5f },
+        new ItemStats(){ damage = 30, pierceCount = 5, size = 0.4f }
     };
 
     public override void OnEquip()
@@ -57,6 +57,6 @@ public class BoomerangAxe : Equipment
         projectile.transform.position = transform.position + (Vector3)direction;
         projectile.transform.localScale = Vector3.one * Size;
         //projectile.GetComponent<SpriteRenderer>().size = new Vector2(SpriteBaseHeight, SpriteBaseHeight * (itemData.itemStats.size + 1f));
-        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), direction, Mathf.RoundToInt(Mathf.Infinity), false, false), this);
+        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), direction, PierceCount, false, false), this);
     }
 }

@@ -13,13 +13,12 @@ public class GameManager : MonoBehaviour
     [BoxGroup("Current Session Stats")] [ReadOnly] [SerializeField] protected int playerEssence;
     [BoxGroup("Current Session Stats")] [ReadOnly] public float gameTime = 0;
     [BoxGroup("Current Session Stats")] [ReadOnly] public GameState GameState;
+    [BoxGroup("Current Session Stats")] [ReadOnly] public Player player;
 
-    [BoxGroup("Player")] [ReadOnly] public Player player;
-    [BoxGroup("Player")] public GameObject selectedPlayerPrefab;
+    [BoxGroup("Settings")] public SessionSettingsSO settings;
+    [BoxGroup("Settings")] public AnimationCurve expCurve;
 
     [BoxGroup("Enemies")] public float enemyHealthScaling = 0.1f;
-
-    [BoxGroup("Settings")] public AnimationCurve expCurve;
 
     private InterfaceController _interfaceController;
     public static GameManager Instance { get; private set; }
@@ -50,7 +49,7 @@ public class GameManager : MonoBehaviour
         if (Instance == null) { Instance = this; }
         else { Debug.LogWarning("Warning! Multiple Game Managers in scene!"); Destroy(gameObject); }
 
-        player = Instantiate(selectedPlayerPrefab, Vector3.zero, Quaternion.identity).GetComponent<Player>();
+        player = Instantiate(settings.selectedPlayerCharacter.characterPrefab, Vector3.zero, Quaternion.identity).GetComponent<Player>();
 
         playerKills = 0;
         playerExp = 0;
@@ -107,13 +106,13 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Stats
-    public int Damage { get => Mathf.RoundToInt(damage.Value);}
-    public float KnockBack { get => knockBack.Value;}
-    public float Duration { get => duration.Value;}
-    public float Size { get => size.Value;}
-    public float Speed { get => speed.Value;}
-    public float CritChance { get => critChance.Value;}
-    public float CritDamage { get => critDamage.Value;}
+    public int Damage { get => Mathf.RoundToInt(damage.Value); }
+    public float KnockBack { get => knockBack.Value; }
+    public float Duration { get => duration.Value; }
+    public float Size { get => size.Value; }
+    public float Speed { get => speed.Value; }
+    public float CritChance { get => critChance.Value; }
+    public float CritDamage { get => critDamage.Value; }
     public int Projectiles { get => Mathf.RoundToInt(projectiles.Value); }
     public int PierceCount { get => Mathf.RoundToInt(pierceCount.Value); }
     public float MoveSpeed { get => moveSpeed.Value; }

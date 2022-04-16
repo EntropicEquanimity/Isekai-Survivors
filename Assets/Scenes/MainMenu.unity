@@ -1927,7 +1927,6 @@ GameObject:
   - component: {fileID: 1190355867}
   - component: {fileID: 1190355866}
   - component: {fileID: 1190355865}
-  - component: {fileID: 1190355864}
   m_Layer: 5
   m_Name: CharacterWeapon
   m_TagString: Untagged
@@ -1953,23 +1952,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 110, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 180, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1190355864
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1190355862}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalFit: 0
-  m_VerticalFit: 0
 --- !u!114 &1190355865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3623,6 +3608,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: be2002bf78113884bb60e0349fcb2852, type: 2}
   characterButtonParent: {fileID: 1013155011}
   characterButtonPrefab: {fileID: 4243933519195731290, guid: 7c92344b87a999a4591124dd86dc0ecb, type: 3}
+  settings: {fileID: 11400000, guid: 80108157f9f17c648b4802e8f0bce050, type: 2}
   characterNameText: {fileID: 1480431011}
   characterDescription: {fileID: 309680725}
   weaponSprite: {fileID: 2116461144}

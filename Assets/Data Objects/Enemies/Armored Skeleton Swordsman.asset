@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aed79cba0cfb8bf4d8537f02a3e113e5, type: 3}
   m_Name: Armored Skeleton Swordsman
   m_EditorClassIdentifier: 
-  entitySprite: {fileID: 21300000, guid: 7472fbbf3c7c5dd4eb35cd9ede48918d, type: 3}
+  entitySprite: {fileID: 21300000, guid: def846eb01c546f4b90e5eb7ecc10ef7, type: 3}
   entityStats:
     health: 150
     damage: 10

@@ -12,7 +12,16 @@ public class Shortbow : Equipment
 
     public override List<ItemStats> UpgradeValues => new List<ItemStats>
     {
-        new ItemStats(){ }
+        new ItemStats(){ damage = 10},
+        new ItemStats(){ speed = 0.25f, duration = 0.25f },
+        new ItemStats(){ projectiles = 1, damage = 5},
+        new ItemStats(){ cooldown = -0.25f, pierceCount = 1},
+        new ItemStats(){ size = 0.25f, damage = 5},
+        new ItemStats(){ projectiles = 1, pierceCount = 1},
+        new ItemStats(){ speed = 0.25f, cooldown = -0.25f },
+        new ItemStats(){ damage = 10 },
+        new ItemStats(){ damage = 5, speed = 0.25f },
+        new ItemStats(){ projectiles = 2, damage = 15, cooldown = -0.5f }
     };
 
     public override void OnEquip()
