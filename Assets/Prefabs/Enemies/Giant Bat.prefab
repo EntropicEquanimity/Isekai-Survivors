@@ -10,11 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 410585927347893562}
   - component: {fileID: 410585927347893561}
-  - component: {fileID: 410585927347893556}
   - component: {fileID: 410585927347893563}
   - component: {fileID: 410585927347893557}
   - component: {fileID: 410585927347893558}
   - component: {fileID: -3256689517227891683}
+  - component: {fileID: 8529137046127184966}
   m_Layer: 7
   m_Name: Giant Bat
   m_TagString: Untagged
@@ -87,27 +87,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &410585927347893556
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 410585927347893560}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8b167fb61a5d7745806266e12d36371, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseStats: {fileID: 11400000, guid: bb69a7b3539932e429961b43fe979eb9, type: 2}
-  entitySpriteRenderer: {fileID: 410585927347893561}
-  settings: {fileID: 11400000, guid: 43be9781a9947624796c212527175348, type: 2}
-  expDrop: {x: 0, y: 5}
-  essenceDrop: 0
-  attackCooldown: 0.5
-  onBecameInvisibleBehavior: 0
-  target: {fileID: 0}
-  range: 0
 --- !u!58 &410585927347893563
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -188,3 +167,24 @@ MonoBehaviour:
   looping: 1
   disableOnComplete: 0
   destroyOnComplete: 0
+--- !u!114 &8529137046127184966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 410585927347893560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 090c89d68ac833b45918dbd7ca55a2fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseStats: {fileID: 11400000, guid: bb69a7b3539932e429961b43fe979eb9, type: 2}
+  entitySpriteRenderer: {fileID: 410585927347893561}
+  settings: {fileID: 11400000, guid: 43be9781a9947624796c212527175348, type: 2}
+  expDrop: {x: 0, y: 5}
+  essenceDrop: 0
+  attackCooldown: 0.5
+  onBecameInvisibleBehavior: 0
+  target: {fileID: 0}
+  range: 0

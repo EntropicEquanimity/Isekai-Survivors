@@ -7,7 +7,7 @@ using DG.Tweening;
 public class Projectile : MonoBehaviour
 {
     [ReadOnly] public ProjectileStats projectileStats;
-    [ReadOnly] public List<SimpleEnemy> targets;
+    [ReadOnly] public List<Enemy> targets;
     [ReadOnly] public Equipment damageSource;
     [ReadOnly] public int durabilityRemaining;
     [ReadOnly] public float durationRemaining;
@@ -67,7 +67,7 @@ public class Projectile : MonoBehaviour
 
                 foreach (var target in targets)
                 {
-                    SimpleEnemy enemy = target.GetComponent<SimpleEnemy>();
+                    Enemy enemy = target.GetComponent<Enemy>();
                     if (enemy != null)
                     {
                         DamageReport report = enemy.TakeDamageWithForce(new DamageInfo()
@@ -100,7 +100,7 @@ public class Projectile : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        SimpleEnemy enemy = collision.GetComponent<SimpleEnemy>();
+        Enemy enemy = collision.GetComponent<Enemy>();
         if (enemy != null)
         {
             durabilityRemaining--;

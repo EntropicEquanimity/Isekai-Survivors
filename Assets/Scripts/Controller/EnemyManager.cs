@@ -9,7 +9,7 @@ public class EnemyManager : MonoBehaviour
     [BoxGroup("Enemies")] public Transform[] spawnPoints;
 
     [BoxGroup("Enemies")] [ReadOnly] public EnemyWaveData currentWaveData;
-    [BoxGroup("Enemies")] [ReadOnly] public List<SimpleEnemy> enemies = new List<SimpleEnemy>();
+    [BoxGroup("Enemies")] [ReadOnly] public List<Enemy> enemies = new List<Enemy>();
     [BoxGroup("Enemies")] [ReadOnly] public float spawnCooldown;
     [BoxGroup("Enemies")] [ReadOnly] public int currentWave = 0;
     [BoxGroup("Enemies")] [ReadOnly] public int maxSize;
@@ -23,7 +23,7 @@ public class EnemyManager : MonoBehaviour
     {
         if (Instance == null) { Instance = this; }
 
-        enemies = new List<SimpleEnemy>();
+        enemies = new List<Enemy>();
         currentWave = 0;
     }
     private void FixedUpdate()
@@ -47,7 +47,7 @@ public class EnemyManager : MonoBehaviour
                 for (int i = 0; i < spawnNum; i++)
                 {
                     EnemyUnitData enemyData = GetEnemyToSpawn();
-                    SimpleEnemy enemy = Instantiate(enemyData.unitInfo.unitPrefab, transform).GetComponent<SimpleEnemy>();
+                    Enemy enemy = Instantiate(enemyData.unitInfo.unitPrefab, transform).GetComponent<Enemy>();
                     enemy.Initialize(enemy.baseStats.entityStats);
                     enemy.transform.position = GameManager.Instance.player.transform.position + spawnPoints[Random.Range(0, spawnPoints.Length)].position;
                     enemies.Add(enemy);
@@ -89,7 +89,7 @@ public class EnemyManager : MonoBehaviour
         //Debug.LogError("Error calculating weights for choosing enemy to spawn!");
         return currentWaveData.enemies[0];
     }
-    public void EnemyDeath(SimpleEnemy enemy)
+    public void EnemyDeath(Enemy enemy)
     {
         if (enemies.Contains(enemy))
         {

@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8ad36cf6a57f9143ad8294876784e4c, type: 3}
   m_Name: Green Pastures
   m_EditorClassIdentifier: 
+  waveDuration: 60
   enemyWaves:
   - maxEnemyCount: 50
     enemySpawnInterval: 3
     maxBatchSpawnCount: 10
     enemies:
     - spawnWeight: 20
-      unitInfo: {fileID: 11400000, guid: bb69a7b3539932e429961b43fe979eb9, type: 2}
+      unitInfo: {fileID: 11400000, guid: 04cde5a72d237964dafdfdff582b6964, type: 2}
   - maxEnemyCount: 100
     enemySpawnInterval: 3
     maxBatchSpawnCount: 50
