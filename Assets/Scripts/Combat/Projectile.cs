@@ -144,6 +144,5 @@ public enum ClearTargetsFlag
     Never,
     Always,
     OnRotate360,
-    OnBounce,
     OnBoomerangReturn
 }

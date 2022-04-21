@@ -13,7 +13,7 @@ TextureImporter:
     second: Arrow
   - first:
       213: 5559745257100799005
-    second: SkullAndBones
+    second: Ice Wand
   - first:
       213: -5239188096445404863
     second: '#1 - Transparent Icons_4'
@@ -1664,6 +1664,27 @@ TextureImporter:
       bones: []
       spriteID: 032177cc8f4c39b30800000000000000
       internalID: 4292991442675503664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ice Wand
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 291
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1ce723cade282d40800000000000000
+      internalID: 5559745257100799005
       vertices: []
       indices: 
       edges: []
