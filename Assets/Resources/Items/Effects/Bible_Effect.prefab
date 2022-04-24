@@ -215,7 +215,7 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
-  clearTargets: 0
+  clearTargets: 1
   rotationSpeed: 0
   rotatesOnAxis: 0
   rotationSpeedAffectedByWeaponSpeed: 0

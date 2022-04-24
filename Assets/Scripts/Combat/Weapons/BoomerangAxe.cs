@@ -57,6 +57,6 @@ public class BoomerangAxe : Equipment
         projectile.transform.position = transform.position + (Vector3)direction;
         projectile.transform.localScale = Vector3.one * Size;
         //projectile.GetComponent<SpriteRenderer>().size = new Vector2(SpriteBaseHeight, SpriteBaseHeight * (itemData.itemStats.size + 1f));
-        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), direction, PierceCount, false, false), this);
+        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), direction, PierceCount), this);
     }
 }

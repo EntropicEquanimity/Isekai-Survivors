@@ -13,13 +13,13 @@ public class Bible : Equipment
 
     public override List<ItemStats> UpgradeValues => new List<ItemStats>
     {
-        new ItemStats(){ damage = 1 },
-        new ItemStats(){ size = 0.2f },
         new ItemStats(){ damage = 2 },
-        new ItemStats(){ size = 0.3f },
-        new ItemStats(){ damage = 3 },
         new ItemStats(){ size = 0.2f },
+        new ItemStats(){ damage = 3 },
+        new ItemStats(){ size = 0.3f },
         new ItemStats(){ damage = 4 },
+        new ItemStats(){ size = 0.2f },
+        new ItemStats(){ damage = 5 },
         new ItemStats(){ size = 0.3f },
         new ItemStats(){ damage = 5 },
         new ItemStats(){ damage = 10, size = 0.5f }
@@ -49,7 +49,7 @@ public class Bible : Equipment
         projectile.transform.SetParent(GameManager.Instance.player.transform);
         projectile.transform.localPosition = Vector3.zero;
         projectile.transform.localScale = Vector3.one * Size;
-        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), Vector3.zero, Mathf.RoundToInt(Mathf.Infinity), false, true), this);
+        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), Vector3.zero, 99999999, true), this);
         _bible = projectile;
     }
 }

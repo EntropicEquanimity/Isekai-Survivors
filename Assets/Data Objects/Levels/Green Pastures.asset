@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waveDuration: 60
   enemyWaves:
-  - maxEnemyCount: 50
+  - maxEnemyCount: 200
     enemySpawnInterval: 3
-    maxBatchSpawnCount: 10
+    maxBatchSpawnCount: 50
     enemies:
     - spawnWeight: 20
-      unitInfo: {fileID: 11400000, guid: 04cde5a72d237964dafdfdff582b6964, type: 2}
+      unitInfo: {fileID: 11400000, guid: 1ab6181c9932a2345a2d2d835444b090, type: 2}
   - maxEnemyCount: 100
     enemySpawnInterval: 3
     maxBatchSpawnCount: 50

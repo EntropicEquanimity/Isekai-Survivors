@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: Ice Wand
   m_EditorClassIdentifier: 
   icon: {fileID: 5559745257100799005, guid: 4d8281c45ade0444bb561c5d33ea8411, type: 3}
-  itemDescription: Fire an initially piercing bolt that freezes and bounces.
+  itemDescription: Spurts out icicles at random enemies. Phew, that's cold!
   pickupablePrefab: {fileID: 4245800294605362401, guid: c08dc1d26a35b11409bd633d47bf6853, type: 3}
   dropWeight: 100
   itemStats:
     damage: 40
-    knockBack: 0.5
-    duration: 0.5
-    size: 1.5
-    speed: 1
+    knockBack: 0.2
+    duration: 4
+    size: 1
+    speed: 4
     critChance: 0
-    cooldown: 2
-    projectiles: 1
-    pierceCount: 0
+    cooldown: 3
+    projectiles: 2
+    pierceCount: 5

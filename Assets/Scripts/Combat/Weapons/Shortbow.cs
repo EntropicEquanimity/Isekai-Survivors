@@ -26,7 +26,6 @@ public class Shortbow : Equipment
 
     public override void OnEquip()
     {
-        Debug.Log("Equip not implemented yet!");
         UseItem();
     }
     public override void StopItem()
@@ -53,6 +52,6 @@ public class Shortbow : Equipment
         projectile.transform.position = transform.position + (Vector3)direction * 0.5f;
         projectile.transform.localScale = Vector3.one * Size;
 
-        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), direction.normalized, PierceCount, false, false), this);
+        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), direction.normalized, PierceCount), this);
     }
 }

@@ -13,13 +13,20 @@ public class IceWand : Equipment
 
     public override List<ItemStats> UpgradeValues => new List<ItemStats>
     {
-        new ItemStats(){ }
+        new ItemStats(){ speed = 0.5f, damage = 5 },
+        new ItemStats(){ projectiles = 1, damage = 5 },
+        new ItemStats(){ pierceCount = 2, damage = 5},
+        new ItemStats(){ damage = 10, cooldown = -0.2f },
+        new ItemStats(){ speed = 0.5f, duration = 0.5f },
+        new ItemStats(){ pierceCount = 2, cooldown = -0.3f},
+        new ItemStats(){ projectiles = 1, damage = 5 },
+        new ItemStats(){ damage = 15 },
+        new ItemStats(){ pierceCount = 2, duration = 0.5f },
+        new ItemStats(){ projectiles = 3, cooldown = -0.5f }
     };
 
     public override void OnEquip()
     {
-        Debug.Log("Equip not implemented yet!");
-        _player = GameManager.Instance.player;
         UseItem();
     }
     public override void StopItem()
@@ -31,7 +38,7 @@ public class IceWand : Equipment
     {
         for (int i = 0; i < ProjectileCount; i++)
         {
-            StartCoroutine(FireIcicles(i * 0.2f));
+            StartCoroutine(FireIcicles(i * 0.05f));
         }
         CurrentCooldown = Cooldown;
     }
@@ -39,13 +46,12 @@ public class IceWand : Equipment
     {
         yield return new WaitForSeconds(delay);
 
-        Collider2D nearest = GetClosestInRadius(Size + 2f);
-        Vector2 direction = ((nearest != null ? nearest.transform.position : transform.position) + (Vector3)Random.insideUnitCircle * 0.25f - transform.position).normalized;
+        Vector2 direction = Random.insideUnitCircle.normalized;
 
         Projectile projectile = GetPrefab().GetComponent<Projectile>();
-        projectile.transform.position = transform.position + (Vector3)direction;
+        projectile.transform.position = transform.position;
         projectile.transform.localScale = Vector3.one * Size;
 
-        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), direction, PierceCount, false, false), this);
+        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), direction, PierceCount), this);
     }
 }

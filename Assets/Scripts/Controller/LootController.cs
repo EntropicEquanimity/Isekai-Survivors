@@ -24,7 +24,7 @@ public class LootController : MonoBehaviour
     }
     private void Start()
     {
-        itemsInPool.AddRange(allItems.weapons);
+        itemsInPool.AddRange(allItems.equipment);
     }
     public void SpawnExperience(int expAmount, Vector2 position)
     {

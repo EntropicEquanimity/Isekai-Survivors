@@ -21,7 +21,7 @@ MonoBehaviour:
     knockBackResistance: 1
   characterDescription: An armored knight with more survivability than the average
     joe.
-  startingWeapon: {fileID: 11400000, guid: 5ffa243392c175d4cac0121dab88b2cf, type: 2}
+  startingWeapon: {fileID: 11400000, guid: 1c1790140d28c1247997795583f60d57, type: 2}
   playerStats:
     levelupStats:
       damage: 0

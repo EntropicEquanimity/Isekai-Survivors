@@ -29,7 +29,6 @@ public class Rapier : Equipment
 
     public override void OnEquip()
     {
-        Debug.Log("Equip not implemented yet!");
         _player = GameManager.Instance.player;
         UseItem();
     }
@@ -62,6 +61,6 @@ public class Rapier : Equipment
         projectile.GetComponent<BoxCollider2D>().size = new Vector2(0.3f, SpriteBaseHeight * (Size + 1f) - 0.2f);
         projectile.GetComponent<BoxCollider2D>().offset = new Vector2(0, (SpriteBaseHeight * (Size + 1f) - 0.2f) / 2f);
         projectile.GetComponent<SpriteRenderer>().size = new Vector2(SpriteBaseHeight, SpriteBaseHeight * (Size + 1f));
-        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), direction, Mathf.RoundToInt(Mathf.Infinity), false, false), this);
+        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), direction, Mathf.RoundToInt(Mathf.Infinity)), this);
     }
 }
