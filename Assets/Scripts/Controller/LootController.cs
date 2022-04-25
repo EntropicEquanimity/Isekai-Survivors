@@ -10,10 +10,14 @@ public class LootController : MonoBehaviour
     [BoxGroup("Resources")] public GameObject experiencePickup, essencePickup;
     [BoxGroup("Resources")] [ReadOnly] public List<ExpPickup> expPickups = new List<ExpPickup>();
     [BoxGroup("Resources")] [ReadOnly] public List<ExpPickup> essencePickups = new List<ExpPickup>();
+    [BoxGroup("Resources")] public LayerMask pickupsLayer;
 
     [BoxGroup("Items")] public Catalogue allItems;
     [BoxGroup("Items")] [ReadOnly] public List<ItemSO> itemsInPool = new List<ItemSO>();
 
+    private Player _player;
+
+    #region Messages
     public void Awake()
     {
         if (Instance == null)
@@ -22,6 +26,21 @@ public class LootController : MonoBehaviour
             itemsInPool = new List<ItemSO>();
         }
     }
+    public void Update()
+    {
+        if(_player == null) { _player = GameManager.Instance.player; if (_player == null) { return; } }
+        foreach(var hit in Physics2D.OverlapCircleAll(_player.transform.position, GameManager.Instance.PickupRadius + 1f, pickupsLayer))
+        {
+            hit.GetComponent<Pickup>().OnTrigger(_player);
+        }
+    }
+    private void OnDrawGizmos()
+    {
+        if(_player == null) { return; }
+        Gizmos.DrawWireSphere(_player.transform.position, GameManager.Instance.PickupRadius + 1f);
+    }
+    #endregion
+
     private void Start()
     {
         itemsInPool.AddRange(allItems.equipment);
@@ -105,6 +124,8 @@ public class LootController : MonoBehaviour
         }
         return totalWeight;
     }
+
+    #region Debug
     [Button]
     public void AttractEverything()
     {
@@ -117,4 +138,5 @@ public class LootController : MonoBehaviour
             }
         }
     }
+    #endregion
 }

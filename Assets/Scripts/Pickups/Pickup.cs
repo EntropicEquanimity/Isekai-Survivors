@@ -11,4 +11,5 @@ public abstract class Pickup : MonoBehaviour
     }
     public abstract void Initialize();
     public abstract void OnPickup();
+    public abstract void OnTrigger(Player player);
 }

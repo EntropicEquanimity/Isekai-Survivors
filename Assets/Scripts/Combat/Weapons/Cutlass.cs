@@ -54,6 +54,6 @@ public class Cutlass : Equipment
         projectile.transform.localPosition = Vector3.zero;
         projectile.transform.localScale = Vector3.one * Size;
         projectile.transform.rotation = Quaternion.Euler(Vector3.zero);
-        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), Vector2.zero, Mathf.RoundToInt(Mathf.Infinity)), this);
+        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), Vector2.zero, 999999999), this);
     }
 }

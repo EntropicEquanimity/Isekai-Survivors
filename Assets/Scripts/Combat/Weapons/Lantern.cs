@@ -73,8 +73,6 @@ public class Lantern : Equipment
     {
         if (_lanternLight != null)
         {
-            Debug.Log(Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90);
-
             _lanternLight.transform.rotation = Quaternion.Slerp(_lanternLight.transform.rotation, Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90), Time.deltaTime * rotationSpeed * Speed);
         }
     }

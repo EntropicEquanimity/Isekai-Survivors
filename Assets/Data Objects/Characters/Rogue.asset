@@ -33,7 +33,7 @@ MonoBehaviour:
       projectiles: 0
       pierceCount: 0
     levelStatsIntervals: 5
-    pickupRadius: 1.5
+    pickupRadius: 0.5
     essenceGain: 1
     goldGain: 1
     maxWeapons: 5

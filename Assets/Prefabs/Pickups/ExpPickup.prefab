@@ -120,3 +120,4 @@ MonoBehaviour:
   small: {fileID: -266883865066856737, guid: ae71d0a74cf6c514ab1daf134c57111f, type: 3}
   medium: {fileID: -1122222750625558779, guid: ae71d0a74cf6c514ab1daf134c57111f, type: 3}
   large: {fileID: 5367102645604608502, guid: ae71d0a74cf6c514ab1daf134c57111f, type: 3}
+  followTargetSpeed: 2

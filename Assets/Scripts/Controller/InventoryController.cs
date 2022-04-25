@@ -10,20 +10,19 @@ public class InventoryController : MonoBehaviour
 
     [BoxGroup("Inventory")] public GameObject itemSlotPrefab;
     [BoxGroup("Inventory")] public Transform weaponSlotsParent, equipmentSlotsParent;
-    [BoxGroup("Inventory")] public List<ItemSlot> weaponItemSlots, equipmentItemSlots;
+    [BoxGroup("Inventory")] [ReadOnly] public List<ItemSlot> weaponItemSlots, toolItemSlots;
+    [BoxGroup("Inventory")] [ReadOnly] public List<Equipment> equippedItems = new List<Equipment>();
 
     public UnityAction OnInventoryChange;
 
-    [BoxGroup("UI")] public List<ItemSlot> itemSlots = new List<ItemSlot>();
-
-    public List<Equipment> equippedItems = new List<Equipment>();
     public static InventoryController Instance;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
 
         weaponItemSlots = new List<ItemSlot>();
-        equipmentItemSlots = new List<ItemSlot>();
+        toolItemSlots = new List<ItemSlot>();
 
         for (int i = 0; i < settings.selectedPlayerCharacter.playerStats.maxWeapons; i++)
         {
@@ -35,7 +34,7 @@ public class InventoryController : MonoBehaviour
         for (int i = 0; i < settings.selectedPlayerCharacter.playerStats.maxTools; i++)
         {
             ItemSlot itemSlot = Instantiate(itemSlotPrefab).GetComponent<ItemSlot>();
-            equipmentItemSlots.Add(itemSlot);
+            toolItemSlots.Add(itemSlot);
             itemSlot.transform.SetParent(equipmentSlotsParent);
             itemSlot.transform.localScale = Vector3.one;
         }
@@ -106,22 +105,44 @@ public class InventoryController : MonoBehaviour
         }
         else
         {
-            for (int i = 0; i < equipmentItemSlots.Count; i++)
+            for (int i = 0; i < toolItemSlots.Count; i++)
             {
-                if (equipmentItemSlots[i].Empty)
+                if (toolItemSlots[i].Empty)
                 {
-                    equipmentItemSlots[i].Initialize(equipment);
+                    toolItemSlots[i].Initialize(equipment);
                     return;
                 }
             }
             ItemSlot itemSlot = Instantiate(itemSlotPrefab).GetComponent<ItemSlot>();
-            equipmentItemSlots.Add(itemSlot);
+            toolItemSlots.Add(itemSlot);
             itemSlot.Initialize(equipment);
             itemSlot.transform.SetParent(equipmentSlotsParent);
             itemSlot.transform.localScale = Vector3.one;
         }
     }
     #endregion
+
+    #region Getters
+    public int MaxWeapons => weaponItemSlots.Count;
+    public int MaxTools => toolItemSlots.Count;
+    public bool MaxWeaponsEquipped()
+    {
+        for (int i = 0; i < weaponItemSlots.Count; i++)
+        {
+            if (weaponItemSlots[i].Empty) { return false; }
+        }
+        return true;
+    }
+    public bool MaxToolsEquipped()
+    {
+        for (int i = 0; i < toolItemSlots.Count; i++)
+        {
+            if (toolItemSlots[i].Empty) { return false; }
+        }
+        return false;
+    }
+    #endregion
+
     private void Start()
     {
         for (int i = 0; i < equippedItems.Count; i++)

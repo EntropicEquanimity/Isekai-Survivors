@@ -49,7 +49,7 @@ public class EnemyManager : MonoBehaviour
                     EnemyUnitData enemyData = GetEnemyToSpawn();
                     Enemy enemy = Instantiate(enemyData.unitInfo.unitPrefab, transform).GetComponent<Enemy>();
                     enemy.Initialize(enemy.baseStats.entityStats);
-                    enemy.transform.position = GameManager.Instance.player.transform.position + spawnPoints[Random.Range(0, spawnPoints.Length)].position;
+                    enemy.transform.position = GameManager.Instance.player.transform.position + spawnPoints[Random.Range(0, spawnPoints.Length)].position + (Vector3)Random.insideUnitCircle * 0.5f;
                     enemies.Add(enemy);
                 }
             }
@@ -71,17 +71,17 @@ public class EnemyManager : MonoBehaviour
     }
     public EnemyUnitData GetEnemyToSpawn()
     {
-        int totalWeight = 0;
+        int weight = 0;
 
         for (int i = 0; i < currentWaveData.enemies.Count; i++)
         {
-            totalWeight += currentWaveData.enemies[i].spawnWeight;
+            weight += currentWaveData.enemies[i].spawnWeight;
         }
-        int roll = Random.Range(0, totalWeight);
+        int roll = Random.Range(0, weight);
         for (int i = 0; i < currentWaveData.enemies.Count; i++)
         {
-            totalWeight -= currentWaveData.enemies[i].spawnWeight;
-            if (roll <= 0)
+            weight -= currentWaveData.enemies[i].spawnWeight;
+            if (weight <= roll)
             {
                 return currentWaveData.enemies[i];
             }

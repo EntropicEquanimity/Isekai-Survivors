@@ -34,9 +34,14 @@ public class EquipmentPickup : Pickup
     {
         if (collision.CompareTag("Player"))
         {
-            Debug.Log("Picking up: " + _equipment);
-            InterfaceController.Instance.OpenChooseItemPanel(new List<ItemSO>() { _equipment.itemData });
-            Destroy(gameObject);
+            OnTrigger(collision.GetComponent<Player>());
         }
+    }
+
+    public override void OnTrigger(Player player)
+    {
+        Debug.Log("Picking up: " + _equipment);
+        InterfaceController.Instance.OpenChooseItemPanel(new List<ItemSO>() { _equipment.itemData });
+        Destroy(gameObject);
     }
 }

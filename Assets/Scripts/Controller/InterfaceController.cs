@@ -31,7 +31,7 @@ public class InterfaceController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab))
         {
-            if (Time.timeScale == 0)
+            if (Time.timeScale < 1f)
             {
                 ClosePauseMenu();
             }

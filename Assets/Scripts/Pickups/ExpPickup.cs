@@ -12,11 +12,15 @@ public class ExpPickup : Pickup
     private SpriteRenderer _sr;
     public int expAmount;
     public Sprite small, medium, large;
+
+    public float followTargetSpeed = 3f;
+    private float _speed = 3f;
+
     public override void Initialize()
     {
         _sr = GetComponent<SpriteRenderer>();
-
-        GetComponent<CircleCollider2D>().radius = GameManager.Instance.PickupRadius + 1f;
+        _speed = followTargetSpeed;
+        //GetComponent<CircleCollider2D>().radius = GameManager.Instance.PickupRadius + 1f;
 
         //Collider2D[] expDrops = Physics2D.OverlapCircleAll(transform.position, GameManager.Instance.PickupRadius + 5f, LayerMask.GetMask("Experience"));
         //if(expDrops.Length > 20)
@@ -59,18 +63,11 @@ public class ExpPickup : Pickup
             _sr.material = superMaterial;
         }
     }
-    public void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            target = collision.GetComponent<Player>();
-        }
-    }
     private void FixedUpdate()
     {
         if (target != null)
         {
-            transform.Translate((target.transform.position - transform.position).normalized * Time.fixedDeltaTime * 3f);
+            transform.Translate((target.transform.position - transform.position).normalized * Time.fixedDeltaTime * _speed);
 
             if (Vector2.Distance(target.transform.position, transform.position) < 0.5f)
             {
@@ -81,11 +78,19 @@ public class ExpPickup : Pickup
     private void OnDisable()
     {
         target = null;
+        _speed = followTargetSpeed;
     }
     public override void OnPickup()
     {
         //Debug.Log("Picking up " + expAmount);
         gameObject.SetActive(false);
         GameManager.Instance.PlayerExperience += expAmount;
+        _speed = followTargetSpeed;
+    }
+
+    public override void OnTrigger(Player player)
+    {
+        target = player;
+        _speed += 0.01f;
     }
 }

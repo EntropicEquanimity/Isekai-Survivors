@@ -60,6 +60,8 @@ public class GameManager : MonoBehaviour
         _interfaceController = GetComponent<InterfaceController>();
         _interfaceController.UpdateExpBar(playerExp, ExpRequired);
         _interfaceController.UpdatePlayerLevel(0);
+
+        ResetGameStats();
     }
     private void Start()
     {
@@ -118,6 +120,7 @@ public class GameManager : MonoBehaviour
     public float MoveSpeed { get => moveSpeed.Value; }
     public int Defense { get => Mathf.RoundToInt(projectiles.Value); }
     public int Health { get => Mathf.RoundToInt(health.Value); }
+
     public float PickupRadius { get => pickupRadius.Value; }
     public int LootChoices { get => Mathf.RoundToInt(lootChoices.Value); }
 
@@ -138,7 +141,7 @@ public class GameManager : MonoBehaviour
 
     public void ResetGameStats()
     {
-        damage = new CharacterStat();
+        damage = new CharacterStat() { BaseValue = settings.selectedPlayerCharacter.entityStats.damage };
         knockBack = new CharacterStat();
         duration = new CharacterStat();
         size = new CharacterStat();
@@ -150,7 +153,7 @@ public class GameManager : MonoBehaviour
         moveSpeed = new CharacterStat();
         defense = new CharacterStat();
         health = new CharacterStat();
-        pickupRadius = new CharacterStat();
+        pickupRadius = new CharacterStat() { BaseValue = settings.selectedPlayerCharacter.playerStats.pickupRadius};
     }
     #endregion
 
