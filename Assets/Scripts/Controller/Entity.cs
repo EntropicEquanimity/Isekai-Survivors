@@ -7,10 +7,9 @@ using UnityEngine.Events;
 
 public abstract class Entity : MonoBehaviour
 {
-    [BoxGroup("Stats")] [Expandable] public EntitySO baseStats;
-    [Required] public SpriteRenderer entitySpriteRenderer;
-
-    [BoxGroup("Settings")] public SettingsSO settings;
+    [BoxGroup("Entity")] [Expandable] public EntitySO baseStats;
+    [BoxGroup("Entity")] [Required] public SpriteRenderer entitySpriteRenderer;
+    [BoxGroup("Entity")] public SettingsSO settings;
 
     #region Stats
     public virtual int MaxHP { get; set; }

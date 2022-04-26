@@ -10,11 +10,13 @@ public class Enemy : Entity
     [BoxGroup("Drops")] public Vector2Int expDrop;
     [BoxGroup("Drops")] public int essenceDrop;
 
+    [BoxGroup("Enemy Behavior")] public bool followTargetPositionInstead = false;
     [BoxGroup("Enemy Behavior")] public float attackCooldown = 0.5f;
     [BoxGroup("Enemy Behavior")] public OnBecameInvisibleBehavior onBecameInvisibleBehavior;
 
     [ReadOnly] [BoxGroup("Read Only")] public Player target;
     [ReadOnly] [BoxGroup("Read Only")] public float range;
+    [ReadOnly] [BoxGroup("Read Only")] [ShowIf("followTargetPositionInstead")] public Vector3 targetPosition;
 
     private Rigidbody2D _rb;
     private float _lastTimeDamageDealt;
@@ -40,6 +42,7 @@ public class Enemy : Entity
     }
     public virtual void FixedUpdate()
     {
+        if(target == null) { return; }
         Move();
         Attack();
         if (_invisible)
@@ -71,10 +74,15 @@ public class Enemy : Entity
     }
     public override void Move()
     {
+        if (followTargetPositionInstead)
+        {
+            _rb.MovePosition((targetPosition - transform.position).normalized * MoveSpeed * Time.fixedDeltaTime + transform.position);
+            entitySpriteRenderer.flipX = target.transform.position.x < transform.position.x;
+            return;
+        }
         if (HP <= 0 || DistanceToTarget < range) { return; }
 
         _rb.MovePosition(MoveSpeed * Time.fixedDeltaTime * DirectionToTarget + (Vector2)transform.position);
-
         entitySpriteRenderer.flipX = target.transform.position.x < transform.position.x;
     }
     public virtual void Attack()

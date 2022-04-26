@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 410585927347893563}
   - component: {fileID: 410585927347893557}
   - component: {fileID: 410585927347893558}
-  - component: {fileID: 8755756583848792444}
   - component: {fileID: 7062933063571776793}
   m_Layer: 7
   m_Name: Skeleton King
@@ -140,27 +139,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &8755756583848792444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 410585927347893560}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 090c89d68ac833b45918dbd7ca55a2fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseStats: {fileID: 11400000, guid: 7d01b53375b177247a089cb0ae55159d, type: 2}
-  entitySpriteRenderer: {fileID: 410585927347893561}
-  settings: {fileID: 11400000, guid: 43be9781a9947624796c212527175348, type: 2}
-  expDrop: {x: 0, y: 0}
-  essenceDrop: 0
-  attackCooldown: 0.5
-  onBecameInvisibleBehavior: 0
-  target: {fileID: 0}
-  range: 0
 --- !u!114 &7062933063571776793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,5 +160,5 @@ MonoBehaviour:
   onBecameInvisibleBehavior: 1
   target: {fileID: 0}
   range: 0
-  spawnCountdown: 10
-  royalGuardsPrefab: {fileID: 0}
+  spawnCountdown: 20
+  royalGuardsPrefab: {fileID: 410585927347893560}
