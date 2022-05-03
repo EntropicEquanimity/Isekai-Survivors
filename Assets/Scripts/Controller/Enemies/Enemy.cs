@@ -76,7 +76,7 @@ public class Enemy : Entity
     {
         if (followTargetPositionInstead)
         {
-            _rb.MovePosition((targetPosition - transform.position).normalized * MoveSpeed * Time.fixedDeltaTime + transform.position);
+            _rb.MovePosition(MoveSpeed * Time.fixedDeltaTime * (targetPosition - transform.position).normalized + transform.position);
             entitySpriteRenderer.flipX = target.transform.position.x < transform.position.x;
             return;
         }

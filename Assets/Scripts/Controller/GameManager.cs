@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            Time.timeScale = 4f;
+            Time.timeScale = 2f;
         }
         else if (Time.timeScale > 0)
         {

@@ -101,7 +101,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0.1}
   serializedVersion: 2
-  m_Radius: 0.3
+  m_Radius: 0.4
 --- !u!114 &410585927347893557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,7 +130,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 50
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 0
@@ -156,7 +156,9 @@ MonoBehaviour:
   settings: {fileID: 11400000, guid: 43be9781a9947624796c212527175348, type: 2}
   expDrop: {x: 20, y: 25}
   essenceDrop: 0
+  followTargetPositionInstead: 0
   attackCooldown: 0.5
   onBecameInvisibleBehavior: 0
   target: {fileID: 0}
   range: 0
+  targetPosition: {x: 0, y: 0, z: 0}

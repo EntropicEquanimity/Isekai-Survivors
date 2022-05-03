@@ -16,7 +16,7 @@ MonoBehaviour:
   entityStats:
     health: 500
     damage: 10
-    moveSpeed: 0.5
+    moveSpeed: 0.75
     defense: 10
     knockBackResistance: 30
   unitPrefab: {fileID: 410585927347893560, guid: 61dec80a78a889144afe1f6ea9bafbe6, type: 3}

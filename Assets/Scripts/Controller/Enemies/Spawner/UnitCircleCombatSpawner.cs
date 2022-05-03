@@ -10,12 +10,14 @@ public class UnitCircleCombatSpawner : MonoBehaviour
     [BoxGroup("Spawner")] public float initialCooldown = 0;
     [BoxGroup("Spawner")] public int spawnCount = 10;
     [BoxGroup("Spawner")] public int maxEnemies = 10;
+    [BoxGroup("Spawner")] public bool continuousSpawn = false;
 
     [BoxGroup("Spawner")] public bool unitsRotateAroundCenter;
     [BoxGroup("Spawner")] [ShowIf("unitsRotateAroundCenter")] public float rotationSpeed = 0f;
     [BoxGroup("Spawner")] public float distanceFromCenter = 2f;
     [BoxGroup("Spawner")] public float rotationalOffset = 0;
-    [BoxGroup("Spawner")] [ReadOnly] private float _spawnCD = 2;
+    [BoxGroup("Spawner")] [ReadOnly] [SerializeField] private float _spawnCD = 2;
+    [BoxGroup("Spawner")] [ReadOnly] [SerializeField] private float _rot = 0;
     [BoxGroup("Spawner")] [ReadOnly] public List<Enemy> enemies;
     [BoxGroup("Spawner")] [ReadOnly] public Vector3[] positions;
 
@@ -24,9 +26,16 @@ public class UnitCircleCombatSpawner : MonoBehaviour
         _spawnCD = initialCooldown;
         enemies = new List<Enemy>();
     }
+    private void Start()
+    {
+        SpawnEntities();
+    }
     public void FixedUpdate()
     {
-        if(enemyPrefab == null || enemies.Count >= maxEnemies) { return; }
+        UpdatePositions();
+        if (unitsRotateAroundCenter) { _rot += Time.fixedDeltaTime * rotationSpeed; }
+        if (enemyPrefab == null || enemies.Count >= maxEnemies || !continuousSpawn) { return; }
+
         _spawnCD -= Time.fixedDeltaTime;
 
         if (_spawnCD <= 0f)
@@ -35,33 +44,40 @@ public class UnitCircleCombatSpawner : MonoBehaviour
             _spawnCD = spawnCooldown;
         }
     }
-
+    private void OnDestroy()
+    {
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            enemies[i].followTargetPositionInstead = false;
+        }
+    }
     public void UpdatePositions()
     {
-
+        if(enemies.Count < 1) { return; }
+        Vector3[] positions = GetPositions(enemies.Count, _rot);
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            enemies[i].targetPosition = positions[i];
+        }
     }
     public void SpawnEntities()
     {
         if (enemies.Count >= maxEnemies) { return; }
-
-        positions = GetSpawnPositions(GetAllowedSpawnCount);
-
-        for (int i = 0; i < GetAllowedSpawnCount; i++)
+        positions = GetPositions(spawnCount);
+        for (int i = 0; i < spawnCount; i++)
         {
-            Debug.Log(positions[i]);
             enemies.Add(Instantiate(enemyPrefab.unitPrefab, positions[i], Quaternion.identity).GetComponent<Enemy>());
             enemies[i].followTargetPositionInstead = true;
         }
     }
     
     #region Getters
-    public int GetAllowedSpawnCount => spawnCount - (maxEnemies - enemies.Count);
-    public Vector3[] GetSpawnPositions(int spawnCount, float offset = 0)
+    public Vector3[] GetPositions(int posCount, float offset = 0)
     {
-        float angleDist = 360 / spawnCount;
+        float angleDist = 360 / posCount;
         Vector3 startPos = transform.position;
-        Vector3[] positions = new Vector3[spawnCount];
-        for (int i = 0; i < spawnCount; i++)
+        Vector3[] positions = new Vector3[posCount];
+        for (int i = 0; i < posCount; i++)
         {
             float angle = i * angleDist + rotationalOffset + offset;
             float rad = angle * Mathf.PI / 180;
@@ -72,9 +88,10 @@ public class UnitCircleCombatSpawner : MonoBehaviour
         return positions;
     }
     #endregion
+
     private void OnDrawGizmosSelected()
     {
-        Vector3[] positions = GetSpawnPositions(maxEnemies);
+        Vector3[] positions = GetPositions(maxEnemies, _rot);
         for (int i = 0; i < positions.Length; i++)
         {
             Gizmos.DrawSphere(positions[i], 0.1f);

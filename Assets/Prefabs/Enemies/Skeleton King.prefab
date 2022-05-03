@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 410585927347893563}
   - component: {fileID: 410585927347893557}
   - component: {fileID: 410585927347893558}
-  - component: {fileID: 7062933063571776793}
+  - component: {fileID: 1655685550}
+  - component: {fileID: 634305225007609984}
   m_Layer: 7
   m_Name: Skeleton King
   m_TagString: Untagged
@@ -101,7 +102,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0.05}
   serializedVersion: 2
-  m_Radius: 0.4
+  m_Radius: 0.45
 --- !u!114 &410585927347893557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,7 +131,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 50
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 0
@@ -139,7 +140,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &7062933063571776793
+--- !u!114 &1655685550
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -148,17 +149,43 @@ MonoBehaviour:
   m_GameObject: {fileID: 410585927347893560}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2e597df5f97806499994b4bf330c50a, type: 3}
+  m_Script: {fileID: 11500000, guid: ab00798a01c162840a7ddf1adf70fb84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseStats: {fileID: 11400000, guid: 7d01b53375b177247a089cb0ae55159d, type: 2}
+  enemyPrefab: {fileID: 11400000, guid: bb8f33a9c9085c145b09cd214d1b7cda, type: 2}
+  spawnCooldown: 5
+  initialCooldown: 0.1
+  spawnCount: 10
+  maxEnemies: 10
+  continuousSpawn: 0
+  unitsRotateAroundCenter: 1
+  rotationSpeed: 5
+  distanceFromCenter: 2
+  rotationalOffset: 0
+  _spawnCD: 2
+  _rot: 0
+  enemies: []
+  positions: []
+--- !u!114 &634305225007609984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 410585927347893560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 090c89d68ac833b45918dbd7ca55a2fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseStats: {fileID: 11400000, guid: 1ab6181c9932a2345a2d2d835444b090, type: 2}
   entitySpriteRenderer: {fileID: 410585927347893561}
   settings: {fileID: 11400000, guid: 43be9781a9947624796c212527175348, type: 2}
   expDrop: {x: 200, y: 250}
-  essenceDrop: 5
+  essenceDrop: 10
+  followTargetPositionInstead: 0
   attackCooldown: 0.5
   onBecameInvisibleBehavior: 1
   target: {fileID: 0}
   range: 0
-  spawnCountdown: 20
-  royalGuardsPrefab: {fileID: 410585927347893560}
+  targetPosition: {x: 0, y: 0, z: 0}
