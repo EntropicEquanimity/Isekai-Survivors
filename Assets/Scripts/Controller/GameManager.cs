@@ -40,6 +40,10 @@ public class GameManager : MonoBehaviour
     public void PlayerDeath()
     {
         GameState = GameState.GameOver;
+        if (Revives > 0)
+        {
+
+        }
     }
     #endregion
 
@@ -122,7 +126,9 @@ public class GameManager : MonoBehaviour
     public int Health { get => Mathf.RoundToInt(health.Value); }
 
     public float PickupRadius { get => pickupRadius.Value; }
+
     public int LootChoices { get => Mathf.RoundToInt(lootChoices.Value); }
+    public int Revives { get => Mathf.RoundToInt(revives.Value); }
 
     [Foldout("Stats")] public CharacterStat damage;
     [Foldout("Stats")] public CharacterStat knockBack;
@@ -137,7 +143,9 @@ public class GameManager : MonoBehaviour
     [Foldout("Stats")] public CharacterStat defense;
     [Foldout("Stats")] public CharacterStat health;
     [Foldout("Stats")] public CharacterStat pickupRadius;
+
     [Foldout("Stats")] public CharacterStat lootChoices = new CharacterStat() { BaseValue = 1 };
+    [Foldout("Stats")] public CharacterStat revives = new CharacterStat() { BaseValue = 0 };
 
     public void ResetGameStats()
     {
@@ -153,7 +161,7 @@ public class GameManager : MonoBehaviour
         moveSpeed = new CharacterStat();
         defense = new CharacterStat();
         health = new CharacterStat();
-        pickupRadius = new CharacterStat() { BaseValue = settings.selectedPlayerCharacter.playerStats.pickupRadius};
+        pickupRadius = new CharacterStat() { BaseValue = settings.selectedPlayerCharacter.playerStats.pickupRadius };
     }
     #endregion
 

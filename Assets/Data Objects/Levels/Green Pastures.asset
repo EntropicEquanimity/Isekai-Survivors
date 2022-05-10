@@ -19,7 +19,7 @@ MonoBehaviour:
     maxBatchSpawnCount: 15
     enemies:
     - spawnWeight: 20
-      unitInfo: {fileID: 11400000, guid: 7d01b53375b177247a089cb0ae55159d, type: 2}
+      unitInfo: {fileID: 11400000, guid: bb69a7b3539932e429961b43fe979eb9, type: 2}
   - maxEnemyCount: 100
     enemySpawnInterval: 3
     maxBatchSpawnCount: 50

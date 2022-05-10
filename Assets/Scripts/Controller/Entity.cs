@@ -36,7 +36,6 @@ public abstract class Entity : MonoBehaviour
     public virtual void Initialize(EntityStats entityStats)
     {
         MaxHP = entityStats.health;
-        HP = entityStats.health;
         Damage = entityStats.damage;
         MoveSpeed = entityStats.moveSpeed;
         Defense = entityStats.defense;
@@ -105,6 +104,20 @@ public abstract class Entity : MonoBehaviour
 
     public abstract void Move();
     public abstract void Die();
+    protected virtual IEnumerator DeathAnimation()
+    {
+        MoveSpeed = 0;
+        Damage = 0;
+        HP = 0;
+        float fadeAmount = -0.15f;
+        while (fadeAmount < 1f)
+        {
+            fadeAmount += Time.fixedDeltaTime * 2f;
+            entitySpriteRenderer.material.SetFloat("_FadeAmount", fadeAmount);
+            yield return new WaitForFixedUpdate();
+        }
+        gameObject.SetActive(false);
+    }
 
     #region Events
     public UnityAction<DamageInfo> OnAttacked;

@@ -42,7 +42,7 @@ public class Enemy : Entity
     }
     public virtual void FixedUpdate()
     {
-        if(target == null) { return; }
+        if (target == null) { return; }
         Move();
         Attack();
         if (_invisible)
@@ -111,26 +111,17 @@ public class Enemy : Entity
     //}
     public override void Die()
     {
+        GetComponent<CircleCollider2D>().enabled = false;
         GameManager.Instance.PlayerKills++;
         int exp = Random.Range(expDrop.x, expDrop.y + 1);
         if (exp > 0) { LootController.Instance.SpawnExperience(exp, transform.position); }
         StartCoroutine(DeathAnimation());
     }
-    public IEnumerator DeathAnimation()
+    protected override IEnumerator DeathAnimation()
     {
-        GetComponent<CircleCollider2D>().enabled = false;
-        MoveSpeed = 0;
-        Damage = 0;
-        HP = 0;
-        float fadeAmount = -0.15f;
-        while (fadeAmount < 1f)
-        {
-            fadeAmount += Time.fixedDeltaTime * 2f;
-            entitySpriteRenderer.material.SetFloat("_FadeAmount", fadeAmount);
-            yield return new WaitForFixedUpdate();
-        }
-        gameObject.SetActive(false);
+        base.DeathAnimation();
         EnemyManager.Instance.EnemyDeath(this);
+        yield return new WaitForEndOfFrame();
     }
     public Vector2 DirectionToTarget => (target.transform.position - transform.position).normalized;
     public float DistanceToTarget => Vector2.Distance(transform.position, target.transform.position);

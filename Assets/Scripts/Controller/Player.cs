@@ -22,6 +22,8 @@ public class Player : Entity
         _rb = GetComponent<Rigidbody2D>();
         _hud = GameManager.Instance.GetComponent<InterfaceController>();
         Initialize(playerData.entityStats);
+        HP = playerData.entityStats.health;
+        GetComponent<CircleCollider2D>().enabled = true;
     }
     public virtual void Update()
     {
@@ -45,6 +47,29 @@ public class Player : Entity
     {
         CanTakeDamage = false;
         throw new System.NotImplementedException();
+    }
+    public virtual void Revive()
+    {
+        //Basic revive revives player at 20% HP. 
+        Initialize(playerData.entityStats);
+        HP = Mathf.RoundToInt(MaxHP * 0.2f);
+        GetComponent<CircleCollider2D>().enabled = true;
+    }
+    protected override IEnumerator DeathAnimation()
+    {
+        GetComponent<CircleCollider2D>().enabled = false;
+        MoveSpeed = 0;
+        Damage = 0;
+        HP = 0;
+        float fadeAmount = -0.15f;
+        while (fadeAmount < 1f)
+        {
+            fadeAmount += Time.fixedDeltaTime * 2f;
+            entitySpriteRenderer.material.SetFloat("_FadeAmount", fadeAmount);
+            yield return new WaitForFixedUpdate();
+        }
+        gameObject.SetActive(false);
+        GameManager.Instance.PlayerDeath();
     }
 }
 [System.Serializable]
