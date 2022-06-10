@@ -28,7 +28,6 @@ public class BoomerangAxe : Equipment
 
     public override void OnEquip()
     {
-        Debug.Log("Equip not implemented yet!");
         _player = GameManager.Instance.player;
         UseItem();
     }

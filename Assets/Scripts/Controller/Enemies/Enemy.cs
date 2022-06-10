@@ -22,10 +22,13 @@ public class Enemy : Entity
     private float _lastTimeDamageDealt;
     private float _timeBeforeDisabling;
     private bool _invisible;
+    private bool _intialized = false;
+
     public override void Initialize(EntityStats entityStats)
     {
         base.Initialize(entityStats);
         range = GetComponent<CircleCollider2D>().radius * transform.localScale.magnitude;
+        _intialized = true;
     }
 
     public override void OnEnable()
@@ -39,6 +42,8 @@ public class Enemy : Entity
     {
         target = GameManager.Instance.player;
         _rb.mass = KnockBackResistance;
+
+        if (!_intialized) { Initialize(baseStats.entityStats); }
     }
     public virtual void FixedUpdate()
     {
@@ -87,7 +92,7 @@ public class Enemy : Entity
     }
     public virtual void Attack()
     {
-        if (DistanceToTarget <= range && AttackOffCooldown)
+        if (DistanceToTarget <= range && AttackOffCooldown && !IsDead)
         {
             target.TakeDamage(new DamageInfo() { damage = Damage });
             _lastTimeDamageDealt = Time.realtimeSinceStartup;
@@ -119,9 +124,17 @@ public class Enemy : Entity
     }
     protected override IEnumerator DeathAnimation()
     {
-        base.DeathAnimation();
+        MoveSpeed = 0;
+        Damage = 0;
+        HP = 0;
+        float fadeAmount = -0.15f;
+        while (fadeAmount < 1f)
+        {
+            fadeAmount += Time.fixedDeltaTime * 2f;
+            entitySpriteRenderer.material.SetFloat("_FadeAmount", fadeAmount);
+            yield return new WaitForFixedUpdate();
+        }
         EnemyManager.Instance.EnemyDeath(this);
-        yield return new WaitForEndOfFrame();
     }
     public Vector2 DirectionToTarget => (target.transform.position - transform.position).normalized;
     public float DistanceToTarget => Vector2.Distance(transform.position, target.transform.position);

@@ -41,6 +41,8 @@ public class InventoryController : MonoBehaviour
     }
     public void AddEquipment(Equipment equipment)
     {
+        if (equipment.ItemType == ItemType.Weapon && MaxWeaponsEquipped()) { Destroy(equipment.gameObject); return; }
+
         for (int i = 0; i < this.equippedItems.Count; i++)
         {
             if (this.equippedItems[i].Name == equipment.Name)
@@ -55,6 +57,11 @@ public class InventoryController : MonoBehaviour
         AddEquipmentUI(equipment);
 
         OnInventoryChange?.Invoke();
+
+        if (equipment.ItemType == ItemType.Weapon && MaxWeaponsEquipped())
+        {
+            LootController.Instance.RemoveAllUnusedWeaponsFromPool();
+        }
     }
     public void AddEquipment(ItemSO item)
     {

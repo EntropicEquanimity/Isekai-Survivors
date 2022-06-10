@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: Catalogue
   m_EditorClassIdentifier: 
   equipment:
+  - {fileID: 11400000, guid: f4222fdedabf2ea4684b42e5fba71cd0, type: 2}
+  - {fileID: 11400000, guid: 9543a9efed406cd4ea7dfe8f8b176f5a, type: 2}
+  - {fileID: 11400000, guid: 15b7aa80706bec845a72c14870b076c8, type: 2}
   - {fileID: 11400000, guid: 9198e3f5201f19848babc03dab7d89d8, type: 2}
   - {fileID: 11400000, guid: 12c236b0ef9bfa340a04ecfe887e87e1, type: 2}
-  - {fileID: 11400000, guid: f4222fdedabf2ea4684b42e5fba71cd0, type: 2}
   - {fileID: 11400000, guid: b5fa093ca28af0944bfc5a3f8c7a4476, type: 2}
-  - {fileID: 11400000, guid: 9543a9efed406cd4ea7dfe8f8b176f5a, type: 2}
   - {fileID: 11400000, guid: 1c1790140d28c1247997795583f60d57, type: 2}
   - {fileID: 11400000, guid: 887df16c9a2ac7946bffbf6df6316908, type: 2}
   - {fileID: 11400000, guid: 71d908cb5a048834d8ab9704361119e6, type: 2}

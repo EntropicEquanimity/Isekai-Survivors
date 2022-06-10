@@ -6,6 +6,7 @@ using System.Text;
 
 public abstract class Equipment : Item
 {
+    public bool usesCustomValues;
     [HideInInspector] public List<GameObject> EffectPrefabs = new List<GameObject>();
     [Expandable] public EquipmentSO itemData;
     [ReadOnly] public ItemSlot itemSlot;
@@ -65,6 +66,7 @@ public abstract class Equipment : Item
         //Debug.Log(BuildLevelUpStatsString());
     }
     public abstract List<ItemStats> UpgradeValues { get; }
+    public virtual List<string> CustomUpgradeValues { get; }
     #endregion
 
     #region Public
@@ -102,6 +104,7 @@ public abstract class Equipment : Item
             pierceCount = PierceCount
         };
     }
+
     public int Damage { get => Mathf.RoundToInt(itemStats.damage.Value + GameManager.Instance.Damage); }
     public float Knockback { get => Mathf.Max(0f, itemStats.knockBack.Value + GameManager.Instance.KnockBack); }
     public float Duration { get => Mathf.Max(0f, itemStats.duration.Value + GameManager.Instance.Duration); }
@@ -130,25 +133,31 @@ public abstract class Equipment : Item
     public string BuildLevelUpStatsString()
     {
         if (IsMaxLevel) { Debug.LogWarning(this.name + " is already at max level!"); return "Max Level"; }
-        ItemStats nextLevelStats = UpgradeValues[ItemLevel];
-
         StringBuilder sb = new StringBuilder();
 
-        if (ItemLevel + 1 == MaxLevel) { sb.Append("(MAX LVL)").AppendLine(); }
+        if (!usesCustomValues)
+        {
+            ItemStats nextLevelStats = UpgradeValues[ItemLevel];
+            if (ItemLevel + 1 == MaxLevel) { sb.Append("(MAX LVL)").AppendLine(); }
 
-        if (nextLevelStats.damage != 0f) { sb.Append("Damage +").Append(nextLevelStats.damage).AppendLine(); }
-        if (nextLevelStats.knockBack != 0f) { sb.Append("Knockback +").Append(nextLevelStats.knockBack).AppendLine(); }
-        if (nextLevelStats.duration != 0f) { sb.Append("Duration +").Append(nextLevelStats.duration).Append("s").AppendLine(); }
-        if (nextLevelStats.size != 0f) { sb.Append("Size +").Append(nextLevelStats.size * 100).Append("%").AppendLine(); }
-        if (nextLevelStats.speed != 0f) { sb.Append("Speed +").Append(nextLevelStats.speed).AppendLine(); }
-        if (nextLevelStats.critChance != 0f) { sb.Append("Crit Chance +").Append(nextLevelStats.critChance * 100).Append("%").AppendLine(); }
-        if (nextLevelStats.cooldown != 0f) { sb.Append("Cooldown ").Append(nextLevelStats.cooldown).Append("s").AppendLine(); }
-        if (nextLevelStats.projectiles != 0f) { sb.Append("Projectiles +").Append(nextLevelStats.projectiles).AppendLine(); }
-        if (nextLevelStats.pierceCount != 0f) { sb.Append("Piercing +").Append(nextLevelStats.pierceCount).AppendLine(); }
+            if (nextLevelStats.damage != 0f) { sb.Append("Damage +").Append(nextLevelStats.damage).AppendLine(); }
+            if (nextLevelStats.knockBack != 0f) { sb.Append("Knockback +").Append(nextLevelStats.knockBack).AppendLine(); }
+            if (nextLevelStats.duration != 0f) { sb.Append("Duration +").Append(nextLevelStats.duration).Append("s").AppendLine(); }
+            if (nextLevelStats.size != 0f) { sb.Append("Size +").Append(nextLevelStats.size * 100).Append("%").AppendLine(); }
+            if (nextLevelStats.speed != 0f) { sb.Append("Speed +").Append(nextLevelStats.speed).AppendLine(); }
+            if (nextLevelStats.critChance != 0f) { sb.Append("Crit Chance +").Append(nextLevelStats.critChance * 100).Append("%").AppendLine(); }
+            if (nextLevelStats.cooldown != 0f) { sb.Append("Cooldown ").Append(nextLevelStats.cooldown).Append("s").AppendLine(); }
+            if (nextLevelStats.projectiles != 0f) { sb.Append("Projectiles +").Append(nextLevelStats.projectiles).AppendLine(); }
+            if (nextLevelStats.pierceCount != 0f) { sb.Append("Piercing +").Append(nextLevelStats.pierceCount).AppendLine(); }
+        }
+        else
+        {
+            sb.Append(CustomUpgradeValues[ItemLevel]);
+        }
 
         return sb.ToString();
     }
-    public int MaxLevel => UpgradeValues.Count;
+    public int MaxLevel => usesCustomValues ? CustomUpgradeValues.Count : UpgradeValues.Count;
     public bool IsMaxLevel => ItemLevel >= MaxLevel;
     #endregion
 

@@ -16,7 +16,7 @@ TextureImporter:
     second: Ice Wand
   - first:
       213: -5239188096445404863
-    second: '#1 - Transparent Icons_4'
+    second: Magnet
   - first:
       213: -5517639455708617040
     second: '#1 - Transparent Icons_5'
@@ -1685,6 +1685,27 @@ TextureImporter:
       bones: []
       spriteID: d1ce723cade282d40800000000000000
       internalID: 5559745257100799005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Magnet
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 291
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 149aae74f2aaa47b0800000000000000
+      internalID: -5239188096445404863
       vertices: []
       indices: 
       edges: []

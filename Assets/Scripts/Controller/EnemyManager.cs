@@ -48,7 +48,7 @@ public class EnemyManager : MonoBehaviour
                 {
                     EnemyUnitData enemyData = GetEnemyToSpawn();
                     Enemy enemy = Instantiate(enemyData.unitInfo.unitPrefab, transform).GetComponent<Enemy>();
-                    enemy.Initialize(enemy.baseStats.entityStats);
+                    //enemy.Initialize(enemy.baseStats.entityStats);
                     enemy.transform.position = GameManager.Instance.player.transform.position + spawnPoints[Random.Range(0, spawnPoints.Length)].position + (Vector3)Random.insideUnitCircle * 0.5f;
                     enemies.Add(enemy);
                 }
@@ -94,7 +94,7 @@ public class EnemyManager : MonoBehaviour
         if (enemies.Contains(enemy))
         {
             enemies.Remove(enemy);
-            Destroy(enemy);
+            Destroy(enemy.gameObject);
         }
     }
     public int GetNumberOfEnemies()

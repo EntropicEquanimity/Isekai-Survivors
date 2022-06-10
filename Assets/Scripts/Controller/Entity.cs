@@ -36,6 +36,7 @@ public abstract class Entity : MonoBehaviour
     public virtual void Initialize(EntityStats entityStats)
     {
         MaxHP = entityStats.health;
+        HP = MaxHP;
         Damage = entityStats.damage;
         MoveSpeed = entityStats.moveSpeed;
         Defense = entityStats.defense;
@@ -112,6 +113,7 @@ public abstract class Entity : MonoBehaviour
         float fadeAmount = -0.15f;
         while (fadeAmount < 1f)
         {
+            Debug.Log(fadeAmount);
             fadeAmount += Time.fixedDeltaTime * 2f;
             entitySpriteRenderer.material.SetFloat("_FadeAmount", fadeAmount);
             yield return new WaitForFixedUpdate();

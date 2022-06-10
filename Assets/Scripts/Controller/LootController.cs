@@ -28,15 +28,15 @@ public class LootController : MonoBehaviour
     }
     public void Update()
     {
-        if(_player == null) { _player = GameManager.Instance.player; if (_player == null) { return; } }
-        foreach(var hit in Physics2D.OverlapCircleAll(_player.transform.position, GameManager.Instance.PickupRadius + 1f, pickupsLayer))
+        if (_player == null) { _player = GameManager.Instance.player; if (_player == null) { return; } }
+        foreach (var hit in Physics2D.OverlapCircleAll(_player.transform.position, GameManager.Instance.PickupRadius + 1f, pickupsLayer))
         {
             hit.GetComponent<Pickup>().OnTrigger(_player);
         }
     }
     private void OnDrawGizmos()
     {
-        if(_player == null) { return; }
+        if (_player == null) { return; }
         Gizmos.DrawWireSphere(_player.transform.position, GameManager.Instance.PickupRadius + 1f);
     }
     #endregion
@@ -72,7 +72,6 @@ public class LootController : MonoBehaviour
         if (itemsInPool.Contains(item))
         {
             itemsInPool.Remove(item);
-            //InventoryController.Instance.AddEquipment(item);
         }
     }
     public void RemoveItemFromPool(string name)
@@ -82,6 +81,32 @@ public class LootController : MonoBehaviour
             if (itemsInPool[i].name == name)
             {
                 RemoveItemFromPool(itemsInPool[i]);
+            }
+        }
+    }
+    public void RemoveAllUnusedWeaponsFromPool()
+    {
+        for (int i = 0; i < itemsInPool.Count; i++)
+        {
+            if (!InventoryController.Instance.HasItem(itemsInPool[i]))
+            {
+                if (itemsInPool[i].pickupablePrefab.GetComponent<Equipment>().ItemType == ItemType.Weapon)
+                {
+                    RemoveItemFromPool(itemsInPool[i]);
+                }
+            }
+        }
+    }
+    public void RemoveAllUnusedToolFromPool()
+    {
+        for (int i = 0; i < itemsInPool.Count; i++)
+        {
+            if (!InventoryController.Instance.HasItem(itemsInPool[i]))
+            {
+                if (itemsInPool[i].pickupablePrefab.GetComponent<Equipment>().ItemType == ItemType.Tool)
+                {
+                    RemoveItemFromPool(itemsInPool[i]);
+                }
             }
         }
     }

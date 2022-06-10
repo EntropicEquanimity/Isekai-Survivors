@@ -24,5 +24,5 @@ public abstract class Item : MonoBehaviour
 public enum ItemType
 {
     Weapon,
-    Equipment
+    Tool
 }
