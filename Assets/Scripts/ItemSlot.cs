@@ -6,7 +6,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Image))]
 public class ItemSlot : MonoBehaviour
 {
-    public Image itemSprite;
+    public Image itemSprite, itemLevelSprite;
     public Image cooldownFillSprite;
     public TMPro.TMP_Text itemLevelText;
     public Equipment equipment;
@@ -23,6 +23,7 @@ public class ItemSlot : MonoBehaviour
     }
     public void Initialize(Equipment equipment)
     {
+        itemLevelSprite.enabled = true;
         _itemBackground = GetComponent<Image>();
         itemSprite.enabled = true;
         itemSprite.sprite = equipment.itemData.icon;
@@ -34,12 +35,14 @@ public class ItemSlot : MonoBehaviour
     }
     public void ResetToEmpty()
     {
+        itemLevelSprite.enabled = false;
         _itemBackground = GetComponent<Image>();
         itemSprite.enabled = false;
         cooldownFillSprite.fillAmount = 0;
         transform.localScale = Vector3.one;
         _itemBackground.color = Color.white;
         itemLevelText.text = "";
+        
         equipment = null;
     }
     private void Update()

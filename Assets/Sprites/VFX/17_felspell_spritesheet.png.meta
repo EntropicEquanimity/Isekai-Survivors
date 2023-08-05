@@ -276,7 +276,7 @@ TextureImporter:
       213: -7909092692737789037
     second: 17_felspell_spritesheet_90
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -297,6 +297,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -335,6 +336,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -386,6 +388,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -2320,6 +2334,98 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      17_felspell_spritesheet_0: 2143842753415656013
+      17_felspell_spritesheet_1: 5983519649686350591
+      17_felspell_spritesheet_10: 8038524469968807907
+      17_felspell_spritesheet_11: -5809647670741381239
+      17_felspell_spritesheet_12: 5135573119427302222
+      17_felspell_spritesheet_13: -453489486769245279
+      17_felspell_spritesheet_14: -4544689757191932004
+      17_felspell_spritesheet_15: -722238822058616825
+      17_felspell_spritesheet_16: 5051300803609118917
+      17_felspell_spritesheet_17: 7489235264510661472
+      17_felspell_spritesheet_18: 6041488671811937022
+      17_felspell_spritesheet_19: -7355989742213766332
+      17_felspell_spritesheet_2: -1071122846412420552
+      17_felspell_spritesheet_20: 1920481186496114349
+      17_felspell_spritesheet_21: 45751585360816842
+      17_felspell_spritesheet_22: -3182328321164620642
+      17_felspell_spritesheet_23: 8033659889679083793
+      17_felspell_spritesheet_24: 8525162231776264523
+      17_felspell_spritesheet_25: -797005708797301960
+      17_felspell_spritesheet_26: -6364977367246105394
+      17_felspell_spritesheet_27: -6040008443582953872
+      17_felspell_spritesheet_28: 1597990194150128372
+      17_felspell_spritesheet_29: -5340280633644042105
+      17_felspell_spritesheet_3: 7953340840038582777
+      17_felspell_spritesheet_30: 9221201030124301208
+      17_felspell_spritesheet_31: -6932523819931910059
+      17_felspell_spritesheet_32: 8691233046994138585
+      17_felspell_spritesheet_33: -3281449796240468966
+      17_felspell_spritesheet_34: 2517830584013935228
+      17_felspell_spritesheet_35: -7849149743211790731
+      17_felspell_spritesheet_36: -949083484225710147
+      17_felspell_spritesheet_37: -8469576362266387077
+      17_felspell_spritesheet_38: 7310738507272724054
+      17_felspell_spritesheet_39: 1862905232981325112
+      17_felspell_spritesheet_4: 1800270815800748619
+      17_felspell_spritesheet_40: 6310313842354790395
+      17_felspell_spritesheet_41: -2190137766591205015
+      17_felspell_spritesheet_42: -5799991660092271012
+      17_felspell_spritesheet_43: -8873419627113970375
+      17_felspell_spritesheet_44: -9203742822726096643
+      17_felspell_spritesheet_45: 6552120691263144207
+      17_felspell_spritesheet_46: -449770823966143457
+      17_felspell_spritesheet_47: -1994945077240679366
+      17_felspell_spritesheet_48: 6447700194735227923
+      17_felspell_spritesheet_49: 789694354433045121
+      17_felspell_spritesheet_5: -3802975882051835866
+      17_felspell_spritesheet_50: 4380075256452919437
+      17_felspell_spritesheet_51: -8930633376909123163
+      17_felspell_spritesheet_52: -3011415047188136130
+      17_felspell_spritesheet_53: -6793883656914996482
+      17_felspell_spritesheet_54: 8934248231477086431
+      17_felspell_spritesheet_55: 4610139514200009619
+      17_felspell_spritesheet_56: -1574515035858526338
+      17_felspell_spritesheet_57: 9065593256430425615
+      17_felspell_spritesheet_58: 2159812841519666407
+      17_felspell_spritesheet_59: -5422808539901617486
+      17_felspell_spritesheet_6: 7357402541862013963
+      17_felspell_spritesheet_60: 212620193330686278
+      17_felspell_spritesheet_61: 8557004091354316714
+      17_felspell_spritesheet_62: 7953760796762896058
+      17_felspell_spritesheet_63: 1961090062583769854
+      17_felspell_spritesheet_64: 2001176414457320589
+      17_felspell_spritesheet_65: -1060350903479017184
+      17_felspell_spritesheet_66: 5142934003407601993
+      17_felspell_spritesheet_67: -7508354240715350049
+      17_felspell_spritesheet_68: 2734951556961692631
+      17_felspell_spritesheet_69: 4126277441725887380
+      17_felspell_spritesheet_7: 1854269481483904990
+      17_felspell_spritesheet_70: -5718220777989742701
+      17_felspell_spritesheet_71: -6255353054877532566
+      17_felspell_spritesheet_72: 8183393898681022494
+      17_felspell_spritesheet_73: 1042938281969508401
+      17_felspell_spritesheet_74: -1460669717419925645
+      17_felspell_spritesheet_75: 4454464293228698910
+      17_felspell_spritesheet_76: 5954063166694436521
+      17_felspell_spritesheet_77: -1956843025464482897
+      17_felspell_spritesheet_78: -8441408755588276592
+      17_felspell_spritesheet_79: 2683169971357308625
+      17_felspell_spritesheet_8: 4732780415729525222
+      17_felspell_spritesheet_80: -5211592964689349162
+      17_felspell_spritesheet_81: -2332066800963100776
+      17_felspell_spritesheet_82: -3312748629742208940
+      17_felspell_spritesheet_83: -9088890097697331184
+      17_felspell_spritesheet_84: -5007306131064993274
+      17_felspell_spritesheet_85: 7990772430536168007
+      17_felspell_spritesheet_86: -4383319010078355611
+      17_felspell_spritesheet_87: 4812067186714798575
+      17_felspell_spritesheet_88: -2996104224013494433
+      17_felspell_spritesheet_89: 662593613472347440
+      17_felspell_spritesheet_9: -69884679266984748
+      17_felspell_spritesheet_90: -7909092692737789037
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

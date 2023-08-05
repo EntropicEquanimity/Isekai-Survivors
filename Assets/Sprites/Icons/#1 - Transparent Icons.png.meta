@@ -855,7 +855,7 @@ TextureImporter:
       213: 7429457448032749387
     second: '#1 - Transparent Icons_283'
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -876,6 +876,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -914,6 +915,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -941,6 +943,30 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1720,6 +1746,43 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      '#1 - Transparent Icons_122': 824011574517451391
+      '#1 - Transparent Icons_65': -2974785909338221766
+      Ancient Rune: 4902729985760503732
+      Apple: -2319894896770420943
+      Armor: 2242318624617250911
+      Arrow: 4292991442675503664
+      Axe: 3536865724434752150
+      Backpack: -3806671376464348307
+      Bible: 3653258361786527596
+      Blood Crystal: 6553418477402450293
+      Candy: 3362789639699432236
+      Chicken: -4645872885414918786
+      Coffee: -6327009497801404868
+      Cutlass: -6763620941933801878
+      Duplication Mirror: -1965184042450674564
+      Fang Necklace: -5155006954947433709
+      Flail: -3796326768004014218
+      Harp: 4836490520773336786
+      Heavyweight Belt: 7003715593917701308
+      Hourglass: -2047667483185799951
+      Ice Wand: 5559745257100799005
+      Iron Briefs: -2367795693369098819
+      Lantern: 2934422873357841234
+      Magnet: -5239188096445404863
+      Magnifying Glass: -1452950795555126347
+      Money Pouch: 5160054113365867577
+      Potted Plant: -7888986177424831467
+      Rapier: 871815484178006130
+      Reroll: 5549134151593316301
+      Scepter: -8000257237967149311
+      Shortbow: -5063555655813669412
+      Staff: -6407407995499387161
+      Toilet Paper: 1108196985403501963
+      Tomato: 2443381508606744931
+      Turtle: 1660957820977104790
+      Wine: -623831946854553623
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

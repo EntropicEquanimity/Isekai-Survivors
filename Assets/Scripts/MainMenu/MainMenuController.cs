@@ -85,7 +85,6 @@ public class MainMenuController : MonoBehaviour
     }
     public void GiveUp()
     {
-        Debug.Log("Closing the game!");
         Application.Quit();
     }
     public void GoToCombatScene()
