@@ -1,14 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using System.Text;
 
 public abstract class Equipment : Item
 {
     public bool usesCustomValues;
     [HideInInspector] public List<GameObject> EffectPrefabs = new List<GameObject>();
-    [Expandable] public EquipmentSO itemData;
+    public EquipmentSO itemData;
     [ReadOnly] public ItemSlot itemSlot;
     [ReadOnly] public SessionItemStats itemStats;
     public float CurrentCooldown { get; protected set; }

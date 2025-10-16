@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using BlondieUtils;
 using UnityEngine.EventSystems;
 

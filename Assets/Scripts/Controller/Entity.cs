@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEngine.Events;
 
 public abstract class Entity : MonoBehaviour
 {
-    [BoxGroup("Entity")] [Expandable] public EntitySO baseStats;
+    [BoxGroup("Entity")] public EntitySO baseStats;
     [BoxGroup("Entity")] [Required] public SpriteRenderer entitySpriteRenderer;
     [BoxGroup("Entity")] public SettingsSO settings;
 

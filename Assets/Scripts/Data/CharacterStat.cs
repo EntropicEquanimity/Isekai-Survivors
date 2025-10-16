@@ -2,112 +2,121 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-[Serializable]
-public class CharacterStat
-{
-    public float BaseValue;
 
-    protected bool isDirty = true;
-    protected float lastBaseValue;
+	[Serializable]
+	public class CharacterStat
+	{
+		public float BaseValue;
 
-    protected float _value;
-    public virtual float Value
-    {
-        get
-        {
-            if (isDirty || lastBaseValue != BaseValue)
-            {
-                lastBaseValue = BaseValue;
-                _value = CalculateFinalValue();
-                isDirty = false;
-            }
-            return _value;
-        }
-    }
+		protected bool isDirty = true;
+		protected float lastBaseValue;
 
-    protected readonly List<StatModifier> statModifiers;
-    public readonly ReadOnlyCollection<StatModifier> StatModifiers;
+		protected float _value;
+		public virtual float Value
+		{
+			get
+			{
+				if (isDirty || lastBaseValue != BaseValue)
+				{
+					lastBaseValue = BaseValue;
+					_value = CalculateFinalValue();
+					isDirty = false;
+				}
+				return _value;
+			}
+		}
 
-    public CharacterStat()
-    {
-        statModifiers = new List<StatModifier>();
-        StatModifiers = statModifiers.AsReadOnly();
-    }
+		protected readonly List<StatModifier> statModifiers;
+		public readonly ReadOnlyCollection<StatModifier> StatModifiers;
 
-    public CharacterStat(float baseValue) : this()
-    {
-        BaseValue = baseValue;
-    }
+		private readonly Comparison<StatModifier> comparison;
+		private readonly Predicate<StatModifier> predicate;
+		private object sourceToRemove;
 
-    public virtual void AddModifier(StatModifier mod)
-    {
-        isDirty = true;
-        statModifiers.Add(mod);
-    }
+		public CharacterStat()
+		{
+			statModifiers = new List<StatModifier>();
+			StatModifiers = statModifiers.AsReadOnly();
+			comparison = CompareModifierOrder;
+			predicate = modifier => modifier.Source == sourceToRemove;
+		}
 
-    public virtual bool RemoveModifier(StatModifier mod)
-    {
-        if (statModifiers.Remove(mod))
-        {
-            isDirty = true;
-            return true;
-        }
-        return false;
-    }
+		public CharacterStat(float baseValue) : this()
+		{
+			BaseValue = baseValue;
+		}
 
-    public virtual bool RemoveAllModifiersFromSource(object source)
-    {
-        int numRemovals = statModifiers.RemoveAll(mod => mod.Source == source);
+		public virtual void AddModifier(StatModifier mod)
+		{
+			statModifiers.Add(mod);
+			isDirty = true;
+		}
 
-        if (numRemovals > 0)
-        {
-            isDirty = true;
-            return true;
-        }
-        return false;
-    }
+		public virtual bool RemoveModifier(StatModifier mod)
+		{
+			if (statModifiers.Remove(mod))
+			{
+				isDirty = true;
+				return true;
+			}
+			return false;
+		}
 
-    protected virtual int CompareModifierOrder(StatModifier a, StatModifier b)
-    {
-        if (a.Order < b.Order)
-            return -1;
-        else if (a.Order > b.Order)
-            return 1;
-        return 0; //if (a.Order == b.Order)
-    }
+		public virtual bool RemoveAllModifiersFromSource(object source)
+		{
+			sourceToRemove = source;
+			int numRemovals = statModifiers.RemoveAll(predicate);
+			sourceToRemove = null; // Don't hang on to the object, so we don't prevent it from being GC'ed.
 
-    protected virtual float CalculateFinalValue()
-    {
-        float finalValue = BaseValue;
-        float sumPercentAdd = 0;
+			if (numRemovals > 0)
+			{
+				isDirty = true;
+				return true;
+			}
+			return false;
+		}
 
-        statModifiers.Sort(CompareModifierOrder);
+		protected virtual int CompareModifierOrder(StatModifier a, StatModifier b)
+		{
+			if (a.Order < b.Order)
+				return -1;
+			else if (a.Order > b.Order)
+				return 1;
+			return 0; //if (a.Order == b.Order)
+		}
 
-        for (int i = 0; i < statModifiers.Count; i++)
-        {
-            StatModifier mod = statModifiers[i];
+		protected virtual float CalculateFinalValue()
+		{
+			float finalValue = BaseValue;
+			float sumPercentAdd = 0;
 
-            if (mod.Type == StatModType.Flat)
-            {
-                finalValue += mod.Value;
-            }
-            else if (mod.Type == StatModType.PercentAdd)
-            {
-                sumPercentAdd += mod.Value;
+			statModifiers.Sort(comparison);
 
-                if (i + 1 >= statModifiers.Count || statModifiers[i + 1].Type != StatModType.PercentAdd)
-                {
-                    finalValue *= 1 + sumPercentAdd;
-                    sumPercentAdd = 0;
-                }
-            }
-            else if (mod.Type == StatModType.PercentMult)
-            {
-                finalValue *= 1 + mod.Value;
-            }
-        }
+			for (int i = 0; i < statModifiers.Count; i++)
+			{
+				StatModifier mod = statModifiers[i];
 
-        // Workaround for float calculation errors, like displaying 12.00001 instead of 12
-        return (float)Math.Round(finalValue, 4);
-    }
-}
+				if (mod.Type == StatModType.Flat)
+				{
+					finalValue += mod.Value;
+				}
+				else if (mod.Type == StatModType.PercentAdd)
+				{
+					sumPercentAdd += mod.Value;
+
+					if (i + 1 >= statModifiers.Count || statModifiers[i + 1].Type != StatModType.PercentAdd)
+					{
+						finalValue *= 1 + sumPercentAdd;
+						sumPercentAdd = 0;
+					}
+				}
+				else if (mod.Type == StatModType.PercentMult)
+				{
+					finalValue *= 1 + mod.Value;
+				}
+			}
+
+			// Workaround for float calculation errors, like displaying 12.00001 instead of 12
+			return (float)Math.Round(finalValue, 4);
+		}
+	}

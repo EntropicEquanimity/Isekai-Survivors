@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 
 public class FadeManager : MonoBehaviour
 {

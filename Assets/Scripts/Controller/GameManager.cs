@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(InterfaceController))]
@@ -130,22 +130,22 @@ public class GameManager : MonoBehaviour
     public int LootChoices { get => Mathf.RoundToInt(lootChoices.Value); }
     public int Revives { get => Mathf.RoundToInt(revives.Value); }
 
-    [Foldout("Stats")] public CharacterStat damage;
-    [Foldout("Stats")] public CharacterStat knockBack;
-    [Foldout("Stats")] public CharacterStat duration;
-    [Foldout("Stats")] public CharacterStat size;
-    [Foldout("Stats")] public CharacterStat speed;
-    [Foldout("Stats")] public CharacterStat critChance;
-    [Foldout("Stats")] public CharacterStat critDamage;
-    [Foldout("Stats")] public CharacterStat projectiles;
-    [Foldout("Stats")] public CharacterStat pierceCount;
-    [Foldout("Stats")] public CharacterStat moveSpeed;
-    [Foldout("Stats")] public CharacterStat defense;
-    [Foldout("Stats")] public CharacterStat health;
-    [Foldout("Stats")] public CharacterStat pickupRadius;
+    [FoldoutGroup("Stats")] public CharacterStat damage;
+    [FoldoutGroup("Stats")] public CharacterStat knockBack;
+    [FoldoutGroup("Stats")] public CharacterStat duration;
+    [FoldoutGroup("Stats")] public CharacterStat size;
+    [FoldoutGroup("Stats")] public CharacterStat speed;
+    [FoldoutGroup("Stats")] public CharacterStat critChance;
+    [FoldoutGroup("Stats")] public CharacterStat critDamage;
+    [FoldoutGroup("Stats")] public CharacterStat projectiles;
+    [FoldoutGroup("Stats")] public CharacterStat pierceCount;
+    [FoldoutGroup("Stats")] public CharacterStat moveSpeed;
+    [FoldoutGroup("Stats")] public CharacterStat defense;
+    [FoldoutGroup("Stats")] public CharacterStat health;
+    [FoldoutGroup("Stats")] public CharacterStat pickupRadius;
 
-    [Foldout("Stats")] public CharacterStat lootChoices = new CharacterStat() { BaseValue = 1 };
-    [Foldout("Stats")] public CharacterStat revives = new CharacterStat() { BaseValue = 0 };
+    [FoldoutGroup("Stats")] public CharacterStat lootChoices = new CharacterStat() { BaseValue = 1 };
+    [FoldoutGroup("Stats")] public CharacterStat revives = new CharacterStat() { BaseValue = 0 };
 
     public void ResetGameStats()
     {

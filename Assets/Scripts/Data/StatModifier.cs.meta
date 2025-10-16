@@ -10,3 +10,10 @@ MonoImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 106351
+  packageName: Character Stats
+  packageVersion: 2.0.0
+  assetPath: Assets/Scripts/Data/StatModifier.cs
+  uploadId: 796298
