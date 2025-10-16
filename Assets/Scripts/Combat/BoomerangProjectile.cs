@@ -19,7 +19,7 @@ public class BoomerangProjectile : Projectile
     public override void FixedUpdate()
     {
         base.FixedUpdate();
-        _rb.drag = Vector2.Distance(transform.position, player.transform.position) / 100f;
+        _rb.linearDamping = Vector2.Distance(transform.position, player.transform.position) / 100f;
 
         _rb.AddForce((player.transform.position - transform.position).normalized * projectileStats.weaponStats.speed);
     }

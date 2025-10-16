@@ -61,7 +61,7 @@ public class Projectile : MonoBehaviour
                 List<Collider2D> targets = new List<Collider2D>();
                 ContactFilter2D filter = new ContactFilter2D();
                 filter.layerMask = enemyLayer;
-                GetComponent<Collider2D>().OverlapCollider(filter, targets);
+                GetComponent<Collider2D>().Overlap(filter, targets);
 
                 foreach (var target in targets)
                 {
@@ -84,7 +84,7 @@ public class Projectile : MonoBehaviour
                 _constantDamageCooldown = constantDamageIntervals;
             }
         }
-        if (_rb.velocity.magnitude <= 0.1f && clearTargets == ClearTargetsFlag.OnBoomerangReturn) { targets.Clear(); }
+        if (_rb.linearVelocity.magnitude <= 0.1f && clearTargets == ClearTargetsFlag.OnBoomerangReturn) { targets.Clear(); }
     }
     public virtual void OnDisable()
     {

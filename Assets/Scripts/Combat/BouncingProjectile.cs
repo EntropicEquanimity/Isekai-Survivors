@@ -15,7 +15,7 @@ public class BouncingProjectile : Projectile
             Vector2 dir = (transform.position - collision.transform.position).normalized;
             if (_rb != null)
             {
-                _rb.velocity = (dir * projectileStats.weaponStats.speed);
+                _rb.linearVelocity = (dir * projectileStats.weaponStats.speed);
                 transform.up = dir;
             }
         }

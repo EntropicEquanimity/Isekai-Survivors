@@ -37,7 +37,7 @@ public class Player : Entity
     }
     public override void Move()
     {
-        if (moveVector != Vector2.zero && _rb.velocity.magnitude < 0.5f)
+        if (moveVector != Vector2.zero && _rb.linearVelocity.magnitude < 0.5f)
         {
             _rb.MovePosition(moveVector * (MoveSpeed + GameManager.Instance.MoveSpeed) * Time.fixedDeltaTime + (Vector2)transform.position);
             if (moveVector.x != 0) entitySpriteRenderer.flipX = moveVector.x < 0;
