@@ -9,12 +9,12 @@ public class DuplicationMirror : Equipment
 
     protected override string EffectPrefabName => throw new System.NotImplementedException();
 
-    public override List<ItemStats> UpgradeValues => new List<ItemStats>
+    public override List<ItemUpgradeStats> ItemUpgrades => new List<ItemUpgradeStats>() 
     {
-        new ItemStats(){ projectiles = 0.5f},
-        new ItemStats(){ projectiles = 0.5f},
-        new ItemStats(){ projectiles = 1}
+        new(ItemStatType.Projectiles, 0, 20, 1f, 1.2f, 1.6f, 2f, 3f),
     };
+
+    public override float BaseCooldown => throw new System.NotImplementedException();
 
     public override void OnEquip()
     {

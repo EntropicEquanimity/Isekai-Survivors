@@ -21,7 +21,7 @@ public class ItemCard : MonoBehaviour
     public void OnSelectCard()
     {
         OnClickEvent?.Invoke();
-        InventoryController.Instance.AddEquipment(item);
+        InventoryController.Instance.ButtonPress(item);
         InterfaceController.Instance.CloseChooseItemPanel();
     }
     public void Initialize(ItemSO item, System.Action onClick)

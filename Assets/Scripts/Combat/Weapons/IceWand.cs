@@ -11,19 +11,15 @@ public class IceWand : Equipment
 
     protected override string EffectPrefabName => "Icicle";
 
-    public override List<ItemStats> UpgradeValues => new List<ItemStats>
+    public override List<ItemUpgradeStats> ItemUpgrades => new List<ItemUpgradeStats>()
     {
-        new ItemStats(){ speed = 0.5f, damage = 5 },
-        new ItemStats(){ projectiles = 1, damage = 5 },
-        new ItemStats(){ pierceCount = 2, damage = 5},
-        new ItemStats(){ damage = 10, cooldown = -0.2f },
-        new ItemStats(){ speed = 0.5f, duration = 0.5f },
-        new ItemStats(){ pierceCount = 2, cooldown = -0.3f},
-        new ItemStats(){ projectiles = 1, damage = 5 },
-        new ItemStats(){ damage = 15 },
-        new ItemStats(){ pierceCount = 2, duration = 0.5f },
-        new ItemStats(){ projectiles = 3, cooldown = -0.5f }
+        new(ItemStatType.Damage, Rarity.Common, 200, 1.75f),
+        new(ItemStatType.Cooldown, Rarity.Common, 150, 0.07f),
+        new(ItemStatType.Projectiles, Rarity.Rare, 50, 0.8f),
+        new(ItemStatType.Bounce, Rarity.Rare, 50, 0.8f),
     };
+
+    public override float BaseCooldown => 3f;
 
     public override void OnEquip()
     {
@@ -40,7 +36,7 @@ public class IceWand : Equipment
         {
             StartCoroutine(FireIcicles(i * 0.05f));
         }
-        CurrentCooldown = Cooldown;
+        CurrentCooldown = CooldownRemaining;
     }
     private IEnumerator FireIcicles(float delay)
     {

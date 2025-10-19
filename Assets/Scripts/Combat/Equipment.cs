@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using System.Text;
+using JetBrains.Annotations;
+using Unity.Burst.Intrinsics;
 
 public abstract class Equipment : Item
 {
-    public bool usesCustomValues;
     [HideInInspector] public List<GameObject> EffectPrefabs = new List<GameObject>();
     public EquipmentSO itemData;
     [ReadOnly] public ItemSlot itemSlot;
@@ -21,20 +22,32 @@ public abstract class Equipment : Item
     }
 
     #region Leveling / Stats
-    public virtual void Upgrade()
+    public virtual void Upgrade(ItemStats upgradeStats)
     {
         if (IsMaxLevel) { return; }
         ItemLevel++;
-        RecalculateItemStats();
-        UseItem();
 
-        if (IsMaxLevel)
-        {
-            LootController.Instance.RemoveItemFromPool(itemData);
-        }
+        AddStats(upgradeStats);
+
+        UseItem();
+        
+        if (IsMaxLevel) { LootController.Instance?.RemoveItemFromPool(itemData); }
+    }
+    void AddStats(ItemStats upgradeStats)
+    {
+        if (upgradeStats.damage != 0f) { itemStats.damage.BaseValue += upgradeStats.damage; }
+        if (upgradeStats.knockBack != 0f) { itemStats.knockBack.BaseValue += upgradeStats.knockBack; }
+        if (upgradeStats.duration != 0f) { itemStats.duration.BaseValue += upgradeStats.duration; }
+        if (upgradeStats.size != 0f) { itemStats.size.BaseValue += upgradeStats.size; }
+        if (upgradeStats.speed != 0f) { itemStats.speed.BaseValue += upgradeStats.speed; }
+        if (upgradeStats.critChance != 0f) { itemStats.critChance.BaseValue += upgradeStats.critChance; }
+        if (upgradeStats.critDamage!= 0f) { itemStats.critDamage.BaseValue += upgradeStats.critDamage; }
+        if (upgradeStats.cooldown != 0f) { itemStats.cooldown.BaseValue += upgradeStats.cooldown; }
+        if (upgradeStats.projectiles != 0f) { itemStats.projectiles.BaseValue += upgradeStats.projectiles; }
+        if (upgradeStats.pierce != 0f) { itemStats.pierce.BaseValue += upgradeStats.pierce; }
     }
     [Button]
-    public void RecalculateItemStats()
+    public void RecalculateItemStats() //Will remove all upgrades, only call once at start of scene or combat
     {
         itemStats = new SessionItemStats(itemData.itemStats);
 
@@ -48,25 +61,27 @@ public abstract class Equipment : Item
         //itemStats.projectiles.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.projectiles;
         //itemStats.pierceCount.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.pierceCount;
 
-        for (int i = 0; i < UpgradeValues.Count; i++)
-        {
-            if (ItemLevel - 1 >= i)
-            {
-                itemStats.damage.BaseValue += UpgradeValues[i].damage;
-                itemStats.knockBack.BaseValue += UpgradeValues[i].knockBack;
-                itemStats.duration.BaseValue += UpgradeValues[i].duration;
-                itemStats.size.BaseValue += UpgradeValues[i].size;
-                itemStats.speed.BaseValue += UpgradeValues[i].speed;
-                itemStats.critChance.BaseValue += UpgradeValues[i].critChance;
-                itemStats.cooldown.BaseValue += UpgradeValues[i].cooldown;
-                itemStats.projectiles.BaseValue += UpgradeValues[i].projectiles;
-                itemStats.pierceCount.BaseValue += UpgradeValues[i].pierceCount;
-            }
-        }
-        //Debug.Log(BuildLevelUpStatsString());
+        //for (int i = 0; i < UpgradeValues.Count; i++)
+        //{
+        //    if (ItemLevel - 1 >= i)
+        //    {
+        //        itemStats.damage.BaseValue += UpgradeValues[i].damage;
+        //        itemStats.knockBack.BaseValue += UpgradeValues[i].knockBack;
+        //        itemStats.duration.BaseValue += UpgradeValues[i].duration;
+        //        itemStats.size.BaseValue += UpgradeValues[i].size;
+        //        itemStats.speed.BaseValue += UpgradeValues[i].speed;
+        //        itemStats.critChance.BaseValue += UpgradeValues[i].critChance;
+        //        itemStats.critDamage.BaseValue += UpgradeValues[i].critDamage;
+        //        itemStats.cooldown.BaseValue += UpgradeValues[i].cooldown;
+        //        itemStats.projectiles.BaseValue += UpgradeValues[i].projectiles;
+        //        itemStats.pierce.BaseValue += UpgradeValues[i].pierce;
+        //    }
+        //}
+
+        Debug.Log(BuildLevelUpStatsString());
     }
-    public abstract List<ItemStats> UpgradeValues { get; }
-    public virtual List<string> CustomUpgradeValues { get; }
+    public abstract List<ItemUpgradeStats> ItemUpgrades { get; }
+    public abstract float BaseCooldown { get; }
     #endregion
 
     #region Public
@@ -75,10 +90,7 @@ public abstract class Equipment : Item
     public virtual void TickCooldown(float time)
     {
         CurrentCooldown -= time;
-        if (CurrentCooldown <= 0f)
-        {
-            UseItem();
-        }
+        if (CurrentCooldown <= 0f) { UseItem(); }
     }
     public virtual void UnEquip()
     {
@@ -99,21 +111,25 @@ public abstract class Equipment : Item
             size = Size,
             speed = Speed,
             critChance = CritChance,
+            critDamage = CritDamage,
             cooldown = Cooldown,
             projectiles = ProjectileCount,
-            pierceCount = PierceCount
+            pierce = PierceCount,
+            bounce = Bounce,
         };
     }
 
-    public int Damage { get => Mathf.RoundToInt(itemStats.damage.Value + GameManager.Instance.Damage); }
-    public float Knockback { get => Mathf.Max(0f, itemStats.knockBack.Value + GameManager.Instance.KnockBack); }
-    public float Duration { get => Mathf.Max(0f, itemStats.duration.Value + GameManager.Instance.Duration); }
+    public float Damage { get => Mathf.Round((itemStats.damage.Value + GameManager.Instance.Damage * 100f) / 100f) * GameManager.Instance.DamageMultiplier; } 
+    public float Knockback { get => itemStats.knockBack.Value + GameManager.Instance.KnockBack; }
+    public float Duration { get => Mathf.Max(0.1f, itemStats.duration.Value + GameManager.Instance.Duration + 1f); }
     public float Size { get => Mathf.Max(0.5f, itemStats.size.Value + GameManager.Instance.Size); }
     public float Speed { get => Mathf.Max(0.5f, itemStats.speed.Value + GameManager.Instance.Speed); }
     public float CritChance { get => Mathf.Max(0f, itemStats.critChance.Value + GameManager.Instance.CritChance); }
-    public float Cooldown { get => Mathf.Max(0.5f, itemStats.cooldown.Value + GameManager.Instance.CritDamage); }
+    public float CritDamage { get => Mathf.Max(0f, itemStats.critDamage.Value + GameManager.Instance.CritDamage); }
+    public float Cooldown { get => Mathf.Max(0.5f, itemStats.cooldown.Value + GameManager.Instance.Cooldown + 1f); }
     public int ProjectileCount { get => Mathf.Max(1, Mathf.RoundToInt(itemStats.projectiles.Value + GameManager.Instance.Projectiles)); }
-    public int PierceCount { get => Mathf.Max(1, Mathf.RoundToInt(itemStats.pierceCount.Value + GameManager.Instance.PierceCount)); }
+    public int PierceCount { get => Mathf.Max(1, Mathf.RoundToInt(itemStats.pierce.Value + GameManager.Instance.Pierce)); }
+    public int Bounce { get => Mathf.Max(0, Mathf.RoundToInt(itemStats.bounce.Value + GameManager.Instance.Bounce)); }
 
     public GameObject GetPrefab()
     {
@@ -135,30 +151,77 @@ public abstract class Equipment : Item
         if (IsMaxLevel) { Debug.LogWarning(this.name + " is already at max level!"); return "Max Level"; }
         StringBuilder sb = new StringBuilder();
 
-        if (!usesCustomValues)
-        {
-            ItemStats nextLevelStats = UpgradeValues[ItemLevel];
-            if (ItemLevel + 1 == MaxLevel) { sb.Append("(MAX LVL)").AppendLine(); }
+        ItemStats nextLevelStats = GetUpgradeStats(0, ItemUpgrades);
+        if (ItemLevel + 1 == MaxLevel) { sb.Append("(MAX LVL)").AppendLine(); }
 
-            if (nextLevelStats.damage != 0f) { sb.Append("Damage +").Append(nextLevelStats.damage).AppendLine(); }
-            if (nextLevelStats.knockBack != 0f) { sb.Append("Knockback +").Append(nextLevelStats.knockBack).AppendLine(); }
-            if (nextLevelStats.duration != 0f) { sb.Append("Duration +").Append(nextLevelStats.duration).Append("s").AppendLine(); }
-            if (nextLevelStats.size != 0f) { sb.Append("Size +").Append(nextLevelStats.size * 100).Append("%").AppendLine(); }
-            if (nextLevelStats.speed != 0f) { sb.Append("Speed +").Append(nextLevelStats.speed).AppendLine(); }
-            if (nextLevelStats.critChance != 0f) { sb.Append("Crit Chance +").Append(nextLevelStats.critChance * 100).Append("%").AppendLine(); }
-            if (nextLevelStats.cooldown != 0f) { sb.Append("Cooldown ").Append(nextLevelStats.cooldown).Append("s").AppendLine(); }
-            if (nextLevelStats.projectiles != 0f) { sb.Append("Projectiles +").Append(nextLevelStats.projectiles).AppendLine(); }
-            if (nextLevelStats.pierceCount != 0f) { sb.Append("Piercing +").Append(nextLevelStats.pierceCount).AppendLine(); }
-        }
-        else
-        {
-            sb.Append(CustomUpgradeValues[ItemLevel]);
-        }
+        if (nextLevelStats.damage != 0f) { sb.Append("Damage +").Append(nextLevelStats.damage).AppendLine(); }
+        if (nextLevelStats.knockBack != 0f) { sb.Append("Knockback +").Append(nextLevelStats.knockBack).AppendLine(); }
+        if (nextLevelStats.duration != 0f) { sb.Append("Duration +").Append(nextLevelStats.duration).Append("s").AppendLine(); }
+        if (nextLevelStats.size != 0f) { sb.Append("Size +").Append(nextLevelStats.size * 100).Append("%").AppendLine(); }
+        if (nextLevelStats.speed != 0f) { sb.Append("Speed +").Append(nextLevelStats.speed).AppendLine(); }
+        if (nextLevelStats.critChance != 0f) { sb.Append("Crit Chance +").Append(nextLevelStats.critChance * 100).Append("%").AppendLine(); }
+        if (nextLevelStats.critDamage != 0f) { sb.Append("Crit Damage +").Append(nextLevelStats.critDamage * 100).Append("%").AppendLine(); }
+        if (nextLevelStats.cooldown != 0f) { sb.Append("Cooldown ").Append(nextLevelStats.cooldown).Append("s").AppendLine(); }
+        if (nextLevelStats.projectiles != 0f) { sb.Append("Projectiles +").Append(nextLevelStats.projectiles).AppendLine(); }
+        if (nextLevelStats.pierce != 0f) { sb.Append("Pierce +").Append(nextLevelStats.pierce).AppendLine(); }
+        if (nextLevelStats.bounce != 0f) { sb.Append("Bounce +").Append(nextLevelStats.bounce).AppendLine(); }
 
         return sb.ToString();
     }
-    public int MaxLevel => usesCustomValues ? CustomUpgradeValues.Count : UpgradeValues.Count;
+    public ItemStats GetUpgradeStats(Rarity luckRoll, List<ItemUpgradeStats> upgrades, int numberOfStats = 2)
+    {
+        ItemStats stats = new ItemStats();
+        List<ItemUpgradeStats> selectedUpgrades = new List<ItemUpgradeStats>();
+        int weight = 0;
+        float mult = (int)luckRoll / 100f;
+        foreach(var upgrade in upgrades) 
+        {
+            if ((int)upgrade.requiredRarity > (int)luckRoll) { upgrades.Remove(upgrade); } //If luck roll did not reach required amount, remove 
+            else weight += upgrade.weight; 
+        }
+
+        if (weight <= 0) { //Calculate weights
+            for (int i = 0; i < numberOfStats; i++)
+            {
+                selectedUpgrades.Add(upgrades[Random.Range(0, upgrades.Count)]);
+            }
+        }
+        else 
+        {
+            for (int i = 0; i < numberOfStats; i++)
+            {
+                int roll = Random.Range(0, weight);
+                for (int j = 0; j < upgrades.Count; j++) 
+                {
+                    roll -= upgrades[j].weight;
+                    if (roll < 0) 
+                    {
+                        selectedUpgrades.Add(upgrades[j]);
+                    }
+                }
+            }
+        }
+
+        #region Convert to ItemStats
+        if (selectedUpgrades.Count > 0) 
+        {
+            foreach (var upgrade in selectedUpgrades)
+            {
+                switch (upgrade.type) 
+                {
+                    case ItemStatType.Damage:
+                        stats.damage = upgrade.baseUpgrade * mult;
+                        break;
+                }
+            }
+        }
+        #endregion
+
+        return stats;
+    }
+    public int MaxLevel => 100; //Hard coded max item level
     public bool IsMaxLevel => ItemLevel >= MaxLevel;
+    public float CooldownRemaining => BaseCooldown / Cooldown;
     #endregion
 
     #region Physics Casting
@@ -186,55 +249,4 @@ public abstract class Equipment : Item
         return selected;
     }
     #endregion
-}
-[System.Serializable]
-public struct ItemStats
-{
-    public float damage;
-    public float knockBack;
-    public float duration;
-    public float size;
-    public float speed;
-    public float critChance;
-    public float cooldown;
-    public float projectiles;
-    public float pierceCount;
-}
-[System.Serializable]
-public struct SessionItemStats
-{
-    public CharacterStat damage;
-    public CharacterStat knockBack;
-    public CharacterStat duration;
-    public CharacterStat size;
-    public CharacterStat speed;
-    public CharacterStat critChance;
-    public CharacterStat cooldown;
-    public CharacterStat projectiles;
-    public CharacterStat pierceCount;
-
-    public SessionItemStats(ItemStats itemStats)
-    {
-        damage = new CharacterStat() { BaseValue = itemStats.damage };
-        knockBack = new CharacterStat() { BaseValue = itemStats.knockBack };
-        duration = new CharacterStat() { BaseValue = itemStats.duration };
-        size = new CharacterStat() { BaseValue = itemStats.size };
-        speed = new CharacterStat() { BaseValue = itemStats.speed };
-        critChance = new CharacterStat() { BaseValue = itemStats.critChance };
-        cooldown = new CharacterStat() { BaseValue = itemStats.cooldown };
-        projectiles = new CharacterStat() { BaseValue = itemStats.projectiles };
-        pierceCount = new CharacterStat() { BaseValue = itemStats.pierceCount };
-    }
-}
-[System.Serializable]
-public class DamageRecord
-{
-    public int damageDealt;
-    public int kills;
-
-    public void AddStats(DamageReport report)
-    {
-        damageDealt += report.damageDealt;
-        if (report.isDead) { kills++; }
-    }
 }

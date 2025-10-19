@@ -46,7 +46,7 @@ public class Player : Entity
     public override void Die()
     {
         CanTakeDamage = false;
-        throw new System.NotImplementedException();
+        Debug.LogError("YOU DIED!");
     }
     public virtual void Revive()
     {
@@ -75,8 +75,8 @@ public class Player : Entity
 [System.Serializable]
 public class PlayerStats
 {
-    public ItemStats levelupStats;
-    public int levelStatsIntervals = 5;
+    //public ItemStats levelupStats;
+    //public int levelStatsIntervals = 5;
 
     public float pickupRadius = 1;
     public float essenceGain = 1;

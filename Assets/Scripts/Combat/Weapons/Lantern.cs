@@ -16,19 +16,14 @@ public class Lantern : Equipment
 
     protected override string EffectPrefabName => "Lantern_Light";
 
-    public override List<ItemStats> UpgradeValues => new List<ItemStats>
+    public override List<ItemUpgradeStats> ItemUpgrades => new List<ItemUpgradeStats>()
     {
-        new ItemStats(){ damage = 2 },
-        new ItemStats(){ size = 0.2f },
-        new ItemStats(){ damage = 2 },
-        new ItemStats(){ size = 0.2f },
-        new ItemStats(){ damage = 2 },
-        new ItemStats(){ knockBack = 0.5f, speed = 0.2f },
-        new ItemStats(){ size = 0.2f},
-        new ItemStats(){ damage = 3, },
-        new ItemStats(){ damage = 3, speed = 0.2f},
-        new ItemStats(){ damage = 5, size = 0.3f, critChance = 0.2f}
+        new(ItemStatType.Damage, Rarity.Common, 100, 1f),
+        new(ItemStatType.Size, Rarity.Common, 100, 0.1f),
+        new(ItemStatType.Knockback, Rarity.Rare, 10, 2f),
     };
+
+    public override float BaseCooldown => throw new System.NotImplementedException();
 
     public override void OnEquip()
     {

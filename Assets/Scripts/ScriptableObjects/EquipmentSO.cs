@@ -7,5 +7,5 @@ using Sirenix.OdinInspector;
 public class EquipmentSO : ItemSO
 {
     [BoxGroup("Equipment")] public ItemStats itemStats;
-    //[BoxGroup("Equipment")] public ItemStats upgradeStats;
+    //[BoxGroup("Equipment")] public ItemUpgrades upgradeStats;
 }

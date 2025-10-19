@@ -10,19 +10,17 @@ public class Shortbow : Equipment
 
     protected override string EffectPrefabName => "Shortbow_Arrow";
 
-    public override List<ItemStats> UpgradeValues => new List<ItemStats>
+    public override List<ItemUpgradeStats> ItemUpgrades => new List<ItemUpgradeStats>()
     {
-        new ItemStats(){ damage = 10},
-        new ItemStats(){ speed = 0.25f, duration = 0.25f },
-        new ItemStats(){ projectiles = 1, damage = 5},
-        new ItemStats(){ cooldown = -0.25f, pierceCount = 1},
-        new ItemStats(){ size = 0.25f, damage = 5},
-        new ItemStats(){ projectiles = 1, pierceCount = 1},
-        new ItemStats(){ speed = 0.25f, cooldown = -0.25f },
-        new ItemStats(){ damage = 10 },
-        new ItemStats(){ damage = 5, speed = 0.25f },
-        new ItemStats(){ projectiles = 2, damage = 15, cooldown = -0.5f }
+        new(ItemStatType.Cooldown, Rarity.Common, 75, 0.09f),
+        new(ItemStatType.Damage, Rarity.Common, 100, 2f),
+        new(ItemStatType.CritDamage, Rarity.Common, 50, 0.15f),
+        new(ItemStatType.CritChance, Rarity.Common, 50, 0.07f),
+        new(ItemStatType.Projectiles, Rarity.Common, 10, 1f),
+        new(ItemStatType.Size, Rarity.Rare, 50, 0.12f),
     };
+
+    public override float BaseCooldown => 2.5f;
 
     public override void OnEquip()
     {
@@ -42,7 +40,7 @@ public class Shortbow : Equipment
         {
             StartCoroutine(SpawnArrows(i * 0.05f, direction + Random.insideUnitCircle * 0.25f));
         }
-        CurrentCooldown = Cooldown;
+        CurrentCooldown = CooldownRemaining;
     }
     private IEnumerator SpawnArrows(float delay, Vector2 direction)
     {

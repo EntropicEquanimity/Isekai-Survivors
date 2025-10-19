@@ -39,6 +39,13 @@ public class InventoryController : MonoBehaviour
             itemSlot.transform.localScale = Vector3.one;
         }
     }
+    #region Equipment
+    public void UpgradeEquipment(Equipment equipment, ItemStats upgradeStats)
+    {
+        if (!HasItem(equipment.itemData)){ Debug.LogError(equipment.itemData.name + " is no longer equipped!"); return; }
+
+        equipment.Upgrade(upgradeStats);
+    }
     public void AddEquipment(Equipment equipment)
     {
         if (equipment.ItemType == ItemType.Weapon && MaxWeaponsEquipped()) { Destroy(equipment.gameObject); return; }
@@ -47,7 +54,6 @@ public class InventoryController : MonoBehaviour
         {
             if (this.equippedItems[i].Name == equipment.Name)
             {
-                this.equippedItems[i].Upgrade();
                 Destroy(equipment.gameObject);
                 return;
             }
@@ -58,10 +64,8 @@ public class InventoryController : MonoBehaviour
 
         OnInventoryChange?.Invoke();
 
-        if (equipment.ItemType == ItemType.Weapon && MaxWeaponsEquipped())
-        {
-            LootController.Instance.RemoveAllUnusedWeaponsFromPool();
-        }
+        if (equipment.ItemType == ItemType.Weapon && MaxWeaponsEquipped()) { LootController.Instance.RemoveAllUnusedWeaponsFromPool(); }
+        else if(equipment.ItemType == ItemType.Tool && MaxToolsEquipped()) { LootController.Instance.RemoveAllUnusedToolFromPool(); }
     }
     public void AddEquipment(ItemSO item)
     {
@@ -69,16 +73,14 @@ public class InventoryController : MonoBehaviour
         equipment.GetComponent<EquipmentPickup>().OnPickup();
         AddEquipment(equipment);
     }
+    public void ButtonPress(ItemSO item, ItemStats upgradeStats = null)
+    {
+        if (HasItem(item)) { UpgradeEquipment(GetItem(item), upgradeStats); }
+    }
     public void RemoveEquipment(Equipment equipment)
     {
-        if (equippedItems.Contains(equipment))
-        {
-            equipment.UnEquip();
-        }
-        else
-        {
-            Debug.Log("Player does not possess this piece of equipment!");
-        }
+        if (equippedItems.Contains(equipment)) { equipment.UnEquip(); }
+        else { Debug.Log("Player does not possess this piece of equipment!"); }
     }
     public bool HasItem(ItemSO item)
     {
@@ -91,6 +93,19 @@ public class InventoryController : MonoBehaviour
         }
         return false;
     }
+    public Equipment GetItem(ItemSO item)
+    {
+        for (int i = 0; i < equippedItems.Count; i++)
+        {
+            if (equippedItems[i].Name == item.name)
+            {
+                return equippedItems[i];
+            }
+        }
+        return null;
+    }
+    #endregion
+
     #region Inventory UI
     public void AddEquipmentUI(Equipment equipment)
     {

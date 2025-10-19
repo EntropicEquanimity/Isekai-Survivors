@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 
 	[Serializable]
-	public class CharacterStat
+	public class EntityStat
 	{
 		public float BaseValue;
 
@@ -33,7 +33,7 @@ using System.Collections.ObjectModel;
 		private readonly Predicate<StatModifier> predicate;
 		private object sourceToRemove;
 
-		public CharacterStat()
+		public EntityStat()
 		{
 			statModifiers = new List<StatModifier>();
 			StatModifiers = statModifiers.AsReadOnly();
@@ -41,7 +41,7 @@ using System.Collections.ObjectModel;
 			predicate = modifier => modifier.Source == sourceToRemove;
 		}
 
-		public CharacterStat(float baseValue) : this()
+		public EntityStat(float baseValue) : this()
 		{
 			BaseValue = baseValue;
 		}

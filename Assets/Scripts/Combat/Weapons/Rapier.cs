@@ -13,19 +13,15 @@ public class Rapier : Equipment
 
     protected override string EffectPrefabName => "Rapier_Stab";
 
-    public override List<ItemStats> UpgradeValues => new List<ItemStats>
+    public override List<ItemUpgradeStats> ItemUpgrades => new List<ItemUpgradeStats>()
     {
-        new ItemStats(){ size = 0.2f, damage = 5 },
-        new ItemStats(){ damage = 10 },
-        new ItemStats(){ cooldown = -0.25f },
-        new ItemStats(){ damage = 10 },
-        new ItemStats(){ size = 0.2f, damage = 5 },
-        new ItemStats(){ critChance = 0.1f },
-        new ItemStats(){ cooldown = -0.25f },
-        new ItemStats(){ damage = 10 },
-        new ItemStats(){ critChance = 0.1f },
-        new ItemStats(){ damage = 20, projectiles = 1, critChance = 0.2f }
+        new(ItemStatType.Cooldown, Rarity.Common, 0, 0.1f),
+        new(ItemStatType.Damage, Rarity.Common, 0, 1.2f),
+        new(ItemStatType.CritDamage, Rarity.Rare, 0, 0.15f),
+        new(ItemStatType.Size, Rarity.Common, 0, 0.07f),
     };
+
+    public override float BaseCooldown => 2.5f;
 
     public override void OnEquip()
     {
@@ -44,7 +40,7 @@ public class Rapier : Equipment
         {
             StartCoroutine(SpawnSpearStabs(i * 0.2f));
         }
-        CurrentCooldown = Cooldown;
+        CurrentCooldown = CooldownRemaining;
     }
     private IEnumerator SpawnSpearStabs(float delay)
     {

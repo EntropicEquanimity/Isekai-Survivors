@@ -15,17 +15,13 @@ public class IronBriefs : Equipment
 
     protected override string EffectPrefabName => throw new System.NotImplementedException();
 
-    public override List<ItemStats> UpgradeValues => new List<ItemStats>
+    public override List<ItemUpgradeStats> ItemUpgrades => new List<ItemUpgradeStats>()
     {
-        new ItemStats(){ cooldown = -0.25f},
-        new ItemStats(){ duration = 0.05f},
-        new ItemStats(){ cooldown = -0.25f},
-        new ItemStats(){ duration = 0.05f},
-        new ItemStats(){ cooldown = -0.25f},
-        new ItemStats(){ duration = 0.05f},
-        new ItemStats(){ cooldown = -0.25f},
-        new ItemStats(){ duration = 0.1f, cooldown = -0.5f}
+        new(ItemStatType.Duration, Rarity.Common, 0, 0.1f),
+        new(ItemStatType.Cooldown, Rarity.Common, 0, 0.1f),
     };
+
+    public override float BaseCooldown => 15f;
 
     public override void TickCooldown(float time)
     {
@@ -40,8 +36,8 @@ public class IronBriefs : Equipment
     {
         if (damageInfo.damage > 0 && CurrentCooldown <= 0f)
         {
-            StartCoroutine(HandleInvulnerability(itemData.itemStats.duration));
-            CurrentCooldown = Cooldown;
+            StartCoroutine(HandleInvulnerability(0.5f * Duration));
+            CurrentCooldown = CooldownRemaining + Duration;
         }
     }
     private IEnumerator HandleInvulnerability(float duration)

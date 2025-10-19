@@ -11,18 +11,12 @@ public class Magnet : Equipment
 
     protected override string EffectPrefabName => throw new System.NotImplementedException();
 
-    public override List<ItemStats> UpgradeValues => new List<ItemStats> { };
-    public override List<string> CustomUpgradeValues => new List<string>
+    public override List<ItemUpgradeStats> ItemUpgrades => new List<ItemUpgradeStats>()
     {
-        "Pickup Radius + 0.5",
-        "Pickup Radius + 0.5",
-        "Pickup Radius + 0.5",
-        "Pickup Radius + 0.5",
-        "Pickup Radius + 0.5",
-        "Pickup Radius + 0.5",
-        "Pickup Radius + 0.5",
-        "Pickup Radius + 0.5",
+        new(ItemStatType.Size, Rarity.Common, 0, 0.25f),
     };
+
+    public override float BaseCooldown => throw new System.NotImplementedException();
 
     public override void TickCooldown(float time)
     {
@@ -32,13 +26,14 @@ public class Magnet : Equipment
     {
         GameManager.Instance.pickupRadius.AddModifier(new StatModifier(0.5f, StatModType.Flat, this));
     }
-    public override void Upgrade()
-    {
-        GameManager.Instance.pickupRadius.AddModifier(new StatModifier(0.5f, StatModType.Flat, this));
-    }
     public override void UseItem()
     {
 
+    }
+
+    public override void Upgrade(ItemStats upgradeStats)
+    {
+        GameManager.Instance.pickupRadius.AddModifier(new StatModifier(upgradeStats.size, StatModType.Flat, this));
     }
 
     public override void StopItem()

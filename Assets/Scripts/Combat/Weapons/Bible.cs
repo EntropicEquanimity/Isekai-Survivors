@@ -11,23 +11,17 @@ public class Bible : Equipment
 
     protected override string EffectPrefabName => "Bible_Effect";
 
-    public override List<ItemStats> UpgradeValues => new List<ItemStats>
+    public override List<ItemUpgradeStats> ItemUpgrades => new List<ItemUpgradeStats>()
     {
-        new ItemStats(){ damage = 2 },
-        new ItemStats(){ size = 0.2f },
-        new ItemStats(){ damage = 3 },
-        new ItemStats(){ size = 0.3f },
-        new ItemStats(){ damage = 4 },
-        new ItemStats(){ size = 0.2f },
-        new ItemStats(){ damage = 5 },
-        new ItemStats(){ size = 0.3f },
-        new ItemStats(){ damage = 5 },
-        new ItemStats(){ damage = 10, size = 0.5f }
+        new(ItemStatType.Size, Rarity.Common, 0, 0.075f),
+        new(ItemStatType.Damage, Rarity.Common, 0, 0.8f),
     };
+
+    public override float BaseCooldown => throw new System.NotImplementedException();
 
     public override void OnEquip()
     {
-        RecalculateItemStats();
+        //RecalculateItemStats();
         SpawnHolyEffect();
     }
     public override void StopItem()

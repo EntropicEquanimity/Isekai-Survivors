@@ -119,49 +119,65 @@ public class GameManager : MonoBehaviour
     public float Speed { get => speed.Value; }
     public float CritChance { get => critChance.Value; }
     public float CritDamage { get => critDamage.Value; }
+    public float Cooldown { get => cooldown.Value; }
     public int Projectiles { get => Mathf.RoundToInt(projectiles.Value); }
-    public int PierceCount { get => Mathf.RoundToInt(pierceCount.Value); }
+    public int Pierce { get => Mathf.RoundToInt(pierce.Value); }
+    public int Bounce { get => Mathf.RoundToInt(bounce.Value); }
     public float MoveSpeed { get => moveSpeed.Value; }
     public int Defense { get => Mathf.RoundToInt(projectiles.Value); }
     public int Health { get => Mathf.RoundToInt(health.Value); }
 
+    public float DamageMultiplier { get => damageMultiplier.Value + 1f; }
+
     public float PickupRadius { get => pickupRadius.Value; }
 
     public int LootChoices { get => Mathf.RoundToInt(lootChoices.Value); }
+    public int LootRerolls { get => Mathf.RoundToInt(lootRerolls.Value); }
+    public int LootBanishes { get => Mathf.RoundToInt(lootBanish.Value); }
     public int Revives { get => Mathf.RoundToInt(revives.Value); }
 
-    [FoldoutGroup("Stats")] public CharacterStat damage;
-    [FoldoutGroup("Stats")] public CharacterStat knockBack;
-    [FoldoutGroup("Stats")] public CharacterStat duration;
-    [FoldoutGroup("Stats")] public CharacterStat size;
-    [FoldoutGroup("Stats")] public CharacterStat speed;
-    [FoldoutGroup("Stats")] public CharacterStat critChance;
-    [FoldoutGroup("Stats")] public CharacterStat critDamage;
-    [FoldoutGroup("Stats")] public CharacterStat projectiles;
-    [FoldoutGroup("Stats")] public CharacterStat pierceCount;
-    [FoldoutGroup("Stats")] public CharacterStat moveSpeed;
-    [FoldoutGroup("Stats")] public CharacterStat defense;
-    [FoldoutGroup("Stats")] public CharacterStat health;
-    [FoldoutGroup("Stats")] public CharacterStat pickupRadius;
+    [FoldoutGroup("Stats")] public EntityStat damage;
+    [FoldoutGroup("Stats")] public EntityStat knockBack;
+    [FoldoutGroup("Stats")] public EntityStat duration;
+    [FoldoutGroup("Stats")] public EntityStat size;
+    [FoldoutGroup("Stats")] public EntityStat speed;
+    [FoldoutGroup("Stats")] public EntityStat critChance;
+    [FoldoutGroup("Stats")] public EntityStat critDamage;
+    [FoldoutGroup("Stats")] public EntityStat cooldown;
+    [FoldoutGroup("Stats")] public EntityStat projectiles;
+    [FoldoutGroup("Stats")] public EntityStat pierce;
+    [FoldoutGroup("Stats")] public EntityStat bounce;
+    [FoldoutGroup("Stats")] public EntityStat moveSpeed;
+    [FoldoutGroup("Stats")] public EntityStat defense;
+    [FoldoutGroup("Stats")] public EntityStat health;
 
-    [FoldoutGroup("Stats")] public CharacterStat lootChoices = new CharacterStat() { BaseValue = 1 };
-    [FoldoutGroup("Stats")] public CharacterStat revives = new CharacterStat() { BaseValue = 0 };
+    [FoldoutGroup("Stats")] public EntityStat damageMultiplier;
+
+    [FoldoutGroup("Stats")] public EntityStat pickupRadius;
+
+    [FoldoutGroup("Stats")] public EntityStat lootChoices = new EntityStat() { BaseValue = 3 };
+    [FoldoutGroup("Stats")] public EntityStat lootRerolls = new EntityStat() { BaseValue = 0 };
+    [FoldoutGroup("Stats")] public EntityStat lootBanish = new EntityStat() { BaseValue = 0 };
+    [FoldoutGroup("Stats")] public EntityStat revives = new EntityStat() { BaseValue = 0 };
 
     public void ResetGameStats()
     {
-        damage = new CharacterStat() { BaseValue = settings.selectedPlayerCharacter.entityStats.damage };
-        knockBack = new CharacterStat();
-        duration = new CharacterStat();
-        size = new CharacterStat();
-        speed = new CharacterStat();
-        critChance = new CharacterStat();
-        critDamage = new CharacterStat();
-        projectiles = new CharacterStat();
-        pierceCount = new CharacterStat();
-        moveSpeed = new CharacterStat();
-        defense = new CharacterStat();
-        health = new CharacterStat();
-        pickupRadius = new CharacterStat() { BaseValue = settings.selectedPlayerCharacter.playerStats.pickupRadius };
+        damage = new EntityStat() { BaseValue = settings.selectedPlayerCharacter.entityStats.damage };
+        knockBack = new EntityStat();
+        duration = new EntityStat();
+        size = new EntityStat();
+        speed = new EntityStat();
+        critChance = new EntityStat();
+        critDamage = new EntityStat();
+        cooldown = new EntityStat();
+        projectiles = new EntityStat();
+        pierce = new EntityStat();
+        bounce = new EntityStat();
+
+        moveSpeed = new EntityStat();
+        defense = new EntityStat();
+        health = new EntityStat();
+        pickupRadius = new EntityStat() { BaseValue = settings.selectedPlayerCharacter.playerStats.pickupRadius };
     }
     #endregion
 

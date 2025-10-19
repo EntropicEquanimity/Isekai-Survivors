@@ -12,19 +12,15 @@ public class BoomerangAxe : Equipment
 
     protected override string EffectPrefabName => "BoomerangAxe";
 
-    public override List<ItemStats> UpgradeValues => new List<ItemStats>
+    public override List<ItemUpgradeStats> ItemUpgrades => new List<ItemUpgradeStats>()
     {
-        new ItemStats(){ damage = 15 },
-        new ItemStats(){ cooldown = -0.5f, damage = 10},
-        new ItemStats(){ projectiles = 1},
-        new ItemStats(){ cooldown = -0.5f, pierceCount = 2 },
-        new ItemStats(){ damage = 15 },
-        new ItemStats(){ size = 0.2f, cooldown = -0.5f },
-        new ItemStats(){ projectiles = 1 },
-        new ItemStats(){ damage = 15, pierceCount = 2},
-        new ItemStats(){ damage = 15, cooldown = -0.5f },
-        new ItemStats(){ damage = 30, pierceCount = 5, size = 0.4f }
+        new(ItemStatType.Cooldown, Rarity.Common, 0, 0.08f),
+        new(ItemStatType.Damage, Rarity.Common, 0, 2.5f),
+        new(ItemStatType.Duration, Rarity.Common, 0, 0.08f),
+        new(ItemStatType.Size, Rarity.Common, 0, 0.1f),
     };
+
+    public override float BaseCooldown => 5f;
 
     public override void OnEquip()
     {
@@ -43,7 +39,7 @@ public class BoomerangAxe : Equipment
         {
             StartCoroutine(SpawnSwingEffects(i * 0.2f));
         }
-        CurrentCooldown = Cooldown;
+        CurrentCooldown = CooldownRemaining;
     }
     private IEnumerator SpawnSwingEffects(float delay)
     {
