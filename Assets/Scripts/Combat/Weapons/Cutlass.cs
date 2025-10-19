@@ -14,10 +14,10 @@ public class Cutlass : Equipment
 
     public override List<ItemUpgradeStats> ItemUpgrades => new List<ItemUpgradeStats>()
     {
-        new(ItemStatType.Cooldown, 100, 0, 0.05f, 0.08f, 0.15f, 0.25f, 0.4f),
-        new(ItemStatType.Damage, 150, 0, 1f, 1.2f, 1.6f, 2f, 3f),
-        new(ItemStatType.CritChance, 50, 50, 0.07f, 0.1f, 0.15f, 0.2f, 0.35f),
-        new(ItemStatType.CritDamage, 50, 75, 0.1f, 0.12f, 0.18f, 0.25f, 0.35f),
+        new(ItemStatType.Cooldown, Rarity.Common, 100, 0.8f),
+        new(ItemStatType.Damage, Rarity.Common, 100, 2f),
+        new(ItemStatType.CritDamage, Rarity.Common, 50, 0.15f),
+        new(ItemStatType.CritChance, Rarity.Common, 50, 0.08f),
     };
 
     public override float BaseCooldown => 2.5f;

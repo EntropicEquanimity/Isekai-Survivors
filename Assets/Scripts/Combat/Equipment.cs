@@ -122,11 +122,11 @@ public abstract class Equipment : Item
     public float Damage { get => Mathf.Round((itemStats.damage.Value + GameManager.Instance.Damage * 100f) / 100f) * GameManager.Instance.DamageMultiplier; } 
     public float Knockback { get => itemStats.knockBack.Value + GameManager.Instance.KnockBack; }
     public float Duration { get => Mathf.Max(0.1f, itemStats.duration.Value + GameManager.Instance.Duration + 1f); }
-    public float Size { get => Mathf.Max(0.5f, itemStats.size.Value + GameManager.Instance.Size); }
-    public float Speed { get => Mathf.Max(0.5f, itemStats.speed.Value + GameManager.Instance.Speed); }
-    public float CritChance { get => Mathf.Max(0f, itemStats.critChance.Value + GameManager.Instance.CritChance); }
-    public float CritDamage { get => Mathf.Max(0f, itemStats.critDamage.Value + GameManager.Instance.CritDamage); }
-    public float Cooldown { get => Mathf.Max(0.5f, itemStats.cooldown.Value + GameManager.Instance.Cooldown + 1f); }
+    public float Size { get => Mathf.Max(0.1f, (itemStats.size.Value + GameManager.Instance.Size * 100f) / 100f); }
+    public float Speed { get => Mathf.Max(0.1f, itemStats.speed.Value + GameManager.Instance.Speed); }
+    public float CritChance { get => Mathf.Max(0f, (itemStats.critChance.Value + GameManager.Instance.CritChance * 100f) / 100f); }
+    public float CritDamage { get => Mathf.Max(-0.8f, (itemStats.critDamage.Value + GameManager.Instance.CritDamage * 100f) / 100f) + 1f; }
+    public float Cooldown { get => Mathf.Max(0.1f, itemStats.cooldown.Value + GameManager.Instance.Cooldown + 1f); }
     public int ProjectileCount { get => Mathf.Max(1, Mathf.RoundToInt(itemStats.projectiles.Value + GameManager.Instance.Projectiles)); }
     public int PierceCount { get => Mathf.Max(1, Mathf.RoundToInt(itemStats.pierce.Value + GameManager.Instance.Pierce)); }
     public int Bounce { get => Mathf.Max(0, Mathf.RoundToInt(itemStats.bounce.Value + GameManager.Instance.Bounce)); }
@@ -154,15 +154,15 @@ public abstract class Equipment : Item
         ItemStats nextLevelStats = GetUpgradeStats(0, ItemUpgrades);
         if (ItemLevel + 1 == MaxLevel) { sb.Append("(MAX LVL)").AppendLine(); }
 
-        if (nextLevelStats.damage != 0f) { sb.Append("Damage +").Append(nextLevelStats.damage).AppendLine(); }
-        if (nextLevelStats.knockBack != 0f) { sb.Append("Knockback +").Append(nextLevelStats.knockBack).AppendLine(); }
-        if (nextLevelStats.duration != 0f) { sb.Append("Duration +").Append(nextLevelStats.duration).Append("s").AppendLine(); }
-        if (nextLevelStats.size != 0f) { sb.Append("Size +").Append(nextLevelStats.size * 100).Append("%").AppendLine(); }
-        if (nextLevelStats.speed != 0f) { sb.Append("Speed +").Append(nextLevelStats.speed).AppendLine(); }
-        if (nextLevelStats.critChance != 0f) { sb.Append("Crit Chance +").Append(nextLevelStats.critChance * 100).Append("%").AppendLine(); }
-        if (nextLevelStats.critDamage != 0f) { sb.Append("Crit Damage +").Append(nextLevelStats.critDamage * 100).Append("%").AppendLine(); }
-        if (nextLevelStats.cooldown != 0f) { sb.Append("Cooldown ").Append(nextLevelStats.cooldown).Append("s").AppendLine(); }
-        if (nextLevelStats.projectiles != 0f) { sb.Append("Projectiles +").Append(nextLevelStats.projectiles).AppendLine(); }
+        if (nextLevelStats.damage != 0f) { sb.Append("Damage ").Append(Damage.ToString("F1")).Append(" + ").Append(nextLevelStats.damage).Append(" -> ").Append((Damage + nextLevelStats.damage).ToString("F1")).AppendLine(); }
+        if (nextLevelStats.knockBack != 0f) { sb.Append("Knockback ").Append(Knockback.ToString("F1")).Append(" + ").Append(nextLevelStats.knockBack).Append(" -> ").Append((Knockback + nextLevelStats.knockBack).ToString("F1")).AppendLine(); }
+        if (nextLevelStats.duration != 0f) { sb.Append("Duration ").Append(Duration.ToString("F1")).Append("% + ").Append(nextLevelStats.duration).Append("% -> ").Append((Duration + nextLevelStats.duration).ToString("F1")).Append("%").AppendLine(); }
+        if (nextLevelStats.size != 0f) { sb.Append("Duration ").Append(Duration.ToString("F1")).Append("% + ").Append(nextLevelStats.duration).Append("% -> ").Append((Duration + nextLevelStats.duration).ToString("F1")).Append("%").AppendLine(); }
+        if (nextLevelStats.speed != 0f) { sb.Append("Speed ").Append(Speed.ToString("F1")).Append(" + ").Append(nextLevelStats.speed).Append(" -> ").Append((Speed + nextLevelStats.speed).ToString("F1")).AppendLine(); }
+        if (nextLevelStats.critChance != 0f) { sb.Append("Crit Chance ").Append(CritChance.ToString("F1")).Append("% + ").Append(nextLevelStats.critChance).Append("% -> ").Append((CritChance + nextLevelStats.critChance).ToString("F1")).Append("%").AppendLine(); }
+        if (nextLevelStats.critDamage != 0f) { sb.Append("Crit Damage ").Append(CritDamage.ToString("F1")).Append("% + ").Append(nextLevelStats.critDamage).Append("% -> ").Append((CritDamage + nextLevelStats.critDamage).ToString("F1")).Append("%").AppendLine(); }
+        if (nextLevelStats.cooldown != 0f) { sb.Append("Cooldown ").Append(Cooldown.ToString("F1")).Append("% + ").Append(nextLevelStats.cooldown).Append("% -> ").Append((Cooldown + nextLevelStats.cooldown).ToString("F1")).Append("%").AppendLine(); }
+        if (nextLevelStats.projectiles != 0f) { sb.Append("Projectiles ").Append(ProjectileCount.ToString("F1")).Append(" + ").Append(nextLevelStats.projectiles).Append(" -> ").Append((ProjectileCount + nextLevelStats.projectiles).ToString("F1")).AppendLine(); }
         if (nextLevelStats.pierce != 0f) { sb.Append("Pierce +").Append(nextLevelStats.pierce).AppendLine(); }
         if (nextLevelStats.bounce != 0f) { sb.Append("Bounce +").Append(nextLevelStats.bounce).AppendLine(); }
 
