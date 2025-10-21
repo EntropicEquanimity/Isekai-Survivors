@@ -49,6 +49,7 @@ public class InventoryController : MonoBehaviour
     public void AddEquipment(Equipment equipment)
     {
         if (equipment.ItemType == ItemType.Weapon && MaxWeaponsEquipped()) { Destroy(equipment.gameObject); return; }
+        else if (equipment.ItemType == ItemType.Tool && MaxToolsEquipped()) { Destroy(equipment.gameObject); return; }
 
         for (int i = 0; i < this.equippedItems.Count; i++)
         {
@@ -76,6 +77,7 @@ public class InventoryController : MonoBehaviour
     public void ButtonPress(ItemSO item, ItemStats upgradeStats = null)
     {
         if (HasItem(item)) { UpgradeEquipment(GetItem(item), upgradeStats); }
+        else { AddEquipment(item); }
     }
     public void RemoveEquipment(Equipment equipment)
     {
@@ -86,7 +88,7 @@ public class InventoryController : MonoBehaviour
     {
         for (int i = 0; i < equippedItems.Count; i++)
         {
-            if (equippedItems[i].Name == item.name)
+            if (equippedItems[i].itemData == item)
             {
                 return true;
             }
@@ -97,7 +99,7 @@ public class InventoryController : MonoBehaviour
     {
         for (int i = 0; i < equippedItems.Count; i++)
         {
-            if (equippedItems[i].Name == item.name)
+            if (equippedItems[i].itemData == item)
             {
                 return equippedItems[i];
             }

@@ -21,7 +21,7 @@ public class ItemCard : MonoBehaviour
     public void OnSelectCard()
     {
         OnClickEvent?.Invoke();
-        InventoryController.Instance.ButtonPress(item);
+        //InventoryController.Instance.ButtonPress(item);
         InterfaceController.Instance.CloseChooseItemPanel();
     }
     public void Initialize(ItemSO item, System.Action onClick)
@@ -29,19 +29,25 @@ public class ItemCard : MonoBehaviour
         newItem = true;
         this.item = item;
         OnClickEvent = onClick;
-        for (int i = 0; i < InventoryController.Instance.equippedItems.Count; i++)
+        ItemStats itemStats = new ItemStats();
+
+        if (InventoryController.Instance.HasItem(item))
         {
-            if (InventoryController.Instance.equippedItems[i].itemData == item)
-            {
-                newItem = false;
-                itemDescription.text = InventoryController.Instance.equippedItems[i].BuildLevelUpStatsString();
-            }
+            newItem = false;
+            Equipment equipment = InventoryController.Instance.GetItem(item);
+            itemStats = equipment.GetUpgradeStats(GameManager.Instance.LuckRoll(), 2);
+            itemDescription.text = equipment.BuildLevelUpStatsString(itemStats);
+            OnClickEvent += () => equipment.Upgrade(itemStats);
         }
         itemImage.sprite = item.icon;
         itemTypeTint.color = item.pickupablePrefab.GetComponent<Equipment>().ItemType == ItemType.Weapon ? graphicsSettings.weaponTint : graphicsSettings.equipmentTint;
         itemName.text = item.name;
 
-        if (newItem) { itemDescription.text = item.itemDescription; }
+        if (newItem) 
+        {
+            itemDescription.text = item.itemDescription;
+            OnClickEvent += ()=> InventoryController.Instance.AddEquipment(item);
+        }
 
         GetComponent<Button>().onClick.AddListener(OnSelectCard);
     }

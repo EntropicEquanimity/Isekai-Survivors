@@ -16,7 +16,7 @@ public class IceWand : Equipment
         new(ItemStatType.Damage, Rarity.Common, 200, 1.75f),
         new(ItemStatType.Cooldown, Rarity.Common, 150, 0.07f),
         new(ItemStatType.Projectiles, Rarity.Rare, 50, 0.8f),
-        new(ItemStatType.Bounce, Rarity.Rare, 50, 0.8f),
+        new(ItemStatType.Pierce, Rarity.Rare, 50, 0.8f),
     };
 
     public override float BaseCooldown => 3f;

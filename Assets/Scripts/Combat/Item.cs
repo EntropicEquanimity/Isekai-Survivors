@@ -41,7 +41,6 @@ public class ItemStats
     public float cooldown;
     public float projectiles;
     public float pierce;
-    public float bounce;
 }
 public struct ItemUpgradeStats
 {
@@ -71,7 +70,6 @@ public struct SessionItemStats
     public EntityStat cooldown;
     public EntityStat projectiles;
     public EntityStat pierce;
-    public EntityStat bounce;
 
     public SessionItemStats(ItemStats itemStats)
     {
@@ -85,7 +83,6 @@ public struct SessionItemStats
         cooldown = new EntityStat() { BaseValue = itemStats.cooldown };
         projectiles = new EntityStat() { BaseValue = itemStats.projectiles };
         pierce = new EntityStat() { BaseValue = itemStats.pierce };
-        bounce = new EntityStat() { BaseValue = itemStats.bounce };
     }
 }
 [System.Serializable]
@@ -113,7 +110,6 @@ public enum ItemStatType
     Cooldown = 7,
     Projectiles = 8,
     Pierce = 9,
-    Bounce = 10,
 }
 public enum Rarity
 {

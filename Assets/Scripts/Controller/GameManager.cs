@@ -89,7 +89,7 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space)) 
         {
-            Debug.Log(InventoryController.Instance.equippedItems[0].BuildLevelUpStatsString());
+            Debug.Log(InventoryController.Instance.equippedItems[0].BuildLevelUpStatsString(InventoryController.Instance.equippedItems[0].GetUpgradeStats(Rarity.Common, 2)));
         }
     }
     #endregion
@@ -167,6 +167,10 @@ public class GameManager : MonoBehaviour
     [FoldoutGroup("Stats")] public EntityStat lootBanish = new EntityStat() { BaseValue = 0 };
     [FoldoutGroup("Stats")] public EntityStat revives = new EntityStat() { BaseValue = 0 };
 
+    public Rarity LuckRoll()
+    {
+        return Rarity.Common; //Need to implement luck
+    }
     public void ResetGameStats()
     {
         damage = new EntityStat() { BaseValue = settings.selectedPlayerCharacter.entityStats.damage };

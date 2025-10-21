@@ -77,8 +77,6 @@ public abstract class Equipment : Item
         //        itemStats.pierce.BaseValue += UpgradeValues[i].pierce;
         //    }
         //}
-
-        Debug.Log(BuildLevelUpStatsString());
     }
     public abstract List<ItemUpgradeStats> ItemUpgrades { get; }
     public abstract float BaseCooldown { get; }
@@ -115,7 +113,6 @@ public abstract class Equipment : Item
             cooldown = Cooldown,
             projectiles = Projectiles,
             pierce = Pierce,
-            bounce = Bounce,
         };
     }
 
@@ -129,7 +126,6 @@ public abstract class Equipment : Item
     public float Cooldown { get => Mathf.Max(0.1f, itemStats.cooldown.Value + GameManager.Instance.Cooldown + 1f); }
     public int Projectiles { get => Mathf.Max(0, Mathf.RoundToInt(itemStats.projectiles.Value + GameManager.Instance.Projectiles)) + 1; }
     public int Pierce { get => Mathf.Max(0, Mathf.RoundToInt(itemStats.pierce.Value + GameManager.Instance.Pierce)) + 1; }
-    public int Bounce { get => Mathf.Max(0, Mathf.RoundToInt(itemStats.bounce.Value + GameManager.Instance.Bounce)); }
 
     public GameObject GetPrefab()
     {
@@ -146,12 +142,11 @@ public abstract class Equipment : Item
         EffectPrefabs.Add(obj);
         return obj;
     }
-    public string BuildLevelUpStatsString()
+    public string BuildLevelUpStatsString(ItemStats nextLevelStats)
     {
         if (IsMaxLevel) { Debug.LogWarning(this.name + " is already at max level!"); return "Max Level"; }
         StringBuilder sb = new StringBuilder();
 
-        ItemStats nextLevelStats = GetUpgradeStats(Rarity.Epic, ItemUpgrades);
         if (ItemLevel + 1 == MaxLevel) { sb.Append("(MAX LVL)").AppendLine(); }
 
         if (nextLevelStats.damage != 0f) { sb.Append("Damage ").Append(nextLevelStats.damage > 0f ? "+" : "-").Append(nextLevelStats.damage).Append(" = ").Append((Damage + nextLevelStats.damage).ToString("F1")).AppendLine(); }
@@ -164,48 +159,53 @@ public abstract class Equipment : Item
         if (nextLevelStats.cooldown != 0f) { sb.Append("Cooldown ").Append(nextLevelStats.cooldown > 0f ? "+" : "-").Append(nextLevelStats.cooldown * 100f).Append("% = ").Append(((Cooldown + nextLevelStats.cooldown) * 100f).ToString("F1")).Append("%").AppendLine(); }
         if (nextLevelStats.projectiles != 0f) { sb.Append("Projectiles ").Append(nextLevelStats.projectiles > 0f ? "+" : "-").Append(nextLevelStats.projectiles).Append(" = ").Append((Projectiles + nextLevelStats.projectiles).ToString("F1")).AppendLine(); }
         if (nextLevelStats.pierce != 0f) { sb.Append("Pierce ").Append(nextLevelStats.pierce > 0f ? "+" : "-").Append(nextLevelStats.pierce.ToString("F1")).Append(" = ").Append(Pierce + nextLevelStats.pierce.ToString("F1")).AppendLine(); }
-        if (nextLevelStats.bounce != 0f) { sb.Append("Bounce ").Append(nextLevelStats.bounce > 0f ? "+" : "-").Append(nextLevelStats.bounce.ToString("F1")).Append(" = ").Append(Bounce + nextLevelStats.bounce.ToString("F1")).AppendLine(); }
+        //if (nextLevelStats.bounce != 0f) { sb.Append("Bounce ").Append(nextLevelStats.bounce > 0f ? "+" : "-").Append(nextLevelStats.bounce.ToString("F1")).Append(" = ").Append(Bounce + nextLevelStats.bounce.ToString("F1")).AppendLine(); }
 
         return sb.ToString();
     }
-    public ItemStats GetUpgradeStats(Rarity luckRoll, List<ItemUpgradeStats> upgrades, int numberOfStats = 2)
+    public ItemStats GetUpgradeStats(Rarity luckRoll, int numberOfStats)
     {
         ItemStats stats = new ItemStats();
-        List<ItemUpgradeStats> selectedUpgrades = new List<ItemUpgradeStats>();
+        List<ItemUpgradeStats> selectedUpgrades = ItemUpgrades;
+        List<ItemUpgradeStats> removedUpgrades = new List<ItemUpgradeStats>();
         int weight = 0;
         float mult = (int)luckRoll / 100f;
 
-        foreach(var upgrade in upgrades) 
+        for(int i = 0; i < selectedUpgrades.Count; i++) 
         {
-            if ((int)upgrade.requiredRarity > (int)luckRoll) { upgrades.Remove(upgrade); } //If luck roll did not reach required amount, remove 
-            else weight += upgrade.weight; 
+            if ((int)selectedUpgrades[i].requiredRarity > (int)luckRoll) { removedUpgrades.Add(selectedUpgrades[i]); } //If luck roll did not reach required amount, remove it
+            else weight += selectedUpgrades[i].weight; 
         }
+        foreach(ItemUpgradeStats upgradeStats in removedUpgrades) { selectedUpgrades.Remove(upgradeStats); }
 
-        if (weight <= 0) { //Calculate weights
-            for (int i = 0; i < numberOfStats; i++)
-            {
-                int u = Random.Range(0, upgrades.Count);
-                selectedUpgrades.Add(upgrades[u]);
-                upgrades.Remove(upgrades[u]);
-            }
-        }
-        else 
+        if (selectedUpgrades.Count <= selectedUpgrades.Count) 
         {
-            for (int i = 0; i < numberOfStats; i++)
-            {
-                int roll = Random.Range(0, weight);
-                for (int j = 0; j < upgrades.Count; j++) 
+            if (weight <= 0)
+            { 
+                for (int i = selectedUpgrades.Count; i < numberOfStats; i++)
                 {
-                    roll -= upgrades[j].weight;
-                    if (roll < 0) 
+                    int u = Random.Range(0, selectedUpgrades.Count);
+                    selectedUpgrades.Remove(selectedUpgrades[u]);
+                }
+            }
+            else
+            {
+                for (int i = selectedUpgrades.Count; i < numberOfStats; i++)
+                {
+                    int roll = Random.Range(0, weight);
+                    for (int j = 0; j < selectedUpgrades.Count; j++)
                     {
-                        Debug.Log(selectedUpgrades[j].type);
-                        selectedUpgrades.Add(upgrades[j]);
+                        roll -= selectedUpgrades[j].weight;
+                        if (roll < 0)
+                        {
+                            selectedUpgrades.Remove(selectedUpgrades[j]);
+                        }
                     }
                 }
             }
         }
-        Debug.Log("1: " + selectedUpgrades[0].type + " 2: " + selectedUpgrades[1].type);
+        
+        //Debug.Log("1: " + selectedUpgrades[0].type + " 2: " + selectedUpgrades[1].type);
         #region Convert to ItemStats
         if (selectedUpgrades.Count > 0) 
         {
@@ -242,9 +242,6 @@ public abstract class Equipment : Item
                         break;
                     case ItemStatType.Pierce:
                         stats.pierce = upgrade.baseUpgrade * mult;
-                        break;
-                    case ItemStatType.Bounce:
-                        stats.bounce = upgrade.baseUpgrade * mult;
                         break;
                 }
             }
