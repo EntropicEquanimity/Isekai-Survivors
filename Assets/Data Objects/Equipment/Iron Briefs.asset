@@ -19,10 +19,12 @@ MonoBehaviour:
   itemStats:
     damage: 0
     knockBack: 0
-    duration: 0.1
+    duration: 0
     size: 0
     speed: 0
     critChance: 0
-    cooldown: 5
+    critDamage: 0
+    cooldown: 0
     projectiles: 0
-    pierceCount: 0
+    pierce: 0
+    bounce: 0

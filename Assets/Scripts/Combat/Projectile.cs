@@ -27,7 +27,7 @@ public class Projectile : MonoBehaviour
         this.projectileStats = projectileStats;
         this.damageSource = damageSource;
         durationRemaining = projectileStats.weaponStats.duration;
-        durabilityRemaining = projectileStats.pierceCount;
+        durabilityRemaining = Mathf.RoundToInt(projectileStats.weaponStats.pierce);
 
         if (!rotatesOnAxis)
         {
@@ -124,14 +124,12 @@ public struct ProjectileStats
 {
     public ItemStats weaponStats;
     public Vector2 direction;
-    public int pierceCount;
     public bool constantDamage;
 
-    public ProjectileStats(ItemStats weaponStats, Vector2 direction, int pierceCount, bool constantDamage = false)
+    public ProjectileStats(ItemStats weaponStats, Vector2 direction, bool constantDamage = false)
     {
         this.weaponStats = weaponStats;
         this.direction = direction;
-        this.pierceCount = pierceCount;
         this.constantDamage = constantDamage;
     }
 }

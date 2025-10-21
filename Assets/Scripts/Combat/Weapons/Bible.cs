@@ -43,7 +43,7 @@ public class Bible : Equipment
         projectile.transform.SetParent(GameManager.Instance.player.transform);
         projectile.transform.localPosition = Vector3.zero;
         projectile.transform.localScale = Vector3.one * Size;
-        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), Vector3.zero, 99999999, true), this);
+        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), Vector3.zero, true), this);
         _bible = projectile;
     }
 }

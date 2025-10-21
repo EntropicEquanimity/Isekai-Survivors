@@ -17,12 +17,14 @@ MonoBehaviour:
   pickupablePrefab: {fileID: 7730069951237586602, guid: 07d3e41512c2902439f5773d44791494, type: 3}
   dropWeight: 100
   itemStats:
-    damage: 50
-    knockBack: 1
-    duration: 3
-    size: 1
+    damage: 7
+    knockBack: 0.05
+    duration: 2
+    size: 0
     speed: 6
     critChance: 0
-    cooldown: 2
-    projectiles: 4
-    pierceCount: 1
+    critDamage: 0
+    cooldown: 0
+    projectiles: 3
+    pierce: 2
+    bounce: 0

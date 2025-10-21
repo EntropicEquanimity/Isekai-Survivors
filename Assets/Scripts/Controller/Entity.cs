@@ -99,8 +99,13 @@ public abstract class Entity : MonoBehaviour
     }
     public DamageReport TakeDamageWithForce(DamageInfo damageInfo, Vector2 direction, float force)
     {
-        transform.DOMove(transform.position + ((Vector3)direction * force / Mathf.Max(1, KnockBackResistance)), 0.1f);
+        AddKnockback(direction, force);
         return TakeDamage(damageInfo);
+    }
+    public void AddKnockback(Vector2 direction, float force, bool ignoreKnockbackResistance = false)
+    {
+        if (ignoreKnockbackResistance) { transform.DOMove(transform.position + ((Vector3)direction * force), 0.1f); }
+        else { transform.DOMove(transform.position + ((Vector3)direction * force / (KnockBackResistance + 1f)), 0.1f); }
     }
 
     public abstract void Move();

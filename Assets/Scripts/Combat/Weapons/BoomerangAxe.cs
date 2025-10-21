@@ -35,7 +35,7 @@ public class BoomerangAxe : Equipment
     public override void UseItem()
     {
         //if (GetRandomInRadius(Range + 1f) == null) { return; }
-        for (int i = 0; i < ProjectileCount; i++)
+        for (int i = 0; i < Projectiles; i++)
         {
             StartCoroutine(SpawnSwingEffects(i * 0.2f));
         }
@@ -52,6 +52,6 @@ public class BoomerangAxe : Equipment
         projectile.transform.position = transform.position + (Vector3)direction;
         projectile.transform.localScale = Vector3.one * Size;
         //projectile.GetComponent<SpriteRenderer>().size = new Vector2(SpriteBaseHeight, SpriteBaseHeight * (itemData.itemStats.size + 1f));
-        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), direction, PierceCount), this);
+        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), direction), this);
     }
 }

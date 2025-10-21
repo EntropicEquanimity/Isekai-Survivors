@@ -32,7 +32,7 @@ public class IceWand : Equipment
 
     public override void UseItem()
     {
-        for (int i = 0; i < ProjectileCount; i++)
+        for (int i = 0; i < Projectiles; i++)
         {
             StartCoroutine(FireIcicles(i * 0.05f));
         }
@@ -48,6 +48,6 @@ public class IceWand : Equipment
         projectile.transform.position = transform.position;
         projectile.transform.localScale = Vector3.one * Size;
 
-        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), direction, PierceCount), this);
+        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), direction), this);
     }
 }

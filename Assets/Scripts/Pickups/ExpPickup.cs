@@ -32,7 +32,7 @@ public class ExpPickup : Pickup
         //    }
         //}
 
-        if (expAmount == 1)
+        if (expAmount <= 3)
         {
             _sr.sprite = small;
             _sr.material = defaultMaterial;

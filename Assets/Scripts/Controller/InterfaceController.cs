@@ -125,12 +125,12 @@ public class InterfaceController : MonoBehaviour
     public void UpdateHealthBar(int current, int max)
     {
         playerHealthBarFill.fillAmount = (float)current / (float)max;
-        playerHealthText.text = current + " / " + max;
+        playerHealthText.text = current + "/" + max;
     }
     public void UpdateExpBar(int current, int max)
     {
         playerExpBarFill.fillAmount = (float)current / (float)max;
-        playerExpText.text = current + " / " + max;
+        playerExpText.text = current + "/" + max;
     }
     public void UpdateKills(int kills)
     {

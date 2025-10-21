@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using UnityEngine.Events;
+using System;
 
 [RequireComponent(typeof(InterfaceController))]
 public class GameManager : MonoBehaviour
@@ -26,6 +27,7 @@ public class GameManager : MonoBehaviour
     #region Player
     public void LevelUp()
     {
+        if (playerExp < ExpRequired) { return; }
         GameState = GameState.Lottery;
         _interfaceController.OpenChooseItemPanel(LootController.Instance.GetItems(LootChoices), delegate
         {
@@ -33,8 +35,9 @@ public class GameManager : MonoBehaviour
             playerLevel++;
             _interfaceController.UpdatePlayerLevel(playerLevel);
             GameState = GameState.Normal;
+            foreach(var hit in Physics2D.OverlapCircleAll(player.transform.position, 2f, LayerMask.GetMask("Enemy"))) { hit.GetComponent<Entity>().AddKnockback(hit.transform.position - player.transform.position, 1f); }
 
-            if (playerExp >= ExpRequired) { LevelUp(); }
+            if (playerExp >= ExpRequired) { DelayedAction(0.1f, LevelUp); }
         });
     }
     public void PlayerDeath()
@@ -54,7 +57,6 @@ public class GameManager : MonoBehaviour
         else { Debug.LogWarning("Warning! Multiple Game Managers in scene!"); Destroy(gameObject); }
 
         player = Instantiate(settings.selectedPlayerCharacter.characterPrefab, Vector3.zero, Quaternion.identity).GetComponent<Player>();
-
         playerKills = 0;
         playerExp = 0;
         gameTime = 0;
@@ -84,6 +86,11 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 1f;
         }
         gameTime += Time.deltaTime;
+
+        if (Input.GetKeyDown(KeyCode.Space)) 
+        {
+            Debug.Log(InventoryController.Instance.equippedItems[0].BuildLevelUpStatsString());
+        }
     }
     #endregion
 
@@ -184,6 +191,16 @@ public class GameManager : MonoBehaviour
     #region Events 
     public UnityAction<ProjectileStats> OnProjectileDestroyed;
     #endregion
+
+    IEnumerator DoWithDelay(float time, Action onComplete)
+    {
+        yield return new WaitForSeconds(time);
+        onComplete.Invoke();
+    }
+    public void DelayedAction(float time, Action onComplete)
+    {
+        StartCoroutine(DoWithDelay(time, onComplete));
+    }
 }
 public enum GameState
 {

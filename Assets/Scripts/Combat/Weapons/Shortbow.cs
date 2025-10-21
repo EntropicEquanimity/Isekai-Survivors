@@ -36,7 +36,7 @@ public class Shortbow : Equipment
         Collider2D nearest = GetClosestInRadius(15f);
         Vector2 direction = ((nearest != null ? nearest.transform.position : transform.position) - transform.position).normalized;
         //if (GetRandomInRadius(Range + 2f) == null) { return; }
-        for (int i = 0; i < ProjectileCount; i++)
+        for (int i = 0; i < Projectiles; i++)
         {
             StartCoroutine(SpawnArrows(i * 0.05f, direction + Random.insideUnitCircle * 0.25f));
         }
@@ -50,6 +50,6 @@ public class Shortbow : Equipment
         projectile.transform.position = transform.position + (Vector3)direction * 0.5f;
         projectile.transform.localScale = Vector3.one * Size;
 
-        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), direction.normalized, PierceCount), this);
+        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), direction.normalized), this);
     }
 }

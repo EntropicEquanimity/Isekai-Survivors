@@ -59,6 +59,7 @@ public class LootController : MonoBehaviour
             }
         }
         GameObject obj = Instantiate(experiencePickup, position, Quaternion.identity);
+        obj.transform.SetParent(this.transform);
         ExpPickup expPickup = obj.GetComponent<ExpPickup>();
         expPickup.expAmount = expAmount;
         expPickups.Add(expPickup);

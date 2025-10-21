@@ -10,7 +10,7 @@ public class BouncingProjectile : Projectile
     public override void OnTriggerEnter2D(Collider2D collision)
     {
         base.OnTriggerEnter2D(collision);
-        if (projectileStats.pierceCount - durabilityRemaining >= pierceCountBeforeBouncing + 1)
+        if (projectileStats.weaponStats.pierce - durabilityRemaining >= pierceCountBeforeBouncing + 1)
         {
             Vector2 dir = (transform.position - collision.transform.position).normalized;
             if (_rb != null)
