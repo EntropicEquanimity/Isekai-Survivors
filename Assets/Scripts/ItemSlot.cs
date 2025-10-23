@@ -48,7 +48,7 @@ public class ItemSlot : MonoBehaviour
     private void Update()
     {
         if (equipment == null) { return; }
-        UpdateCooldown(equipment.CurrentCooldown, equipment.Cooldown);
+        UpdateCooldown(equipment.CurrentCooldown, equipment.CooldownRemaining);
 
         if (equipment.ItemLevel < equipment.MaxLevel)
         {

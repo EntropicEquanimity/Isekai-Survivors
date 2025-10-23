@@ -36,7 +36,7 @@ public class Cutlass : Equipment
 
     public override void UseItem()
     {
-        if (GetRandomInRadius(Size + 0.5f) == null) { return; } //If no enemies are nearby, don't attack
+        if (GetRandomInRadius(Size + 0.25f) == null) { return; } //If no enemies are nearby, don't attack
         for (int i = 0; i < Projectiles; i++)
         {
             StartCoroutine(SpawnSwingEffects(i * 0.1f));
@@ -52,7 +52,6 @@ public class Cutlass : Equipment
         projectile.transform.localPosition = Vector3.zero;
         projectile.transform.localScale = Vector3.one * Size;
         projectile.transform.up = closest == null ? Vector3.up : (closest.transform.position  - transform.position).normalized;
-        projectile.rotationSpeed = Mathf.Clamp(-500 + -25 * Speed, -1000, -100);
         projectile.Initialize(new ProjectileStats(GetEquipmentStats(), Vector2.zero), this);
     }
 }

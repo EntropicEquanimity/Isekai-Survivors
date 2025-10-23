@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
@@ -68,7 +69,7 @@ public class ExpPickup : Pickup
         if (target != null)
         {
             transform.Translate((target.transform.position - transform.position).normalized * Time.fixedDeltaTime * _speed);
-
+            _speed += 0.01f;
             if (Vector2.Distance(target.transform.position, transform.position) < 0.5f)
             {
                 OnPickup();
@@ -77,12 +78,12 @@ public class ExpPickup : Pickup
     }
     private void OnDisable()
     {
+        GetComponent<Collider2D>().enabled = true;
         target = null;
         _speed = followTargetSpeed;
     }
     public override void OnPickup()
     {
-        //Debug.Log("Picking up " + expAmount);
         gameObject.SetActive(false);
         GameManager.Instance.PlayerExperience += expAmount;
         _speed = followTargetSpeed;
@@ -90,7 +91,8 @@ public class ExpPickup : Pickup
 
     public override void OnTrigger(Player player)
     {
+        GetComponent<Collider2D>().enabled = false;
         target = player;
-        _speed += 0.01f;
+        transform.DOMove((transform.position - target.transform.position) + transform.position, 0.3f);
     }
 }

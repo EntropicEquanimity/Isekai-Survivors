@@ -21,7 +21,7 @@ MonoBehaviour:
     knockBack: 0.05
     duration: 2
     size: 0
-    speed: 8
+    speed: 6
     critChance: 0
     critDamage: 0
     cooldown: 0

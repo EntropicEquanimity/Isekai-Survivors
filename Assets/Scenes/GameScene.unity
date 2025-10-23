@@ -173,7 +173,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7932044964597562847, guid: 7f89b2276e177f449ba94de74f285ff2, type: 3}
       propertyPath: expAmount
-      value: 100
+      value: 1000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -168455,6 +168455,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1434411655181867827, guid: b25e2660c9903644ebd149f4ad911a46, type: 3}
+      propertyPath: levelData
+      value: 
+      objectReference: {fileID: 11400000, guid: a4219b8c3e8940b42b8ab78ba29d0c98, type: 2}
     - target: {fileID: 5918914203734701410, guid: b25e2660c9903644ebd149f4ad911a46, type: 3}
       propertyPath: m_Name
       value: GameController

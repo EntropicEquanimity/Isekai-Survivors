@@ -48,7 +48,7 @@ public class Rapier : Equipment
         yield return new WaitForSeconds(delay);
         Rigidbody2D rb = _player.GetComponent<Rigidbody2D>();
 
-        Collider2D nearest = GetClosestInRadius(Size + 0.2f);
+        Collider2D nearest = GetClosestInRadius(Size + 0.75f);
         Vector2 direction = ((nearest != null ? nearest.transform.position : transform.position) + (Vector3)Random.insideUnitCircle * 0.25f - transform.position).normalized;
 
         if (rb != null && pullsPlayerForward) { rb.AddForce(direction * 10f, ForceMode2D.Impulse); }

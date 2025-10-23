@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
         {
             playerExp -= ExpRequired;
             playerLevel++;
+            _interfaceController.UpdateExpBar(playerExp, ExpRequired);
             _interfaceController.UpdatePlayerLevel(playerLevel);
             GameState = GameState.Normal;
             foreach(var hit in Physics2D.OverlapCircleAll(player.transform.position, 2f, LayerMask.GetMask("Enemy"))) { hit.GetComponent<Entity>().AddKnockback(hit.transform.position - player.transform.position, 1f); }

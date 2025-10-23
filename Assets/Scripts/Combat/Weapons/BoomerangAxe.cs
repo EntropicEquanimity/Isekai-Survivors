@@ -36,7 +36,6 @@ public class BoomerangAxe : Equipment
 
     public override void UseItem()
     {
-        //if (GetRandomInRadius(Range + 1f) == null) { return; }
         for (int i = 0; i < Projectiles; i++)
         {
             StartCoroutine(SpawnSwingEffects(i * 0.2f));
