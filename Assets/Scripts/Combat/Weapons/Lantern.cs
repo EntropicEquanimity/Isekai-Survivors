@@ -18,9 +18,9 @@ public class Lantern : Equipment
 
     public override List<ItemUpgradeStats> ItemUpgrades => new List<ItemUpgradeStats>()
     {
-        new(ItemStatType.Damage, Rarity.Common, 100, 1f),
+        new(ItemStatType.Damage, Rarity.Common, 100, 1.5f),
         new(ItemStatType.Size, Rarity.Common, 100, 0.1f),
-        new(ItemStatType.Knockback, Rarity.Rare, 10, 2f),
+        new(ItemStatType.Knockback, Rarity.Rare, 25, 0.1f),
     };
 
     public override float BaseCooldown => throw new System.NotImplementedException();

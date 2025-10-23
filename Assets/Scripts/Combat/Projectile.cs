@@ -120,6 +120,7 @@ public class Projectile : MonoBehaviour
         if (durabilityRemaining <= 0) { GameManager.Instance.OnProjectileDestroyed?.Invoke(projectileStats); gameObject.SetActive(false); }
     }
 }
+[System.Serializable]
 public struct ProjectileStats
 {
     public ItemStats weaponStats;

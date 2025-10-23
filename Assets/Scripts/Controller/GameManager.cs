@@ -86,11 +86,6 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 1f;
         }
         gameTime += Time.deltaTime;
-
-        if (Input.GetKeyDown(KeyCode.Space)) 
-        {
-            Debug.Log(InventoryController.Instance.equippedItems[0].BuildLevelUpStatsString(InventoryController.Instance.equippedItems[0].GetUpgradeStats(Rarity.Common, 2)));
-        }
     }
     #endregion
 

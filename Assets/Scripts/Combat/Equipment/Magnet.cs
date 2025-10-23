@@ -13,7 +13,7 @@ public class Magnet : Equipment
 
     public override List<ItemUpgradeStats> ItemUpgrades => new List<ItemUpgradeStats>()
     {
-        new(ItemStatType.Size, Rarity.Common, 0, 0.25f),
+        new(ItemStatType.Size, Rarity.Common, 0, 0.125f),
     };
 
     public override float BaseCooldown => throw new System.NotImplementedException();

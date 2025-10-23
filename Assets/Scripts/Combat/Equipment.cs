@@ -50,33 +50,6 @@ public abstract class Equipment : Item
     public void RecalculateItemStats() //Will remove all upgrades, only call once at start of scene or combat
     {
         itemStats = new SessionItemStats(itemData.itemStats);
-
-        //itemStats.damage.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.damage;
-        //itemStats.knockBack.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.knockBack;
-        //itemStats.duration.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.duration;
-        //itemStats.size.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.size;
-        //itemStats.speed.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.speed;
-        //itemStats.critChance.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.critChance;
-        //itemStats.cooldown.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.cooldown;
-        //itemStats.projectiles.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.projectiles;
-        //itemStats.pierceCount.BaseValue += (ItemLevel - 1) * itemData.upgradeStats.pierceCount;
-
-        //for (int i = 0; i < UpgradeValues.Count; i++)
-        //{
-        //    if (ItemLevel - 1 >= i)
-        //    {
-        //        itemStats.damage.BaseValue += UpgradeValues[i].damage;
-        //        itemStats.knockBack.BaseValue += UpgradeValues[i].knockBack;
-        //        itemStats.duration.BaseValue += UpgradeValues[i].duration;
-        //        itemStats.size.BaseValue += UpgradeValues[i].size;
-        //        itemStats.speed.BaseValue += UpgradeValues[i].speed;
-        //        itemStats.critChance.BaseValue += UpgradeValues[i].critChance;
-        //        itemStats.critDamage.BaseValue += UpgradeValues[i].critDamage;
-        //        itemStats.cooldown.BaseValue += UpgradeValues[i].cooldown;
-        //        itemStats.projectiles.BaseValue += UpgradeValues[i].projectiles;
-        //        itemStats.pierce.BaseValue += UpgradeValues[i].pierce;
-        //    }
-        //}
     }
     public abstract List<ItemUpgradeStats> ItemUpgrades { get; }
     public abstract float BaseCooldown { get; }
@@ -166,82 +139,82 @@ public abstract class Equipment : Item
     public ItemStats GetUpgradeStats(Rarity luckRoll, int numberOfStats)
     {
         ItemStats stats = new ItemStats();
-        List<ItemUpgradeStats> selectedUpgrades = ItemUpgrades;
-        List<ItemUpgradeStats> removedUpgrades = new List<ItemUpgradeStats>();
+        List<ItemUpgradeStats> selectedUpgrades = new List<ItemUpgradeStats>();
+        List<ItemUpgradeStats> upgrades = ItemUpgrades;
         int weight = 0;
         float mult = (int)luckRoll / 100f;
 
-        for(int i = 0; i < selectedUpgrades.Count; i++) 
+        for(int i = 0; i < upgrades.Count; i++) 
         {
-            if ((int)selectedUpgrades[i].requiredRarity > (int)luckRoll) { removedUpgrades.Add(selectedUpgrades[i]); } //If luck roll did not reach required amount, remove it
-            else weight += selectedUpgrades[i].weight; 
-        }
-        foreach(ItemUpgradeStats upgradeStats in removedUpgrades) { selectedUpgrades.Remove(upgradeStats); }
-
-        if (selectedUpgrades.Count <= selectedUpgrades.Count) 
-        {
-            if (weight <= 0)
-            { 
-                for (int i = selectedUpgrades.Count; i < numberOfStats; i++)
-                {
-                    int u = Random.Range(0, selectedUpgrades.Count);
-                    selectedUpgrades.Remove(selectedUpgrades[u]);
-                }
-            }
-            else
+            if ((int)upgrades[i].requiredRarity <= (int)luckRoll) 
             {
-                for (int i = selectedUpgrades.Count; i < numberOfStats; i++)
+                selectedUpgrades.Add(upgrades[i]); 
+                weight += upgrades[i].weight; 
+            }
+        }
+        upgrades = new List<ItemUpgradeStats>();
+
+        if (weight <= 0)
+        {
+            for (int i = 0; i < numberOfStats; i++)
+            {
+                int u = Random.Range(0, selectedUpgrades.Count);
+                upgrades.Add(selectedUpgrades[u]);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < numberOfStats; i++)
+            {
+                int roll = Random.Range(0, weight);
+                for (int j = 0; j < selectedUpgrades.Count; j++)
                 {
-                    int roll = Random.Range(0, weight);
-                    for (int j = 0; j < selectedUpgrades.Count; j++)
+                    roll -= selectedUpgrades[j].weight;
+                    if (roll < 0)
                     {
-                        roll -= selectedUpgrades[j].weight;
-                        if (roll < 0)
-                        {
-                            selectedUpgrades.Remove(selectedUpgrades[j]);
-                        }
+                        upgrades.Add(selectedUpgrades[j]);
+                        break;
                     }
                 }
             }
         }
-        
-        //Debug.Log("1: " + selectedUpgrades[0].type + " 2: " + selectedUpgrades[1].type);
         #region Convert to ItemStats
-        if (selectedUpgrades.Count > 0) 
+        if (upgrades.Count > 0) 
         {
-            foreach (var upgrade in selectedUpgrades)
+            foreach (var upgrade in upgrades)
             {
+                float num = upgrade.baseUpgrade * mult;
                 switch (upgrade.type) 
                 {
                     case ItemStatType.Damage:
-                        stats.damage = upgrade.baseUpgrade * mult;
+                        stats.damage += num;
                         break;
                     case ItemStatType.Knockback:
-                        stats.knockBack = upgrade.baseUpgrade * mult;
+                        stats.knockBack += num;
                         break;
                     case ItemStatType.Duration:
-                        stats.duration = upgrade.baseUpgrade * mult;
+                        stats.duration += num;
                         break;
                     case ItemStatType.Size:
-                        stats.size = upgrade.baseUpgrade * mult;
+                        stats.size += num;
                         break;
                     case ItemStatType.Speed:
-                        stats.speed = upgrade.baseUpgrade * mult;
+                        stats.speed += num;
                         break;
                     case ItemStatType.CritChance:
-                        stats.critChance = upgrade.baseUpgrade * mult;
+                        stats.critChance += num;
                         break;
                     case ItemStatType.CritDamage:
-                        stats.critDamage = upgrade.baseUpgrade * mult;
+                        stats.critDamage += num;
                         break;
                     case ItemStatType.Cooldown:
-                        stats.cooldown = upgrade.baseUpgrade * mult;
+                        stats.cooldown += num;
                         break;
                     case ItemStatType.Projectiles:
-                        stats.projectiles = upgrade.baseUpgrade * mult;
+                        stats.projectiles += num;
                         break;
                     case ItemStatType.Pierce:
-                        stats.pierce = upgrade.baseUpgrade * mult;
+                        stats.pierce += num;
                         break;
                 }
             }

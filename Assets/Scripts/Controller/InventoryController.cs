@@ -65,8 +65,8 @@ public class InventoryController : MonoBehaviour
 
         OnInventoryChange?.Invoke();
 
-        if (equipment.ItemType == ItemType.Weapon && MaxWeaponsEquipped()) { LootController.Instance.RemoveAllUnusedWeaponsFromPool(); }
-        else if(equipment.ItemType == ItemType.Tool && MaxToolsEquipped()) { LootController.Instance.RemoveAllUnusedToolFromPool(); }
+        if (equipment.ItemType == ItemType.Weapon && MaxWeaponsEquipped()) { LootController.Instance.RemoveEquipmentTypeFromList(ItemType.Weapon); }
+        else if(equipment.ItemType == ItemType.Tool && MaxToolsEquipped()) { LootController.Instance.RemoveEquipmentTypeFromList(ItemType.Tool); }
     }
     public void AddEquipment(ItemSO item)
     {

@@ -18,8 +18,8 @@ MonoBehaviour:
   dropWeight: 100
   itemStats:
     damage: 12
-    knockBack: 0.1
-    duration: 0
+    knockBack: 0.4
+    duration: 0.5
     size: 0
     speed: 0
     critChance: 0.1

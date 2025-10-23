@@ -13,11 +13,12 @@ public class Shortbow : Equipment
     public override List<ItemUpgradeStats> ItemUpgrades => new List<ItemUpgradeStats>()
     {
         new(ItemStatType.Cooldown, Rarity.Common, 75, 0.09f),
-        new(ItemStatType.Damage, Rarity.Common, 100, 2f),
+        new(ItemStatType.Damage, Rarity.Common, 100, 2.1f),
         new(ItemStatType.CritDamage, Rarity.Common, 50, 0.15f),
         new(ItemStatType.CritChance, Rarity.Common, 50, 0.07f),
-        new(ItemStatType.Projectiles, Rarity.Common, 10, 1f),
+        new(ItemStatType.Pierce, Rarity.Common, 50, 1),
         new(ItemStatType.Size, Rarity.Rare, 50, 0.12f),
+        new(ItemStatType.Projectiles, Rarity.Epic, 100, 1f),
     };
 
     public override float BaseCooldown => 2.5f;

@@ -85,7 +85,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 1
-  m_Size: {x: 2, y: 2}
+  m_Size: {x: 2, y: 1.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -134,7 +134,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   clearTargets: 0
-  rotationSpeed: -360
+  rotationSpeed: 0
   rotatesOnAxis: 0
   rotationSpeedAffectedByWeaponSpeed: 0
   constantDamageIntervals: 0
@@ -172,17 +172,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 1}
+  m_Offset: {x: 0, y: 0.75}
   m_SpriteTilingProperty:
-    border: {x: 0, y: 0.34375, z: 0, w: 0.5625}
+    border: {x: 0, y: 0.34375, z: 0, w: 0.5}
     pivot: {x: 0.49, y: 0}
-    oldSize: {x: 2, y: 2}
-    newSize: {x: 2, y: 2}
+    oldSize: {x: 2, y: 1.5}
+    newSize: {x: 2, y: 1.5}
     adaptiveTilingThreshold: 0.5
     drawMode: 1
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.5, y: 2}
+  m_Size: {x: 0.5, y: 1.5}
   m_EdgeRadius: 0
 --- !u!50 &-111393002927137281
 Rigidbody2D:

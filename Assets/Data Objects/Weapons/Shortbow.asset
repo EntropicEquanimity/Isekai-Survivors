@@ -21,10 +21,9 @@ MonoBehaviour:
     knockBack: 0.05
     duration: 2
     size: 0
-    speed: 6
+    speed: 8
     critChance: 0
     critDamage: 0
     cooldown: 0
-    projectiles: 3
-    pierce: 2
-    bounce: 0
+    projectiles: 2
+    pierce: 1

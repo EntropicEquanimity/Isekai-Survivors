@@ -14,15 +14,14 @@ public class Bible : Equipment
     public override List<ItemUpgradeStats> ItemUpgrades => new List<ItemUpgradeStats>()
     {
         new(ItemStatType.Size, Rarity.Common, 0, 0.075f),
-        new(ItemStatType.Damage, Rarity.Common, 0, 0.8f),
+        new(ItemStatType.Damage, Rarity.Common, 0, 1f),
     };
 
     public override float BaseCooldown => throw new System.NotImplementedException();
 
     public override void OnEquip()
     {
-        //RecalculateItemStats();
-        SpawnHolyEffect();
+        HolyEffect();
     }
     public override void StopItem()
     {
@@ -30,20 +29,27 @@ public class Bible : Equipment
     }
     public override void UseItem()
     {
-        SpawnHolyEffect();
+        HolyEffect();
     }
     public override void TickCooldown(float time)
     {
 
     }
-    private void SpawnHolyEffect()
+    private void HolyEffect()
     {
-        if (_bible != null) { _bible.gameObject.SetActive(false); _bible = null; }
-        Projectile projectile = GetPrefab().GetComponent<Projectile>();
-        projectile.transform.SetParent(GameManager.Instance.player.transform);
-        projectile.transform.localPosition = Vector3.zero;
-        projectile.transform.localScale = Vector3.one * Size;
-        projectile.Initialize(new ProjectileStats(GetEquipmentStats(), Vector3.zero, true), this);
-        _bible = projectile;
+        Projectile projectile = _bible;
+        if (projectile == null) 
+        {
+            projectile = GetPrefab().GetComponent<Projectile>();
+            projectile.transform.SetParent(GameManager.Instance.player.transform);
+            projectile.transform.localPosition = Vector3.zero;
+            _bible = projectile;
+        }
+
+        projectile.transform.localScale = Vector2.one * Size;
+        ItemStats stats = GetEquipmentStats();
+        stats.duration = Mathf.Infinity;
+        stats.pierce = Mathf.Infinity;
+        projectile.Initialize(new ProjectileStats(stats, Vector3.zero, true), this);
     }
 }

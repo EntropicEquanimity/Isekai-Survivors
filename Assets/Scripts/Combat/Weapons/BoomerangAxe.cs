@@ -14,10 +14,12 @@ public class BoomerangAxe : Equipment
 
     public override List<ItemUpgradeStats> ItemUpgrades => new List<ItemUpgradeStats>()
     {
-        new(ItemStatType.Cooldown, Rarity.Common, 0, 0.08f),
-        new(ItemStatType.Damage, Rarity.Common, 0, 2.5f),
-        new(ItemStatType.Duration, Rarity.Common, 0, 0.08f),
-        new(ItemStatType.Size, Rarity.Common, 0, 0.1f),
+        new(ItemStatType.Cooldown, Rarity.Common, 100, 0.08f),
+        new(ItemStatType.Damage, Rarity.Common, 100, 2.5f),
+        new(ItemStatType.Size, Rarity.Common, 100, 0.1f),
+        new(ItemStatType.Duration, Rarity.Common, 50, 0.08f),
+        new(ItemStatType.Speed, Rarity.Epic, 25, 0.1f),
+        new(ItemStatType.Projectiles, Rarity.Legendary, 100, 0.4f),
     };
 
     public override float BaseCooldown => 5f;

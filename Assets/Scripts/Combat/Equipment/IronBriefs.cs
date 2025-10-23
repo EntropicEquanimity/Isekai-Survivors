@@ -17,8 +17,8 @@ public class IronBriefs : Equipment
 
     public override List<ItemUpgradeStats> ItemUpgrades => new List<ItemUpgradeStats>()
     {
-        new(ItemStatType.Duration, Rarity.Common, 0, 0.1f),
-        new(ItemStatType.Cooldown, Rarity.Common, 0, 0.1f),
+        new(ItemStatType.Duration, Rarity.Common, 0, 0.05f),
+        new(ItemStatType.Cooldown, Rarity.Common, 0, 0.05f),
     };
 
     public override float BaseCooldown => 15f;

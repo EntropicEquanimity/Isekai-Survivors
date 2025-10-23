@@ -85,31 +85,18 @@ public class LootController : MonoBehaviour
             }
         }
     }
-    public void RemoveAllUnusedWeaponsFromPool()
+    public void RemoveEquipmentTypeFromList(ItemType itemType)
     {
+        List<ItemSO> itemsToRemove = new();
+
         for (int i = 0; i < itemsInPool.Count; i++)
         {
             if (!InventoryController.Instance.HasItem(itemsInPool[i]))
             {
-                if (itemsInPool[i].pickupablePrefab.GetComponent<Equipment>().ItemType == ItemType.Weapon)
-                {
-                    RemoveItemFromPool(itemsInPool[i]);
-                }
+                if (itemsInPool[i].pickupablePrefab.GetComponent<Equipment>().ItemType == itemType) { itemsToRemove.Add(itemsInPool[i]); }
             }
         }
-    }
-    public void RemoveAllUnusedToolFromPool()
-    {
-        for (int i = 0; i < itemsInPool.Count; i++)
-        {
-            if (!InventoryController.Instance.HasItem(itemsInPool[i]))
-            {
-                if (itemsInPool[i].pickupablePrefab.GetComponent<Equipment>().ItemType == ItemType.Tool)
-                {
-                    RemoveItemFromPool(itemsInPool[i]);
-                }
-            }
-        }
+        for (int i = 0; i < itemsToRemove.Count; i++) { if (itemsInPool.Contains(itemsToRemove[i])) { itemsInPool.Remove(itemsInPool[itemsInPool.IndexOf(itemsToRemove[i])]); } }
     }
     public List<ItemSO> GetItems(int numberToPull)
     {

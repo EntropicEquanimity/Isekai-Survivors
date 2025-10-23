@@ -18,12 +18,12 @@ MonoBehaviour:
   dropWeight: 100
   itemStats:
     damage: 10
-    knockBack: 1
+    knockBack: 0.6
     duration: 2
     size: 0
     speed: 5
     critChance: 0
     critDamage: 0
     cooldown: 0
-    projectiles: 2
+    projectiles: 1
     pierce: 999

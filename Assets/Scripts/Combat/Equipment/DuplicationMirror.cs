@@ -11,7 +11,7 @@ public class DuplicationMirror : Equipment
 
     public override List<ItemUpgradeStats> ItemUpgrades => new List<ItemUpgradeStats>() 
     {
-        new(ItemStatType.Projectiles, Rarity.Common, 0, 1f),
+        new(ItemStatType.Projectiles, Rarity.Common, 0, 0.5f),
     };
 
     public override float BaseCooldown => throw new System.NotImplementedException();

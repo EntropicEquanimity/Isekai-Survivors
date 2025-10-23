@@ -14,10 +14,12 @@ public class Cutlass : Equipment
 
     public override List<ItemUpgradeStats> ItemUpgrades => new List<ItemUpgradeStats>()
     {
-        new(ItemStatType.Cooldown, Rarity.Common, 100, 0.8f),
-        new(ItemStatType.Damage, Rarity.Common, 100, 2f),
+        new(ItemStatType.Cooldown, Rarity.Common, 100, 0.08f),
+        new(ItemStatType.Damage, Rarity.Common, 100, 2.2f),
         new(ItemStatType.CritDamage, Rarity.Common, 50, 0.15f),
         new(ItemStatType.CritChance, Rarity.Common, 50, 0.08f),
+        new(ItemStatType.Duration, Rarity.Rare, 50, 0.05f),
+        new(ItemStatType.Projectiles, Rarity.Legendary, 100, 0.4f),
     };
 
     public override float BaseCooldown => 2.5f;
@@ -44,12 +46,13 @@ public class Cutlass : Equipment
     private IEnumerator SpawnSwingEffects(float delay)
     {
         yield return new WaitForSeconds(delay);
-
+        Collider2D closest = GetClosestInRadius(Size + 0.5f);
         Projectile projectile = GetPrefab().GetComponent<Projectile>();
         projectile.transform.SetParent(GameManager.Instance.player.transform);
         projectile.transform.localPosition = Vector3.zero;
         projectile.transform.localScale = Vector3.one * Size;
-        projectile.transform.rotation = Quaternion.Euler(Vector3.zero);
+        projectile.transform.up = closest == null ? Vector3.up : (closest.transform.position  - transform.position).normalized;
+        projectile.rotationSpeed = Mathf.Clamp(-500 + -25 * Speed, -1000, -100);
         projectile.Initialize(new ProjectileStats(GetEquipmentStats(), Vector2.zero), this);
     }
 }
