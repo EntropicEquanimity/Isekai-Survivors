@@ -16,7 +16,7 @@ public class Magnet : Equipment
         new(ItemStatType.Size, Rarity.Common, 0, 0.125f),
     };
 
-    public override float BaseCooldown => throw new System.NotImplementedException();
+    public override float BaseCooldown => 0;
 
     public override void TickCooldown(float time)
     {

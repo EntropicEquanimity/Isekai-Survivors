@@ -979,7 +979,7 @@ MonoBehaviour:
     m_Top: 8
     m_Bottom: 8
   m_ChildAlignment: 4
-  m_Spacing: 4
+  m_Spacing: 0
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -4625,7 +4625,17 @@ MonoBehaviour:
     BaseValue: 0
   damageMultiplier:
     BaseValue: 0
+  armor:
+    BaseValue: 0
   pickupRadius:
+    BaseValue: 0
+  xpGain:
+    BaseValue: 0
+  goldGain:
+    BaseValue: 0
+  essenceGain:
+    BaseValue: 0
+  luck:
     BaseValue: 0
   lootChoices:
     BaseValue: 5

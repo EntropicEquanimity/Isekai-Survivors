@@ -17,7 +17,7 @@ public class Bible : Equipment
         new(ItemStatType.Damage, Rarity.Common, 0, 1f),
     };
 
-    public override float BaseCooldown => throw new System.NotImplementedException();
+    public override float BaseCooldown => 0;
 
     public override void OnEquip()
     {

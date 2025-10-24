@@ -15,7 +15,7 @@ public class Cutlass : Equipment
     public override List<ItemUpgradeStats> ItemUpgrades => new List<ItemUpgradeStats>()
     {
         new(ItemStatType.Cooldown, Rarity.Common, 100, 0.08f),
-        new(ItemStatType.Damage, Rarity.Common, 100, 2.2f),
+        new(ItemStatType.Damage, Rarity.Common, 100, 2f),
         new(ItemStatType.CritDamage, Rarity.Common, 50, 0.15f),
         new(ItemStatType.CritChance, Rarity.Common, 50, 0.08f),
         new(ItemStatType.Duration, Rarity.Rare, 50, 0.05f),

@@ -23,7 +23,7 @@ public class Lantern : Equipment
         new(ItemStatType.Knockback, Rarity.Rare, 25, 0.1f),
     };
 
-    public override float BaseCooldown => throw new System.NotImplementedException();
+    public override float BaseCooldown => 0;
 
     public override void OnEquip()
     {

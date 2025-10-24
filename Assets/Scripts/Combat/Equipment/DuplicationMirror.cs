@@ -14,7 +14,7 @@ public class DuplicationMirror : Equipment
         new(ItemStatType.Projectiles, Rarity.Common, 0, 0.5f),
     };
 
-    public override float BaseCooldown => throw new System.NotImplementedException();
+    public override float BaseCooldown => 0;
 
     public override void OnEquip()
     {

@@ -30,22 +30,25 @@ public class ItemCard : MonoBehaviour
         this.item = item;
         OnClickEvent = onClick;
         ItemStats itemStats = new ItemStats();
+        Rarity rarity = GameManager.Instance.LuckRoll;
 
         if (InventoryController.Instance.HasItem(item))
         {
             newItem = false;
             Equipment equipment = InventoryController.Instance.GetItem(item);
-            itemStats = equipment.GetUpgradeStats(GameManager.Instance.LuckRoll(), 2);
+            itemStats = equipment.GetUpgradeStats(rarity, 2);
             itemDescription.text = equipment.BuildLevelUpStatsString(itemStats);
             OnClickEvent += () => equipment.Upgrade(itemStats);
         }
         itemImage.sprite = item.icon;
-        itemTypeTint.color = item.pickupablePrefab.GetComponent<Equipment>().ItemType == ItemType.Weapon ? graphicsSettings.weaponTint : graphicsSettings.equipmentTint;
+        //itemTypeTint.color = item.pickupablePrefab.GetComponent<Equipment>().ItemType == ItemType.Weapon ? graphicsSettings.weaponTint : graphicsSettings.equipmentTint;
+        itemTypeTint.color = Item.GetColorFromRarity(rarity);
         itemName.text = item.name;
 
         if (newItem) 
         {
             itemDescription.text = item.itemDescription;
+            itemTypeTint.color = Color.gray;
             OnClickEvent += ()=> InventoryController.Instance.AddEquipment(item);
         }
 

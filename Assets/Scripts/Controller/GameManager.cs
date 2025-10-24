@@ -1,9 +1,9 @@
+using Sirenix.OdinInspector;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Sirenix.OdinInspector;
 using UnityEngine.Events;
-using System;
 
 [RequireComponent(typeof(InterfaceController))]
 public class GameManager : MonoBehaviour
@@ -126,13 +126,17 @@ public class GameManager : MonoBehaviour
     public int Projectiles { get => Mathf.RoundToInt(projectiles.Value); }
     public int Pierce { get => Mathf.RoundToInt(pierce.Value); }
     public int Bounce { get => Mathf.RoundToInt(bounce.Value); }
+
     public float MoveSpeed { get => moveSpeed.Value; }
-    public int Defense { get => Mathf.RoundToInt(projectiles.Value); }
+    public int Defense { get => Mathf.RoundToInt(defense.Value); }
     public int Health { get => Mathf.RoundToInt(health.Value); }
-
+    public float Armor { get => armor.Value; }
     public float DamageMultiplier { get => damageMultiplier.Value + 1f; }
-
     public float PickupRadius { get => pickupRadius.Value; }
+    public float XpGain { get => pickupRadius.Value; }
+    public float GoldGain { get => pickupRadius.Value; }
+    public float EssenceGain { get => essenceGain.Value; }
+    public int Luck { get => Mathf.RoundToInt(luck.Value); }
 
     public int LootChoices { get => Mathf.RoundToInt(lootChoices.Value); }
     public int LootRerolls { get => Mathf.RoundToInt(lootRerolls.Value); }
@@ -155,18 +159,20 @@ public class GameManager : MonoBehaviour
     [FoldoutGroup("Stats")] public EntityStat health;
 
     [FoldoutGroup("Stats")] public EntityStat damageMultiplier;
+    [FoldoutGroup("Stats")] public EntityStat armor;
 
     [FoldoutGroup("Stats")] public EntityStat pickupRadius;
+    [FoldoutGroup("Stats")] public EntityStat xpGain;
+    [FoldoutGroup("Stats")] public EntityStat goldGain;
+    [FoldoutGroup("Stats")] public EntityStat essenceGain;
+    [FoldoutGroup("Stats")] public EntityStat luck;
 
     [FoldoutGroup("Stats")] public EntityStat lootChoices = new EntityStat() { BaseValue = 3 };
     [FoldoutGroup("Stats")] public EntityStat lootRerolls = new EntityStat() { BaseValue = 0 };
     [FoldoutGroup("Stats")] public EntityStat lootBanish = new EntityStat() { BaseValue = 0 };
     [FoldoutGroup("Stats")] public EntityStat revives = new EntityStat() { BaseValue = 0 };
 
-    public Rarity LuckRoll()
-    {
-        return Rarity.Common; //Need to implement luck
-    }
+    public Rarity LuckRoll => Item.GetRarityFromLuck(Luck);
     public void ResetGameStats()
     {
         damage = new EntityStat() { BaseValue = settings.selectedPlayerCharacter.entityStats.damage };
