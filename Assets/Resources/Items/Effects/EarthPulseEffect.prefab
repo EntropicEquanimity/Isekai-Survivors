@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4660113044867486778}
   - component: {fileID: 8864358367796439392}
   m_Layer: 8
-  m_Name: Bible_Effect
+  m_Name: EarthPulseEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

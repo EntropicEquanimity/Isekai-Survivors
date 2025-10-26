@@ -63,6 +63,8 @@ public class Enemy : Entity
                     case OnBecameInvisibleBehavior.TeleportToOtherSide:
                         _rb.MovePosition(Vector2.Distance(target.transform.position, transform.position) * (target.transform.position - transform.position).normalized);
                         break;
+                    default:
+                        break;
                 }
                 _timeBeforeDisabling = 5f;
             }
@@ -98,22 +100,6 @@ public class Enemy : Entity
             _lastTimeDamageDealt = Time.realtimeSinceStartup;
         }
     }
-    //public virtual void OnCollisionEnter2D(Collision2D collision)
-    //{
-    //    if (collision.transform.CompareTag("Player"))
-    //    {
-    //        collision.transform.GetComponent<Player>().TakeDamage(new DamageInfo() { damage = Damage, critChance = 0 });
-    //        _lastTimeDamageDealt = Time.realtimeSinceStartup;
-    //    }
-    //}
-    //public virtual void OnCollisionStay2D(Collision2D collision)
-    //{
-    //    if (collision.transform.CompareTag("Player") && Time.realtimeSinceStartup - _lastTimeDamageDealt > 0.5f)
-    //    {
-    //        collision.transform.GetComponent<Player>().TakeDamage(new DamageInfo() { damage = Damage, critChance = 0 });
-    //        _lastTimeDamageDealt = Time.realtimeSinceStartup;
-    //    }
-    //}
     public override void Die()
     {
         GetComponent<CircleCollider2D>().enabled = false;
@@ -142,6 +128,7 @@ public class Enemy : Entity
 }
 public enum OnBecameInvisibleBehavior
 {
+    Nothing,
     Disable,
     TeleportToOtherSide
 }

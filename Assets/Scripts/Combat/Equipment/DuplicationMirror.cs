@@ -5,7 +5,7 @@ using UnityEngine;
 public class DuplicationMirror : Equipment
 {
     public override string Name => "Duplication Mirror";
-    public override ItemType ItemType => ItemType.Tool;
+    public override ItemType ItemType => ItemType.Artifact;
 
     protected override string EffectPrefabName => throw new System.NotImplementedException();
 

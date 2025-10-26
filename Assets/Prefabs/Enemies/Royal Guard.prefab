@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8701169495049851619}
   m_Layer: 7
   m_Name: Royal Guard
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -186,10 +186,10 @@ MonoBehaviour:
   entitySpriteRenderer: {fileID: 410585927347893561}
   settings: {fileID: 11400000, guid: 43be9781a9947624796c212527175348, type: 2}
   expDrop: {x: 30, y: 40}
-  essenceDrop: 0
+  essenceDrop: 1
   followTargetPositionInstead: 0
   attackCooldown: 0.5
-  onBecameInvisibleBehavior: 0
+  onBecameInvisibleBehavior: 2
   target: {fileID: 0}
   range: 0
   targetPosition: {x: 0, y: 0, z: 0}

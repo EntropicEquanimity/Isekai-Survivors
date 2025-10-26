@@ -6,11 +6,11 @@ public class BoomerangAxe : Equipment
 {
     private Player _player;
     private const int SpriteBaseHeight = 2;
-    public override string Name => "Boomerang Axe";
+    public override string Name => "Throwing Axe";
 
     public override ItemType ItemType => ItemType.Weapon;
 
-    protected override string EffectPrefabName => "BoomerangAxe";
+    protected override string EffectPrefabName => "ThrowingAxe";
 
     public override List<ItemUpgradeStats> ItemUpgrades => new List<ItemUpgradeStats>()
     {

@@ -6,7 +6,7 @@ public class Cutlass : Equipment
 {
     private Player _player;
     private const int SpriteBaseHeight = 2;
-    public override string Name => "Cutlass";
+    public override string Name => "Pirate Cutlass";
 
     public override ItemType ItemType => ItemType.Weapon;
 

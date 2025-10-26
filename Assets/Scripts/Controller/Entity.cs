@@ -140,5 +140,7 @@ public struct EntityStats
     public int damage;
     public float moveSpeed;
     public int defense;
+    public int dodgeChance;
+
     [Tooltip("0 for no resistance at all.")] public int knockBackResistance;
 }

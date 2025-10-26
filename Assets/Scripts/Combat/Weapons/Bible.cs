@@ -5,11 +5,11 @@ using UnityEngine;
 public class Bible : Equipment
 {
     private Projectile _bible;
-    public override string Name => "Bible";
+    public override string Name => "Earth's Pulse";
 
     public override ItemType ItemType => ItemType.Weapon;
 
-    protected override string EffectPrefabName => "Bible_Effect";
+    protected override string EffectPrefabName => "EarthPulseEffect";
 
     public override List<ItemUpgradeStats> ItemUpgrades => new List<ItemUpgradeStats>()
     {

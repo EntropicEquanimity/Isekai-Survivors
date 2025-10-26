@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entitySprite: {fileID: 21300000, guid: 7472fbbf3c7c5dd4eb35cd9ede48918d, type: 3}
   entityStats:
-    health: 50
+    health: 60
     damage: 10
     moveSpeed: 0.6
     defense: 1
+    dodgeChance: 0
     knockBackResistance: 5
   unitPrefab: {fileID: 410585927347893560, guid: 2d2b84df1c44a404ba21e318316c2942, type: 3}

@@ -21,17 +21,16 @@ public class ExpPickup : Pickup
     {
         _sr = GetComponent<SpriteRenderer>();
         _speed = followTargetSpeed;
-        //GetComponent<CircleCollider2D>().radius = GameManager.Instance.PickupRadius + 1f;
 
-        //Collider2D[] expDrops = Physics2D.OverlapCircleAll(transform.position, GameManager.Instance.PickupRadius + 5f, LayerMask.GetMask("Experience"));
-        //if(expDrops.Length > 20)
-        //{
-        //    for (int i = 0; i < expDrops.Length; i++)
-        //    {
-        //        this.expAmount += expDrops[i].GetComponent<ExpPickup>().expAmount;
-        //        expDrops[i].gameObject.SetActive(false);
-        //    }
-        //}
+        Collider2D[] expDrops = Physics2D.OverlapCircleAll(transform.position, 2.5f, LayerMask.GetMask("Experience"));
+        if (expDrops.Length > 20)
+        {
+            for (int i = 0; i < expDrops.Length; i++)
+            {
+                this.expAmount += expDrops[i].GetComponent<ExpPickup>().expAmount;
+                expDrops[i].gameObject.SetActive(false);
+            }
+        }
 
         if (expAmount <= 3)
         {

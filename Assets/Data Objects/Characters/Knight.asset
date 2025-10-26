@@ -18,14 +18,18 @@ MonoBehaviour:
     damage: 0
     moveSpeed: 3
     defense: 3
+    dodgeChance: 0
     knockBackResistance: 1
   characterDescription: An armored knight with more survivability than the average
     joe.
-  startingWeapon: {fileID: 11400000, guid: b5fa093ca28af0944bfc5a3f8c7a4476, type: 2}
+  startingWeapon: {fileID: 11400000, guid: 5ffa243392c175d4cac0121dab88b2cf, type: 2}
   playerStats:
+    accuracy: 0
     pickupRadius: 0
     essenceGain: 1
     goldGain: 1
-    maxWeapons: 3
-    maxTools: 3
+    xpGain: 1
+    luck: 0
+    maxWeapons: 1
+    maxTools: 1
   characterPrefab: {fileID: 2152762838893216242, guid: 6c74774bef3e41b4398eec0b21be582d, type: 3}

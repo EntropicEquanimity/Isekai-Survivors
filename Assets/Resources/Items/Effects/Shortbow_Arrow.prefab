@@ -79,12 +79,12 @@ SpriteRenderer:
   m_SortingLayerID: -1418622387
   m_SortingLayer: 2
   m_SortingOrder: 1
-  m_Sprite: {fileID: 4292991442675503664, guid: 4d8281c45ade0444bb561c5d33ea8411, type: 3}
+  m_Sprite: {fileID: -1964310288, guid: 7e90440ae8cd0fe4cbe8510a0bb99f5c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.15625, y: 0.8125}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -128,8 +128,8 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.28125, y: 0.875}
-    newSize: {x: 1, y: 1}
+    oldSize: {x: 0.15625, y: 0.8125}
+    newSize: {x: 0.15625, y: 0.8125}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -175,6 +175,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1542d183621491b48ad8c9d7c0eaf6df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  projectileStats:
+    weaponStats:
+      damage: 0
+      knockBack: 0
+      duration: 0
+      size: 0
+      speed: 0
+      critChance: 0
+      critDamage: 0
+      cooldown: 0
+      projectiles: 0
+      pierce: 0
+    direction: {x: 0, y: 0}
+    constantDamage: 0
   targets: []
   damageSource: {fileID: 0}
   durabilityRemaining: 0

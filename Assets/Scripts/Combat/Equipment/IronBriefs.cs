@@ -11,7 +11,7 @@ public class IronBriefs : Equipment
     private Player player;
     public override string Name => "Iron Briefs";
 
-    public override ItemType ItemType => ItemType.Tool;
+    public override ItemType ItemType => ItemType.Artifact;
 
     protected override string EffectPrefabName => throw new System.NotImplementedException();
 

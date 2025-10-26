@@ -12,6 +12,7 @@ public abstract class Equipment : Item
     public EquipmentSO itemData;
     [ReadOnly] public ItemSlot itemSlot;
     [ReadOnly] public SessionItemStats itemStats;
+    [ReadOnly] public ItemStats upgradeStats;
     public float CurrentCooldown { get; protected set; }
     public DamageRecord DamageRecord { get; protected set; }
     public void Awake()
@@ -97,7 +98,7 @@ public abstract class Equipment : Item
     public float CritChance { get => Mathf.Max(0f, ((itemStats.critChance.Value + GameManager.Instance.CritChance) * 100f) / 100f); }
     public float CritDamage { get => Mathf.Max(-0.8f, ((itemStats.critDamage.Value + GameManager.Instance.CritDamage) * 100f) / 100f) + 1.5f; } //Base crit damage of +50% damage
     public float Cooldown { get => Mathf.Max(0.1f, itemStats.cooldown.Value + GameManager.Instance.Cooldown + 1f); }
-    public int Projectiles { get => Mathf.Max(0, Mathf.RoundToInt(itemStats.projectiles.Value + GameManager.Instance.Projectiles)) + 1; }
+    public int Projectiles { get => Mathf.Max(1, Mathf.RoundToInt(itemStats.projectiles.Value + GameManager.Instance.Projectiles)) + 1; }
     public int Pierce { get => Mathf.Max(0, Mathf.RoundToInt(itemStats.pierce.Value + GameManager.Instance.Pierce)) + 1; }
 
     public GameObject GetPrefab()
@@ -223,7 +224,7 @@ public abstract class Equipment : Item
 
         return stats;
     }
-    public int MaxLevel => 100; //Hard coded max item level
+    public virtual int MaxLevel => 100; //Hard coded max item level
     public bool IsMaxLevel => ItemLevel >= MaxLevel;
     public float CooldownRemaining => BaseCooldown / Cooldown;
     #endregion

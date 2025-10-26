@@ -49,7 +49,7 @@ public class InventoryController : MonoBehaviour
     public void AddEquipment(Equipment equipment)
     {
         if (equipment.ItemType == ItemType.Weapon && MaxWeaponsEquipped()) { Destroy(equipment.gameObject); return; }
-        else if (equipment.ItemType == ItemType.Tool && MaxToolsEquipped()) { Destroy(equipment.gameObject); return; }
+        else if (equipment.ItemType == ItemType.Artifact && MaxToolsEquipped()) { Destroy(equipment.gameObject); return; }
 
         for (int i = 0; i < this.equippedItems.Count; i++)
         {
@@ -66,7 +66,7 @@ public class InventoryController : MonoBehaviour
         OnInventoryChange?.Invoke();
 
         if (equipment.ItemType == ItemType.Weapon && MaxWeaponsEquipped()) { LootController.Instance.RemoveEquipmentTypeFromList(ItemType.Weapon); }
-        else if(equipment.ItemType == ItemType.Tool && MaxToolsEquipped()) { LootController.Instance.RemoveEquipmentTypeFromList(ItemType.Tool); }
+        else if(equipment.ItemType == ItemType.Artifact && MaxToolsEquipped()) { LootController.Instance.RemoveEquipmentTypeFromList(ItemType.Artifact); }
     }
     public void AddEquipment(ItemSO item)
     {

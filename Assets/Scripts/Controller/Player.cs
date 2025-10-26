@@ -39,7 +39,7 @@ public class Player : Entity
     {
         if (moveVector != Vector2.zero && _rb.linearVelocity.magnitude < 0.5f)
         {
-            _rb.MovePosition(moveVector * (MoveSpeed + GameManager.Instance.MoveSpeed) * Time.fixedDeltaTime + (Vector2)transform.position);
+            _rb.MovePosition(moveVector * (MoveSpeed) * Time.fixedDeltaTime + (Vector2)transform.position);
             if (moveVector.x != 0) entitySpriteRenderer.flipX = moveVector.x < 0;
         }
     }
@@ -75,12 +75,14 @@ public class Player : Entity
 [System.Serializable]
 public class PlayerStats
 {
-    //public ItemStats levelupStats;
-    //public int levelStatsIntervals = 5;
-
+    public float accuracy = 0;
     public float pickupRadius = 1;
+
     public float essenceGain = 1;
     public float goldGain = 1;
+    public float xpGain = 1;
+    public float luck = 0;
+
     public int maxWeapons = 5;
     public int maxTools = 5;
 }

@@ -7,16 +7,16 @@ public class Magnet : Equipment
 {
     public override string Name => "Magnet";
 
-    public override ItemType ItemType => ItemType.Tool;
+    public override ItemType ItemType => ItemType.Artifact;
 
     protected override string EffectPrefabName => throw new System.NotImplementedException();
 
     public override List<ItemUpgradeStats> ItemUpgrades => new List<ItemUpgradeStats>()
     {
-        new(ItemStatType.Size, Rarity.Common, 0, 0.125f),
+        new(ItemStatType.Cooldown, Rarity.Common, 0, 0.05f),
     };
 
-    public override float BaseCooldown => 0;
+    public override float BaseCooldown => 30f;
 
     public override void TickCooldown(float time)
     {

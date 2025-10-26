@@ -125,17 +125,18 @@ public class GameManager : MonoBehaviour
     public float Cooldown { get => cooldown.Value; }
     public int Projectiles { get => Mathf.RoundToInt(projectiles.Value); }
     public int Pierce { get => Mathf.RoundToInt(pierce.Value); }
-    public int Bounce { get => Mathf.RoundToInt(bounce.Value); }
 
     public float MoveSpeed { get => moveSpeed.Value; }
     public int Defense { get => Mathf.RoundToInt(defense.Value); }
     public int Health { get => Mathf.RoundToInt(health.Value); }
-    public float Armor { get => armor.Value; }
+    public float Armor { get => Mathf.Max(0f, armor.Value); }
+    public float Dodge { get => Mathf.Max(0f, dodge.Value); }
+
     public float DamageMultiplier { get => damageMultiplier.Value + 1f; }
-    public float PickupRadius { get => pickupRadius.Value; }
-    public float XpGain { get => pickupRadius.Value; }
-    public float GoldGain { get => pickupRadius.Value; }
-    public float EssenceGain { get => essenceGain.Value; }
+    public float PickupRadius { get => Mathf.Max(0f, pickupRadius.Value); }
+    public float XpGain { get => Mathf.Max(0f, pickupRadius.Value); }
+    public float GoldGain { get => Mathf.Max(0f, pickupRadius.Value); }
+    public float EssenceGain { get => Mathf.Max(0f, essenceGain.Value); }
     public int Luck { get => Mathf.RoundToInt(luck.Value); }
 
     public int LootChoices { get => Mathf.RoundToInt(lootChoices.Value); }
@@ -153,13 +154,12 @@ public class GameManager : MonoBehaviour
     [FoldoutGroup("Stats")] public EntityStat cooldown;
     [FoldoutGroup("Stats")] public EntityStat projectiles;
     [FoldoutGroup("Stats")] public EntityStat pierce;
-    [FoldoutGroup("Stats")] public EntityStat bounce;
     [FoldoutGroup("Stats")] public EntityStat moveSpeed;
     [FoldoutGroup("Stats")] public EntityStat defense;
     [FoldoutGroup("Stats")] public EntityStat health;
-
-    [FoldoutGroup("Stats")] public EntityStat damageMultiplier;
+    [FoldoutGroup("Stats")] public EntityStat dodge;
     [FoldoutGroup("Stats")] public EntityStat armor;
+    [FoldoutGroup("Stats")] public EntityStat damageMultiplier;
 
     [FoldoutGroup("Stats")] public EntityStat pickupRadius;
     [FoldoutGroup("Stats")] public EntityStat xpGain;
@@ -175,7 +175,8 @@ public class GameManager : MonoBehaviour
     public Rarity LuckRoll => Item.GetRarityFromLuck(Luck);
     public void ResetGameStats()
     {
-        damage = new EntityStat() { BaseValue = settings.selectedPlayerCharacter.entityStats.damage };
+        PlayerStats playerStats = settings.selectedPlayerCharacter.playerStats;
+        damage = new EntityStat();
         knockBack = new EntityStat();
         duration = new EntityStat();
         size = new EntityStat();
@@ -185,12 +186,17 @@ public class GameManager : MonoBehaviour
         cooldown = new EntityStat();
         projectiles = new EntityStat();
         pierce = new EntityStat();
-        bounce = new EntityStat();
 
         moveSpeed = new EntityStat();
         defense = new EntityStat();
         health = new EntityStat();
-        pickupRadius = new EntityStat() { BaseValue = settings.selectedPlayerCharacter.playerStats.pickupRadius };
+        dodge = new EntityStat();
+
+        pickupRadius = new EntityStat() { BaseValue = playerStats.pickupRadius };
+        xpGain = new EntityStat() { BaseValue = playerStats.xpGain };
+        goldGain = new EntityStat() { BaseValue = playerStats.goldGain };
+        essenceGain = new EntityStat() { BaseValue = playerStats.essenceGain };
+        luck = new EntityStat() { BaseValue = playerStats.luck };
     }
     #endregion
 

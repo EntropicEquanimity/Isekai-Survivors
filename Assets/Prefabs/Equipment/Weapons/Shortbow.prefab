@@ -28,12 +28,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7730069951237586602}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.25, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7730069951237586614
 SpriteRenderer:
@@ -46,11 +47,15 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -75,7 +80,7 @@ SpriteRenderer:
   m_SortingLayerID: 923098403
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: -5063555655813669412, guid: 4d8281c45ade0444bb561c5d33ea8411, type: 3}
+  m_Sprite: {fileID: 396641727, guid: 7e90440ae8cd0fe4cbe8510a0bb99f5c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -101,6 +106,38 @@ MonoBehaviour:
   EffectPrefabs: []
   itemData: {fileID: 11400000, guid: 71d908cb5a048834d8ab9704361119e6, type: 2}
   itemSlot: {fileID: 0}
+  itemStats:
+    damage:
+      BaseValue: 0
+    knockBack:
+      BaseValue: 0
+    duration:
+      BaseValue: 0
+    size:
+      BaseValue: 0
+    speed:
+      BaseValue: 0
+    critChance:
+      BaseValue: 0
+    critDamage:
+      BaseValue: 0
+    cooldown:
+      BaseValue: 0
+    projectiles:
+      BaseValue: 0
+    pierce:
+      BaseValue: 0
+  upgradeStats:
+    damage: 0
+    knockBack: 0
+    duration: 0
+    size: 0
+    speed: 0
+    critChance: 0
+    critDamage: 0
+    cooldown: 0
+    projectiles: 0
+    pierce: 0
 --- !u!114 &7730069951237586601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -122,13 +159,33 @@ CircleCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7730069951237586602}
   m_Enabled: 1
+  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
   m_Radius: 0.5
 --- !u!114 &7730069951237586612
 MonoBehaviour:
