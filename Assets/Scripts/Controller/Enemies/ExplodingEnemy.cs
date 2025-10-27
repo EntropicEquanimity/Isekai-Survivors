@@ -10,20 +10,35 @@ public class ExplodingEnemy : Enemy
     public int explosionDamage = 30;
     public bool explodeWhenWithinRange = false;
     public float triggerRadiusForExplosion = 0.5f;
+    bool _startingExplosion = false;
 
     public override void Die()
     {
+        if (_startingExplosion) { return; }
+        _startingExplosion = true;
         base.Die();
+        GameManager.Instance.DelayedAction(0.25f, () => Explode(transform.position, new DamageInfo() { damage = explosionDamage, attacker = this }));
+    }
 
-        GameManager.Instance.DelayedAction(0.25f, delegate 
+    public override void Initialize(EntityStats entityStats)
+    {
+        base.Initialize(entityStats);
+        _startingExplosion = false;
+    }
+
+    public void Explode(Vector2 location, DamageInfo damageInfo)
+    {
+        Instantiate(explosionEffect, location, Quaternion.identity);
+
+        Collider2D[] hits = Physics2D.OverlapCircleAll(location, explosionRadius);
+        for (int i = 0; i < hits.Length; i++)
         {
-            Instantiate(explosionEffect, transform.position, Quaternion.identity);
-            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
-            for (int i = 0; i < hits.Length; i++)
+            if (hits[i].CompareTag("Player") || hits[i].CompareTag("Enemy")) 
             {
-                if (hits[i].CompareTag("Player") || hits[i].CompareTag("Enemy")) { hits[i].GetComponent<Entity>().TakeDamage(new DamageInfo() { damage = explosionDamage, attacker = this }); }
+                hits[i].GetComponent<Entity>().TakeDamage(damageInfo);
+                //Debug.Log(report.victim + " taking " + report.damageDealt + " from " + report.attacker);
             }
-        });
+        }
     }
     private void Update()
     {

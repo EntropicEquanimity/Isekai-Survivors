@@ -103,6 +103,7 @@ public class Enemy : Entity
     public override void Die()
     {
         GetComponent<CircleCollider2D>().enabled = false;
+        CanTakeDamage = false;
         GameManager.Instance.PlayerKills++;
         int exp = Random.Range(expDrop.x, expDrop.y + 1);
         if (exp > 0) { LootController.Instance.SpawnExperience(exp, transform.position); }

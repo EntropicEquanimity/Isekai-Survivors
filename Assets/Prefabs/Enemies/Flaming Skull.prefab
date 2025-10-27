@@ -185,7 +185,7 @@ MonoBehaviour:
   baseStats: {fileID: 11400000, guid: aaecb5a34df4f21449ba6e5cc88dbbea, type: 2}
   entitySpriteRenderer: {fileID: 498872031918539500}
   settings: {fileID: 11400000, guid: 43be9781a9947624796c212527175348, type: 2}
-  expDrop: {x: 5, y: 15}
+  expDrop: {x: 1, y: 1}
   essenceDrop: 0
   followTargetPositionInstead: 0
   attackCooldown: 0.5

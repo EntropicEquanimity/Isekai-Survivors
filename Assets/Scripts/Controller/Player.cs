@@ -46,7 +46,7 @@ public class Player : Entity
     public override void Die()
     {
         CanTakeDamage = false;
-        Debug.LogError("YOU DIED!");
+        GetComponent<CircleCollider2D>().enabled = false;
     }
     public virtual void Revive()
     {
