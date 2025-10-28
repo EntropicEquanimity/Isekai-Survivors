@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class IceWand : Equipment
 {
-    private Player _player;
     public override string Name => "Ice Wand";
 
     public override ItemType ItemType => ItemType.Weapon;

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7932044964597562844}
   - component: {fileID: 7932044964597562846}
   - component: {fileID: 7932044964597562847}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: ExpPickup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -141,7 +141,7 @@ MonoBehaviour:
   defaultMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   superMaterial: {fileID: 2100000, guid: 315cefcafd81663459319b7024e738e7, type: 2}
   target: {fileID: 0}
-  expAmount: 1
+  expAmount: 1000
   small: {fileID: -266883865066856737, guid: ae71d0a74cf6c514ab1daf134c57111f, type: 3}
   medium: {fileID: -1122222750625558779, guid: ae71d0a74cf6c514ab1daf134c57111f, type: 3}
   large: {fileID: 5367102645604608502, guid: ae71d0a74cf6c514ab1daf134c57111f, type: 3}

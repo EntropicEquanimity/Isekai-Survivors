@@ -41,14 +41,6 @@ public class GameManager : MonoBehaviour
             if (playerExp >= ExpRequired) { DelayedAction(0.1f, LevelUp); }
         });
     }
-    public void PlayerDeath()
-    {
-        GameState = GameState.GameOver;
-        if (Revives > 0)
-        {
-
-        }
-    }
     #endregion
 
     #region Messages
@@ -72,7 +64,9 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        InventoryController.Instance.AddEquipment(player.playerData.startingWeapon);
+        PlayerSO p = (PlayerSO)player.baseStats;
+        InventoryController.Instance.AddEquipment(p.startingWeapon);
+        ObjectPool.Instance.CreatePool("Barrier", Resources.Load("Barrier") as GameObject, 1);
     }
     public void Update()
     {

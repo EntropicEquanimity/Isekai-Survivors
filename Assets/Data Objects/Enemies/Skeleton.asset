@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entitySprite: {fileID: 21300000, guid: 7472fbbf3c7c5dd4eb35cd9ede48918d, type: 3}
   entityStats:
-    health: 60
+    health: 75
     damage: 10
     moveSpeed: 0.6
     defense: 1

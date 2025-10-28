@@ -6,7 +6,6 @@ using Sirenix.OdinInspector;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Player : Entity
 {
-    public PlayerSO playerData;
     private Rigidbody2D _rb;
     private InterfaceController _hud;
     [BoxGroup("ReadOnly")] [ReadOnly] public Vector2 moveVector;
@@ -21,9 +20,11 @@ public class Player : Entity
     {
         _rb = GetComponent<Rigidbody2D>();
         _hud = GameManager.Instance.GetComponent<InterfaceController>();
-        Initialize(playerData.entityStats);
-        HP = playerData.entityStats.health;
+        Initialize(baseStats.entityStats);
+        HP = baseStats.entityStats.health;
         GetComponent<CircleCollider2D>().enabled = true;
+
+        OnTakeDamage += delegate { Invulnerable(2f); };
     }
     public virtual void Update()
     {
@@ -48,13 +49,6 @@ public class Player : Entity
         CanTakeDamage = false;
         GetComponent<CircleCollider2D>().enabled = false;
     }
-    public virtual void Revive()
-    {
-        //Basic revive revives player at 20% HP. 
-        Initialize(playerData.entityStats);
-        HP = Mathf.RoundToInt(MaxHP * 0.2f);
-        GetComponent<CircleCollider2D>().enabled = true;
-    }
     protected override IEnumerator DeathAnimation()
     {
         GetComponent<CircleCollider2D>().enabled = false;
@@ -69,7 +63,6 @@ public class Player : Entity
             yield return new WaitForFixedUpdate();
         }
         gameObject.SetActive(false);
-        GameManager.Instance.PlayerDeath();
     }
 }
 [System.Serializable]

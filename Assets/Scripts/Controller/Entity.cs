@@ -18,6 +18,7 @@ public abstract class Entity : MonoBehaviour
     public virtual float MoveSpeed { get; set; }
     public virtual int Defense { get; set; }
     public virtual float KnockBackResistance { get; set; }
+    public int Revives { get; protected set; }
     #endregion
 
     private bool _initialized = false;
@@ -41,9 +42,9 @@ public abstract class Entity : MonoBehaviour
         MoveSpeed = entityStats.moveSpeed;
         Defense = entityStats.defense;
         KnockBackResistance = entityStats.knockBackResistance;
+        Revives = 0;
 
         CanTakeDamage = true;
-
         _initialized = true;
     }
     public DamageReport TakeDamage(DamageInfo damageInfo)
@@ -107,7 +108,45 @@ public abstract class Entity : MonoBehaviour
         if (ignoreKnockbackResistance) { transform.DOMove(transform.position + ((Vector3)direction * force), 0.1f); }
         else { transform.DOMove(transform.position + ((Vector3)direction * force / (KnockBackResistance + 1f)), 0.1f); }
     }
+    public virtual void Revive()
+    {
+        Initialize(baseStats.entityStats);
+        HP = Mathf.RoundToInt(MaxHP * 0.2f);
+        GetComponent<CircleCollider2D>().enabled = true;
+    }
+    #region Invulnerability
+    private const string BarrierEffectPath = "Barrier";
+    private Coroutine _invulnerabilityCoroutine;
+    float _invulnDuration = 0f;
+    public virtual void Invulnerable(float duration)
+    {
+        if (_invulnerabilityCoroutine == null) {
+            _invulnerabilityCoroutine = StartCoroutine(InvulnerableCoroutine(duration));
+        }
+        else if(_invulnDuration < duration){
+            _invulnDuration = duration;
+        }
 
+        IEnumerator InvulnerableCoroutine(float duration)
+        {
+            SpriteRenderer sr = ObjectPool.Instance.Spawn("Barrier", transform.position, Quaternion.identity, transform).GetComponent<SpriteRenderer>();
+            CanTakeDamage = false;
+            _invulnDuration = duration;
+            while (_invulnDuration > 0f) 
+            {
+                _invulnDuration -= Time.deltaTime;
+                Color color = sr.color;
+                color = new Color(color.r, color.g, color.b, Mathf.Min(0.5f, _invulnDuration / 3f));
+                sr.color = color;
+                
+                yield return null;
+            }
+            ObjectPool.Instance.Despawn(sr.gameObject);
+            CanTakeDamage = true;
+            _invulnerabilityCoroutine = null;
+        }
+    }
+    #endregion
     public abstract void Move();
     public abstract void Die();
     protected virtual IEnumerator DeathAnimation()

@@ -4615,17 +4615,17 @@ MonoBehaviour:
     BaseValue: 0
   pierce:
     BaseValue: 0
-  bounce:
-    BaseValue: 0
   moveSpeed:
     BaseValue: 0
   defense:
     BaseValue: 0
   health:
     BaseValue: 0
-  damageMultiplier:
+  dodge:
     BaseValue: 0
   armor:
+    BaseValue: 0
+  damageMultiplier:
     BaseValue: 0
   pickupRadius:
     BaseValue: 0
@@ -4706,7 +4706,7 @@ MonoBehaviour:
   essencePickups: []
   pickupsLayer:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 3072
   allItems: {fileID: 11400000, guid: 66d35d6b7d72c9b42ae82783a50ac1d5, type: 2}
   itemsInPool: []
 --- !u!114 &1434411655181867827
@@ -4721,7 +4721,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd791078918b45642aed6f98489af0d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelData: {fileID: 11400000, guid: e60706c5326ce8b4381390f9ab55abbf, type: 2}
+  levelData: {fileID: 11400000, guid: a4219b8c3e8940b42b8ab78ba29d0c98, type: 2}
   spawnPoints:
   - {fileID: 4791106305914971299}
   - {fileID: 662147020909032134}
