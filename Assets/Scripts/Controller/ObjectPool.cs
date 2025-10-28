@@ -12,7 +12,7 @@ public class ObjectPool : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = FindObjectOfType<ObjectPool>();
+                _instance = FindAnyObjectByType<ObjectPool>();
                 if (_instance == null)
                 {
                     GameObject obj = new GameObject("ObjectPool");
