@@ -168545,14 +168545,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 684005731335104132, guid: b25e2660c9903644ebd149f4ad911a46, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 684005731335104132, guid: b25e2660c9903644ebd149f4ad911a46, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5918914203734701410, guid: b25e2660c9903644ebd149f4ad911a46, type: 3}
       propertyPath: m_Name
       value: GameController
@@ -168595,14 +168587,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5918914203734701421, guid: b25e2660c9903644ebd149f4ad911a46, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7373611395763310421, guid: b25e2660c9903644ebd149f4ad911a46, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7373611395763310421, guid: b25e2660c9903644ebd149f4ad911a46, type: 3}
-      propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

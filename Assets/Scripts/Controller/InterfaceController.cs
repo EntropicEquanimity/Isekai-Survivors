@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Sirenix.OdinInspector;
 using BlondieUtils;
 using UnityEngine.EventSystems;
+using DG.Tweening;
 
 public class InterfaceController : MonoBehaviour
 {
@@ -23,6 +24,9 @@ public class InterfaceController : MonoBehaviour
     [BoxGroup("Items")] public Transform itemChoicePanelParent;
     [BoxGroup("Items")] public GameObject itemChoiceCardPrefab;
     [BoxGroup("Items")] public List<ItemCard> itemCards;
+
+    [BoxGroup("GameOver")] public List<WeaponOverview> weaponSummaries;
+    [BoxGroup("GameOver")] public CanvasGroup gameOverCanvas;
 
     public static InterfaceController Instance;
     void Update()
@@ -53,6 +57,8 @@ public class InterfaceController : MonoBehaviour
             itemCards[i].gameObject.SetActive(false);
         }
         itemChoicePanelParent.gameObject.SetActive(false);
+        gameOverCanvas.alpha = 0f;
+        gameOverCanvas.interactable = false;
     }
     #region Items
     public void OpenChooseItemPanel(List<ItemSO> items, System.Action onChoose = null)
@@ -118,6 +124,31 @@ public class InterfaceController : MonoBehaviour
     public void Quit()
     {
         Application.Quit();
+    }
+    #endregion
+
+    #region Game Over
+    public void ShowGameOver(Equipment[] weapons, float time)
+    {
+        gameOverCanvas.interactable = true;
+        gameOverCanvas.DOFade(1f, 2f);
+        DamageRecord[] damageRecord = new DamageRecord[weapons.Length];
+        for (int i = 0; i < weapons.Length; i++)
+        {
+            damageRecord[i] = weapons[i].DamageRecord;
+        }
+        float totalDmg = 0;
+        float totalKills = 0;
+        for (int i = 0; i < damageRecord.Length; i++) 
+        {
+            totalDmg += damageRecord[i].damageDealt;
+            totalKills += damageRecord[i].kills;
+        }
+        for (int i = 0; i < damageRecord.Length; i++)
+        {
+            weaponSummaries[i].gameObject.SetActive(true);
+            weaponSummaries[i].Initialize(weapons[i].itemData.icon, damageRecord[i].damageDealt, damageRecord[i].kills, damageRecord[i].damageDealt / totalDmg, damageRecord[i].kills / totalKills);
+        }
     }
     #endregion
 

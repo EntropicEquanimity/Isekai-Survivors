@@ -46,22 +46,16 @@ public class Player : Entity
     }
     public override void Die()
     {
-        CanTakeDamage = false;
-        GetComponent<CircleCollider2D>().enabled = false;
+        StartCoroutine(DeathAnimation());
     }
     protected override IEnumerator DeathAnimation()
     {
+        CanTakeDamage = false;
         GetComponent<CircleCollider2D>().enabled = false;
         MoveSpeed = 0;
         Damage = 0;
         HP = 0;
-        float fadeAmount = -0.15f;
-        while (fadeAmount < 1f)
-        {
-            fadeAmount += Time.fixedDeltaTime * 2f;
-            entitySpriteRenderer.material.SetFloat("_FadeAmount", fadeAmount);
-            yield return new WaitForFixedUpdate();
-        }
+        yield return new WaitForFixedUpdate();
         gameObject.SetActive(false);
     }
 }

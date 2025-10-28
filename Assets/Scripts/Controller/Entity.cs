@@ -151,6 +151,7 @@ public abstract class Entity : MonoBehaviour
     public abstract void Die();
     protected virtual IEnumerator DeathAnimation()
     {
+        CanTakeDamage = false;
         MoveSpeed = 0;
         Damage = 0;
         HP = 0;

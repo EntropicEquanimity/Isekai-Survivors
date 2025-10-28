@@ -416,50 +416,6 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: red_bar_empty
-      rect:
-        serializedVersion: 2
-        x: 296
-        y: 101
-        width: 34
-        height: 7
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: daabdbadd360b2620800000000000000
-      internalID: 2750298860172458669
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 04_28
-      rect:
-        serializedVersion: 2
-        x: 54
-        y: 164
-        width: 36
-        height: 7
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e4047306b955ed9e0800000000000000
-      internalID: -1594743092220051378
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: 04_33
       rect:
         serializedVersion: 2
@@ -477,204 +433,6 @@ TextureImporter:
       bones: []
       spriteID: c875d186cfae81f80800000000000000
       internalID: -8135494357045389428
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 04_35
-      rect:
-        serializedVersion: 2
-        x: 54
-        y: 148
-        width: 36
-        height: 7
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 60d38e4c7a77abc10800000000000000
-      internalID: 2070098541176962310
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 04_42
-      rect:
-        serializedVersion: 2
-        x: 54
-        y: 132
-        width: 36
-        height: 7
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 2d432d336c1769e30800000000000000
-      internalID: 4509917172945007826
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 04_48
-      rect:
-        serializedVersion: 2
-        x: 54
-        y: 116
-        width: 36
-        height: 7
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 433d735fc2abc5d00800000000000000
-      internalID: 962849122605847348
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: red_bar_filled
-      rect:
-        serializedVersion: 2
-        x: 56
-        y: 101
-        width: 34
-        height: 7
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8ba9388c717224c10800000000000000
-      internalID: 2036232964626684600
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 04_62
-      rect:
-        serializedVersion: 2
-        x: 56
-        y: 85
-        width: 34
-        height: 7
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 98d2146d197e14d70800000000000000
-      internalID: 9025749741778054537
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 04_69
-      rect:
-        serializedVersion: 2
-        x: 56
-        y: 69
-        width: 34
-        height: 7
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a0e4bd4a90791c2e0800000000000000
-      internalID: -2107237082956345846
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 04_75
-      rect:
-        serializedVersion: 2
-        x: 56
-        y: 53
-        width: 34
-        height: 7
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: ee2478690a560aac0800000000000000
-      internalID: -3845962341379783954
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: green_vertical_bar_full
-      rect:
-        serializedVersion: 2
-        x: 53
-        y: 7
-        width: 6
-        height: 35
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 5a1371ad3e9383e00800000000000000
-      internalID: 1024632566006100389
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: green_vertical_bar_empty
-      rect:
-        serializedVersion: 2
-        x: 133
-        y: 7
-        width: 6
-        height: 35
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 6c7ef9d12a5573720800000000000000
-      internalID: 2825821445968357318
       vertices: []
       indices: 
       edges: []
@@ -719,6 +477,50 @@ TextureImporter:
       bones: []
       spriteID: d87ad8440d47a2443a78fc09c1d4faf9
       internalID: 283304274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RatioBar
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 100
+        width: 48
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b20abc0a42898f4faee32bb01ff887f
+      internalID: 2117652659
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RatioBar_BG
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 89
+        width: 48
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 613e5b8fd47000b4a93e3ea55d4bd17c
+      internalID: -932134372
       vertices: []
       indices: 
       edges: []
@@ -835,6 +637,8 @@ TextureImporter:
       04_97: 4180486932610364611
       04_98: -6291263786170210103
       04_99: 7232788762529073701
+      RatioBar: 2117652659
+      RatioBar_BG: -932134372
       green_vertical_bar_empty: 2825821445968357318
       green_vertical_bar_full: 1024632566006100389
       mini_red_bar_empty: 283304274
