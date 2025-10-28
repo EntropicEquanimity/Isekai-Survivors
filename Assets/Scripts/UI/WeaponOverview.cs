@@ -18,5 +18,7 @@ public class WeaponOverview : MonoBehaviour
         weaponKills.text = Utils.FormatNumberShort(kills);
         this.weaponDamagePercentage.text = dmgPercent.ToString("P2");
         this.weaponKillsPercentage.text = killsPercent.ToString("P2");
+        damageBarFill.fillAmount = dmgPercent;
+        killBarFill.fillAmount = killsPercent;
     }
 }

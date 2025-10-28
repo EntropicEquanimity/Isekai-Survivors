@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: SessionSettings
   m_EditorClassIdentifier: 
   selectedPlayerCharacter: {fileID: 11400000, guid: 7239ab555c6f05d489498b7c56fdb315, type: 2}
+  selectedLevel: {fileID: 11400000, guid: a4219b8c3e8940b42b8ab78ba29d0c98, type: 2}

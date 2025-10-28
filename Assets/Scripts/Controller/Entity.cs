@@ -81,7 +81,7 @@ public abstract class Entity : MonoBehaviour
             OnDeath?.Invoke(damageReport);
             if (HP <= 0)
             {
-                damageReport.attacker.OnKill?.Invoke(damageReport);
+                damageReport.attacker?.OnKill?.Invoke(damageReport);
                 Die();
             }
         }
@@ -155,6 +155,7 @@ public abstract class Entity : MonoBehaviour
         MoveSpeed = 0;
         Damage = 0;
         HP = 0;
+        _initialized = false;
         float fadeAmount = -0.15f;
         while (fadeAmount < 1f)
         {

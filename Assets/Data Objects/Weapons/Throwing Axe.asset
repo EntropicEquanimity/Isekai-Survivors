@@ -26,4 +26,4 @@ MonoBehaviour:
     critDamage: 0
     cooldown: 0
     projectiles: 1
-    pierce: 999
+    pierce: 9999

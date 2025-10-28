@@ -1,8 +1,8 @@
+using DG.Tweening;
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Sirenix.OdinInspector;
-using DG.Tweening;
 
 public class Projectile : MonoBehaviour
 {
@@ -68,12 +68,10 @@ public class Projectile : MonoBehaviour
                     Enemy enemy = target.GetComponent<Enemy>();
                     if (enemy != null)
                     {
-                        DamageReport report = enemy.TakeDamageWithForce(new DamageInfo()
-                        {
-                            attacker = GameManager.Instance.player,
-                            damage = Mathf.RoundToInt(projectileStats.weaponStats.damage),
-                            critChance = projectileStats.weaponStats.critChance
-                        }, (enemy.transform.position - damageSource.transform.position).normalized, projectileStats.weaponStats.knockBack);
+                        DamageReport report = enemy.TakeDamageWithForce(new DamageInfo(GameManager.Instance.player,
+                            Mathf.RoundToInt(projectileStats.weaponStats.damage),
+                            projectileStats.weaponStats.critChance, false), 
+                            (enemy.transform.position - damageSource.transform.position).normalized, projectileStats.weaponStats.knockBack);
                         damageSource.DamageRecord.AddStats(report);
                         if (report.victim != null)
                         {
@@ -104,12 +102,12 @@ public class Projectile : MonoBehaviour
             durabilityRemaining--;
             if (targets.Contains(enemy)) { return; }
             if (clearTargets != ClearTargetsFlag.Always) { targets.Add(enemy); }
-            DamageReport report = enemy.TakeDamageWithForce(new DamageInfo()
-            {
-                attacker = GameManager.Instance.player,
-                damage = Mathf.RoundToInt(projectileStats.weaponStats.damage),
-                critChance = projectileStats.weaponStats.critChance
-            }, (collision.transform.position - damageSource.transform.position).normalized, projectileStats.weaponStats.knockBack);
+            DamageReport report = enemy.TakeDamageWithForce(
+                new DamageInfo(GameManager.Instance.player,
+                Mathf.RoundToInt(projectileStats.weaponStats.damage),
+                projectileStats.weaponStats.critChance,
+                false), 
+                (collision.transform.position - damageSource.transform.position).normalized, projectileStats.weaponStats.knockBack);
 
             if (report.victim != null)
             {

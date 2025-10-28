@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyManager : MonoBehaviour
+public class EnemyWaveManager : MonoBehaviour
 {
-    [BoxGroup("Enemies")] public LevelSO levelData;
+    [BoxGroup("Enemies")] public SessionSettingsSO sessionSettings;
     [BoxGroup("Enemies")] public Transform[] spawnPoints;
 
     [BoxGroup("Enemies")] [ReadOnly] public EnemyWaveData currentWaveData;
@@ -18,7 +18,7 @@ public class EnemyManager : MonoBehaviour
 
     public int MaxSize { get => maxSize; set => maxSize = value + Mathf.RoundToInt(GameManager.Instance.gameTime / 10); }
 
-    public static EnemyManager Instance;
+    public static EnemyWaveManager Instance;
     private void Awake()
     {
         if (Instance == null) { Instance = this; }
@@ -28,12 +28,13 @@ public class EnemyManager : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        if ((GameManager.Instance.GameState == GameState.GameOver)) { return;}
         spawnCooldown -= Time.fixedDeltaTime;
         if (currentWave != GetCurrentWave())
         {
             enemies.Clear();
             currentWave = GetCurrentWave();
-            currentWaveData = levelData.enemyWaves[currentWave - 1];
+            currentWaveData = sessionSettings.selectedLevel.enemyWaves[currentWave - 1];
             maxSize = currentWaveData.maxEnemyCount;
             maxSpawnAtOnce = currentWaveData.maxBatchSpawnCount;
             spawnInterval = currentWaveData.enemySpawnInterval;
@@ -53,19 +54,6 @@ public class EnemyManager : MonoBehaviour
                     enemies.Add(enemy);
                 }
             }
-            //for (int i = 0; i < MaxSize - GetNumberOfEnemies(); i++)
-            //{
-            //    for (int e = 0; e < enemies.Count; e++)
-            //    {
-            //        if (!enemies[e].gameObject.activeInHierarchy)
-            //        {
-            //            enemies[e].gameObject.SetActive(true);
-            //            enemies[e].entitySpriteRenderer.sprite = enemies[e].baseStats.entitySprite;
-            //            enemies[e].Initialize(enemies[e].baseStats.entityStats);
-            //            enemies[e].transform.position = GameManager.Instance.player.transform.position + spawnPoints[Random.Range(0, spawnPoints.Length)].position;
-            //        }
-            //    }
-            //}
             spawnCooldown = spawnInterval;
         }
     }
@@ -111,11 +99,11 @@ public class EnemyManager : MonoBehaviour
     }
     public int GetCurrentWave()
     {
-        return Mathf.FloorToInt(GameManager.Instance.gameTime / levelData.waveDuration) + 1;
+        return Mathf.FloorToInt(GameManager.Instance.gameTime / sessionSettings.selectedLevel.waveDuration) + 1;
     }
     public void CheckIfAllWavesCompleted()
     {
-        if (levelData.enemyWaves.Count <= GetCurrentWave())
+        if (sessionSettings.selectedLevel.enemyWaves.Count <= GetCurrentWave())
         {
             ///Out of waves.
             for (int i = 0; i < enemies.Count; i++)

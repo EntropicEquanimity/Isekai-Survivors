@@ -6,4 +6,5 @@ using UnityEngine;
 public class SessionSettingsSO : ScriptableObject
 {
     public PlayerSO selectedPlayerCharacter;
+    public LevelSO selectedLevel;
 }

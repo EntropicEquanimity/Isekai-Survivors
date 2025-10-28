@@ -28,18 +28,20 @@ public class GameManager : MonoBehaviour
     public void LevelUp()
     {
         if (playerExp < ExpRequired) { return; }
-        GameState = GameState.Lottery;
         _interfaceController.OpenChooseItemPanel(LootController.Instance.GetItems(LootChoices), delegate
         {
             playerExp -= ExpRequired;
             playerLevel++;
             _interfaceController.UpdateExpBar(playerExp, ExpRequired);
             _interfaceController.UpdatePlayerLevel(playerLevel);
-            GameState = GameState.Normal;
-            foreach(var hit in Physics2D.OverlapCircleAll(player.transform.position, 2f, LayerMask.GetMask("Enemy"))) { hit.GetComponent<Entity>().AddKnockback(hit.transform.position - player.transform.position, 1f); }
+            foreach(var hit in Physics2D.OverlapCircleAll(player.transform.position, 3f, LayerMask.GetMask("Enemy"))) { hit.GetComponent<Entity>().AddKnockback(hit.transform.position - player.transform.position, 1f); }
 
             if (playerExp >= ExpRequired) { DelayedAction(0.1f, LevelUp); }
         });
+    }
+    public void GameOver()
+    {
+        GameState = GameState.GameOver;
     }
     #endregion
 
@@ -54,18 +56,17 @@ public class GameManager : MonoBehaviour
         playerExp = 0;
         gameTime = 0;
         playerLevel = 0;
-        GameState = GameState.Normal;
 
         _interfaceController = GetComponent<InterfaceController>();
         _interfaceController.UpdateExpBar(playerExp, ExpRequired);
         _interfaceController.UpdatePlayerLevel(0);
-
+        GameState = GameState.Normal;
         ResetGameStats();
     }
     private void Start()
     {
         PlayerSO p = (PlayerSO)player.baseStats;
-        InventoryController.Instance.AddEquipment(p.startingWeapon);
+        InventoryController.Instance.AddWeapon(p.startingWeapon);
         ObjectPool.Instance.CreatePool("Barrier", Resources.Load("Barrier") as GameObject, 1);
     }
     public void Update()
@@ -212,6 +213,5 @@ public enum GameState
 {
     Normal,
     Paused,
-    Lottery,
     GameOver
 }

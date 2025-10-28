@@ -17,7 +17,7 @@ public class ExplodingEnemy : Enemy
         if (_startingExplosion) { return; }
         _startingExplosion = true;
         base.Die();
-        GameManager.Instance.DelayedAction(0.25f, () => Explode(transform.position, new DamageInfo() { damage = explosionDamage, attacker = this }));
+        GameManager.Instance.DelayedAction(0.25f, () => Explode(transform.position, new DamageInfo(this, explosionDamage, 0, true)));
     }
 
     public override void Initialize(EntityStats entityStats)
@@ -28,7 +28,8 @@ public class ExplodingEnemy : Enemy
 
     public void Explode(Vector2 location, DamageInfo damageInfo)
     {
-        Instantiate(explosionEffect, location, Quaternion.identity);
+        GameObject go = Instantiate(explosionEffect, location, Quaternion.identity);
+        go.transform.localScale = Vector3.one * (explosionRadius + 0.5f);
 
         Collider2D[] hits = Physics2D.OverlapCircleAll(location, explosionRadius);
         for (int i = 0; i < hits.Length; i++)

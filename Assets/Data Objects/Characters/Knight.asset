@@ -29,7 +29,7 @@ MonoBehaviour:
     essenceGain: 1
     goldGain: 1
     xpGain: 1
-    luck: 0
-    maxWeapons: 1
+    luck: 500
+    maxWeapons: 3
     maxTools: 1
   characterPrefab: {fileID: 2152762838893216242, guid: 6c74774bef3e41b4398eec0b21be582d, type: 3}

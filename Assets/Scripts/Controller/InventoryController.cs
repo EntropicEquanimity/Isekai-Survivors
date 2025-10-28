@@ -11,7 +11,10 @@ public class InventoryController : MonoBehaviour
     [BoxGroup("Inventory")] public GameObject itemSlotPrefab;
     [BoxGroup("Inventory")] public Transform weaponSlotsParent, equipmentSlotsParent;
     [BoxGroup("Inventory")] [ReadOnly] public List<ItemSlot> weaponItemSlots, toolItemSlots;
-    [BoxGroup("Inventory")] [ReadOnly] public List<Equipment> equippedItems = new List<Equipment>();
+    [BoxGroup("Inventory")] [ReadOnly] public List<Equipment> equippedWeapons {  get; private set; }
+    [BoxGroup("Inventory")] [ReadOnly] public List<Equipment> equippedEquipment { get; private set; }
+    [BoxGroup("Inventory")] [ReadOnly] public List<Equipment> equippedArtifacts { get; private set; }
+    [BoxGroup("Inventory")] [ReadOnly] public List<Equipment> allEquippedItems { get; private set; }
 
     public UnityAction OnInventoryChange;
 
@@ -23,6 +26,11 @@ public class InventoryController : MonoBehaviour
 
         weaponItemSlots = new List<ItemSlot>();
         toolItemSlots = new List<ItemSlot>();
+
+        equippedWeapons = new List<Equipment>();
+        equippedEquipment = new List<Equipment>(); 
+        equippedArtifacts = new List<Equipment>();
+        allEquippedItems = new List<Equipment>();
 
         for (int i = 0; i < settings.selectedPlayerCharacter.playerStats.maxWeapons; i++)
         {
@@ -40,71 +48,75 @@ public class InventoryController : MonoBehaviour
         }
     }
     #region Equipment
-    public void UpgradeEquipment(Equipment equipment, ItemStats upgradeStats)
+    public void AddItem(ItemSO item, ItemType type)
+    {
+        if (item == null) return;
+        if (type == ItemType.Weapon) { AddWeapon(item); }
+    }
+    public void UpgradeWeapon(Equipment equipment, ItemStats upgradeStats)
     {
         if (!HasItem(equipment.itemData)){ Debug.LogError(equipment.itemData.name + " is no longer equipped!"); return; }
 
         equipment.Upgrade(upgradeStats);
     }
-    public void AddEquipment(Equipment equipment)
+    public void AddWeapon(Equipment weapon)
     {
-        if (equipment.ItemType == ItemType.Weapon && MaxWeaponsEquipped()) { Destroy(equipment.gameObject); return; }
-        else if (equipment.ItemType == ItemType.Artifact && MaxToolsEquipped()) { Destroy(equipment.gameObject); return; }
+        if (weapon.ItemType == ItemType.Weapon && MaxWeaponsEquipped()) { Destroy(weapon.gameObject); return; }
 
-        for (int i = 0; i < this.equippedItems.Count; i++)
+        for (int i = 0; i < this.equippedWeapons.Count; i++)
         {
-            if (this.equippedItems[i].Name == equipment.Name)
+            if (this.equippedWeapons[i].Name == weapon.Name)
             {
-                Destroy(equipment.gameObject);
+                Destroy(weapon.gameObject);
                 return;
             }
         }
-        this.equippedItems.Add(equipment);
-        equipment.OnEquip();
-        AddEquipmentUI(equipment);
+        this.equippedWeapons.Add(weapon);
+        allEquippedItems.Add(weapon);
+        weapon.OnEquip();
+        AddEquipmentUI(weapon);
 
         OnInventoryChange?.Invoke();
 
-        if (equipment.ItemType == ItemType.Weapon && MaxWeaponsEquipped()) { LootController.Instance.RemoveEquipmentTypeFromList(ItemType.Weapon); }
-        else if(equipment.ItemType == ItemType.Artifact && MaxToolsEquipped()) { LootController.Instance.RemoveEquipmentTypeFromList(ItemType.Artifact); }
+        if (weapon.ItemType == ItemType.Weapon && MaxWeaponsEquipped()) { LootController.Instance.RemoveEquipmentTypeFromList(ItemType.Weapon); }
     }
-    public void AddEquipment(ItemSO item)
+    public void AddWeapon(ItemSO item)
     {
         Equipment equipment = Instantiate(item.pickupablePrefab).GetComponent<Equipment>();
         equipment.GetComponent<EquipmentPickup>().OnPickup();
-        AddEquipment(equipment);
+        AddWeapon(equipment);
     }
-    public void ButtonPress(ItemSO item, ItemStats upgradeStats = null)
+    public void RemoveWeapon(Equipment equipment)
     {
-        if (HasItem(item)) { UpgradeEquipment(GetItem(item), upgradeStats); }
-        else { AddEquipment(item); }
-    }
-    public void RemoveEquipment(Equipment equipment)
-    {
-        if (equippedItems.Contains(equipment)) { equipment.UnEquip(); }
+        if (equippedWeapons.Contains(equipment)) { equipment.UnEquip(); }
         else { Debug.Log("Player does not possess this piece of equipment!"); }
     }
     public bool HasItem(ItemSO item)
     {
-        for (int i = 0; i < equippedItems.Count; i++)
+        for (int i = 0; i < allEquippedItems.Count; i++)
         {
-            if (equippedItems[i].itemData == item)
+            if (allEquippedItems[i].itemData == item)
             {
                 return true;
             }
         }
         return false;
     }
-    public Equipment GetItem(ItemSO item)
+    public Equipment GetWeapon(ItemSO item)
     {
-        for (int i = 0; i < equippedItems.Count; i++)
+        for (int i = 0; i < equippedWeapons.Count; i++)
         {
-            if (equippedItems[i].itemData == item)
+            if (equippedWeapons[i].itemData == item)
             {
-                return equippedItems[i];
+                return equippedWeapons[i];
             }
         }
         return null;
+    }
+    public void ButtonPress(ItemSO item, ItemStats upgradeStats = null)
+    {
+        if (HasItem(item)) { UpgradeWeapon(GetWeapon(item), upgradeStats); }
+        else { AddWeapon(item); }
     }
     #endregion
 
@@ -169,16 +181,17 @@ public class InventoryController : MonoBehaviour
 
     private void Start()
     {
-        for (int i = 0; i < equippedItems.Count; i++)
+        for (int i = 0; i < equippedWeapons.Count; i++)
         {
-            equippedItems[i].OnEquip();
+            equippedWeapons[i].OnEquip();
         }
     }
     public void FixedUpdate()
     {
-        for (int i = 0; i < equippedItems.Count; i++)
+        if(GameManager.Instance.GameState != GameState.Normal) { return; }
+        for (int i = 0; i < equippedWeapons.Count; i++)
         {
-            equippedItems[i].TickCooldown(Time.fixedDeltaTime);
+            equippedWeapons[i].TickCooldown(Time.fixedDeltaTime);
         }
     }
 }

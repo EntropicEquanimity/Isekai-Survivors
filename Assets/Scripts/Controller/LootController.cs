@@ -28,6 +28,7 @@ public class LootController : MonoBehaviour
     }
     public void Update()
     {
+        if(GameManager.Instance.GameState != GameState.Normal) { return; }
         if (_player == null) { _player = GameManager.Instance.player; if (_player == null) { return; } }
         foreach (var hit in Physics2D.OverlapCircleAll(_player.transform.position, GameManager.Instance.PickupRadius + 1f, pickupsLayer))
         {
@@ -106,7 +107,7 @@ public class LootController : MonoBehaviour
         List<ItemSO> selectedItems = new List<ItemSO>();
 
         for (int n = 0; n < numberToPull; n++)
-        {
+        { 
             int totalWeight = GetItemWeight(_allItems);
             int roll = Random.Range(0, totalWeight);
             for (int i = 0; i < _allItems.Count; i++)
@@ -120,12 +121,6 @@ public class LootController : MonoBehaviour
                 }
             }
         }
-        //for (int i = 0; i < numberToPull; i++)
-        //{
-        //    int index = Random.Range(0, _allItems.Count);
-        //    selectedItems.Add(_allItems[index]);
-        //    _allItems.RemoveAt(index);
-        //}
         return selectedItems;
     }
     public int GetItemWeight(List<ItemSO> items)

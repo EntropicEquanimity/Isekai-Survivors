@@ -194,7 +194,7 @@ MonoBehaviour:
   range: 0
   targetPosition: {x: 0, y: 0, z: 0}
   explosionEffect: {fileID: 8946634070377217577, guid: cd3927b3c86d70a4781bd55205b68e8f, type: 3}
-  explosionRadius: 1.5
-  explosionDamage: 100
+  explosionRadius: 1
+  explosionDamage: 60
   explodeWhenWithinRange: 1
-  triggerRadiusForExplosion: 1
+  triggerRadiusForExplosion: 0.8

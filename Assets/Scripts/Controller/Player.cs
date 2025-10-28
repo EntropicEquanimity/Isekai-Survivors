@@ -24,7 +24,7 @@ public class Player : Entity
         HP = baseStats.entityStats.health;
         GetComponent<CircleCollider2D>().enabled = true;
 
-        OnTakeDamage += delegate { Invulnerable(2f); };
+        OnDeath += DisableWeapons;
     }
     public virtual void Update()
     {
@@ -36,6 +36,14 @@ public class Player : Entity
 
         _hud.UpdateHealthBar(HP, MaxHP);
     }
+    void DisableWeapons(DamageReport report)
+    {
+        foreach (Equipment weapon in InventoryController.Instance.equippedWeapons) 
+        {
+            if (weapon != null) { weapon.enabled = false; }
+            else { Debug.LogError("Trying to disable missing weapon!"); }
+        }
+    }
     public override void Move()
     {
         if (moveVector != Vector2.zero && _rb.linearVelocity.magnitude < 0.5f)
@@ -46,7 +54,14 @@ public class Player : Entity
     }
     public override void Die()
     {
-        StartCoroutine(DeathAnimation());
+        CanTakeDamage = false;
+        GetComponent<CircleCollider2D>().enabled = false;
+        MoveSpeed = 0;
+        Damage = 0;
+        HP = 0;
+
+        _hud.ShowGameOver(InventoryController.Instance.equippedWeapons, 0f);
+        GameManager.Instance.GameOver();
     }
     protected override IEnumerator DeathAnimation()
     {
@@ -56,7 +71,6 @@ public class Player : Entity
         Damage = 0;
         HP = 0;
         yield return new WaitForFixedUpdate();
-        gameObject.SetActive(false);
     }
 }
 [System.Serializable]

@@ -96,7 +96,7 @@ public class Enemy : Entity
     {
         if (DistanceToTarget <= range && AttackOffCooldown && !IsDead)
         {
-            target.TakeDamage(new DamageInfo() { damage = Damage });
+            target.TakeDamage(new DamageInfo(this, Damage, 0, false));
             _lastTimeDamageDealt = Time.realtimeSinceStartup;
         }
     }
@@ -121,7 +121,7 @@ public class Enemy : Entity
             entitySpriteRenderer.material.SetFloat("_FadeAmount", fadeAmount);
             yield return new WaitForFixedUpdate();
         }
-        EnemyManager.Instance.EnemyDeath(this);
+        EnemyWaveManager.Instance.EnemyDeath(this);
     }
     public Vector2 DirectionToTarget => (target.transform.position - transform.position).normalized;
     public float DistanceToTarget => Vector2.Distance(transform.position, target.transform.position);

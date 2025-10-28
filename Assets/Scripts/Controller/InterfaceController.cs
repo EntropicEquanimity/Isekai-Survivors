@@ -63,12 +63,8 @@ public class InterfaceController : MonoBehaviour
     #region Items
     public void OpenChooseItemPanel(List<ItemSO> items, System.Action onChoose = null)
     {
-        if (items.Count < 1)
-        {
-            Debug.LogError("Empty List Of Items was handed to the ItemPanel!");
-            return;
-        }
-        Pause();
+        if (items.Count < 1) { Debug.LogError("Empty List Of Items was handed to the ItemPanel!"); return; }
+        if (!Pause()) { return; }
         itemChoicePanelParent.gameObject.SetActive(true);
         int count = items.Count > 5 ? 5 : items.Count;
         for (int i = 0; i < itemCards.Count; i++)
@@ -97,43 +93,62 @@ public class InterfaceController : MonoBehaviour
     #endregion
 
     #region Pause Menu
-    public void Pause()
+    public bool Pause()
     {
-        Time.timeScale = 0;
-        GameManager.Instance.GameState = GameState.Paused;
+        if (GameManager.Instance.GameState == GameState.Normal)
+        {
+            Time.timeScale = 0;
+            GameManager.Instance.GameState = GameState.Paused;
+            return true;
+        }
+        return false;
     }
-    public void Resume()
-    {
-        Time.timeScale = 1;
-        GameManager.Instance.GameState = GameState.Normal;
+    public bool Resume()
+    { 
+        if(GameManager.Instance.GameState == GameState.Paused)
+        {
+            Time.timeScale = 1;
+            GameManager.Instance.GameState = GameState.Normal;
+            return true;
+        }
+        return false;
     }
     public void OpenPauseMenu()
     {
-        Pause();
-        pauseMenu.SetActive(true);
+        if (Pause()) pauseMenu.SetActive(true);
     }
     public void ClosePauseMenu()
     {
-        Resume();
-        pauseMenu.SetActive(false);
+        if (Resume()) pauseMenu.SetActive(false);
     }
     public void GiveUp()
     {
-        Debug.LogError("Give up not implemented yet!");
+        ClosePauseMenu();
+        FindFirstObjectByType<Player>().TakeDamage(new DamageInfo(null, 999, 0, true));
+    }
+    public void Restart()
+    {
+        SceneManager.Instance.GoToGameScene();
+    }
+    public void GoToMainMenu()
+    {
+        SceneManager.Instance.GoToMainMenu();
     }
     public void Quit()
     {
+#if UNITY_STANDALONE_WIN
         Application.Quit();
+#endif
     }
     #endregion
 
     #region Game Over
-    public void ShowGameOver(Equipment[] weapons, float time)
+    public void ShowGameOver(List<Equipment> weapons, float time)
     {
         gameOverCanvas.interactable = true;
         gameOverCanvas.DOFade(1f, 2f);
-        DamageRecord[] damageRecord = new DamageRecord[weapons.Length];
-        for (int i = 0; i < weapons.Length; i++)
+        DamageRecord[] damageRecord = new DamageRecord[weapons.Count];
+        for (int i = 0; i < weapons.Count; i++)
         {
             damageRecord[i] = weapons[i].DamageRecord;
         }
