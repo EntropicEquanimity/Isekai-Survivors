@@ -407,7 +407,7 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 4, y: 4, z: 4, w: 4}
       customData: 
       outline: []
@@ -416,6 +416,28 @@ TextureImporter:
       bones: []
       spriteID: 4b0e858458c06fd4bb296280ca08eeed
       internalID: -696597326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fade
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 16, y: 16, z: 16, w: 16}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e97c7560446c7294e88013d6d76a3fe5
+      internalID: 187237049
       vertices: []
       indices: 
       edges: []
@@ -435,6 +457,7 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Basic_Panel: -696597326
+      Fade: 187237049
       GUI_2: -5376358965234703051
       GUI_3: 5740453210667488706
       check: -3238813901825184631

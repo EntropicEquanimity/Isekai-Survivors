@@ -65,6 +65,7 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
+        Time.timeScale = 1.0f;
         PlayerSO p = (PlayerSO)player.baseStats;
         InventoryController.Instance.AddWeapon(p.startingWeapon);
         ObjectPool.Instance.CreatePool("Barrier", Resources.Load("Barrier") as GameObject, 1);

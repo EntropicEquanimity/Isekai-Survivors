@@ -8,7 +8,10 @@ public class Player : Entity
 {
     private Rigidbody2D _rb;
     private InterfaceController _hud;
+    [SerializeField] SimpleSpriteAnimator _animator;
     [BoxGroup("ReadOnly")] [ReadOnly] public Vector2 moveVector;
+    private Vector2 lastMoveVector = Vector2.zero;
+    private PlayerSO playerStats;
 
     public override int MaxHP { get => base.MaxHP + GameManager.Instance.Health; set => base.MaxHP = value; }
     public override int Damage { get => base.Damage + GameManager.Instance.Damage; set => base.Damage = value; }
@@ -23,8 +26,11 @@ public class Player : Entity
         Initialize(baseStats.entityStats);
         HP = baseStats.entityStats.health;
         GetComponent<CircleCollider2D>().enabled = true;
-
         OnDeath += DisableWeapons;
+
+        playerStats = (PlayerSO)baseStats;
+        _animator.animationSprites = playerStats.idleAnimation;
+        _animator.Restart();
     }
     public virtual void Update()
     {
@@ -48,8 +54,17 @@ public class Player : Entity
     {
         if (moveVector != Vector2.zero && _rb.linearVelocity.magnitude < 0.5f)
         {
+                _animator.animationSprites = playerStats.walkingAnimation;
+
             _rb.MovePosition(moveVector * (MoveSpeed) * Time.fixedDeltaTime + (Vector2)transform.position);
             if (moveVector.x != 0) entitySpriteRenderer.flipX = moveVector.x < 0;
+
+            lastMoveVector = moveVector;
+        }
+        else if (lastMoveVector != moveVector)
+        {
+            _animator.animationSprites = playerStats.idleAnimation;
+            _animator.Restart();
         }
     }
     public override void Die()

@@ -53,7 +53,7 @@ public class SimpleSpriteAnimator : MonoBehaviour
     {
         isPlaying = true;
     }
-    void Update()
+    void LateUpdate()
     {
         if (!isPlaying) { return; }
         if (_waitTime > 0f)

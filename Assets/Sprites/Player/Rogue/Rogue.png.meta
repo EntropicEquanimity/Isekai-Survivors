@@ -1,22 +1,7 @@
 fileFormatVersion: 2
-guid: 12105856021079745ac6b5ed1ea2bf6a
+guid: e66053c5bb00c1b4ca0815fec3ed0452
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: -557450005631253508
-    second: Player-sheet_0
-  - first:
-      213: -4245768072236673565
-    second: Player-sheet_1
-  - first:
-      213: -1827791990933645307
-    second: Player-sheet_2
-  - first:
-      213: 2911549044442082324
-    second: Player-sheet_3
-  - first:
-      213: -6564579147891151752
-    second: Player-sheet_4
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -80,7 +65,7 @@ TextureImporter:
   ignorePngGamma: 0
   applyGammaDecoding: 0
   swizzle: 50462976
-  cookieLightType: 1
+  cookieLightType: 0
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
@@ -100,33 +85,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: Server
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -139,7 +98,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -151,199 +110,309 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Knight_0
+      name: Rogue_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 38
-        width: 43
-        height: 38
+        y: 32
+        width: 32
+        height: 32
       alignment: 9
-      pivot: {x: 0.5, y: 0.17}
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8645345742ce31e46add18f9fe03d0a4
-      internalID: -54644739
+      spriteID: b38bea637a50821438de7d2576a405dc
+      internalID: -1041210920
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Knight_1
+      name: Rogue_1
       rect:
         serializedVersion: 2
-        x: 43
-        y: 38
-        width: 43
-        height: 38
+        x: 32
+        y: 32
+        width: 32
+        height: 32
       alignment: 9
-      pivot: {x: 0.5, y: 0.17}
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ab7f581c18a51524780b9bce7ebd9569
-      internalID: 1991567095
+      spriteID: 8981ff9fb05e25e499fdbfb16f507f70
+      internalID: -521542592
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Knight_2
+      name: Rogue_2
       rect:
         serializedVersion: 2
-        x: 86
-        y: 38
-        width: 43
-        height: 38
+        x: 64
+        y: 32
+        width: 32
+        height: 32
       alignment: 9
-      pivot: {x: 0.5, y: 0.17}
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7e4c6885d2da5014fb94017bb5bc2109
-      internalID: -1931753738
+      spriteID: a7e3ff38ca51be748bc5e64d1ec31a33
+      internalID: -477940409
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Knight_3
+      name: Rogue_3
       rect:
         serializedVersion: 2
-        x: 129
-        y: 38
-        width: 43
-        height: 38
+        x: 96
+        y: 32
+        width: 32
+        height: 32
       alignment: 9
-      pivot: {x: 0.5, y: 0.17}
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f784d8654f0d2d942807ec1fac30586c
-      internalID: 1995717583
+      spriteID: cf8c805d76a3e844e9dbd6dae3482d1f
+      internalID: -160233917
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Knight_4
+      name: Rogue_4
       rect:
         serializedVersion: 2
-        x: 172
-        y: 38
-        width: 43
-        height: 38
+        x: 128
+        y: 32
+        width: 32
+        height: 32
       alignment: 9
-      pivot: {x: 0.5, y: 0.17}
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a7bbb1af68f6b8045a980943e32d7945
-      internalID: 869314867
+      spriteID: f13f5a8e626b246479d8a0b3d38ebef8
+      internalID: -2108902573
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Knight_5
+      name: Rogue_5
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 786687ea5da5bab4ba1a4885f6a9a0ed
+      internalID: -1743796970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rogue_6
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5febb0d0d3d196c45b58d9dec672f564
+      internalID: 377189689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rogue_7
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 43
-        height: 38
+        width: 32
+        height: 32
       alignment: 9
-      pivot: {x: 0.5, y: 0.17}
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3789e99b90e52ea4aa535b3b968dabf0
-      internalID: -130121963
+      spriteID: 52ca211a468ac7b408805b66c69b1f05
+      internalID: 497595809
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Knight_6
+      name: Rogue_8
       rect:
         serializedVersion: 2
-        x: 43
+        x: 32
         y: 0
-        width: 43
-        height: 38
+        width: 32
+        height: 32
       alignment: 9
-      pivot: {x: 0.5, y: 0.17}
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: df95c89cb193daf40805844f72babf4f
-      internalID: -1366569163
+      spriteID: e9e0b7f67bfdd8b4cafaee17a437b693
+      internalID: -2045887913
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Knight_7
+      name: Rogue_9
       rect:
         serializedVersion: 2
-        x: 86
+        x: 64
         y: 0
-        width: 43
-        height: 38
+        width: 32
+        height: 32
       alignment: 9
-      pivot: {x: 0.5, y: 0.17}
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 879a306c9426f8e42bb11bd2dd1485e8
-      internalID: 783958078
+      spriteID: 5db256550fd2eb444b3144c6f7397e94
+      internalID: 692547514
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Knight_8
+      name: Rogue_10
       rect:
         serializedVersion: 2
-        x: 129
+        x: 96
         y: 0
-        width: 43
-        height: 38
+        width: 32
+        height: 32
       alignment: 9
-      pivot: {x: 0.5, y: 0.17}
+      pivot: {x: 0.5, y: 0.2}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ba1ec1c38110f94449a49907802aee03
-      internalID: -1822893605
+      spriteID: 12a5582364517264487cbcc436d4108d
+      internalID: 673030796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rogue_11
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 119dc9f2050fc124dbbf51aea1a1def2
+      internalID: 414145438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rogue_12
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 947a9d12aed89db4db5bda313a59d9a3
+      internalID: 675943477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rogue_13
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 820ee6916d4eb6848b99ceeb45427e45
+      internalID: 831268018
       vertices: []
       indices: 
       edges: []
@@ -362,15 +431,20 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Knight_0: -54644739
-      Knight_1: 1991567095
-      Knight_2: -1931753738
-      Knight_3: 1995717583
-      Knight_4: 869314867
-      Knight_5: -130121963
-      Knight_6: -1366569163
-      Knight_7: 783958078
-      Knight_8: -1822893605
+      Rogue_0: -1041210920
+      Rogue_1: -521542592
+      Rogue_10: 673030796
+      Rogue_11: 414145438
+      Rogue_12: 675943477
+      Rogue_13: 831268018
+      Rogue_2: -477940409
+      Rogue_3: -160233917
+      Rogue_4: -2108902573
+      Rogue_5: -1743796970
+      Rogue_6: 377189689
+      Rogue_7: 497595809
+      Rogue_8: -2045887913
+      Rogue_9: 692547514
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

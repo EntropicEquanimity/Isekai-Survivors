@@ -176,7 +176,7 @@ public class InterfaceController : MonoBehaviour
     public void UpdateExpBar(int current, int max)
     {
         playerExpBarFill.fillAmount = (float)current / (float)max;
-        playerExpText.text = current + "/" + max;
+        //playerExpText.text = current + "/" + max;
     }
     public void UpdateKills(int kills)
     {
@@ -184,7 +184,7 @@ public class InterfaceController : MonoBehaviour
     }
     public void UpdatePlayerLevel(int level)
     {
-        playerLevel.text = "LVL " + level.ToString();
+        playerLevel.text = level.ToString();
     }
     #endregion
 }

@@ -18,6 +18,7 @@ public class FadeManager : MonoBehaviour
     {
         if (Instance == null) { Instance = this; DontDestroyOnLoad(this); }
         else { Destroy(gameObject); }
+
         fadeIn.material.SetFloat("_FadeAmount", 1f);
         fadeOut.material.SetFloat("_FadeAmount", 1f);
         ToggleCanvasGroup(false);

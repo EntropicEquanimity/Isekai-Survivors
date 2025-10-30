@@ -7,28 +7,28 @@ public class MainMenuController : MonoBehaviour
 {
     private void Start()
     {
-        FadeManager.Instance.StartFadeOut(delegate
-        {
-            fightPanel.SetActive(false);
-            upgradesPanel.SetActive(false);
-            creditsPanel.SetActive(false);
-        });
+        //FadeManager.Instance.StartFadeOut(delegate
+        //{
+        //    fightPanel.SetActive(false);
+        //    upgradesPanel.SetActive(false);
+        //    creditsPanel.SetActive(false);
+        //});
     }
-    public GameObject fightPanel, upgradesPanel, creditsPanel;
+    public GameObject fightPanel, upgradesPanel, creditsPanel, confirmQuitPanel;
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1))
         {
-            OnPressEscape();
+            GoBack();
         }
     }
 
-    private void OnPressEscape()
+    private void GoBack()
     {
         if (!fightPanel.activeInHierarchy && !creditsPanel.activeInHierarchy && !upgradesPanel.activeInHierarchy)
         {
-            GiveUp();
+            confirmQuitPanel.SetActive(true);
         }
         else
         {

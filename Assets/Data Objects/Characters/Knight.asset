@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8545fb79fa1d2940995e9d85a9297b8, type: 3}
   m_Name: Knight
   m_EditorClassIdentifier: 
-  entitySprite: {fileID: -557450005631253508, guid: 12105856021079745ac6b5ed1ea2bf6a, type: 3}
+  entitySprite: {fileID: -54644739, guid: 12105856021079745ac6b5ed1ea2bf6a, type: 3}
   entityStats:
     health: 120
     damage: 0
@@ -20,6 +20,17 @@ MonoBehaviour:
     defense: 3
     dodgeChance: 0
     knockBackResistance: 1
+  idleAnimation:
+  - {fileID: -54644739, guid: 12105856021079745ac6b5ed1ea2bf6a, type: 3}
+  - {fileID: 1991567095, guid: 12105856021079745ac6b5ed1ea2bf6a, type: 3}
+  - {fileID: -1931753738, guid: 12105856021079745ac6b5ed1ea2bf6a, type: 3}
+  - {fileID: 1995717583, guid: 12105856021079745ac6b5ed1ea2bf6a, type: 3}
+  - {fileID: 869314867, guid: 12105856021079745ac6b5ed1ea2bf6a, type: 3}
+  walkingAnimation:
+  - {fileID: -130121963, guid: 12105856021079745ac6b5ed1ea2bf6a, type: 3}
+  - {fileID: -1366569163, guid: 12105856021079745ac6b5ed1ea2bf6a, type: 3}
+  - {fileID: 783958078, guid: 12105856021079745ac6b5ed1ea2bf6a, type: 3}
+  - {fileID: -1822893605, guid: 12105856021079745ac6b5ed1ea2bf6a, type: 3}
   characterDescription: An armored knight with more survivability than the average
     joe.
   startingWeapon: {fileID: 11400000, guid: 5ffa243392c175d4cac0121dab88b2cf, type: 2}
@@ -29,7 +40,7 @@ MonoBehaviour:
     essenceGain: 1
     goldGain: 1
     xpGain: 1
-    luck: 500
+    luck: 0
     maxWeapons: 3
     maxTools: 1
   characterPrefab: {fileID: 2152762838893216242, guid: 6c74774bef3e41b4398eec0b21be582d, type: 3}

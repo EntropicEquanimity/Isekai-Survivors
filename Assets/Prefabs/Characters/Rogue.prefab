@@ -269,7 +269,7 @@ MonoBehaviour:
   baseStats: {fileID: 11400000, guid: be2002bf78113884bb60e0349fcb2852, type: 2}
   entitySpriteRenderer: {fileID: 2152762837662601540}
   settings: {fileID: 11400000, guid: 43be9781a9947624796c212527175348, type: 2}
-  playerData: {fileID: 11400000, guid: be2002bf78113884bb60e0349fcb2852, type: 2}
+  _animator: {fileID: 261023270793569940}
   moveVector: {x: 0, y: 0}
 --- !u!50 &91648475
 Rigidbody2D:
