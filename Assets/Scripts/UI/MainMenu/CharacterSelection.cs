@@ -63,20 +63,21 @@ public class CharacterSelection : MonoBehaviour
         StringBuilder sb = new StringBuilder();
 
         sb.Append("Health: ");
-        if (character.entityStats.health != 100) { sb.Append(character.entityStats.health > 100 ? "<color=green>" : "<color=red>"); }
-        sb.Append(character.entityStats.health).Append(character.entityStats.health != 100 ? "</color>" : "").AppendLine();
+        int hp = character.entityStats.health;
+        if (hp > 100) { sb.Append("<color=green>"); }
+        else if (hp == 100) { sb.Append("<color=white>"); }
+        else { sb.Append("<color=red>"); }
+        sb.Append(character.entityStats.health).AppendLine("</color>");
 
-        sb.Append("Damage: ");
-        if (character.entityStats.damage != 0) { sb.Append(character.entityStats.damage > 0 ? "<color=green>" : "<color=red>"); }
-        sb.Append(character.entityStats.damage).Append(character.entityStats.damage != 0 ? "</color>" : "").AppendLine();
-
-        sb.Append("Speed: ");
-        if (character.entityStats.moveSpeed != 3) { sb.Append(character.entityStats.moveSpeed > 3 ? "<color=green>" : "<color=red>"); }
-        sb.Append(character.entityStats.moveSpeed).Append(character.entityStats.moveSpeed != 3 ? "</color>" : "").AppendLine();
-
-        sb.Append("Defense: ");
-        if (character.entityStats.defense != 0) { sb.Append(character.entityStats.defense > 0 ? "<color=green>" : "<color=red>"); }
-        sb.Append(character.entityStats.defense).Append(character.entityStats.defense != 0 ? "</color>" : "").AppendLine();
+        if (character.entityStats.damage != 0) { sb.Append("Damage: ").Append(character.entityStats.damage > 0 ? "<color=green>" : "<color=red>").Append(character.entityStats.damage).AppendLine("</color>"); }
+        if (character.entityStats.moveSpeed != 3) { sb.Append("Speed: ").Append(character.entityStats.moveSpeed > 3 ? "<color=green>" : "<color=red>").Append(character.entityStats.moveSpeed).AppendLine("</color>"); }
+        if (character.entityStats.defense != 0) { sb.Append("Defense: ").Append(character.entityStats.defense > 0 ? "<color=green>+" : "<color=red>").Append(character.entityStats.defense).AppendLine("</color>"); }
+        if (character.entityStats.dodgeChance != 0) { sb.Append("Dodge: ").Append(character.entityStats.dodgeChance > 0 ? "<color=green>+" : "<color=red>").Append(character.entityStats.dodgeChance).AppendLine("%</color>"); }
+        if (character.playerStats.pickupRadius != 0) { sb.Append("Pickup Radius: ").Append(character.playerStats.pickupRadius > 0f ? "<color=green>+" : "<color=red>").Append(character.playerStats.pickupRadius).AppendLine("</color>"); }
+        if (character.playerStats.essenceGain != 0) { sb.Append("Essence Gain: ").Append(character.playerStats.essenceGain> 0f ? "<color=green>+" : "<color=red>").Append(character.playerStats.essenceGain).AppendLine("%</color>"); }
+        if (character.playerStats.xpGain != 0) { sb.Append("XP Gain: ").Append(character.playerStats.xpGain > 0f ? "<color=green>+" : "<color=red>").Append(character.playerStats.xpGain).AppendLine("%</color>"); }
+        if (character.playerStats.goldGain != 0) { sb.Append("Gold Gain: ").Append(character.playerStats.goldGain> 0f ? "<color=green>+" : "<color=red>").Append(character.playerStats.goldGain).AppendLine("%</color>"); }
+        if (character.playerStats.luck != 0) { sb.Append("Luck: ").Append(character.playerStats.luck > 0 ? "<color=green>+" : "<color=red>").Append(character.playerStats.luck).AppendLine("</color>"); }
 
         characterStats.text = sb.ToString();
     }

@@ -18,7 +18,7 @@ MonoBehaviour:
     damage: 0
     moveSpeed: 4
     defense: 0
-    dodgeChance: 0
+    dodgeChance: 1
     knockBackResistance: 0
   idleAnimation:
   - {fileID: -1041210920, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
@@ -41,9 +41,9 @@ MonoBehaviour:
   playerStats:
     accuracy: 0
     pickupRadius: 0.5
-    essenceGain: 1
-    goldGain: 1.2
-    xpGain: 1
+    essenceGain: 0
+    goldGain: 20
+    xpGain: 0
     luck: 0
     maxWeapons: 3
     maxTools: 1

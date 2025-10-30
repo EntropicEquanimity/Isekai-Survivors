@@ -16,8 +16,8 @@ MonoBehaviour:
   entityStats:
     health: 120
     damage: 0
-    moveSpeed: 3
-    defense: 3
+    moveSpeed: 2.5
+    defense: 5
     dodgeChance: 0
     knockBackResistance: 1
   idleAnimation:
@@ -37,9 +37,9 @@ MonoBehaviour:
   playerStats:
     accuracy: 0
     pickupRadius: 0
-    essenceGain: 1
-    goldGain: 1
-    xpGain: 1
+    essenceGain: 0
+    goldGain: 0
+    xpGain: 0
     luck: 0
     maxWeapons: 3
     maxTools: 1
