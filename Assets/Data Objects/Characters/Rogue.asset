@@ -18,7 +18,7 @@ MonoBehaviour:
     damage: 0
     moveSpeed: 4
     defense: 0
-    dodgeChance: 1
+    dodgeChance: 15
     knockBackResistance: 0
   idleAnimation:
   - {fileID: -1041210920, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}

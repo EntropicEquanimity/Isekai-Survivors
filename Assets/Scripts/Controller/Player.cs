@@ -91,7 +91,7 @@ public class Player : Entity
 [System.Serializable]
 public class PlayerStats
 {
-    public float accuracy = 0;
+    public float accuracy = 0; // NOT IMPLEMENTED AT THIS MOMENT
     public float pickupRadius = 1;
 
     public float essenceGain = 1;

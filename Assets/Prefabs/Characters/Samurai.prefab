@@ -82,7 +82,7 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -1041210920, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
+  m_Sprite: {fileID: 975244514, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -106,16 +106,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPlaying: 0
   animationSprites:
-  - {fileID: 497595809, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
-  - {fileID: -2045887913, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
-  - {fileID: 692547514, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
-  - {fileID: 673030796, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
-  - {fileID: 414145438, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
-  - {fileID: 675943477, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
-  - {fileID: 831268018, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
+  - {fileID: 1962258022, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: 1424513955, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: 22520187, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: 1088380083, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: -1370416881, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: -1949661700, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: -1933053981, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: 2022795373, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
   framesPerSecond: 10
   playOnEnable: 1
-  looping: 0
+  looping: 1
   disableOnComplete: 0
   destroyOnComplete: 0
 --- !u!1 &2152762838311306415
@@ -235,7 +236,7 @@ GameObject:
   - component: {fileID: 91648475}
   - component: {fileID: 9023075079282131029}
   m_Layer: 6
-  m_Name: Rogue
+  m_Name: Samurai
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -270,7 +271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 761f2a8c0b66f7c469986b56a4f42021, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseStats: {fileID: 11400000, guid: be2002bf78113884bb60e0349fcb2852, type: 2}
+  baseStats: {fileID: 11400000, guid: 15d3dfb152ab4684d9c7eb85bc1c0b15, type: 2}
   entitySpriteRenderer: {fileID: 2152762837662601540}
   settings: {fileID: 11400000, guid: 43be9781a9947624796c212527175348, type: 2}
   _animator: {fileID: 261023270793569940}

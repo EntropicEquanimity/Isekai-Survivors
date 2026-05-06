@@ -12,39 +12,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8545fb79fa1d2940995e9d85a9297b8, type: 3}
   m_Name: Samurai
   m_EditorClassIdentifier: 
-  entitySprite: {fileID: -1041210920, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
+  entitySprite: {fileID: 975244514, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
   entityStats:
-    health: 75
-    damage: 0
-    moveSpeed: 4
+    health: 100
+    damage: 2
+    moveSpeed: 5
     defense: 0
-    dodgeChance: 1
+    dodgeChance: 0
     knockBackResistance: 0
   idleAnimation:
-  - {fileID: -1041210920, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
-  - {fileID: -521542592, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
-  - {fileID: -477940409, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
-  - {fileID: -160233917, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
-  - {fileID: -2108902573, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
-  - {fileID: -1743796970, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
-  - {fileID: 377189689, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
+  - {fileID: 975244514, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: 515201930, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: 1729982609, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: 2012669209, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: 1366144851, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: -1866999778, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: -1727759903, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: -1101248912, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
   walkingAnimation:
-  - {fileID: 497595809, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
-  - {fileID: -2045887913, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
-  - {fileID: 692547514, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
-  - {fileID: 673030796, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
-  - {fileID: 414145438, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
-  - {fileID: 675943477, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
-  - {fileID: 831268018, guid: e66053c5bb00c1b4ca0815fec3ed0452, type: 3}
-  characterDescription: An agile character excelling at picking things up.
-  startingWeapon: {fileID: 11400000, guid: 71d908cb5a048834d8ab9704361119e6, type: 2}
+  - {fileID: 1962258022, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: 1424513955, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: 22520187, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: 1088380083, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: -1370416881, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: -1949661700, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: -1933053981, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: 2022795373, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  characterDescription: A dishonoured ronin
+  startingWeapon: {fileID: 11400000, guid: f739bcaa9b4ca4541bc0d4907b77c7ab, type: 2}
   playerStats:
     accuracy: 0
-    pickupRadius: 0.5
+    pickupRadius: 0
     essenceGain: 0
-    goldGain: 20
+    goldGain: 0
     xpGain: 0
     luck: 0
     maxWeapons: 3
     maxTools: 1
-  characterPrefab: {fileID: 2152762838893216242, guid: 4a3210229a6808c48afde0ab47e9b5e1, type: 3}
+  characterPrefab: {fileID: 2152762838893216242, guid: 61e75bf9e000aaa409d24921e8288c9c, type: 3}

@@ -253,5 +253,21 @@ public abstract class Equipment : Item
         }
         return selected;
     }
+    public List<Vector2> GetSprayDirections(Vector2 baseDirection, int count, float maxSpreadDegrees)
+    {
+        baseDirection.Normalize();
+        float baseAngle = Mathf.Atan2(baseDirection.y, baseDirection.x) * Mathf.Rad2Deg;
+        List<Vector2> directions = new List<Vector2>();
+
+        for (int i = 0; i < count; i++)
+        {
+            float angleOffset = Random.Range(-maxSpreadDegrees / 2f, maxSpreadDegrees / 2f);
+            float finalAngle = baseAngle + angleOffset;
+            float rad = finalAngle * Mathf.Deg2Rad;
+            Vector2 dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
+            directions.Add(dir);
+        }
+        return directions;
+    }
     #endregion
 }

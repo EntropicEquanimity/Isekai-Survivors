@@ -124,7 +124,7 @@ public class InterfaceController : MonoBehaviour
     public void GiveUp()
     {
         ClosePauseMenu();
-        FindFirstObjectByType<Player>().TakeDamage(new DamageInfo(null, 999, 0, true));
+        FindAnyObjectByType<Player>().TakeDamage(new DamageInfo(null, 999, 0, true));
     }
     public void Restart()
     {

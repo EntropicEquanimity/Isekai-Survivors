@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 665397388908953095}
   - component: {fileID: 665397388908953092}
   - component: {fileID: 665397388908953093}
-  - component: {fileID: 5967082748213669832}
+  - component: {fileID: 462638706230775352}
   m_Layer: 8
-  m_Name: Icicle
+  m_Name: Sai
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79,7 +79,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.3, y: 0.6}
+  m_Size: {x: 0.2, y: 0.5}
   m_EdgeRadius: 0
 --- !u!50 &665397388908953093
 Rigidbody2D:
@@ -108,7 +108,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &5967082748213669832
+--- !u!114 &462638706230775352
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -117,9 +117,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 665397388908953097}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 340c222df1bbedd4aa52834c8cc2d331, type: 3}
+  m_Script: {fileID: 11500000, guid: 1542d183621491b48ad8c9d7c0eaf6df, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::Projectile
   projectileStats:
     weaponStats:
       damage: 0
@@ -141,12 +141,11 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
-  clearTargets: 1
-  rotationSpeed: -360
+  clearTargets: 0
+  rotationSpeed: 0
   rotatesOnAxis: 0
   rotationSpeedAffectedByWeaponSpeed: 0
   constantDamageIntervals: 0.5
-  pierceCountBeforeBouncing: 1
 --- !u!1 &8139856222136744428
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,7 +156,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8139856222136744429}
   - component: {fileID: 8139856222136744426}
-  - component: {fileID: 8139856222136744427}
   m_Layer: 8
   m_Name: Sprite
   m_TagString: Untagged
@@ -175,7 +173,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.38268343, w: 0.92387956}
   m_LocalPosition: {x: 0, y: -0.05, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 665397388908953095}
@@ -229,7 +227,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1957081910, guid: f65070fa0e12e234384d2e849f247f98, type: 3}
+  m_Sprite: {fileID: -56565063, guid: 7e90440ae8cd0fe4cbe8510a0bb99f5c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -239,26 +237,3 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &8139856222136744427
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8139856222136744428}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 573368e80c0996e44949d9a0124d72ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isPlaying: 0
-  animationSprites:
-  - {fileID: 1957081910, guid: f65070fa0e12e234384d2e849f247f98, type: 3}
-  - {fileID: -457416155, guid: f65070fa0e12e234384d2e849f247f98, type: 3}
-  - {fileID: 459042761, guid: f65070fa0e12e234384d2e849f247f98, type: 3}
-  - {fileID: 1747223141, guid: f65070fa0e12e234384d2e849f247f98, type: 3}
-  framesPerSecond: 20
-  playOnEnable: 1
-  looping: 1
-  disableOnComplete: 0
-  destroyOnComplete: 0

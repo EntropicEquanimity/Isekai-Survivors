@@ -82,7 +82,7 @@ public class Projectile : MonoBehaviour
                 _constantDamageCooldown = constantDamageIntervals;
             }
         }
-        if (_rb.linearVelocity.magnitude <= 0.1f && clearTargets == ClearTargetsFlag.OnBoomerangReturn) { targets.Clear(); }
+        if (_rb.linearVelocity.magnitude <= 0.2f && clearTargets == ClearTargetsFlag.OnBoomerangReturn) { targets.Clear(); }
     }
     public virtual void OnDisable()
     {

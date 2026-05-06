@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ed5c0d4448dbe4d844b11407931386, type: 3}
   m_Name: SessionSettings
   m_EditorClassIdentifier: 
-  selectedPlayerCharacter: {fileID: 11400000, guid: 7239ab555c6f05d489498b7c56fdb315, type: 2}
-  selectedLevel: {fileID: 11400000, guid: a4219b8c3e8940b42b8ab78ba29d0c98, type: 2}
+  selectedPlayerCharacter: {fileID: 11400000, guid: 15d3dfb152ab4684d9c7eb85bc1c0b15, type: 2}
+  selectedLevel: {fileID: 11400000, guid: e60706c5326ce8b4381390f9ab55abbf, type: 2}
