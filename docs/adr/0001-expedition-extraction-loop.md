@@ -1,0 +1,3 @@
+# Expedition / extraction is the core loop
+
+The game currently plays as a classic survivor: pick a character, survive timed waves on a map, then Game Over. We decided a Run is a planet expedition with Extraction instead — Successful Run returns all collected resources, Failed Run returns a portion, and the Soul World is the persistent place between Runs. That identity is hard to reverse, would surprise anyone looking at the existing wave-timer code, and was chosen over bolting upgrades onto the current “timer then game over” structure because death, planets, and secondary objectives only make sense if the Run is something you return from.
