@@ -12,6 +12,7 @@ public class Player : Entity
     [BoxGroup("ReadOnly")] [ReadOnly] public Vector2 moveVector;
     private Vector2 lastMoveVector = Vector2.zero;
     private PlayerSO playerStats;
+    public IMoveInput MoveInput { get; set; }
 
     public override int MaxHP { get => base.MaxHP + GameManager.Instance.Health; set => base.MaxHP = value; }
     public override int Damage { get => base.Damage + GameManager.Instance.Damage; set => base.Damage = value; }
@@ -34,7 +35,8 @@ public class Player : Entity
     }
     public virtual void Update()
     {
-        moveVector = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+        Vector2 input = MoveInput != null ? MoveInput.ReadMove() : new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        moveVector = input.normalized;
     }
     public virtual void FixedUpdate()
     {
