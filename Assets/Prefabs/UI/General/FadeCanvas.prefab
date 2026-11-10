@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5132794755971374516}
   - component: {fileID: 5132794755971374520}
   - component: {fileID: 5132794755971374523}
+  - component: {fileID: 707637175081565831}
   m_Layer: 5
   m_Name: FadeCanvas
   m_TagString: Untagged
@@ -60,6 +61,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -134,6 +136,18 @@ MonoBehaviour:
   fadeOut: {fileID: 5132794756566640415}
   fadeSpeed: 5
   fadeInOutPause: 0.2
+--- !u!114 &707637175081565831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5132794755971374517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63431293d72e5a04bb1b6fa81b47c241, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelCanvasScaler
 --- !u!1 &5132794756329966834
 GameObject:
   m_ObjectHideFlags: 0

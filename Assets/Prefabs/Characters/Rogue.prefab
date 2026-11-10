@@ -35,7 +35,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2152762837662601540
 SpriteRenderer:
-  serializedVersion: 2
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -92,6 +92,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+  m_BlendShapeWeights: []
 --- !u!114 &261023270793569940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,7 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2152762838311306323}
   - component: {fileID: 2152762838311306412}
-  - component: {fileID: 2152762838311306413}
+  - component: {fileID: 1240122109466572805}
   m_Layer: 6
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -202,7 +203,7 @@ Camera:
   m_OcclusionCulling: 0
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &2152762838311306413
+--- !u!114 &1240122109466572805
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -211,17 +212,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 2152762838311306415}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a160d838ff8b4b4693ac20007e008c7, type: 3}
+  m_Script: {fileID: 11500000, guid: 0fd1b9e40becc374ca8573e5ff6f52c3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  m_AssetsPPU: 32
-  m_RefResolutionX: 640
-  m_RefResolutionY: 360
-  m_UpscaleRT: 1
-  m_PixelSnapping: 1
-  m_CropFrameX: 1
-  m_CropFrameY: 1
-  m_StretchFill: 1
+  m_EditorClassIdentifier: Blondie.PixelPerfect::Blondie.PixelPerfect.PixelCamera
+  _grid: 32
+  _referenceResolution: {x: 640, y: 360}
+  _mode: 0
+  _output: 0
+  _letterboxColor: {r: 0, g: 0, b: 0, a: 1}
+  _smoothScrolling: 0
+  _minFill: 0
+  _configured: 1
 --- !u!1 &2152762838893216242
 GameObject:
   m_ObjectHideFlags: 0

@@ -4093,8 +4093,8 @@ GameObject:
   - component: {fileID: 1777250432}
   - component: {fileID: 1777250431}
   - component: {fileID: 1777250430}
-  - component: {fileID: 1777250433}
   - component: {fileID: 1777250434}
+  - component: {fileID: 1777250435}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -4119,7 +4119,7 @@ Camera:
   m_GameObject: {fileID: 1777250429}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -4155,7 +4155,7 @@ Camera:
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
-  m_AllowMSAA: 1
+  m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
@@ -4176,26 +4176,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1777250433
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1777250429}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a160d838ff8b4b4693ac20007e008c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AssetsPPU: 32
-  m_RefResolutionX: 640
-  m_RefResolutionY: 360
-  m_UpscaleRT: 1
-  m_PixelSnapping: 0
-  m_CropFrameX: 1
-  m_CropFrameY: 1
-  m_StretchFill: 1
 --- !u!114 &1777250434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4215,6 +4195,26 @@ MonoBehaviour:
   newColor: {r: 0.2635003, g: 0.4245283, b: 0, a: 1}
   sr: {fileID: 0}
   image: {fileID: 0}
+--- !u!114 &1777250435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1777250429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fd1b9e40becc374ca8573e5ff6f52c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Blondie.PixelPerfect::Blondie.PixelPerfect.PixelCamera
+  _grid: 32
+  _referenceResolution: {x: 640, y: 360}
+  _mode: 0
+  _output: 0
+  _letterboxColor: {r: 0, g: 0, b: 0, a: 1}
+  _smoothScrolling: 0
+  _minFill: 0
+  _configured: 1
 --- !u!1 &1879032372
 GameObject:
   m_ObjectHideFlags: 0
@@ -5085,13 +5085,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'something
-
-    something
-
-    something
-
-    something'
+  m_text: Haven't figured out what to put here yet...
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e76099f2cb16ed4e87dc841a80d014f, type: 2}
   m_sharedMaterial: {fileID: -661406868640687818, guid: 8e76099f2cb16ed4e87dc841a80d014f, type: 2}
@@ -6104,6 +6098,7 @@ GameObject:
   - component: {fileID: 7429435060112590437}
   - component: {fileID: 7429435060112590441}
   - component: {fileID: 7429435060112590442}
+  - component: {fileID: 7429435060112590443}
   m_Layer: 5
   m_Name: MainMenu
   m_TagString: Untagged
@@ -6163,7 +6158,7 @@ Canvas:
   m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
-  m_PixelPerfect: 0
+  m_PixelPerfect: 1
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
@@ -6230,6 +6225,18 @@ MonoBehaviour:
   upgradesPanel: {fileID: 1355127792}
   creditsPanel: {fileID: 689168758}
   confirmQuitPanel: {fileID: 2101496570}
+--- !u!114 &7429435060112590443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7429435060112590436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63431293d72e5a04bb1b6fa81b47c241, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelCanvasScaler
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

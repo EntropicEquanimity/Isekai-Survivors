@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76edc7c3b47cabb4f8969e4bd0f9f56c, type: 3}
+  m_Name: PixelProfile
+  m_EditorClassIdentifier: Blondie.PixelPerfect::Blondie.PixelPerfect.PixelProfile
+  _settings:
+    Grid: 32
+    ReferenceResolution: {x: 640, y: 360}
+    Mode: 0
+    Output: 0
+    LetterboxColor: {r: 0, g: 0, b: 0, a: 1}
+    SmoothScrolling: 0
+    MinFill: 0
+    PanelReferenceResolution: {x: 960, y: 540}
+    PanelMinUILayout: {x: 640, y: 360}
+    PanelAutoAttach: 1
+    PanelApplyFont: 1
+  _grid: 16
+  _referenceResolution: {x: 0, y: 0}
+  _mode: 0
+  _output: 0
+  _letterboxColor: {r: 0, g: 0, b: 0, a: 1}
+  _smoothScrolling: 0
+  _minFill: 0
+  _migrated: 1

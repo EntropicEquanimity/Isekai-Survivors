@@ -1,7 +1,8 @@
 {
   "dependencies": {
+    "com.blondie.core": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.core#0bf46189760792fc27109b9e8896a39e132d6cb9",
+    "com.blondie.pixelperfect": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.pixelperfect#0bf46189760792fc27109b9e8896a39e132d6cb9",
     "com.unity.2d.animation": "16.0.1",
-    "com.unity.2d.pixel-perfect": "6.0.0",
     "com.unity.2d.psdimporter": "15.0.1",
     "com.unity.recorder": "5.1.7",
     "com.unity.2d.sprite": "1.0.0",

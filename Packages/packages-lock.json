@@ -1,5 +1,26 @@
 {
   "dependencies": {
+    "com.blondie.core": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.core#0bf46189760792fc27109b9e8896a39e132d6cb9",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.modules.uielements": "1.0.0"
+      },
+      "hash": "0bf46189760792fc27109b9e8896a39e132d6cb9"
+    },
+    "com.blondie.pixelperfect": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.pixelperfect#0bf46189760792fc27109b9e8896a39e132d6cb9",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.blondie.core": "3.1.0",
+        "com.unity.render-pipelines.universal": "17.3.0",
+        "com.unity.modules.uielements": "1.0.0",
+        "com.unity.modules.tilemap": "1.0.0"
+      },
+      "hash": "0bf46189760792fc27109b9e8896a39e132d6cb9"
+    },
     "com.unity.2d.animation": {
       "version": "16.0.1",
       "depth": 0,
@@ -24,15 +45,6 @@
         "com.unity.mathematics": "1.1.0",
         "com.unity.modules.animation": "1.0.0",
         "com.unity.modules.imageconversion": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.2d.pixel-perfect": {
-      "version": "6.0.0",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.modules.imgui": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },
@@ -121,6 +133,12 @@
       "source": "builtin",
       "dependencies": {}
     },
+    "com.unity.graph-authoring": {
+      "version": "1.0.0",
+      "depth": 3,
+      "source": "builtin",
+      "dependencies": {}
+    },
     "com.unity.ide.visualstudio": {
       "version": "2.0.27",
       "depth": 0,
@@ -151,6 +169,13 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.profiling.core": {
+      "version": "1.0.3",
+      "depth": 3,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.recorder": {
       "version": "5.1.7",
       "depth": 0,
@@ -161,6 +186,52 @@
         "com.unity.bindings.openimageio": "1.0.2"
       },
       "url": "https://packages.unity.com"
+    },
+    "com.unity.render-pipelines.core": {
+      "version": "17.6.0",
+      "depth": 2,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.burst": "1.8.14",
+        "com.unity.collections": "2.4.3",
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.profiling.core": "1.0.3"
+      }
+    },
+    "com.unity.render-pipelines.universal": {
+      "version": "17.6.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.render-pipelines.core": "17.6.0",
+        "com.unity.shadergraph": "17.6.0",
+        "com.unity.render-pipelines.universal-config": "17.6.0"
+      }
+    },
+    "com.unity.render-pipelines.universal-config": {
+      "version": "17.6.0",
+      "depth": 2,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.render-pipelines.core": "17.6.0"
+      }
+    },
+    "com.unity.searcher": {
+      "version": "4.9.5",
+      "depth": 3,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.shadergraph": {
+      "version": "17.6.0",
+      "depth": 2,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.render-pipelines.core": "17.6.0",
+        "com.unity.searcher": "4.9.5",
+        "com.unity.graph-authoring": "1.0.0"
+      }
     },
     "com.unity.test-framework": {
       "version": "1.8.0",
