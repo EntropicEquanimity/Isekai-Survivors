@@ -13,6 +13,10 @@ public static class IsekaiTrailerCapture
     #region Fields
     const string ActiveKey = "Trailer.Capture.Active";
     const string FailedKey = "Trailer.Capture.Failed";
+    const string CharactersKey = "Trailer.Capture.Characters";
+    const string SceneKey = "Trailer.Capture.ReturnScene";
+    const string QuitKey = "Trailer.Capture.Quit";
+    const string CharacterPath = "Assets/Data Objects/Characters/Knight.asset";
     const string ScenePath = "Assets/Scenes/GameScene.unity";
     const int Width = 1920;
     const int Height = 1080;
@@ -35,8 +39,23 @@ public static class IsekaiTrailerCapture
         if (Active) Hook();
     }
     [MenuItem("Tools/Trailer/Capture All")]
-    public static void CaptureAll()
+    public static void CaptureAll() => Begin(false);
+    public static void Run() => Begin(true);
+    #endregion
+
+    #region Private Methods
+    static void Begin(bool quitWhenDone)
     {
+        if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+        PlayerSO knight = AssetDatabase.LoadAssetAtPath<PlayerSO>(CharacterPath);
+        if (knight == null)
+        {
+            Debug.LogError("[Trailer] Missing " + CharacterPath);
+            return;
+        }
+        SessionState.SetString(SceneKey, EditorSceneManager.GetActiveScene().path);
+        SessionState.SetBool(QuitKey, quitWhenDone);
+        SessionState.SetString(CharactersKey, SwapCharacter(knight));
         SessionState.SetBool(ActiveKey, true);
         SessionState.SetInt(FailedKey, 0);
         _started = Time.realtimeSinceStartup;
@@ -50,9 +69,32 @@ public static class IsekaiTrailerCapture
         Hook();
         EditorApplication.isPlaying = true;
     }
-    #endregion
-
-    #region Private Methods
+    static string SwapCharacter(PlayerSO character)
+    {
+        var saved = new System.Text.StringBuilder();
+        foreach (string guid in AssetDatabase.FindAssets("t:SessionSettingsSO"))
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            SessionSettingsSO settings = AssetDatabase.LoadAssetAtPath<SessionSettingsSO>(path);
+            if (settings == null) continue;
+            string previous = settings.selectedPlayerCharacter != null ? AssetDatabase.GetAssetPath(settings.selectedPlayerCharacter) : string.Empty;
+            saved.Append(path).Append('|').Append(previous).Append('\n');
+            settings.selectedPlayerCharacter = character;
+        }
+        return saved.ToString();
+    }
+    static void RestoreCharacters(string saved)
+    {
+        if (string.IsNullOrEmpty(saved)) return;
+        foreach (string line in saved.Split('\n'))
+        {
+            string[] parts = line.Split('|');
+            if (parts.Length != 2) continue;
+            SessionSettingsSO settings = AssetDatabase.LoadAssetAtPath<SessionSettingsSO>(parts[0]);
+            if (settings == null) continue;
+            settings.selectedPlayerCharacter = string.IsNullOrEmpty(parts[1]) ? null : AssetDatabase.LoadAssetAtPath<PlayerSO>(parts[1]);
+        }
+    }
     static void Hook()
     {
         Application.logMessageReceived -= Log;
@@ -189,10 +231,17 @@ public static class IsekaiTrailerCapture
         EditorApplication.playModeStateChanged -= OnPlayModeChanged;
         Application.logMessageReceived -= Log;
         int failed = SessionState.GetInt(FailedKey, 0);
+        bool quit = SessionState.GetBool(QuitKey, false);
+        string scene = SessionState.GetString(SceneKey, string.Empty);
+        RestoreCharacters(SessionState.GetString(CharactersKey, string.Empty));
         SessionState.EraseBool(ActiveKey);
         SessionState.EraseInt(FailedKey);
+        SessionState.EraseString(CharactersKey);
+        SessionState.EraseString(SceneKey);
+        SessionState.EraseBool(QuitKey);
         File.WriteAllText(Path.Combine(OutputFolder, "capture-result.txt"), failed > 0 ? "FAILED, see the Console [Trailer] lines" : "OK");
-        EditorApplication.Exit(failed > 0 ? 1 : 0);
+        if (quit) EditorApplication.Exit(failed > 0 ? 1 : 0);
+        else if (!string.IsNullOrEmpty(scene) && scene != ScenePath) EditorSceneManager.OpenScene(scene, OpenSceneMode.Single);
     }
     #endregion
 }

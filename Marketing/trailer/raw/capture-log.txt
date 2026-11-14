@@ -1,0 +1,5 @@
+11:39:22 Log: [Trailer] Pilot started; output D:\GameDev\Isekai-Survivors\Marketing\trailer\raw
+11:40:03 Log: [Trailer] Recording isekai_knight_late
+11:40:30 Log: [Trailer] Recording isekai_knight_surrounded
+11:40:44 Log: [Trailer] Still requested for isekai_knight_surrounded
+11:40:46 Log: [Trailer] All clips captured.

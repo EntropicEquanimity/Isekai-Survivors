@@ -204,6 +204,7 @@ GameObject:
   - component: {fileID: 1970763058795132076}
   - component: {fileID: 4347138917800616201}
   - component: {fileID: 3618409786770792654}
+  - component: {fileID: 8742268030475597621}
   m_Layer: 5
   m_Name: Label
   m_TagString: Untagged
@@ -285,8 +286,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 19
+  m_fontSizeBase: 19
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -344,6 +345,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 0
+--- !u!114 &8742268030475597621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 480519574651326006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!1 &533994303705485048
 GameObject:
   m_ObjectHideFlags: 0
@@ -595,6 +608,7 @@ GameObject:
   - component: {fileID: 4114903832171861249}
   - component: {fileID: 693600429772039255}
   - component: {fileID: 7061008372820163543}
+  - component: {fileID: 1164112851992192933}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -676,8 +690,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 19
+  m_fontSizeBase: 19
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
@@ -721,6 +735,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1164112851992192933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 741486065145670642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!1 &794469327563432510
 GameObject:
   m_ObjectHideFlags: 0
@@ -732,6 +758,7 @@ GameObject:
   - component: {fileID: 3115233027524756450}
   - component: {fileID: 5888755744550356349}
   - component: {fileID: 2703563005172668923}
+  - component: {fileID: 3195131565225353030}
   m_Layer: 0
   m_Name: KillsNumberText
   m_TagString: Untagged
@@ -858,6 +885,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3195131565225353030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 794469327563432510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!1 &925108067071736841
 GameObject:
   m_ObjectHideFlags: 0
@@ -3216,6 +3255,7 @@ GameObject:
   - component: {fileID: 89807685606508550}
   - component: {fileID: 6982253181884139654}
   - component: {fileID: 554262977550411509}
+  - component: {fileID: 5251357551930926532}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -3297,8 +3337,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 19
+  m_fontSizeBase: 19
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
@@ -3342,6 +3382,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5251357551930926532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3948842676459296346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!1 &4000415112666432866
 GameObject:
   m_ObjectHideFlags: 0
@@ -3734,6 +3786,7 @@ GameObject:
   - component: {fileID: 6256189545571524332}
   - component: {fileID: 447964098845889342}
   - component: {fileID: 3663842647710750512}
+  - component: {fileID: 3289418552301233677}
   m_Layer: 5
   m_Name: Level Text
   m_TagString: Untagged
@@ -3860,6 +3913,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3289418552301233677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4355446224001261358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!1 &4367060586361296484
 GameObject:
   m_ObjectHideFlags: 0
@@ -4578,6 +4643,7 @@ GameObject:
   - component: {fileID: 5207458351365934078}
   - component: {fileID: 7753900393837183972}
   - component: {fileID: 7645821674075704779}
+  - component: {fileID: 4974424808874614218}
   m_Layer: 5
   m_Name: HealthText
   m_TagString: Untagged
@@ -4704,6 +4770,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4974424808874614218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5184327524887078642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!1 &5239101464230354851
 GameObject:
   m_ObjectHideFlags: 0
@@ -4932,6 +5010,7 @@ GameObject:
   - component: {fileID: 7093487976315046828}
   - component: {fileID: 5013940038777148357}
   - component: {fileID: 1404025265666829922}
+  - component: {fileID: 8944320608777036829}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -5058,6 +5137,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8944320608777036829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5735784460565987294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!1 &5785483935748035114
 GameObject:
   m_ObjectHideFlags: 0
@@ -5766,8 +5857,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 682396439465795681, guid: 9e4a250fb29b0b24dae13a8b6def3199, type: 3}
   settings: {fileID: 11400000, guid: 43be9781a9947624796c212527175348, type: 2}
-  normalFontSize: 0.48
-  critFontSize: 0.48
+  normalFontSize: 0.5
+  critFontSize: 0.5
   duration: 1
   critColor: {r: 0.7075472, g: 0.09734378, b: 0, a: 1}
   normalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -5981,6 +6072,7 @@ GameObject:
   - component: {fileID: 5918914204092050432}
   - component: {fileID: 5918914204092050434}
   - component: {fileID: 5918914204092050435}
+  - component: {fileID: 8935290525586294823}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -6062,8 +6154,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 19
+  m_fontSizeBase: 19
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
@@ -6107,6 +6199,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8935290525586294823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5918914204092050433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!1 &5935512932194405886
 GameObject:
   m_ObjectHideFlags: 0
@@ -6317,6 +6421,7 @@ GameObject:
   - component: {fileID: 6853603695243353036}
   - component: {fileID: 5403310571596944622}
   - component: {fileID: 550338733153783722}
+  - component: {fileID: 8438003601443802281}
   m_Layer: 5
   m_Name: ExpText
   m_TagString: Untagged
@@ -6443,6 +6548,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8438003601443802281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6067773373158400063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!1 &6146383949826756144
 GameObject:
   m_ObjectHideFlags: 0
@@ -7025,6 +7142,7 @@ GameObject:
   - component: {fileID: 621914849848471598}
   - component: {fileID: 8657738217512232081}
   - component: {fileID: 5108158517944572073}
+  - component: {fileID: 3910809891362118329}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -7106,8 +7224,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 19
+  m_fontSizeBase: 19
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
@@ -7151,6 +7269,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3910809891362118329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6633145929960383672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!1 &6690452142258468227
 GameObject:
   m_ObjectHideFlags: 0
@@ -7859,6 +7989,7 @@ GameObject:
   - component: {fileID: 287041675155103664}
   - component: {fileID: 1070952068323833958}
   - component: {fileID: 4501477793669187988}
+  - component: {fileID: 2136237330649028085}
   m_Layer: 5
   m_Name: WeaponDamageText
   m_TagString: Untagged
@@ -7985,6 +8116,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2136237330649028085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7792118074418370670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!1 &7919624600065863012
 GameObject:
   m_ObjectHideFlags: 0
@@ -8071,6 +8214,7 @@ GameObject:
   - component: {fileID: 7295413707756829814}
   - component: {fileID: 8058633772902868379}
   - component: {fileID: 4708546328895452769}
+  - component: {fileID: 5896403459855233551}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -8152,8 +8296,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 19
+  m_fontSizeBase: 19
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
@@ -8197,6 +8341,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5896403459855233551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7974098257316813339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!1 &8011773914302267208
 GameObject:
   m_ObjectHideFlags: 0
@@ -8240,6 +8396,7 @@ GameObject:
   - component: {fileID: 4257886185855578220}
   - component: {fileID: 4102138689576850360}
   - component: {fileID: 8137522126777066147}
+  - component: {fileID: 2175742976178129142}
   m_Layer: 0
   m_Name: GameTimeText
   m_TagString: Untagged
@@ -8380,6 +8537,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 2
+--- !u!114 &2175742976178129142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8155833756802574355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!1 &8203395341736142244
 GameObject:
   m_ObjectHideFlags: 0
@@ -9077,6 +9246,7 @@ GameObject:
   - component: {fileID: 1063012081591494255}
   - component: {fileID: 4361704865014230430}
   - component: {fileID: 3175104561259012597}
+  - component: {fileID: 8291414907959726785}
   m_Layer: 0
   m_Name: EssenceCount
   m_TagString: Untagged
@@ -9203,6 +9373,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8291414907959726785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8848936768261474553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!1 &9038196089194582135
 GameObject:
   m_ObjectHideFlags: 0
@@ -9429,6 +9611,7 @@ GameObject:
   - component: {fileID: 4362617549584233763}
   - component: {fileID: 2234736906803015998}
   - component: {fileID: 941317181690688785}
+  - component: {fileID: 5691002563418752101}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -9510,8 +9693,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 19
+  m_fontSizeBase: 19
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
@@ -9555,6 +9738,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5691002563418752101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9168956921475751355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!1 &9190596973236449951
 GameObject:
   m_ObjectHideFlags: 0
@@ -9566,6 +9761,7 @@ GameObject:
   - component: {fileID: 3079889903234900454}
   - component: {fileID: 3382923078130965718}
   - component: {fileID: 8337038138590784578}
+  - component: {fileID: 6831262238044596732}
   m_Layer: 5
   m_Name: WeaponKillsText
   m_TagString: Untagged
@@ -9692,6 +9888,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &6831262238044596732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9190596973236449951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!1001 &2918322350869648849
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9791,13 +9999,59 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6311088458826801951, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1475758047901578459}
+    - targetCorrespondingSourceObject: {fileID: 5970054439475308020, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6381949047739672536}
+    - targetCorrespondingSourceObject: {fileID: 3389040078666124804, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5657206879916418184}
+    - targetCorrespondingSourceObject: {fileID: 8611537852371860967, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8356125532466464487}
   m_SourcePrefab: {fileID: 100100000, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+--- !u!1 &538109003798928341 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3389040078666124804, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+  m_PrefabInstance: {fileID: 2918322350869648849}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5657206879916418184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 538109003798928341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!224 &3747392555615727716 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2053253422345364917, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
   m_PrefabInstance: {fileID: 2918322350869648849}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6916863523865716790 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8611537852371860967, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+  m_PrefabInstance: {fileID: 2918322350869648849}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8356125532466464487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6916863523865716790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!114 &7967151191710439926 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5111294736276130855, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
@@ -9809,6 +10063,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ae47eeb7fb9a7b419a90bddea0b7492, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &8837771481971716133 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5970054439475308020, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+  m_PrefabInstance: {fileID: 2918322350869648849}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6381949047739672536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8837771481971716133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
+--- !u!1 &9217332639900071630 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6311088458826801951, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+  m_PrefabInstance: {fileID: 2918322350869648849}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1475758047901578459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9217332639900071630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!1001 &4522253588102025260
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9908,13 +10196,93 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6311088458826801951, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8079083864561804631}
+    - targetCorrespondingSourceObject: {fileID: 5970054439475308020, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1524078507391642222}
+    - targetCorrespondingSourceObject: {fileID: 3389040078666124804, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6892437767784594527}
+    - targetCorrespondingSourceObject: {fileID: 8611537852371860967, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8116804981439896256}
   m_SourcePrefab: {fileID: 100100000, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+--- !u!1 &1281850595862011432 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3389040078666124804, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+  m_PrefabInstance: {fileID: 4522253588102025260}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6892437767784594527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1281850595862011432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!224 &2503115969334785433 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2053253422345364917, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
   m_PrefabInstance: {fileID: 4522253588102025260}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5278238145047621067 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8611537852371860967, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+  m_PrefabInstance: {fileID: 4522253588102025260}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8116804981439896256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5278238145047621067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
+--- !u!1 &7590597448544744243 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6311088458826801951, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+  m_PrefabInstance: {fileID: 4522253588102025260}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8079083864561804631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7590597448544744243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
+--- !u!1 &7789997329962366424 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5970054439475308020, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+  m_PrefabInstance: {fileID: 4522253588102025260}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1524078507391642222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7789997329962366424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!114 &8659492819831790603 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5111294736276130855, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
@@ -10021,8 +10389,54 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6311088458826801951, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7793236172782104398}
+    - targetCorrespondingSourceObject: {fileID: 5970054439475308020, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8340649266277730323}
+    - targetCorrespondingSourceObject: {fileID: 3389040078666124804, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9039077608152358222}
+    - targetCorrespondingSourceObject: {fileID: 8611537852371860967, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 552404558698218034}
   m_SourcePrefab: {fileID: 100100000, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+--- !u!1 &841876149615599275 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6311088458826801951, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+  m_PrefabInstance: {fileID: 6646060026790575540}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7793236172782104398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 841876149615599275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
+--- !u!1 &1072534560340514880 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5970054439475308020, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+  m_PrefabInstance: {fileID: 6646060026790575540}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8340649266277730323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072534560340514880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!114 &1933586969155498387 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5111294736276130855, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
@@ -10034,11 +10448,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ae47eeb7fb9a7b419a90bddea0b7492, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &3150787376057548883 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8611537852371860967, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+  m_PrefabInstance: {fileID: 6646060026790575540}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &552404558698218034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3150787376057548883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!224 &4631129207131756545 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2053253422345364917, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
   m_PrefabInstance: {fileID: 6646060026790575540}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8301195825647891376 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3389040078666124804, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+  m_PrefabInstance: {fileID: 6646060026790575540}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &9039077608152358222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8301195825647891376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!1001 &8688289433131779690
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10138,8 +10586,71 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6311088458826801951, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6073725361550196827}
+    - targetCorrespondingSourceObject: {fileID: 5970054439475308020, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1978060018892995631}
+    - targetCorrespondingSourceObject: {fileID: 3389040078666124804, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7485949100551885428}
+    - targetCorrespondingSourceObject: {fileID: 8611537852371860967, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8189748562650151794}
   m_SourcePrefab: {fileID: 100100000, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+--- !u!1 &1085742692566956941 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8611537852371860967, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+  m_PrefabInstance: {fileID: 8688289433131779690}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8189748562650151794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1085742692566956941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
+--- !u!1 &3047500801887101854 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5970054439475308020, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+  m_PrefabInstance: {fileID: 8688289433131779690}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1978060018892995631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3047500801887101854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
+--- !u!1 &3388532869057602933 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6311088458826801951, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+  m_PrefabInstance: {fileID: 8688289433131779690}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6073725361550196827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3388532869057602933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!114 &4503026024514685517 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5111294736276130855, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
@@ -10151,6 +10662,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ae47eeb7fb9a7b419a90bddea0b7492, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &6312719335478347886 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3389040078666124804, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+  m_PrefabInstance: {fileID: 8688289433131779690}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7485949100551885428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6312719335478347886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!224 &7272642898499838943 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2053253422345364917, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
@@ -10255,8 +10783,71 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6311088458826801951, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 183571690434355656}
+    - targetCorrespondingSourceObject: {fileID: 5970054439475308020, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 331349375745957939}
+    - targetCorrespondingSourceObject: {fileID: 3389040078666124804, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1073746806603817277}
+    - targetCorrespondingSourceObject: {fileID: 8611537852371860967, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6270294666866810412}
   m_SourcePrefab: {fileID: 100100000, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+--- !u!1 &869219321817289377 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8611537852371860967, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+  m_PrefabInstance: {fileID: 8904252338196655942}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6270294666866810412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 869219321817289377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
+--- !u!1 &2975655266035190450 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5970054439475308020, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+  m_PrefabInstance: {fileID: 8904252338196655942}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &331349375745957939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2975655266035190450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
+--- !u!1 &3172574655942184025 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6311088458826801951, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+  m_PrefabInstance: {fileID: 8904252338196655942}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &183571690434355656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3172574655942184025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!114 &4430615318753649505 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5111294736276130855, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
@@ -10268,6 +10859,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ae47eeb7fb9a7b419a90bddea0b7492, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &6096197886659518786 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3389040078666124804, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
+  m_PrefabInstance: {fileID: 8904252338196655942}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1073746806603817277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6096197886659518786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de23c3410ecf5d843a83778a1d1ab7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelTextSnap
 --- !u!224 &7488603584945654515 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2053253422345364917, guid: ced0a024fd9ff614abc9b8617560ecc0, type: 3}
