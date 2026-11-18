@@ -169,6 +169,7 @@ GameObject:
   - component: {fileID: 1849022969829550233}
   - component: {fileID: 7137278908193479849}
   - component: {fileID: 8097078253891701239}
+  - component: {fileID: 5251759720067950116}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -413,6 +414,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Blondie.Abilities.Unity::Blondie.Abilities.AbilityCaster
   _startingAbilities:
   - {fileID: 11400000, guid: 1045794142039884d9c0c6262d884062, type: 2}
+  - {fileID: 11400000, guid: 9e3546dce4e38524c8a7b13a354c25a4, type: 2}
   _globalCooldown: 0
   _castOffset: {x: 0, y: 0, z: 0}
   _publishEvents: 1
@@ -460,3 +462,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Isekai.Game::Isekai.Miner
   _reach: 1.25
   _baseRate: 1
+--- !u!114 &5251759720067950116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3011107552043763039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38e454c02995c814eaef9b8e9bbb71dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Isekai.Game::Isekai.HordeTarget
+  _radius: 0.3

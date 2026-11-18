@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Linq;
 using Blondie.Combat;
+using Blondie.FlowFields;
 using Blondie.PixelPerfect;
+using Blondie.Pooling;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -25,9 +27,16 @@ namespace Isekai.Tests
         [UnityTest]
         public IEnumerator Idle_Character_walks_to_and_kills_a_nearby_enemy()
         {
-            Damageable[] enemies = Object.FindObjectsByType<Damageable>(FindObjectsInactive.Exclude)
-                .Where(d => d.GetComponent<Team>()?.Id == "Enemies").ToArray();
-            Assume.That(enemies.Length, Is.GreaterThan(0), "the Region has training enemies");
+            // A small fight of our own: no horde, two enemies inside the leash.
+            var spawner = Object.FindAnyObjectByType<HordeSpawner>();
+            spawner.enabled = false;
+            Object.FindAnyObjectByType<FlowFieldCrowd>().Speed = 0f;   // they stand still, so the Character must walk
+            foreach (HordeMember m in Object.FindObjectsByType<HordeMember>(FindObjectsInactive.Exclude)) Pools.Despawn(m.gameObject);
+            Damageable[] enemies =
+            {
+                Pools.Spawn(spawner.Prefab, new Vector3(-4.5f, 1.5f, 0f), Quaternion.identity).GetComponent<Damageable>(),
+                Pools.Spawn(spawner.Prefab, new Vector3(-5f, 2f, 0f), Quaternion.identity).GetComponent<Damageable>(),
+            };
             var control = Object.FindAnyObjectByType<CharacterControl>();
             Vector3 start = control.transform.position;
 

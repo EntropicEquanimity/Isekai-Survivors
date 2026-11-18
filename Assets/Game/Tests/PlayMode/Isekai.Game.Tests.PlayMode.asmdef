@@ -17,7 +17,13 @@
         "Blondie.Combat",
         "Blondie.Combat.Unity",
         "Blondie.PixelPerfect",
-        "Blondie.PixelPerfect.Unity"
+        "Blondie.PixelPerfect.Unity",
+        "Blondie.Abilities",
+        "Blondie.Abilities.Unity",
+        "Blondie.Pooling",
+        "Blondie.Pooling.Unity",
+        "Blondie.FlowFields",
+        "Blondie.FlowFields.Unity"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

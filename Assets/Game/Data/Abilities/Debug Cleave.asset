@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33c35cdc3d9c443499c0724a0b91b54b, type: 3}
+  m_Name: Debug Cleave
+  m_EditorClassIdentifier: Blondie.Abilities.Unity::Blondie.Abilities.AbilityAsset
+  _id: debug_cleave
+  _displayName: Debug Cleave
+  _description: 
+  _icon: {fileID: 0}
+  _iconKey: 
+  _targetType: 4
+  _affects: 4
+  _range: 1.6
+  _requiresLineOfSight: 0
+  _costs: []
+  _customCosts: []
+  _cooldown:
+    Base: 0.5
+    PerLevel: 0
+    Scaling: []
+  _charges: 1
+  _triggersGlobalCooldown: 1
+  _castTime: 0
+  _channelTime: 0
+  _channelTick: 0.5
+  _interruptible: 1
+  _interruptedByDamage: 0
+  _waitForRelease: 0
+  _delivery:
+    rid: 8327159422257201296
+  _effects:
+  - rid: 8327159422257201297
+  _casterEffects: []
+  _projectilePrefab: {fileID: 0}
+  _areaVisual: {fileID: 0}
+  _projectileKey: 
+  _areaVisualKey: 
+  _requiredUnlock: 
+  _levelFromUnlock: 1
+  _maxLevel: 5
+  _tags: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 8327159422257201296
+      type: {class: AreaDelivery, ns: Blondie.Abilities, asm: Blondie.Abilities}
+      data:
+        Shape: 0
+        Center: 1
+        Radius: 1.6
+        Angle: 60
+        Width: 1
+        Delay: 0
+        Duration: 0
+        TickInterval: 1
+    - rid: 8327159422257201297
+      type: {class: DamageEffect, ns: Blondie.Combat, asm: Blondie.Combat}
+      data:
+        Amount:
+          Base: 20
+          PerLevel: 0
+          Scaling: []
+        Type: Physical
+        CanCrit: 1
+        PerStack: 0

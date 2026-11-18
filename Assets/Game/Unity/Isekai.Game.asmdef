@@ -21,7 +21,11 @@
         "Blondie.UI.Unity",
         "Blondie.Utils2D",
         "Blondie.Utils2D.Unity",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Blondie.FlowFields",
+        "Blondie.FlowFields.Unity",
+        "Blondie.Pooling",
+        "Blondie.Pooling.Unity"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

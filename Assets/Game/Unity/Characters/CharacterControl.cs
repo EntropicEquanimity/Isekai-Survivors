@@ -2,6 +2,7 @@ using Blondie.Abilities;
 using Blondie.Combat;
 using Blondie.Controllers;
 using Blondie.Core;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Isekai
@@ -22,7 +23,7 @@ namespace Isekai
         [SerializeField, Min(0.1f)] private float _thinkInterval = 0.2f;
 
         private readonly AutoFight _fight = new();
-        private readonly Collider2D[] _hits = new Collider2D[64];
+        private readonly List<CombatUnit> _units = new();
         private CharacterMotor _motor;
         private PlayerBrain _brain;
         private AutoCaster _autoCaster;
@@ -94,22 +95,26 @@ namespace Isekai
             return move.x * move.x + move.y * move.y > 0.01f || ActionInput.IsHeld("Interact");
         }
 
-        // Phase 3 replaces this physics query with the horde's spatial lookup.
+        // Every unit near the anchor through the ability world (the horde's spatial hash plus physics), nearest hostile one.
         private Transform NearestEnemy(out float distance)
         {
             distance = float.MaxValue;
             Transform best = null;
-            int count = Physics2D.OverlapCircle(_anchor, _leash + _attackRange, ContactFilter2D.noFilter, _hits);
-            for (int i = 0; i < count; i++)
+            _units.Clear();
+            Vector3 a = _anchor;
+            AbilityWorld.Current.FindUnits(new Float3(a.x, a.y, a.z), _leash + _attackRange, true, _units);
+            string ownTeam = _team != null ? _team.Id : null;
+            Vector3 p = transform.position;
+            foreach (CombatUnit unit in _units)
             {
-                Collider2D hit = _hits[i];
-                if (hit.attachedRigidbody != null && hit.attachedRigidbody.gameObject == gameObject) continue;
-                Team team = hit.GetComponentInParent<Team>();
-                Damageable damageable = hit.GetComponentInParent<Damageable>();
-                if (team == null || damageable == null || damageable.Unit.IsDead) continue;
-                if (_team != null && team.Id == _team.Id) continue;
-                float d = Vector2.Distance(transform.position, hit.transform.position);
-                if (d < distance) { distance = d; best = damageable.transform; }
+                if (unit.IsDead || unit.Team == ownTeam || string.IsNullOrEmpty(unit.Team)) continue;
+                Float3 u = unit.Position;
+                float d = Vector2.Distance(p, new Vector2(u.x, u.y));
+                if (d >= distance) continue;
+                GameObject go = unit.GameObject();
+                if (go == null) continue;
+                distance = d;
+                best = go.transform;
             }
             return best;
         }
