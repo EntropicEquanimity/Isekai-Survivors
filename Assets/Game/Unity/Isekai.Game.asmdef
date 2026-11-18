@@ -1,0 +1,22 @@
+{
+    "name": "Isekai.Game",
+    "rootNamespace": "Isekai",
+    "references": [
+        "Isekai.Rules",
+        "Blondie.Core",
+        "Blondie.Core.Unity",
+        "Blondie.Stats",
+        "Blondie.Stats.Unity",
+        "Blondie.GameSetup",
+        "Blondie.GameSetup.Unity"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

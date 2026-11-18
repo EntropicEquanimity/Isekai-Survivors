@@ -1,0 +1,30 @@
+{
+    "name": "Isekai.Game.Tests.EditMode",
+    "rootNamespace": "Isekai.Tests",
+    "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "Isekai.Rules",
+        "Isekai.Game",
+        "Blondie.Core",
+        "Blondie.Core.Unity",
+        "Blondie.Stats",
+        "Blondie.Stats.Unity",
+        "Blondie.GameSetup"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

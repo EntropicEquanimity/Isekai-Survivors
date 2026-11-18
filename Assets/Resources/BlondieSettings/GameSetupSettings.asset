@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Blondie.GameSetup::Blondie.GameSetup.GameSetupSettingsAsset
   _settings:
     Enabled: 0
+    BootScene: Boot
+    MainMenuScene: Menu
+    GameScene: Region

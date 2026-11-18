@@ -41,15 +41,22 @@ public class SceneManager : ScriptableObject
         Debug.Log("<b>SceneManager</b> switching scene to " + scene.ToString() + " from " + UnityEngine.SceneManagement.SceneManager.GetActiveScene());
         if (FadeManager.Instance != null && useFade)
         {
-            FadeManager.Instance.StartFadeIn(()=>UnityEngine.SceneManagement.SceneManager.LoadSceneAsync((int)scene, LoadSceneMode.Single), OnFadeOut);
+            FadeManager.Instance.StartFadeIn(()=>UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(PathOf(scene), LoadSceneMode.Single), OnFadeOut);
         }
         else
         {
             OnFadeIn?.Invoke();
-            UnityEngine.SceneManagement.SceneManager.LoadScene((int)scene, LoadSceneMode.Single);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(PathOf(scene), LoadSceneMode.Single);
             OnFadeOut?.Invoke();
         }
     }
+
+    // By path, not build index: Blondie Game Setup puts the new Boot/Menu/Region scenes first in the build list.
+    private static string PathOf(Scene scene) => scene switch
+    {
+        Scene.Game => "Assets/Scenes/GameScene.unity",
+        _ => "Assets/Scenes/MainMenu.unity",
+    };
 }
 public enum Scene
 {

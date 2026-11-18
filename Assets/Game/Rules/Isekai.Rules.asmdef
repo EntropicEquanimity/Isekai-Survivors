@@ -1,0 +1,17 @@
+{
+    "name": "Isekai.Rules",
+    "rootNamespace": "Isekai",
+    "references": [
+        "Blondie.Core",
+        "Blondie.Stats"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}
