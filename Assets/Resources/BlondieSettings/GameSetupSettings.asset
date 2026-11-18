@@ -14,6 +14,103 @@ MonoBehaviour:
   m_EditorClassIdentifier: Blondie.GameSetup::Blondie.GameSetup.GameSetupSettingsAsset
   _settings:
     Enabled: 0
+    GameTitle: 
     BootScene: Boot
     MainMenuScene: Menu
-    GameScene: Region
+    GameScene: Planet
+    SkipMenusInEditor: 1
+    Transition:
+      Kind: 1
+      Seconds: 0.35
+      Ease: 0
+      Color:
+        r: 0
+        g: 0
+        b: 0
+        a: 1
+      Direction: 0
+      Cell: 8
+      Count: 8
+      MosaicBlock: 32
+    ShowLoadingScreen: 1
+    MinLoadingSeconds: 0.5
+    LoadingTips: []
+    LoadingBarColor:
+      r: 1
+      g: 0.77
+      b: 0.25
+      a: 1
+    LoadingTrackColor:
+      r: 0
+      g: 0
+      b: 0
+      a: 0.5
+    SplashSkippable: 1
+    SplashVideoMaxStep: 0.05
+    FirstLaunchLanguage: 1
+    FirstLaunchSettings: 0
+    MainMenuItems: 000000000100000002000000030000000400000005000000060000000700000008000000i
+    MusicFadeSeconds: 0
+    ShowVersion: 1
+    VersionFormat: v{version}
+    WriteBuildStamp: 1
+    ConfirmExit: 0
+    UseSaveSlots: 1
+    ConfirmNewGame: 1
+    PauseEnabled: 1
+    PauseMenuItems: 00000000010000000200000003000000i
+    PauseTimeScale: 1
+    PauseGameClock: 1
+    BlockPlayerInput: 1
+    PauseOnFocusLoss: 1
+    ConfirmLeave: 1
+    BackBindings:
+    - <Keyboard>/escape
+    - <Gamepad>/buttonEast
+    PauseBindings:
+    - <Keyboard>/escape
+    - <Gamepad>/start
+    PreviousTabBindings:
+    - <Keyboard>/q
+    - <Gamepad>/leftShoulder
+    NextTabBindings:
+    - <Keyboard>/e
+    - <Gamepad>/rightShoulder
+    HideCursorWithGamepad: 1
+    ShowButtonPrompts: 1
+    SettingsTabs: 0000000001000000020000000300000004000000i
+    ShowVoiceVolume: 1
+    ShowUISoundVolume: 1
+    ShowMuteWhenUnfocused: 1
+    GraphicsConfirmSeconds: 10
+    FrameRateChoices: 1e0000003c0000007800000090000000ffffffffi
+    MaxUIScale: 4
+    ShowFpsOption: 1
+    ShowQualityOption: 1
+    ShowSubtitleOptions: 0
+    ShowColorblindOption: 0
+    ShowDifficultyOption: 0
+    ShowTutorialsOption: 0
+    ShowStreamerModeOption: 1
+    RebindableActions: []
+    ShowMouseSensitivity: 1
+    ShowInvertY: 1
+    ShowVibration: 1
+    CreditsAutoScroll: 0
+    CreditsScrollSpeed: 40
+    PrivacyUrl: 
+    FeedbackUrl: 
+    ThankYouTitle: gamesetup.thank_you
+    ThankYouMessage: 
+    ThankYouSignature: 
+    ButtonHoverGrow: 12
+    ButtonMotionSeconds: 0.1
+    PanelSlide:
+      x: 0
+      y: 24
+    PanelMotionSeconds: 0.2
+    StaggerSeconds: 0.05
+    FpsCorner: 1
+    FpsUpdateSeconds: 0.5
+    DropdownMaxRows: 8
+    UISoundVolume: 1

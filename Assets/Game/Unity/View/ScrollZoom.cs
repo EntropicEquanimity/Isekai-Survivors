@@ -1,3 +1,4 @@
+using System;
 using Blondie.Core;
 using Blondie.PixelPerfect;
 using UnityEngine;
@@ -35,12 +36,38 @@ namespace Isekai
         {
             Mouse mouse = Mouse.current;
             float scroll = mouse != null ? mouse.scroll.ReadValue().y : 0f;
-            if (scroll != 0f) Zoom(scroll > 0f ? 1 : -1);
+            if (scroll != 0f && Blocked)
+            {
+                if (scroll > 0f) InWhileBlocked?.Invoke();
+            }
+            else if (scroll != 0f) Zoom(scroll > 0f ? 1 : -1);
             else Apply(force: false);
         }
 
+        /// <summary>While true the wheel doesn't zoom (the Planet map is up); scrolling in raises <see cref="InWhileBlocked"/>.</summary>
+        public bool Blocked { get; set; }
+
+        /// <summary>The player zoomed out with nothing wider to show: time for the Planet map.</summary>
+        public event Action OutPastLimit;
+
+        /// <summary>The player scrolled in while <see cref="Blocked"/>.</summary>
+        public event Action InWhileBlocked;
+
         /// <summary>Steps the zoom (positive = in) and applies it at once.</summary>
-        public void Zoom(int steps) => Apply(Levels.Step(steps));
+        public void Zoom(int steps)
+        {
+            Int2 screen = _camera.OutputSize;
+            int before = Levels.EffectiveScale(screen);
+            bool changed = Levels.Step(steps);
+            int after = Levels.EffectiveScale(screen);
+            if (steps < 0 && after == before)
+            {
+                if (changed) Levels.Step(-steps);   // don't drift below what the screen shows
+                OutPastLimit?.Invoke();
+                return;
+            }
+            Apply(changed || after != before);
+        }
 
         private void Apply(bool force)
         {

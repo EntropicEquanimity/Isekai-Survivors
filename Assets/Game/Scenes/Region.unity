@@ -1253,6 +1253,65 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4259010811179191087, guid: 50ddd893d4056624ab8604c79f81f681, type: 3}
   m_PrefabInstance: {fileID: 955737642}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1012556091
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1012556094}
+  - component: {fileID: 1012556093}
+  - component: {fileID: 1012556092}
+  m_Layer: 0
+  m_Name: Run
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1012556092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1012556091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e9c03bde593a034fa67b526309ddb05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Isekai.Game::Isekai.PlanetOverlay
+  _panelSettings: {fileID: 11400000, guid: 2e44eb48f5629344a897def63885b187, type: 2}
+--- !u!114 &1012556093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1012556091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b8ecf0c0d2a5db44b635033eb5e4098, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Isekai.Game::Isekai.RegionRun
+  _returnDelay: 3
+--- !u!4 &1012556094
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1012556091}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1040949438
 GameObject:
   m_ObjectHideFlags: 0
@@ -1950,3 +2009,4 @@ SceneRoots:
   - {fileID: 54421578}
   - {fileID: 1642966399}
   - {fileID: 2136951643}
+  - {fileID: 1012556094}

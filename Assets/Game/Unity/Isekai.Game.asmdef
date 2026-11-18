@@ -33,7 +33,11 @@
         "Blondie.Roguelike",
         "Blondie.Roguelike.Unity",
         "Blondie.Roguelike.Drafts",
-        "Blondie.Roguelike.Drafts.Unity"
+        "Blondie.Roguelike.Drafts.Unity",
+        "Blondie.Roguelike.Boons",
+        "Blondie.Roguelike.Boons.Unity",
+        "Blondie.Juice",
+        "Blondie.Juice.Unity"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

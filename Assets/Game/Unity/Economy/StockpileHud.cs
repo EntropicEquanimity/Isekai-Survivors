@@ -18,10 +18,7 @@ namespace Isekai
 
         private void Start()
         {
-            PanelRenderer panel = UIPanels.FindOrCreateRenderer(this, PanelName);
-            if (_panelSettings != null) UIPanels.SetPanelSettings(panel, _panelSettings);
-            else if (panel.panelSettings == null) UIPanels.SetPanelSettings(panel, UIPanels.CreatePanelSettings(PanelName, null, 50f));
-            VisualElement root = UIPanels.Mount(panel);
+            VisualElement root = GamePanels.Mount(this, PanelName, _panelSettings, out PanelRenderer panel);
             _label = new Label { style = { position = Position.Absolute, left = 6, top = 4, color = Color.white } };
             root.Add(_label);
             UIPanels.Created(panel);

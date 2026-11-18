@@ -16,11 +16,7 @@ namespace Isekai
 
         private void Start()
         {
-            PanelRenderer panel = UIPanels.FindOrCreateRenderer(this, PanelName);
-            if (_panelSettings != null) UIPanels.SetPanelSettings(panel, _panelSettings);
-            else if (panel.panelSettings == null) UIPanels.SetPanelSettings(panel, UIPanels.CreatePanelSettings(PanelName, null, 50f));
-            VisualElement root = UIPanels.Mount(panel);
-            root.pickingMode = PickingMode.Ignore;
+            VisualElement root = GamePanels.Mount(this, PanelName, _panelSettings, out PanelRenderer panel);
             _label = new Label
             {
                 pickingMode = PickingMode.Ignore,

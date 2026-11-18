@@ -46,12 +46,17 @@ namespace Isekai
         private void Start()
         {
             ItemPickups.SpawnOnDrop = false;   // Items never land in the world: a drop goes to Storage
+            // Restore first: it may rebuild the grids, and the rules must sit on the ones in use.
+            GridInventorySaveData carried = RunSession.TakeInventory();
+            if (carried != null) Unit.Restore(carried);   // the Run's Items from earlier Regions
+            else
+            {
+                foreach (ItemAsset a in _startingActive) if (a != null) Active.Add(a.Definition);
+                foreach (ItemAsset a in _startingStorage) if (a != null) Storage.Add(a.Definition);
+            }
             Rules = new InventoryRules(Active, Storage, () => Time.time);
             Unit.Changed += OnChanged;
             Unit.Dropped += OnDropped;
-            foreach (ItemAsset a in _startingActive) if (a != null) Active.Add(a.Definition);
-            foreach (ItemAsset a in _startingStorage) if (a != null) Storage.Add(a.Definition);
-            if (RegionGoal.Current != null) RegionGoal.Current.Captured += OnRegionCaptured;
             Refresh();
         }
 
@@ -60,7 +65,6 @@ namespace Isekai
             if (_holder == null || _holder.Unit == null) return;
             _holder.Unit.Changed -= OnChanged;
             _holder.Unit.Dropped -= OnDropped;
-            if (RegionGoal.Current != null) RegionGoal.Current.Captured -= OnRegionCaptured;
         }
 
         /// <summary>Adds a new Item: to Storage, else the Active grid. False if neither has room.</summary>
@@ -94,6 +98,7 @@ namespace Isekai
             if (Storage.Add(item) > 0) Say($"Storage full: {item.DisplayName} was lost", Color.red);
         }
 
+        /// <summary>The Region is captured: unlock Locked and Fixed Items and remove Region-only ones (called by <see cref="RegionRun"/>).</summary>
         internal void OnRegionCaptured()
         {
             List<GridItem> expired = Rules.RegionCompleted();

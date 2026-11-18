@@ -39,6 +39,7 @@ namespace Isekai
         private Escalation _escalation;
         private Random _random;
         private float _clock;
+        private float _runSecondsAtStart;
         private int _released;
 
         public WaveSchedule Schedule => _schedule ??= new WaveSchedule(_waves);
@@ -46,7 +47,16 @@ namespace Isekai
         public int Released => _released;
         /// <summary>Enemies of released Waves still waiting to spawn.</summary>
         public int PendingSpawns => _pending.Count;
-        public float Multiplier => (_escalation ??= new Escalation { PerMinute = _perMinute, PerDepth = _perDepth }).Multiplier(_clock, _depth);
+        public float Multiplier => (_escalation ??= new Escalation { PerMinute = _perMinute, PerDepth = _perDepth }).Multiplier(_runSecondsAtStart + _clock, _depth);
+
+        /// <summary>Where this Region sits in the Run: its depth toward the Capital and the Run time before it began.</summary>
+        public void SetRun(int depth, float runSecondsAtStart)
+        {
+            _depth = Mathf.Max(0, depth);
+            _runSecondsAtStart = Mathf.Max(0f, runSecondsAtStart);
+        }
+
+        public int Depth => _depth;
         public float SecondsUntilNext => Schedule.SecondsUntilNext(_clock);
 
         /// <summary>Jumps the Region clock forward (tests and debugging).</summary>

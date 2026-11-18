@@ -6,14 +6,16 @@ using UnityEngine;
 namespace Isekai
 {
     /// <summary>
-    /// Losing the Main Base loses the Run: the horde stops spawning and Game Setup asks whether to try again (reload the
-    /// Region) or go back to the menu. Played without Game Setup's front end it just says so on screen.
+    /// Losing the Main Base loses the Run: the horde stops spawning, it says so on screen and <see cref="Defeated"/> fires.
     /// </summary>
     public sealed class RegionDefeat : MonoBehaviour
     {
         private bool _hadMainBase;
 
         public bool IsDefeated { get; private set; }
+
+        /// <summary>The Main Base fell (<see cref="RegionRun"/> ends the Run).</summary>
+        public event System.Action Defeated;
 
         private void Update()
         {
@@ -36,8 +38,7 @@ namespace Isekai
             BLog.Info("Region", "Main Base destroyed: the Run is lost.");
             Camera cam = Camera.main;
             if (cam != null) FloatingText.Spawn(cam.transform.position + new Vector3(0f, 0f, 10f), "Main Base destroyed", Color.red, 4f);
-            if (GameSetup.IsRunning)
-                ConfirmPresenter.Ask("Main Base destroyed", "The Run is lost. Try again?", () => GameScenes.Reload(), GameSetup.GoToMainMenu);
+            Defeated?.Invoke();
         }
     }
 }

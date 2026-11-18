@@ -24,6 +24,7 @@ namespace Isekai.Tests
         [UnitySetUp]
         public IEnumerator LoadRegion()
         {
+            RunSession.Clear();   // a fresh Run: no inventory carried over from an earlier test
             SceneManager.LoadScene("Region");
             yield return null;
             yield return null;
