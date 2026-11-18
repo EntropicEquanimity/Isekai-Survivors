@@ -15,23 +15,27 @@ namespace Isekai
     {
         private static readonly Color Captured = new(0.35f, 0.75f, 0.35f);
         private static readonly Color Open = new(0.95f, 0.8f, 0.3f);
-        private static readonly Color Locked = new(0.35f, 0.35f, 0.4f);
+        private static readonly Color Locked = new(0.27f, 0.27f, 0.31f);
         private static readonly Color CurrentColor = new(0.35f, 0.6f, 1f);
         private static readonly Color CapitalColor = new(0.85f, 0.25f, 0.25f);
 
+        /// <summary>The bundled pixel font's native size; text sizes must be whole multiples of it.</summary>
+        public const int PixelFontSize = 12;
+
         private readonly PlanetRun _run;
         private readonly Action<RegionInfo> _onPick;
-        private readonly float _size;
+        private readonly Vector2 _size;
         private readonly Dictionary<string, Button> _nodes = new();
         private readonly Label _info;
 
-        public PlanetMapView(PlanetRun run, float size, Action<RegionInfo> onPick)
+        /// <param name="size">Width and height in UI pixels. The rings are drawn as an ellipse filling it: the boxes are wide.</param>
+        public PlanetMapView(PlanetRun run, Vector2 size, Action<RegionInfo> onPick)
         {
             _run = run;
             _onPick = onPick;
             _size = size;
-            style.width = size;
-            style.height = size;
+            style.width = size.x;
+            style.height = size.y;
             style.flexShrink = 0;
             generateVisualContent += DrawLinks;
 
@@ -39,20 +43,24 @@ namespace Isekai
             {
                 RegionInfo r = region;
                 var node = new Button(() => Pick(r)) { text = r.IsCapital ? "Capital" : r.Name, name = "region-" + r.Id };
-                float w = r.IsCapital ? 64f : 76f;
+                float w = r.IsCapital ? 72f : 96f;
                 Vector2 at = PointOf(r);
                 node.style.position = Position.Absolute;
-                node.style.left = at.x - w * 0.5f;
-                node.style.top = at.y - 10f;
+                node.style.left = Mathf.Round(at.x - w * 0.5f);
+                node.style.top = Mathf.Round(at.y - 10f);
                 node.style.width = w;
                 node.style.height = 20f;
-                node.style.fontSize = 9;
-                node.style.whiteSpace = WhiteSpace.Normal;
+                node.style.fontSize = PixelFontSize;   // the pixel font's native size: anything else blurs
+                node.style.whiteSpace = WhiteSpace.NoWrap;
+                node.style.paddingLeft = 0;
+                node.style.paddingRight = 0;
+                node.style.marginLeft = 0;
+                node.style.marginRight = 0;
                 node.RegisterCallback<PointerEnterEvent>(_ => Describe(r));
                 _nodes[r.Id] = node;
                 Add(node);
             }
-            _info = new Label { pickingMode = PickingMode.Ignore, style = { position = Position.Absolute, left = 0, right = 0, bottom = -18, unityTextAlign = TextAnchor.MiddleCenter, color = Color.white } };
+            _info = new Label { pickingMode = PickingMode.Ignore, style = { fontSize = PixelFontSize, position = Position.Absolute, left = 0, right = 0, bottom = -22, unityTextAlign = TextAnchor.MiddleCenter, color = Color.white } };
             Add(_info);
             Refresh();
         }
@@ -79,7 +87,8 @@ namespace Isekai
                 node.style.borderBottomWidth = bw;
                 node.style.borderLeftWidth = bw;
                 node.style.borderRightWidth = bw;
-                node.SetEnabled(_onPick == null || open.Contains(r) || _run.IsCaptured(r));
+                // Never disabled: a disabled button is drawn see-through. Clicking a locked Region simply does nothing.
+                node.style.opacity = 1f;
             }
             MarkDirtyRepaint();
         }
@@ -98,8 +107,9 @@ namespace Isekai
 
         private Vector2 PointOf(RegionInfo r)
         {
-            float half = _size * 0.5f, reach = half - 46f;
-            return new Vector2(half + Mathf.Cos(r.Angle) * r.Radius * reach, half + Mathf.Sin(r.Angle) * r.Radius * reach);
+            Vector2 half = _size * 0.5f;
+            float reachX = half.x - 52f, reachY = half.y - 14f;
+            return new Vector2(Mathf.Round(half.x + Mathf.Cos(r.Angle) * r.Radius * reachX), Mathf.Round(half.y + Mathf.Sin(r.Angle) * r.Radius * reachY));
         }
 
         private void DrawLinks(MeshGenerationContext context)

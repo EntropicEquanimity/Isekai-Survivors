@@ -85,7 +85,7 @@ namespace Isekai
                         BuffId = buffOrder.Count > 0 ? buffOrder[n % buffOrder.Count] : null,
                         BonusStone = 10 + 5 * ring,
                         Angle = offset + i * (float)(Math.PI * 2) / ringSizes[ring],
-                        Radius = 1f - ring * (0.7f / ringSizes.Count),   // evenly spaced rings, the Capital at the centre
+                        Radius = 1f - ring * (0.84f / ringSizes.Count),   // evenly spaced rings, the Capital at the centre
                     };
                     list.Add(r);
                     regions.Add(r);

@@ -55,10 +55,10 @@ namespace Isekai
             if (IsOpen || RunSession.Run == null || _shade == null) return;
             IsOpen = true;
             _shade.Clear();
-            _shade.Add(new Label(RunSession.Run.Current != null ? $"{RunSession.Run.Current.Name} on the Planet" : "The Planet") { style = { fontSize = 16, color = Color.white } });
-            _map = new PlanetMapView(RunSession.Run, 440f, null);
+            _shade.Add(new Label(RunSession.Run.Current != null ? $"{RunSession.Run.Current.Name} on the Planet" : "The Planet") { style = { fontSize = PlanetMapView.PixelFontSize * 2, color = Color.white } });
+            _map = new PlanetMapView(RunSession.Run, new Vector2(880f, 400f), null);
             _shade.Add(_map);
-            _shade.Add(new Label("Scroll in to return") { style = { color = new Color(0.8f, 0.8f, 0.85f), marginTop = 22 } });
+            _shade.Add(new Label("Scroll in to return") { style = { fontSize = PlanetMapView.PixelFontSize, color = new Color(0.8f, 0.8f, 0.85f), marginTop = 22 } });
             _shade.style.display = DisplayStyle.Flex;
             if (_zoom != null) _zoom.Blocked = true;
             MenuStack.Push(MenuName, Close);

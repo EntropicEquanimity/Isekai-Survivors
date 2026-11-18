@@ -43,13 +43,13 @@ namespace Isekai
                 PlanetRunState.Lost => "The Run is lost",
                 _ => run.CapturedInOrder.Count == 0 ? "Choose where to land" : "Choose your next Region",
             };
-            column.Add(new Label(title) { style = { fontSize = 16, color = Color.white, marginBottom = 4 } });
+            column.Add(new Label(title) { style = { fontSize = PlanetMapView.PixelFontSize * 2, color = Color.white, marginBottom = 4 } });
             int secs = Mathf.FloorToInt(run.RunSeconds);
             string buffs = string.Join(", ", run.Buffs.Select(b => RegionBuffs.Get(b)?.Name).Where(n => n != null));
             column.Add(new Label($"Run time {secs / 60}:{secs % 60:00}   Captured {run.CapturedInOrder.Count}   Bonus Stone {run.BonusStone}" +
                                  (buffs.Length > 0 ? $"   Buffs: {buffs}" : ""))
-                { style = { color = new Color(0.85f, 0.85f, 0.9f), marginBottom = 6 } });
-            _map = new PlanetMapView(run, 440f, region => RunSession.GoToRegion(region));
+                { style = { fontSize = PlanetMapView.PixelFontSize, color = new Color(0.85f, 0.85f, 0.9f), marginBottom = 6 } });
+            _map = new PlanetMapView(run, new Vector2(880f, 400f), region => RunSession.GoToRegion(region));
             column.Add(_map);
             if (run.IsOver)
             {
