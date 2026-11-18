@@ -1,25 +1,248 @@
 {
   "dependencies": {
-    "com.blondie.core": {
-      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.core#0bf46189760792fc27109b9e8896a39e132d6cb9",
+    "com.blondie.abilities": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.abilities#b275a07c313515e3c88e5534900d72d1a1b73bac",
       "depth": 0,
       "source": "git",
       "dependencies": {
+        "com.blondie.core": "3.6.1",
+        "com.blondie.combat": "0.10.1",
+        "com.unity.inputsystem": "1.11.2"
+      },
+      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
+    },
+    "com.blondie.combat": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.combat#b275a07c313515e3c88e5534900d72d1a1b73bac",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.blondie.core": "3.6.1"
+      },
+      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
+    },
+    "com.blondie.controllers": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.controllers#b275a07c313515e3c88e5534900d72d1a1b73bac",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.blondie.core": "3.6.1",
+        "com.unity.inputsystem": "1.11.2",
+        "com.unity.modules.physics": "1.0.0",
+        "com.unity.modules.physics2d": "1.0.0",
+        "com.unity.modules.ai": "1.0.0",
         "com.unity.modules.uielements": "1.0.0"
       },
-      "hash": "0bf46189760792fc27109b9e8896a39e132d6cb9"
+      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
     },
-    "com.blondie.pixelperfect": {
-      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.pixelperfect#0bf46189760792fc27109b9e8896a39e132d6cb9",
+    "com.blondie.core": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.core#b275a07c313515e3c88e5534900d72d1a1b73bac",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "com.blondie.core": "3.1.0",
+        "com.unity.modules.audio": "1.0.0",
+        "com.unity.modules.uielements": "1.0.0"
+      },
+      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
+    },
+    "com.blondie.flowfields": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.flowfields#b275a07c313515e3c88e5534900d72d1a1b73bac",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.blondie.core": "3.6.1",
+        "com.unity.burst": "1.8.18",
+        "com.unity.collections": "2.5.1",
+        "com.unity.mathematics": "1.3.2"
+      },
+      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
+    },
+    "com.blondie.gamesetup": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.gamesetup#b275a07c313515e3c88e5534900d72d1a1b73bac",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.blondie.core": "3.6.1",
+        "com.blondie.ui": "0.14.1",
+        "com.blondie.input": "0.6.2",
+        "com.blondie.localization": "0.7.8",
+        "com.blondie.settings": "0.8.2",
+        "com.blondie.juice": "0.7.1",
+        "com.blondie.save": "0.4.5",
+        "com.unity.inputsystem": "1.11.2",
+        "com.unity.modules.audio": "1.0.0",
+        "com.unity.modules.uielements": "1.0.0",
+        "com.unity.modules.video": "1.0.0"
+      },
+      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
+    },
+    "com.blondie.gridinventory": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.gridinventory#b275a07c313515e3c88e5534900d72d1a1b73bac",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.blondie.core": "3.6.1",
+        "com.blondie.inventory": "0.12.2",
+        "com.unity.inputsystem": "1.11.2"
+      },
+      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
+    },
+    "com.blondie.input": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.input#b275a07c313515e3c88e5534900d72d1a1b73bac",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.blondie.core": "3.6.1",
+        "com.unity.inputsystem": "1.11.2"
+      },
+      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
+    },
+    "com.blondie.inventory": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.inventory#b275a07c313515e3c88e5534900d72d1a1b73bac",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.blondie.core": "3.6.1",
+        "com.unity.inputsystem": "1.11.2"
+      },
+      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
+    },
+    "com.blondie.juice": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.juice#b275a07c313515e3c88e5534900d72d1a1b73bac",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.blondie.core": "3.6.1",
+        "com.unity.modules.audio": "1.0.0",
+        "com.unity.modules.uielements": "1.0.0",
+        "com.unity.modules.physics": "1.0.0",
+        "com.unity.modules.physics2d": "1.0.0",
+        "com.unity.render-pipelines.universal": "17.3.0"
+      },
+      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
+    },
+    "com.blondie.localization": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.localization#b275a07c313515e3c88e5534900d72d1a1b73bac",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.blondie.core": "3.6.1",
+        "com.unity.inputsystem": "1.11.2"
+      },
+      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
+    },
+    "com.blondie.pixelfx": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.pixelfx#b275a07c313515e3c88e5534900d72d1a1b73bac",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.blondie.core": "3.6.1",
+        "com.blondie.pixelperfect": "0.14.2"
+      },
+      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
+    },
+    "com.blondie.pixelperfect": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.pixelperfect#b275a07c313515e3c88e5534900d72d1a1b73bac",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.blondie.core": "3.6.1",
         "com.unity.render-pipelines.universal": "17.3.0",
         "com.unity.modules.uielements": "1.0.0",
         "com.unity.modules.tilemap": "1.0.0"
       },
-      "hash": "0bf46189760792fc27109b9e8896a39e132d6cb9"
+      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
+    },
+    "com.blondie.pooling": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.pooling#b275a07c313515e3c88e5534900d72d1a1b73bac",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.blondie.core": "3.6.1"
+      },
+      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
+    },
+    "com.blondie.roguelike": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.roguelike#b275a07c313515e3c88e5534900d72d1a1b73bac",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.blondie.core": "3.6.1",
+        "com.unity.inputsystem": "1.11.2"
+      },
+      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
+    },
+    "com.blondie.save": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.save#b275a07c313515e3c88e5534900d72d1a1b73bac",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.blondie.core": "3.6.1",
+        "com.unity.inputsystem": "1.11.2"
+      },
+      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
+    },
+    "com.blondie.settings": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.settings#b275a07c313515e3c88e5534900d72d1a1b73bac",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.blondie.core": "3.6.1",
+        "com.unity.inputsystem": "1.11.2",
+        "com.unity.modules.audio": "1.0.0"
+      },
+      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
+    },
+    "com.blondie.skilltrees": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.skilltrees#b275a07c313515e3c88e5534900d72d1a1b73bac",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.blondie.core": "3.6.1",
+        "com.unity.inputsystem": "1.11.2"
+      },
+      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
+    },
+    "com.blondie.stats": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.stats#b275a07c313515e3c88e5534900d72d1a1b73bac",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.blondie.core": "3.6.1"
+      },
+      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
+    },
+    "com.blondie.ui": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.ui#b275a07c313515e3c88e5534900d72d1a1b73bac",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.blondie.core": "3.6.1",
+        "com.unity.inputsystem": "1.11.2",
+        "com.unity.modules.uielements": "1.0.0",
+        "com.unity.modules.physics": "1.0.0",
+        "com.unity.modules.physics2d": "1.0.0"
+      },
+      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
+    },
+    "com.blondie.utils": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.utils#b275a07c313515e3c88e5534900d72d1a1b73bac",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.blondie.core": "3.6.1"
+      },
+      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
+    },
+    "com.blondie.utils2d": {
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.utils2d#b275a07c313515e3c88e5534900d72d1a1b73bac",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.blondie.core": "3.6.1",
+        "com.unity.inputsystem": "1.11.2",
+        "com.unity.modules.physics2d": "1.0.0"
+      },
+      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
     },
     "com.unity.2d.animation": {
       "version": "16.0.1",
@@ -105,7 +328,7 @@
     },
     "com.unity.burst": {
       "version": "2.0.0",
-      "depth": 2,
+      "depth": 1,
       "source": "builtin",
       "dependencies": {}
     },
@@ -145,6 +368,15 @@
       "source": "registry",
       "dependencies": {
         "com.unity.test-framework": "1.1.33"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.inputsystem": {
+      "version": "1.20.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.uielements": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },

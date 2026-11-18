@@ -1,3 +1,4 @@
+using Blondie.Core;
 using Blondie.PixelPerfect;
 using UnityEngine;
 using UnityEngine.UI;
@@ -38,7 +39,7 @@ public class PixelCanvasScaler : MonoBehaviour
         PixelCamera pixelCamera = PixelCamera.Main;
         int scale = pixelCamera != null && pixelCamera.IntegerScale > 0
             ? pixelCamera.IntegerScale
-            : PixelViewport.Compute(PixelPerfectSettings.Current.ResolvedReferenceResolution, screen, UpscaleMode.Integer).IntegerScale;
+            : PixelViewport.Compute(PixelPerfectSettings.Current.ResolvedReferenceResolution, new Int2(screen.x, screen.y), UpscaleMode.Integer).IntegerScale;
         _scaler.scaleFactor = Mathf.Max(1, scale);
     }
 }

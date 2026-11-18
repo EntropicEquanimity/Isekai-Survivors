@@ -1,5 +1,7 @@
 # Plan: move Isekai Survivors onto BlondieUtils
 
+> **Superseded** by [isekai-conquerors.md](isekai-conquerors.md) (2026-11-18): the game is changing genre, so this survivors port is no longer the target.
+
 Goal: replace the hand-rolled architecture in `Assets/Scripts` with BlondieUtils (BU) packages, keeping the art, enemy roster, weapons and Levels, and end with a game that plays at least as well as today.
 
 ## Where we start
