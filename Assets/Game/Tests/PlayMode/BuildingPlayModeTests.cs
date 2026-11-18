@@ -1,0 +1,122 @@
+using System;
+using System.Collections;
+using System.Linq;
+using Blondie.Combat;
+using Blondie.Core;
+using Blondie.FlowFields;
+using Blondie.Pooling;
+using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.TestTools;
+using Object = UnityEngine.Object;
+
+namespace Isekai.Tests
+{
+    /// <summary>Phase 4 in the real Region scene, without the horde, at 4x speed.</summary>
+    public class BuildingPlayModeTests
+    {
+        private RegionBuildings _buildings;
+        private Building _mainBase;
+        private BuildMode _mode;
+
+        [UnitySetUp]
+        public IEnumerator LoadRegion()
+        {
+            SceneManager.LoadScene("Region");
+            yield return null;
+            Object.FindAnyObjectByType<HordeSpawner>().enabled = false;
+            foreach (HordeMember m in Object.FindObjectsByType<HordeMember>(FindObjectsInactive.Exclude)) Pools.Despawn(m.gameObject);
+            yield return null;
+            yield return null;   // RegionBuildings claims the Main Base's ground after the grid bakes
+            _buildings = RegionBuildings.Current;
+            _mainBase = Building.All.First(b => b.IsMainBase);
+            _mode = Object.FindAnyObjectByType<BuildMode>();
+            Time.timeScale = 4f;
+        }
+
+        [UnityTearDown]
+        public IEnumerator Restore()
+        {
+            Time.timeScale = 1f;
+            yield return null;
+        }
+
+        private BuildingAsset Catalogue(string name) => _mode.Catalogue.First(a => a.DisplayName == name);
+
+        private Int2 BesideMainBase(int dx) => new(_mainBase.Origin.x + dx, _mainBase.Origin.y);
+
+        [UnityTest]
+        public IEnumerator Barracks_costs_stone_blocks_the_horde_builds_and_produces_Militia()
+        {
+            FlowFieldGrid field = HordeDirector.Current.Grid;
+            Assert.AreEqual(FlowFieldGrid.Blocked, field.GetCost(_mainBase.Origin), "the Main Base blocks its ground");
+
+            Stockpile pile = RegionEconomy.Current.Stockpile;
+            int stone = pile.Get(ResourceType.Stone);
+            BuildingAsset barracks = Catalogue("Barracks");
+            Building placed = _buildings.Place(barracks, BesideMainBase(4));
+            Assert.IsNotNull(placed, "placed inside the Main Base's area");
+            Assert.AreEqual(stone - 20, pile.Get(ResourceType.Stone));
+            Assert.AreEqual(FlowFieldGrid.Blocked, field.GetCost(BesideMainBase(4)));
+            Assert.IsFalse(placed.IsBuilt);
+
+            yield return WaitFor(() => placed.IsBuilt, 15f, "the Barracks finishes");
+            var producer = placed.GetComponent<UnitProducer>();
+            yield return WaitFor(() => producer.Units.Count > 0, 15f, "the Barracks produces a Militia");
+            Assert.AreEqual(Stance.Guard, producer.Units[0].Stance, "Units follow their Building's stance");
+            producer.Stance = Stance.Hold;
+            Assert.AreEqual(Stance.Hold, producer.Units[0].Stance);
+        }
+
+        [UnityTest]
+        public IEnumerator Placement_is_refused_outside_a_Base_and_when_too_expensive()
+        {
+            BuildingAsset tower = Catalogue("Tower");
+            Assert.AreEqual(RegionBuildings.Verdict.OutsideBase, _buildings.Check(tower, BesideMainBase(30)));
+            Assert.AreEqual(RegionBuildings.Verdict.Blocked, _buildings.Check(tower, _mainBase.Origin), "on the Main Base");
+            RegionEconomy.Current.Stockpile.TrySpend(ResourceType.Stone, RegionEconomy.Current.Stockpile.Get(ResourceType.Stone));
+            Assert.AreEqual(RegionBuildings.Verdict.TooExpensive, _buildings.Check(tower, BesideMainBase(4)));
+            Assert.IsNull(_buildings.Place(tower, BesideMainBase(4)));
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator A_Cloning_Pod_brings_the_Character_back_once()
+        {
+            var character = Object.FindAnyObjectByType<CharacterControl>();
+            var damageable = character.GetComponent<Damageable>();
+            character.transform.position = _mainBase.transform.position + new Vector3(10f, 0f, 0f);
+
+            damageable.Unit.TakeDamage(10000f, DamageRules.TrueType);
+            Assert.IsTrue(character.IsDead);
+            yield return WaitFor(() => !character.IsDead, 15f, "the clone is ready");
+            Assert.Less(Vector3.Distance(character.transform.position, _mainBase.transform.position), 3f, "cloned at the Main Base");
+            Assert.AreEqual(0, _mainBase.GetComponent<CloningPods>().Bay.Pods);
+
+            damageable.Unit.TakeDamage(10000f, DamageRules.TrueType);
+            yield return new WaitForSeconds(10f);
+            Assert.IsTrue(character.IsDead, "no pods left: stays dead");
+            Assert.IsFalse(Object.FindAnyObjectByType<RegionDefeat>().IsDefeated, "losing the Character alone doesn't lose the Run");
+        }
+
+        [UnityTest]
+        public IEnumerator Losing_the_Main_Base_loses_the_Run()
+        {
+            var defeat = Object.FindAnyObjectByType<RegionDefeat>();
+            _mainBase.Damageable.Unit.TakeDamage(100000f, DamageRules.TrueType);
+            yield return WaitFor(() => defeat.IsDefeated, 3f, "the Run is lost");
+            Assert.IsFalse(Object.FindAnyObjectByType<HordeSpawner>().enabled);
+        }
+
+        private static IEnumerator WaitFor(Func<bool> condition, float seconds, string what)
+        {
+            float end = Time.time + seconds;
+            while (!condition())
+            {
+                if (Time.time > end) Assert.Fail("Timed out: " + what);
+                yield return null;
+            }
+        }
+    }
+}

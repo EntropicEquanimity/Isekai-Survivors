@@ -81,7 +81,7 @@ namespace Isekai
         {
             _targetCells.Clear();
             foreach (HordeTarget target in HordeTarget.All)
-                if (target.IsAlive) target.AddCells(Grid, _targetCells);
+                if (target.IsAlive && target.AttractsHorde) target.AddCells(Grid, _targetCells);
             if (SameCells(_targetCells, _lastCells)) return;
             _lastCells.Clear();
             _lastCells.AddRange(_targetCells);

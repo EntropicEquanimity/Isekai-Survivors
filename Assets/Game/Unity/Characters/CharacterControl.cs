@@ -28,12 +28,15 @@ namespace Isekai
         private PlayerBrain _brain;
         private AutoCaster _autoCaster;
         private Team _team;
+        private Damageable _damageable;
+        private Renderer[] _renderers;
         private Vector3 _anchor;
         private float _nextThink;
         private AutoFightOrder _order = AutoFightOrder.PlayerControl;
 
         public AutoFightOrder Order => _order;
         public bool IsAutoFighting => _fight.IsActive;
+        public bool IsDead => _damageable != null && _damageable.Unit.IsDead;
 
         private void Awake()
         {
@@ -41,13 +44,43 @@ namespace Isekai
             _brain = GetComponent<PlayerBrain>();
             _autoCaster = GetComponent<AutoCaster>();
             _team = GetComponent<Team>();
+            _damageable = GetComponent<Damageable>();
+            _renderers = GetComponentsInChildren<Renderer>(true);
             _fight.IdleDelay = _idleDelay;
             _fight.Leash = _leash;
+            SetPlayerControl(true);
+            if (_damageable == null) return;
+            _damageable.Died += OnDied;
+            _damageable.Revived += OnRevived;
+        }
+
+        private void OnDestroy()
+        {
+            if (_damageable == null) return;
+            _damageable.Died -= OnDied;
+            _damageable.Revived -= OnRevived;
+        }
+
+        // Dead: hidden and still until a Cloning Pod brings it back (CloningPods).
+        private void OnDied(DamageResult result)
+        {
+            _brain.enabled = false;
+            _autoCaster.enabled = false;
+            _motor.Stop();
+            _motor.MoveInput = Vector2.zero;
+            foreach (Renderer r in _renderers) r.enabled = false;
+        }
+
+        private void OnRevived()
+        {
+            foreach (Renderer r in _renderers) r.enabled = true;
+            _fight.Tick(0f, playerInput: true);
             SetPlayerControl(true);
         }
 
         private void Update()
         {
+            if (IsDead) return;
             bool input = PlayerGaveInput();
             bool wasActive = _fight.IsActive;
             _fight.Tick(Time.deltaTime, input);

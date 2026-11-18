@@ -23,6 +23,28 @@ namespace Isekai
 
         public bool CanAfford(ResourceType type, int amount) => amount <= Get(type);
 
+        /// <summary>True if every line of <paramref name="costs"/> is affordable at once (repeated types add up).</summary>
+        public bool CanAfford(IReadOnlyList<ResourceCost> costs)
+        {
+            var totals = new Dictionary<ResourceType, int>();
+            foreach (ResourceCost c in costs)
+            {
+                if (c.Amount < 0) throw new ArgumentOutOfRangeException(nameof(costs));
+                totals[c.Type] = (totals.TryGetValue(c.Type, out int t) ? t : 0) + c.Amount;
+            }
+            foreach (KeyValuePair<ResourceType, int> total in totals)
+                if (!CanAfford(total.Key, total.Value)) return false;
+            return true;
+        }
+
+        /// <summary>Takes every line of <paramref name="costs"/>, or nothing at all if any can't be afforded.</summary>
+        public bool TrySpend(IReadOnlyList<ResourceCost> costs)
+        {
+            if (!CanAfford(costs)) return false;
+            foreach (ResourceCost c in costs) TrySpend(c.Type, c.Amount);
+            return true;
+        }
+
         /// <summary>Takes <paramref name="amount"/> if there is enough, else takes nothing and returns false.</summary>
         public bool TrySpend(ResourceType type, int amount)
         {

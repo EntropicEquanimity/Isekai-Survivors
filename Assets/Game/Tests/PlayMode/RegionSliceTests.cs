@@ -53,6 +53,7 @@ namespace Isekai.Tests
             ResourceNode node = ResourceNode.All.First();
             int before = node.Remaining;
             Stockpile pile = RegionEconomy.Current.Stockpile;
+            int start = pile.Get(node.Type);
 
             int mined = 0;
             for (int i = 0; i < 12; i++)
@@ -62,7 +63,7 @@ namespace Isekai.Tests
             }
 
             Assert.AreEqual(6, mined);
-            Assert.AreEqual(6, pile.Get(node.Type));
+            Assert.AreEqual(start + 6, pile.Get(node.Type));
             Assert.AreEqual(before - 6, node.Remaining);
         }
 

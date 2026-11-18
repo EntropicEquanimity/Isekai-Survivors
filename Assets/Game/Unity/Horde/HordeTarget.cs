@@ -17,12 +17,15 @@ namespace Isekai
 
         [Tooltip("The target's body radius: enemies stop and attack at this distance plus their reach.")]
         [SerializeField, Min(0.05f)] private float _radius = 0.3f;
+        [Tooltip("The horde's flow field leads to it. Off for Units: enemies still hit them in passing, and the field isn't rebuilt every time one moves.")]
+        [SerializeField] private bool _attractsHorde = true;
 
         private Damageable _damageable;
 
         public static IReadOnlyList<HordeTarget> All => s_all;
 
         public float Radius => _radius;
+        public bool AttractsHorde => _attractsHorde;
         public Damageable Damageable => _damageable != null ? _damageable : _damageable = GetComponent<Damageable>();
         public bool IsAlive => isActiveAndEnabled && !Damageable.Unit.IsDead;
 

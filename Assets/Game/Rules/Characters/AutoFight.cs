@@ -48,9 +48,7 @@ namespace Isekai
         public AutoFightOrder Decide(float? enemyDistance, float enemyDistanceFromAnchor, float attackRange, float distanceFromAnchor)
         {
             if (!IsActive) return AutoFightOrder.PlayerControl;
-            if (enemyDistance is float d && enemyDistanceFromAnchor <= Leash)
-                return d <= attackRange ? AutoFightOrder.Hold : AutoFightOrder.Approach;
-            return distanceFromAnchor > ReturnTolerance ? AutoFightOrder.Return : AutoFightOrder.Hold;
+            return Engagement.Decide(enemyDistance, enemyDistanceFromAnchor, attackRange, Leash, distanceFromAnchor, ReturnTolerance);
         }
     }
 }
