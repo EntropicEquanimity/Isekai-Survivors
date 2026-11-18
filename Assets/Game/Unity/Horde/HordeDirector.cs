@@ -20,18 +20,27 @@ namespace Isekai
         [SerializeField, Min(0.25f)] private float _hashCellSize = 1f;
         [Tooltip("An enemy's body radius, for ability hits.")]
         [SerializeField, Min(0f)] private float _memberRadius = 0.25f;
+        [Tooltip("Roaming enemies this close to a player target (the Character, a Unit, a Building) wake and attack.")]
+        [SerializeField, Min(0f)] private float _aggroRadius = 7f;
+        [Tooltip("When a roaming enemy is hurt, the roamers this close to it wake too.")]
+        [SerializeField, Min(0f)] private float _alarmRadius = 5f;
+        [SerializeField, Min(0.05f)] private float _aggroInterval = 0.25f;
 
         private readonly List<HordeMember> _members = new();
         private readonly List<HordeMember> _nearby = new();
         private readonly List<Int2> _targetCells = new();
         private readonly List<Int2> _lastCells = new();
         private SpatialHash<HordeMember> _hash;
+        private float _nextAggro;
         private HordeWorld _world;
         private IAbilityWorld _previousWorld;
 
         public static HordeDirector Current { get; private set; }
 
         public int Count => _members.Count;
+
+        /// <summary>Enemies in the attacking crowd (the rest are roaming).</summary>
+        public int Attacking => _crowd.Count;
 
         /// <summary>Horde enemies killed since this director started.</summary>
         public int Kills { get; private set; }
@@ -57,8 +66,31 @@ namespace Isekai
         {
             if (_members.Contains(member)) return;
             _members.Add(member);
-            _crowd.Add(member.transform, member.SpeedMultiplier);
+            if (!member.IsRoaming) _crowd.Add(member.transform, member.SpeedMultiplier);
         }
+
+        /// <summary>A roaming member starts attacking: it joins the crowd that follows the field.</summary>
+        internal void Wake(HordeMember member)
+        {
+            if (_members.Contains(member) && !_crowd.Contains(member.transform)) _crowd.Add(member.transform, member.SpeedMultiplier);
+        }
+
+        /// <summary>A member stops and roams: it leaves the crowd.</summary>
+        internal void Sleep(HordeMember member)
+        {
+            if (_crowd != null) _crowd.Remove(member.transform);
+        }
+
+        /// <summary>Wakes every roaming member within <paramref name="radius"/> of <paramref name="point"/>.</summary>
+        public void WakeAround(Vector3 point, float radius)
+        {
+            _nearby.Clear();
+            Hash.Query(point.x, point.y, radius, _nearby);
+            foreach (HordeMember m in _nearby)
+                if (m != null && m.IsAlive && m.IsRoaming) m.Wake();
+        }
+
+        internal void Alarm(HordeMember hurt) => WakeAround(hurt.transform.position, _alarmRadius);
 
         internal void Unregister(HordeMember member)
         {
@@ -74,6 +106,10 @@ namespace Isekai
             _crowd.CompleteJobs();
             RebuildHash();
             HitTargets();
+            if (Time.time < _nextAggro) return;
+            _nextAggro = Time.time + _aggroInterval;
+            foreach (HordeTarget target in HordeTarget.All)
+                if (target.IsAlive) WakeAround(target.transform.position, _aggroRadius + target.Radius);
         }
 
         // One field over every living target's cells; a new one only when that set of cells changes.

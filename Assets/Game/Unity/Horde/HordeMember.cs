@@ -18,19 +18,64 @@ namespace Isekai
 
         internal ContactAttack Attack;
         private Damageable _damageable;
+        private bool _subscribed;
 
         public Damageable Damageable => _damageable != null ? _damageable : _damageable = GetComponent<Damageable>();
         public CombatUnit Unit => Damageable.Unit;
         public bool IsAlive => isActiveAndEnabled && !Unit.IsDead;
+
+        /// <summary>Health before any escalation, as authored on the prefab.</summary>
+        public float BaseHealth { get; private set; }
+
+        /// <summary>Scales this enemy's health (escalation) and fills it.</summary>
+        public void ScaleHealth(float multiplier)
+        {
+            Damageable.MaxHealth = BaseHealth * Mathf.Max(0.01f, multiplier);
+            Unit.Heal(Damageable.MaxHealth);
+        }
+
+        private void Awake() => BaseHealth = Damageable.MaxHealth;
         public float Reach => _reach;
         public float SpeedMultiplier => _speedMultiplier;
+
+        /// <summary>
+        /// Roaming enemies stand where they are until something wakes them: a player target coming near, or being hurt
+        /// (which wakes the roamers around them too). Then they attack along the horde's flow field.
+        /// </summary>
+        public bool IsRoaming { get; private set; }
+
+        /// <summary>Called right after spawning: roam (true) or attack at once (false, the default).</summary>
+        public void SetRoaming(bool roaming)
+        {
+            if (IsRoaming == roaming) return;
+            IsRoaming = roaming;
+            if (roaming) HordeDirector.Current?.Sleep(this);
+            else HordeDirector.Current?.Wake(this);
+        }
+
+        public void Wake() => SetRoaming(false);
 
         private void OnEnable()
         {
             Attack = new ContactAttack(_contactDamage, _attackInterval, _reach);
+            IsRoaming = false;
+            if (BaseHealth > 0f && !Mathf.Approximately(Damageable.MaxHealth, BaseHealth)) ScaleHealth(1f);   // undo a previous Wave's scaling
+            if (!_subscribed) { Damageable.Damaged += OnDamaged; _subscribed = true; }
             HordeDirector.Current?.Register(this);
         }
 
         private void OnDisable() => HordeDirector.Current?.Unregister(this);
+
+        private void OnDestroy()
+        {
+            if (_subscribed && _damageable != null) _damageable.Damaged -= OnDamaged;
+        }
+
+        private void OnDamaged(DamageResult result)
+        {
+            if (!IsRoaming) return;
+            Wake();
+            HordeDirector.Current?.Alarm(this);
+        }
     }
 }
