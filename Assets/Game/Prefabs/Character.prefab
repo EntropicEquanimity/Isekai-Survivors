@@ -170,6 +170,8 @@ GameObject:
   - component: {fileID: 7137278908193479849}
   - component: {fileID: 8097078253891701239}
   - component: {fileID: 5251759720067950116}
+  - component: {fileID: 1099911240037160439}
+  - component: {fileID: 7172010893617079226}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -356,6 +358,18 @@ MonoBehaviour:
     min: 0
     max: 0
     rounding: 0
+  - id: DamageBonus
+    baseValue: 0
+    clamp: 0
+    min: 0
+    max: 0
+    rounding: 0
+  - id: CritChance
+    baseValue: 0
+    clamp: 0
+    min: 0
+    max: 0
+    rounding: 0
   _vitals:
   - id: Health
     max: 100
@@ -412,9 +426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91bfa9dd421ea414bb462984d0059b3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Blondie.Abilities.Unity::Blondie.Abilities.AbilityCaster
-  _startingAbilities:
-  - {fileID: 11400000, guid: 1045794142039884d9c0c6262d884062, type: 2}
-  - {fileID: 11400000, guid: 9e3546dce4e38524c8a7b13a354c25a4, type: 2}
+  _startingAbilities: []
   _globalCooldown: 0
   _castOffset: {x: 0, y: 0, z: 0}
   _publishEvents: 1
@@ -475,3 +487,79 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Isekai.Game::Isekai.HordeTarget
   _radius: 0.3
+  _attractsHorde: 1
+--- !u!114 &1099911240037160439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3011107552043763039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e92bce59288d0f74bbaf4a47e9330ffb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Blondie.GridInventory.Unity::Blondie.GridInventory.GridInventoryHolder
+  _displayName: Inventory
+  _grids:
+  - _id: active
+    _displayName: Active
+    _width: 3
+    _height: 3
+    _acceptedTags: []
+    _maxItemSize: {x: 0, y: 0}
+    _blockedCells: []
+    _active: 1
+  - _id: storage
+    _displayName: Storage
+    _width: 6
+    _height: 4
+    _acceptedTags: []
+    _maxItemSize: {x: 0, y: 0}
+    _blockedCells: []
+    _active: 0
+  _hasEquipment: 0
+  _equipSlots:
+  - _id: Head
+    _accepts: 
+  - _id: Chest
+    _accepts: 
+  - _id: Legs
+    _accepts: 
+  - _id: Feet
+    _accepts: 
+  - _id: Hands
+    _accepts: 
+  - _id: MainHand
+    _accepts: 
+  - _id: OffHand
+    _accepts: 
+  - _id: Ring1
+    _accepts: Ring
+  - _id: Ring2
+    _accepts: Ring
+  - _id: Amulet
+    _accepts: 
+  _startingItems: []
+  _maxWeight: 0
+  _isPlayer: 1
+  _saveKey: 
+  _publishEvents: 1
+--- !u!114 &7172010893617079226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3011107552043763039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c01afe24a7ee4974a9b642eac4bcb8eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Isekai.Game::Isekai.CharacterInventory
+  _baseActiveSize: {x: 3, y: 3}
+  _startingActive:
+  - {fileID: 11400000, guid: 95603d7eddd2ec6428e6cdb2bd62d72b, type: 2}
+  _startingStorage:
+  - {fileID: 11400000, guid: e4dd3fc1bf6f3904b8843701090e0090, type: 2}
+  - {fileID: 11400000, guid: 38f5f519e5cd0ea4c8f15415887d294e, type: 2}

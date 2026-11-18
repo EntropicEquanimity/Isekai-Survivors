@@ -16,6 +16,9 @@ namespace Isekai
 
         public RegionCapture Capture { get; } = new();
 
+        /// <summary>The Region was just captured.</summary>
+        public event System.Action Captured;
+
         private bool _announced;
 
         private void OnEnable() => Current = this;
@@ -33,6 +36,7 @@ namespace Isekai
         {
             if (_announced || !Capture.IsCaptured) return;
             _announced = true;
+            Captured?.Invoke();
             WaveDirector waves = FindAnyObjectByType<WaveDirector>();
             if (waves != null) waves.enabled = false;
             BLog.Info("Region", "Region captured.");

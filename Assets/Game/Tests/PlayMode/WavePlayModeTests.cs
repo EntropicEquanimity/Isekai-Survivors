@@ -23,9 +23,19 @@ namespace Isekai.Tests
             yield return null;
             yield return null;
             yield return null;   // nests have spawned their packs
+            ItemDrafts drafts = Object.FindAnyObjectByType<ItemDrafts>();
+            if (drafts != null) drafts.enabled = false;   // a draft pauses the game; these tests don't pick Items
             _character = Object.FindAnyObjectByType<CharacterControl>();
             _character.enabled = false;
             _character.GetComponent<AutoCaster>().enabled = false;   // the tests do the killing
+        }
+
+        [UnityTearDown]
+        public IEnumerator Restore()
+        {
+            Blondie.Roguelike.Drafts.RunDrafts.ClearQueue();
+            Time.timeScale = 1f;
+            yield return null;
         }
 
         private static HordeMember[] Roamers() =>

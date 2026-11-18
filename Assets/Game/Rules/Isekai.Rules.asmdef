@@ -3,7 +3,9 @@
     "rootNamespace": "Isekai",
     "references": [
         "Blondie.Core",
-        "Blondie.Stats"
+        "Blondie.Stats",
+        "Blondie.Inventory",
+        "Blondie.GridInventory"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -23,7 +23,15 @@
         "Blondie.Pooling",
         "Blondie.Pooling.Unity",
         "Blondie.FlowFields",
-        "Blondie.FlowFields.Unity"
+        "Blondie.FlowFields.Unity",
+        "Blondie.Inventory",
+        "Blondie.Inventory.Unity",
+        "Blondie.GridInventory",
+        "Blondie.GridInventory.Unity",
+        "Blondie.Roguelike",
+        "Blondie.Roguelike.Drafts",
+        "Blondie.Stats",
+        "Blondie.Stats.Unity"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

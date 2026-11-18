@@ -6,7 +6,9 @@
         "UnityEditor.TestRunner",
         "Isekai.Rules",
         "Blondie.Core",
-        "Blondie.Stats"
+        "Blondie.Stats",
+        "Blondie.Inventory",
+        "Blondie.GridInventory"
     ],
     "includePlatforms": [
         "Editor"

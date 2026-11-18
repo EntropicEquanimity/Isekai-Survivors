@@ -27,6 +27,9 @@ namespace Isekai
         private bool _destroyed;
 
         public static IReadOnlyList<EnemyNest> All => s_all;
+
+        /// <summary>An enemy Base was destroyed.</summary>
+        public static event System.Action<EnemyNest> Destroyed;
         public bool IsDestroyed => _destroyed;
         public int PackCount => _pack.Count;
 
@@ -75,6 +78,7 @@ namespace Isekai
             if (_destroyed) return;
             _destroyed = true;
             RegionGoal.Current?.NestDestroyed();
+            Destroyed?.Invoke(this);
             gameObject.SetActive(false);
         }
     }
