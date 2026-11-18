@@ -1,0 +1,462 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1684795894898325857
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2767264452946573201}
+  - component: {fileID: 2760599743390176014}
+  - component: {fileID: 276902349160951916}
+  - component: {fileID: 8491020855641199084}
+  m_Layer: 0
+  m_Name: Sprite
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2767264452946573201
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1684795894898325857}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4259010811179191087}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &2760599743390176014
+SpriteRenderer:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1684795894898325857}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 5
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: 975244514, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 2, y: 2}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_SpriteSortPoint: 0
+  m_BlendShapeWeights: []
+--- !u!114 &276902349160951916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1684795894898325857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e94e25eb86e9db948922c44e914de52d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Blondie.Utils2D.Unity::Blondie.Utils2D.SpriteFrameAnimator
+  _frames: []
+  _framesPerSecond: 12
+  _onEnd: 1
+  _playOnEnable: 1
+  _useUnscaledTime: 0
+  Started:
+    m_PersistentCalls:
+      m_Calls: []
+  Finished:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &8491020855641199084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1684795894898325857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edf00347610eae44bb4dda1c74258b33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Isekai.Game::Isekai.WalkAnimation
+  _motor: {fileID: 2211162548012431558}
+  _idle:
+  - {fileID: 975244514, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: 515201930, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: 1729982609, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: 2012669209, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: 1366144851, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: -1866999778, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: -1727759903, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: -1101248912, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  _walk:
+  - {fileID: 1962258022, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: 1424513955, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: 22520187, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: 1088380083, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: -1370416881, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: -1949661700, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: -1933053981, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: 2022795373, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  _movingSpeed: 0.1
+--- !u!1 &3011107552043763039
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4259010811179191087}
+  - component: {fileID: 1989515562255280525}
+  - component: {fileID: 608014575193260826}
+  - component: {fileID: 2211162548012431558}
+  - component: {fileID: 5639995788263337928}
+  - component: {fileID: 8496690284513129272}
+  - component: {fileID: 4222685050363599322}
+  - component: {fileID: 2197145491949979627}
+  - component: {fileID: 7099498444318142779}
+  - component: {fileID: 1849022969829550233}
+  - component: {fileID: 7137278908193479849}
+  - component: {fileID: 8097078253891701239}
+  m_Layer: 0
+  m_Name: Character
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4259010811179191087
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3011107552043763039}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2767264452946573201}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &1989515562255280525
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3011107552043763039}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.25
+--- !u!50 &608014575193260826
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3011107552043763039}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!114 &2211162548012431558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3011107552043763039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed24c5c7fdb98114bbf171b3bf59352f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Blondie.Controllers.Unity::Blondie.Controllers.TopDownMotor2D
+  _baseSpeed: 5
+  _speedStat: Speed
+  _stunnedTag: Stunned
+  _rootedTag: Rooted
+  _dash:
+    _enabled: 1
+    _distance: 4
+    _duration: 0.15
+    _cooldown: 0.6
+    _charges: 1
+    _direction: 0
+    _invulnerable: 0
+    _invulnerableTag: Invulnerable
+    _refillOnGround: 1
+  _stoppingDistance: 0.1
+  _stuckTimeout: 1.5
+  _publishEvents: 1
+  _pushForce: 20
+  _sprite: {fileID: 0}
+  _flipSprite: 1
+  _acceleration: 60
+  _deceleration: 80
+  _eightDirections: 0
+  _facing: 0
+--- !u!114 &5639995788263337928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3011107552043763039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01c251bb27888c544bc7bcff21d51a71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Blondie.Controllers.Unity::Blondie.Controllers.PlayerBrain
+  _move: {fileID: 0}
+  _jump: {fileID: 0}
+  _dash: {fileID: 0}
+  _sprint: {fileID: 0}
+  _aimStick: {fileID: 0}
+  _aimWithPointer: 1
+  _camera: {fileID: 0}
+  _motor: {fileID: 0}
+--- !u!114 &8496690284513129272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3011107552043763039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c39026412f0e144aa36e1950e752631, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Blondie.Stats.Unity::Blondie.Stats.StatBlock
+  _sheet: {fileID: 0}
+  _stats:
+  - id: Speed
+    baseValue: 5
+    clamp: 0
+    min: 0
+    max: 0
+    rounding: 0
+  - id: Damage
+    baseValue: 10
+    clamp: 0
+    min: 0
+    max: 0
+    rounding: 0
+  - id: Speed
+    baseValue: 4
+    clamp: 0
+    min: 0
+    max: 0
+    rounding: 0
+  - id: MiningSpeed
+    baseValue: 2
+    clamp: 0
+    min: 0
+    max: 0
+    rounding: 0
+  - id: Armor
+    baseValue: 0
+    clamp: 0
+    min: 0
+    max: 0
+    rounding: 0
+  _vitals:
+  - id: Health
+    max: 100
+    maxStatId: 
+    regenStatId: 
+    startEmpty: 0
+    maxBehaviour: 0
+  _buffGroups: []
+  _publishEvents: 1
+  _useUnscaledTime: 0
+  _saveKey: 
+--- !u!114 &4222685050363599322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3011107552043763039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d033a22dfc5acf74c8d65b0d220e95b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Blondie.Combat.Unity::Blondie.Combat.Damageable
+  _healthVital: Health
+  _maxHealth: 100
+  _invulnerableAfterHit: 0
+  _disableCollidersOnDeath: 1
+  _despawnOnDeath: 0
+  _despawnDelay: 2
+  _reviveOnEnable: 1
+  _publishEvents: 1
+--- !u!114 &2197145491949979627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3011107552043763039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c419d00b44ce48b48b36984fb282ef63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Blondie.Combat.Unity::Blondie.Combat.Team
+  _id: Players
+--- !u!114 &7099498444318142779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3011107552043763039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91bfa9dd421ea414bb462984d0059b3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Blondie.Abilities.Unity::Blondie.Abilities.AbilityCaster
+  _startingAbilities:
+  - {fileID: 11400000, guid: 1045794142039884d9c0c6262d884062, type: 2}
+  _globalCooldown: 0
+  _castOffset: {x: 0, y: 0, z: 0}
+  _publishEvents: 1
+--- !u!114 &1849022969829550233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3011107552043763039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 876bce91a8e40e64f82e8a23f2d48f99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Blondie.Abilities.Unity::Blondie.Abilities.AutoCaster
+  _interval: 0.25
+  _rules: []
+--- !u!114 &7137278908193479849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3011107552043763039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01aafe539d4719b4ca17da6b7d95fa36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Isekai.Game::Isekai.CharacterControl
+  _idleDelay: 1.5
+  _leash: 6
+  _attackRange: 4
+  _thinkInterval: 0.2
+--- !u!114 &8097078253891701239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3011107552043763039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2ba592bdc8899c4abdc9bf2da71bbbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Isekai.Game::Isekai.Miner
+  _reach: 1.25
+  _baseRate: 1

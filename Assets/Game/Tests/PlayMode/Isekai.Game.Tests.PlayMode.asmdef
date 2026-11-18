@@ -13,7 +13,11 @@
         "Blondie.UI",
         "Blondie.UI.Unity",
         "Blondie.Settings",
-        "Blondie.Juice"
+        "Blondie.Juice",
+        "Blondie.Combat",
+        "Blondie.Combat.Unity",
+        "Blondie.PixelPerfect",
+        "Blondie.PixelPerfect.Unity"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
