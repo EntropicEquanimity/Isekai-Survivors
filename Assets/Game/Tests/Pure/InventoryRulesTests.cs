@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Blondie.Core;
 using Blondie.GridInventory;
@@ -11,6 +12,7 @@ namespace Isekai.Tests
         private float _now;
         private ItemGrid _active, _storage;
         private InventoryRules _rules;
+        private readonly List<ItemDefinition> _made = new();
 
         [SetUp]
         public void SetUp()
@@ -21,9 +23,19 @@ namespace Isekai.Tests
             _rules = new InventoryRules(_active, _storage, () => _now);
         }
 
-        private static Item Make(string id, ItemRemoval removal = ItemRemoval.Free, ItemLifetime lifetime = ItemLifetime.Run, float cooldown = 10f)
+        // ItemDefinition.Create registers in the global ItemDatabase, which outlives the test (domain reload is off), so
+        // test items get their own ids and are unregistered: a test "satchel" once replaced the real one in Play Mode.
+        [TearDown]
+        public void TearDown()
         {
-            ItemDefinition d = ItemDefinition.Create(id, id);
+            foreach (ItemDefinition d in _made) ItemDatabase.Unregister(d);
+            _made.Clear();
+        }
+
+        private Item Make(string id, ItemRemoval removal = ItemRemoval.Free, ItemLifetime lifetime = ItemLifetime.Run, float cooldown = 10f)
+        {
+            ItemDefinition d = ItemDefinition.Create("test." + id, id);
+            _made.Add(d);
             d.Effects.Add(new ItemRules { Removal = removal, Lifetime = lifetime, SwapCooldown = cooldown });
             return new Item(d);
         }
@@ -105,7 +117,7 @@ namespace Isekai.Tests
             _storage.Place(Make("spare", lifetime: ItemLifetime.Region), new Int2(0, 0));
             InActive(Make("boots"), 2, 2);
             var expired = _rules.RegionCompleted();
-            CollectionAssert.AreEquivalent(new[] { "coin", "spare" }, expired.ConvertAll(e => e.Item.Definition.Id));
+            CollectionAssert.AreEquivalent(new[] { "coin", "spare" }, expired.ConvertAll(e => e.Item.Definition.DisplayName));
         }
 
         [Test]
