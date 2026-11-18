@@ -46,6 +46,24 @@ namespace Isekai.Tests
         }
 
         [UnityTest]
+        public IEnumerator Weapons_fire_while_the_player_is_in_control()
+        {
+            var spawner = Object.FindAnyObjectByType<HordeSpawner>();
+            spawner.enabled = false;
+            Object.FindAnyObjectByType<FlowFieldCrowd>().Speed = 0f;
+            foreach (HordeMember m in Object.FindObjectsByType<HordeMember>(FindObjectsInactive.Exclude)) Pools.Despawn(m.gameObject);
+            var control = Object.FindAnyObjectByType<CharacterControl>();
+            var enemy = Pools.Spawn(spawner.Prefab, control.transform.position + new Vector3(2f, 0f, 0f), Quaternion.identity).GetComponent<Damageable>();
+            bool hit = false;
+            enemy.Damaged += _ => hit = true;
+
+            // Well before the idle delay: the player still has the Character, and its weapons already fire.
+            yield return WaitFor(() => hit, 1f, "the enemy in range is shot");
+            Assert.IsFalse(control.IsAutoFighting);
+            Assert.AreEqual(AutoFightOrder.PlayerControl, control.Order);
+        }
+
+        [UnityTest]
         public IEnumerator Mining_a_node_fills_the_stockpile()
         {
             var miner = Object.FindAnyObjectByType<Miner>();

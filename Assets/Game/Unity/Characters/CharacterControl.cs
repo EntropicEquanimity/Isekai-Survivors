@@ -8,9 +8,9 @@ using UnityEngine;
 namespace Isekai
 {
     /// <summary>
-    /// Hands the Character between the player and its own fighting. While the player steers, the <see cref="PlayerBrain"/>
-    /// drives the motor and the weapons stay quiet. After a moment without input the <see cref="AutoCaster"/> fires at
-    /// enemies in range, and the Character walks to enemies inside its leash and back to where it was left
+    /// Hands the Character's walking between the player and its own fighting. Its weapons (the <see cref="AutoCaster"/>)
+    /// always fire at enemies in range, steered or not. While the player steers, the <see cref="PlayerBrain"/> drives the
+    /// motor; after a moment without input the Character walks to enemies inside its leash and back to where it was left
     /// (<see cref="AutoFight"/>).
     /// </summary>
     [RequireComponent(typeof(CharacterMotor), typeof(PlayerBrain), typeof(AutoCaster))]
@@ -74,6 +74,7 @@ namespace Isekai
         private void OnRevived()
         {
             foreach (Renderer r in _renderers) r.enabled = true;
+            _autoCaster.enabled = true;
             _fight.Tick(0f, playerInput: true);
             SetPlayerControl(true);
         }
@@ -118,7 +119,6 @@ namespace Isekai
         {
             _order = player ? AutoFightOrder.PlayerControl : AutoFightOrder.Hold;
             _brain.enabled = player;
-            _autoCaster.enabled = !player;
             if (player && _motor.HasDestination) _motor.Stop();
         }
 
