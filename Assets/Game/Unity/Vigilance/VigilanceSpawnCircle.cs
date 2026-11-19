@@ -7,8 +7,8 @@ namespace Isekai
     /// <summary>
     /// A summoning circle on the Mortals' side that Waves can arrive through. It stands until something destroys it, and
     /// once destroyed it sends nothing more. Built in code (one object: art, a trigger collider so Jack's side can hit
-    /// it, and a Damageable on the Mortals' team); <see cref="VigilanceDirector"/> places them. Discovery and staying
-    /// marked on the map is ticket #17.
+    /// it, and a Damageable on the Mortals' team); <see cref="VigilanceDirector"/> places them. Once Jack's side has seen
+    /// it, it is <see cref="Discovered"/> for good and stays marked on the map until it is destroyed.
     /// </summary>
     public sealed class VigilanceSpawnCircle : MonoBehaviour
     {
@@ -26,6 +26,19 @@ namespace Isekai
         public bool IsAlive => this != null && isActiveAndEnabled && _damageable != null && !_damageable.IsDead;
 
         public Damageable Damageable => _damageable;
+
+        /// <summary>Jack's side has seen it (see <see cref="SpawnCircleDiscovery"/>); it stays discovered.</summary>
+        public bool Discovered { get; private set; }
+
+        /// <summary>It was discovered (raised once).</summary>
+        public event Action<VigilanceSpawnCircle> WasDiscovered;
+
+        internal void MarkDiscovered()
+        {
+            if (Discovered) return;
+            Discovered = true;
+            WasDiscovered?.Invoke(this);
+        }
 
         /// <summary>It was destroyed (raised once).</summary>
         public event Action<VigilanceSpawnCircle> Destroyed;

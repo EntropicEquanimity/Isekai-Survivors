@@ -49,6 +49,7 @@ namespace Isekai
         private float _threatRadius;
         private bool _assigned;
         private bool _hasPurifyCell;
+        private bool _fled;
         private Int2 _purifyCell;
 
         internal int Index = -1;
@@ -112,6 +113,7 @@ namespace Isekai
             _stuck = 0f;
             _assigned = false;
             _hasPurifyCell = false;
+            _fled = false;
             _fieldTarget = null;
             Purified = 0;
             _damageable.Damaged += OnDamaged;
@@ -162,7 +164,17 @@ namespace Isekai
 
             BehaviourAction next = BehaviourScoring.Choose(Behaviour, _context, Action);
             if (next != Action) Begin(next);
+            if (_fled) SpreadAlarm(pos, world);
             Carry(now, dt, pos, seen, distance, world);
+        }
+
+        // A peasant that has fled brings the alarm with it when it reaches a stronghold (even if its fear ran out on the way).
+        private void SpreadAlarm(Vector3 pos, RegionMortals world)
+        {
+            RegionSettlements.Settlement stronghold = world.Homes.NearestStronghold(pos);
+            if (stronghold == null || !MortalHomes.IsAt(stronghold, world.Grid.CellAt(pos))) return;
+            _fled = false;
+            RegionAlarms.Current?.AlertStronghold(stronghold);
         }
 
         // Switching to another action: into or out of the crowd, and forget the old walk.
@@ -170,6 +182,8 @@ namespace Isekai
         {
             bool wasFight = Action == BehaviourAction.Fight;
             Action = next;
+            if (next == BehaviourAction.Flee && Profile.Role == MortalRole.Civilian) _fled = true;
+            else if (next == BehaviourAction.Work || next == BehaviourAction.Patrol) _fled = false;
             _move = Move.None;
             _wait = 0f;
             _stuck = 0f;

@@ -125,17 +125,18 @@ namespace Isekai
         {
             ForgetMember(death.Unit.GameObject);
             if (death.KillerSide != Side.Yours || death.Side != Side.Mortals) return;
-            // Witnessed kills are ticket #17: until then every kill counts as unseen.
-            if (_machine.OnKill(death.Kind, witnessed: false)) Reached();
+            // A kill a mortal saw is worth more; the same Died event, asked once, so nothing counts twice.
+            bool witnessed = death.Kind == UnitKind.Mortal && RegionAlarms.Witnessed(death);
+            if (_machine.OnKill(death.Kind, witnessed)) Reached();
         }
 
-        /// <summary>A rider reached the Seat (ticket #17 raises this).</summary>
+        /// <summary>A rider reached the Seat (<see cref="RegionAlarms"/> raises this).</summary>
         public void RiderReachedSeat()
         {
             if (_machine.OnRiderReachedSeat()) Reached();
         }
 
-        /// <summary>Jack or the Anchor was spotted (ticket #17 raises this).</summary>
+        /// <summary>Jack or the Anchor was spotted (<see cref="RegionAlarms.NoteSpotted"/> raises this, rate-limited).</summary>
         public void Spotted()
         {
             if (_machine.OnSpotted()) Reached();
