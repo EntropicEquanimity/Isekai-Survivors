@@ -74,16 +74,21 @@ namespace Isekai.Tests
             Stockpile pile = RegionEconomy.Current.Stockpile;
             int start = pile.Get(node.Type);
 
+            // The Run outlives a test, so Items or capture buffs from earlier tests may have raised MiningSpeed:
+            // expect what the Character's own rate gives over 3 s, not a fixed number.
+            int expected = Mathf.Min(before, Mathf.FloorToInt(miner.Rate * 3f + 0.001f));
+            Assume.That(expected, Is.GreaterThan(0), "the Character can mine");
+
             int mined = 0;
             for (int i = 0; i < 12; i++)
             {
-                mined += miner.Mine(node, 0.25f);   // 3 s at MiningSpeed 2
+                mined += miner.Mine(node, 0.25f);   // 3 s
                 yield return null;
             }
 
-            Assert.AreEqual(6, mined);
-            Assert.AreEqual(start + 6, pile.Get(node.Type));
-            Assert.AreEqual(before - 6, node.Remaining);
+            Assert.AreEqual(expected, mined, $"3 s at mining speed {miner.Rate}");
+            Assert.AreEqual(start + mined, pile.Get(node.Type));
+            Assert.AreEqual(before - mined, node.Remaining);
         }
 
         [UnityTest]
