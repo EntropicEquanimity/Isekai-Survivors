@@ -1,8 +1,8 @@
-Bones (corpse remains) sprite sheet, 96x48 px: 3 columns x 3 rows of 32x16 cells, cell index = row*3 + col. Each sprite is centred in its cell; slice by cells (32x16, pivot centre) so every variant shares one pivot.
-0 Human_A, 1 Human_B, 2 Human_C: human remains (10-20 px wide, up to 14 tall), swap in for a normal-sized corpse.
-3 Small_A: small creature bones (about 8x10).
-4 Beast_A, 5 Beast_B: big beast / orc skeleton (about 20x16), for large units.
-6 Demon_A, 7 Demon_B: charred demon bones with a horned skull and ember eyes (about 10x14), for dead demons.
-8 Pile_A: a heap of skulls and bones (about 17x16), e.g. where bones are gathered for a spell.
-Lies flat on the ground: draw it under units (ground decal layer). Pack corpses end at about 19x10 (normal) and 28x16 (big). Small sprites here use an outline drawn outside the shape so thin bones keep their pixels.
+Bones (corpse remains) sprite sheet, 60x36 px: 3 columns x 3 rows of 20x12 cells, cell index = row*3 + col. Each sprite is centred in its cell; slice by cells (20x12, pivot centre) so every variant shares one pivot.
+0 Human_A, 1 Human_B, 2 Human_C: human remains (at most 13x9), for normal units.
+3 Small_A: small creature bones (about 5x6).
+4 Beast_A, 5 Beast_B: big beast / orc skeleton (at most 14x11), for large units.
+6 Demon_A, 7 Demon_B: charred demon bones with a horned skull (about 8x10), for dead demons.
+8 Pile_A: a heap of skulls and bones (10x10), e.g. where bones are gathered for a spell.
+Always smaller than the corpse it replaces (pack corpses end at about 19x10 normal, 29x10 orc, 41x13 Demon_D). Muted on purpose so it almost blends into the ground: soft #44373d outline (#32272e for demon bones), toned-down bone greys, dim embers. Draw it on the ground decal layer under units.
 Generated with Cursor CLI GenerateImage (agent model grok-4.7-medium), pixel-finished at 1x with the Isekai master palette (palette/isekai_master.hex in D:/GameDev/Isekai-Art-Forge). Transparent PNG, binary alpha, no filtering: import with Point filter, no compression, 16 pixels per unit.
