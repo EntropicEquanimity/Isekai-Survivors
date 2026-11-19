@@ -76,6 +76,17 @@ namespace Isekai
             if (region.Region != null) SetRun(region.Region.Depth, region.Run?.RunSeconds ?? 0f);
             _random = region.Random("waves");
             region.Threat = this;
+            PrewarmPools();
+        }
+
+        // Every Wave enemy made at load, not mid-fight: the biggest Wave at its likely escalation, plus a margin.
+        private void PrewarmPools()
+        {
+            int largest = 0;
+            foreach (Wave w in _waves) largest = Mathf.Max(largest, w.Count);
+            int chasers = Mathf.Min(Escalation.Scale(largest, Multiplier) * 2, 600);
+            if (_chaserPrefab != null) Pools.Prewarm(_chaserPrefab, chasers);
+            if (_squadPrefab != null) Pools.Prewarm(_squadPrefab, Mathf.Max(8, chasers / 4));
         }
 
         float IThreat.HealthMultiplier => Multiplier;
@@ -92,6 +103,11 @@ namespace Isekai
         void IRegionEndListener.OnRegionEnded(RegionEnd end) => enabled = false;
 
         private void Update()
+        {
+            using (PerfMarkers.Waves.Auto()) Tick();
+        }
+
+        private void Tick()
         {
             _clock += Time.deltaTime * ClockSpeed;
             _due.Clear();

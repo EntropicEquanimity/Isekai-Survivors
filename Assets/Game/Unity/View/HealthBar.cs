@@ -35,7 +35,15 @@ namespace Isekai
         /// <summary>The fill's width in art pixels.</summary>
         public int FilledPixels { get; private set; }
 
-        private void Awake() => _damageable = GetComponentInParent<Damageable>();
+        // Built hidden right away: pooled enemies are made once (at load) and reused, so a first hit on many at once
+        // (an area attack into a crowd) doesn't create all their bars in one frame.
+        private void Awake()
+        {
+            _damageable = GetComponentInParent<Damageable>();
+            if (_damageable == null) return;
+            Build();
+            _bar.gameObject.SetActive(false);
+        }
 
         private void OnEnable()
         {

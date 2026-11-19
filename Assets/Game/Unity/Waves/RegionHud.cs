@@ -28,6 +28,11 @@ namespace Isekai
 
         private void Update()
         {
+            using (PerfMarkers.Hud.Auto()) Tick();
+        }
+
+        private void Tick()
+        {
             if (_label == null || Time.unscaledTime < _next) return;
             _next = Time.unscaledTime + 0.25f;
             var text = new System.Text.StringBuilder();

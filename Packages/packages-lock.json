@@ -45,7 +45,7 @@
       "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
     },
     "com.blondie.flowfields": {
-      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.flowfields#b275a07c313515e3c88e5534900d72d1a1b73bac",
+      "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.flowfields#7129115905eded0507acc0c6ba2c9e13a712d322",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -54,7 +54,7 @@
         "com.unity.collections": "2.5.1",
         "com.unity.mathematics": "1.3.2"
       },
-      "hash": "b275a07c313515e3c88e5534900d72d1a1b73bac"
+      "hash": "7129115905eded0507acc0c6ba2c9e13a712d322"
     },
     "com.blondie.gamesetup": {
       "version": "https://github.com/EntropicEquanimity/BlondieUtils.git?path=/Packages/com.blondie.gamesetup#b275a07c313515e3c88e5534900d72d1a1b73bac",

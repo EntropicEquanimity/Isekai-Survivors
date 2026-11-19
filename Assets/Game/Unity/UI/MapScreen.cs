@@ -101,7 +101,7 @@ namespace Isekai
             if (IsOpen && GameSetup.IsPaused) Close();
             if (!IsOpen || Current != Tab.Region || _regionMap == null || Time.unscaledTime < _redrawAt) return;
             _redrawAt = Time.unscaledTime + RedrawSeconds;
-            _regionMap.Redraw();
+            using (PerfMarkers.MapRedraw.Auto()) _regionMap.Redraw();
         }
 
         public void OpenRegion() => Open(Tab.Region);

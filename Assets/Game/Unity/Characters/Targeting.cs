@@ -22,6 +22,7 @@ namespace Isekai
         {
             distance = float.MaxValue;
             if (self == null || AbilityWorld.Current == null) return null;
+            using var _ = PerfMarkers.Targeting.Auto();
             buffer.Clear();
             AbilityWorld.Current.FindUnits(new Float3(around.x, around.y, 0f), radius, true, buffer);
             CombatUnit best = null;

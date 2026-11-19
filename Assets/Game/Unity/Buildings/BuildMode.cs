@@ -71,6 +71,11 @@ namespace Isekai
 
         private void Update()
         {
+            using (PerfMarkers.Build.Auto()) Tick();
+        }
+
+        private void Tick()
+        {
             if (Selected != null && !Selected.IsAlive) Select(null);
             RegionBuildings buildings = RegionBuildings.Current;
             Keyboard keyboard = Keyboard.current;

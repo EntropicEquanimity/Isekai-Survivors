@@ -81,6 +81,11 @@ namespace Isekai
 
         private void Update()
         {
+            using (PerfMarkers.Character.Auto()) Tick();
+        }
+
+        private void Tick()
+        {
             if (IsDead) return;
             bool input = PlayerGaveInput();
             bool wasActive = _fight.IsActive;

@@ -52,6 +52,11 @@ namespace Isekai
 
         private void Update()
         {
+            using (PerfMarkers.Nests.Auto()) Tick();
+        }
+
+        private void Tick()
+        {
             if (_destroyed) return;
             _pack.RemoveAll(m => m == null || !m.IsAlive || !m.IsRoaming);
             if (_pack.Count >= _packSize) { _regrowTimer = 0f; return; }

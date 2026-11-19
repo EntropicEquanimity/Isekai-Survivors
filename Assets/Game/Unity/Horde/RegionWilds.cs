@@ -58,7 +58,8 @@ namespace Isekai
 
         private void Update()
         {
-            if (_populated) Wander(Time.deltaTime);
+            if (!_populated) return;
+            using (PerfMarkers.WildsWander.Auto()) Wander(Time.deltaTime);
         }
 
         /// <summary>Fills the Region once its walls are known: Resource nodes, then wandering groups.</summary>

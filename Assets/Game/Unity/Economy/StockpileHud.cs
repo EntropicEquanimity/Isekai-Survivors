@@ -41,6 +41,11 @@ namespace Isekai
 
         private void Update()
         {
+            using (PerfMarkers.Hud.Auto()) Tick();
+        }
+
+        private void Tick()
+        {
             UpdatePrompt();
             Stockpile current = RegionEconomy.Current != null ? RegionEconomy.Current.Stockpile : null;
             if (current == _stockpile && _label != null && _label.text.Length > 0) return;

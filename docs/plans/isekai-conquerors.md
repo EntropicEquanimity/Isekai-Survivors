@@ -18,7 +18,7 @@ The premise below is being replaced. A redesign plan follows once the open quest
 - **Corruption:** ground your demons take over turns demonic, with at least 4 levels per cell, from untouched to fully converted.
 - **Alert** (working name): mortals start unaware, with few patrols and few enemies. Higher alert brings more patrols, stronger enemies, longer detection range and stronger responses.
 - **Settlements:** each Region has small concentrations of mortals (village, farm, small town, outpost, camp) and at least one major fortification (castle or fort).
-- **Capture:** destroy every fortification and kill every mortal.
+- **Capture:** ~~destroy every fortification and kill every mortal~~. Replaced below: take out the Region's rulers.
 - **Named hero:** at least one per Region, with smarter AI and personality-driven behaviour, such as fleeing when hurt, calling reinforcements, building defences, or staying in their castle (a named wizard).
 
 **Settled (2026-11-19).**
@@ -26,7 +26,40 @@ The premise below is being replaced. A redesign plan follows once the open quest
 2. **Alert is called Vigilance**, rising Unaware → Uneasy → Alarmed → Mobilized → Crusade.
 3. **Other factions too**, beyond humans (orcs, beasts and others from the mortal pack). Factions have summoners that bring in non-standard units.
 4. **16 px is the standard** for sprites and tiles from now on (the world moves from 32 to 16 pixels per unit).
-5. **Placeholder art** (tiles, resources, icons) comes from agent-sprite-forge, run through the local Grok Build CLI on the player's own Grok sign-in, and only for pixel art.
+5. **Placeholder art** (tiles, resources, icons) is pixel art generated through the player's Cursor CLI (Grok 4.7) with the Forge's pixel finish. The Forge's own Grok route needs grok.com credits.
+
+**Settled (2026-11-19, round 2).**
+1. **Capture: take out the rulers.** A Region falls when its seat of power (its ruler, or the capital settlement they hold) is taken. Killing everything is not required.
+2. **Neutral and hostile forces live on the map.**
+   - **Neutrals** attack no one by default: some fight back when attacked, some run.
+   - **Hostiles** attack everything on sight: some flee when hurt, some fight to the death.
+3. **Traits weight the AI's decisions.** Traits are data that change the weights and thresholds of a unit's choices. Examples:
+   - **Cowardly:** flees below 75% health.
+   - **Berserk:** never flees.
+   - **Sneaky:** invisible until it attacks.
+   - **Ambusher:** backs off after a few kills.
+
+   Traits apply to wildlife, mortals, heroes and demons alike.
+4. **Not a traditional RTS.**
+   - The player makes the macro decisions: building, resources, where to push.
+   - Demons decide for themselves and are barely controlled, as demons would be. There is no unit micro by default.
+   - Possibly one Suit whose special ability is commanding nearby units and buffing them.
+5. **No time limit and no default Waves.**
+   - Waves are reinforcements that start at Vigilance thresholds.
+   - They arrive from the map edge or from dedicated spawn circles, never out of nowhere.
+   - Each Region has a cap on total Waves; once it is reached, no more come.
+   - The time pressure comes from the heroes, who can gain power, flee, build, train soldiers and take other actions.
+6. **Building takes time.** A placed Building goes up over its build time and gains health as it does (StarCraft-like), so it can be attacked and destroyed while unfinished.
+7. **Fog of war.**
+   - The map starts covered.
+   - Explored ground keeps a snapshot of what was last seen there (terrain, buildings).
+   - Enemy units only show while in a friendly unit's vision, or where the player knows they come from (a known spawn circle, for example).
+8. **Vision.** Jack's vision is much greater than the other demons'. Demons see a little further than the Region's mortals and denizens, so the player's side usually sees first.
+
+**Blondie RTS** (`com.blondie.rts` and `com.blondie.strategy`, on BU's `feat/settings-extension` branch at `399fa1e` and not yet on main) needs Core 3.8 (the game is on 3.6.1).
+- **What it has:** a full engine-free match model (factions, actors, orders as data), timed construction sites, production queues, stances, a minimap with a visibility hook, and selection, orders, formations and control groups.
+- **What it lacks:** construction that gains health, fog of war (vision range is only a definition field), and evidence that it scales to thousands of units.
+- **Leaning:** use it where it fits this game (construction timing, production queues, maybe resources), keep the jobified crowds for the hordes, and skip its micro layer (selection, orders, control groups).
 
 **Branches.** `main` keeps the legacy survivors game. `conquerors` becomes the main line. Once the swap is done, the old code, scenes, art and text that are no longer used get deleted from `conquerors`.
 
@@ -60,6 +93,21 @@ Three reviews (units and AI; buildings and economy; Run, UI and scenes) looked f
   - `Support/TestWait` waits on real time, so tests can't hang while the game is paused.
   - `Support/RegionTestScene` loads the Region with drafts off.
   - `FoundationTests` covers each seam above.
+
+**Performance (2026-11-19).**
+- **Tools:**
+  - `PerfMarkers` on the game's hot paths.
+  - `FrameStats` logs a `[Perf] spike` breakdown for every slow frame.
+  - `exec Isekai.Dev.Editor.PerfProbe.Run 40` plays the Region with the Character walking a loop, and logs the scripts behind each slow frame by name from the Profiler (`[Perf] who`).
+- **What it found and fixed:**
+  - The horde allocated a new map-wide flow field (1.4 MB, 4–25 ms) and stalled every time the Character changed cell. Fixed in BU: flowfields 0.3.10 reuses idle fields.
+  - The game throttles retargets to every 0.2 s or more.
+  - Health bars are built when an enemy is created, not on its first hit.
+  - Wave pools are prewarmed at setup.
+- **Result in the Editor:** about 180 → about 235 fps; the slowest frame in a typical 5 s window went from 17–20 ms to 9–16 ms.
+- **Pin:** `com.blondie.flowfields` is pinned to BU branch `fix/flowfield-reuse` (`7129115`) until it is merged into BU's main. The other BU packages are still at `b275a07`.
+- **Left:** frames that log to the Editor console cost the console's time (Editor only). Measure in a build before deeper work.
+- **Design for scale:** keep map-wide field requests rare. Per-team crowds should follow fields over slowly changing targets, with local steering for the last stretch.
 
 **Designed, built with their feature.**
 

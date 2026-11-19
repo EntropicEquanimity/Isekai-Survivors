@@ -27,6 +27,8 @@ namespace Isekai
         [Tooltip("When a roaming enemy is hurt, the roamers this close to it wake too.")]
         [SerializeField, Min(0f)] private float _alarmRadius = 5f;
         [SerializeField, Min(0.05f)] private float _aggroInterval = 0.25f;
+        [Tooltip("Least time between new path fields when targets move (a field covers the whole map, so it isn't free).")]
+        [SerializeField, Min(0f)] private float _retargetInterval = 0.2f;
 
         private readonly List<HordeMember> _members = new();
         private readonly List<HordeMember> _nearby = new();
@@ -35,6 +37,7 @@ namespace Isekai
         private readonly List<Int2> _lastCells = new();
         private SpatialHash<HordeMember> _hash;
         private float _nextAggro;
+        private float _nextRetarget;
         private HordeWorld _world;
         private IAbilityWorld _previousWorld;
 
@@ -57,7 +60,11 @@ namespace Isekai
         public SpatialHash<HordeMember> Hash => _hash ??= new SpatialHash<HordeMember>(_hashCellSize);
 
         // When the Region's walls are baked again, the field over the targets must be requested again.
-        private void OnGridBaked() => _lastCells.Clear();
+        private void OnGridBaked()
+        {
+            _lastCells.Clear();
+            _nextRetarget = 0f;
+        }
 
         private void OnEnable()
         {
@@ -113,22 +120,30 @@ namespace Isekai
             if (_crowd != null) _crowd.Remove(member.transform);
         }
 
-        private void Update() => RetargetIfNeeded();
+        private void Update()
+        {
+            using (PerfMarkers.HordeRetarget.Auto()) RetargetIfNeeded();
+        }
 
         private void LateUpdate()
         {
-            _crowd.CompleteJobs();
-            RebuildHash();
-            HitTargets();
+            using (PerfMarkers.HordeCrowdJobs.Auto()) _crowd.CompleteJobs();
+            using (PerfMarkers.HordeHash.Auto()) RebuildHash();
+            using (PerfMarkers.HordeHits.Auto()) HitTargets();
             if (Time.time < _nextAggro) return;
             _nextAggro = Time.time + _aggroInterval;
-            foreach (HordeTarget target in HordeTarget.All)
-                if (target.IsAlive && IsHostile(target)) WakeAround(target.transform.position, _aggroRadius + target.Radius);
+            using (PerfMarkers.HordeAggro.Auto())
+                foreach (HordeTarget target in HordeTarget.All)
+                    if (target.IsAlive && IsHostile(target)) WakeAround(target.transform.position, _aggroRadius + target.Radius);
         }
 
-        // One field over every living target's cells; a new one only when that set of cells changes.
+        // One field over every living target's cells; a new one only when that set of cells changes, at most every
+        // _retargetInterval, and never while the last one is still computing (the crowd follows the last result meanwhile).
         private void RetargetIfNeeded()
         {
+            if (Time.time < _nextRetarget) return;
+            FlowField current = _crowd.Field.Field;
+            if (current != null && current.IsComputing) return;
             _targetCells.Clear();
             foreach (HordeTarget target in HordeTarget.All)
                 if (target.IsAlive && target.AttractsHorde && IsHostile(target)) target.AddCells(Grid, _targetCells);
@@ -136,7 +151,8 @@ namespace Isekai
             _lastCells.Clear();
             _lastCells.AddRange(_targetCells);
             if (_targetCells.Count == 0) return;
-            _crowd.Field = FlowFields.Request(Grid, _targetCells.ToArray());
+            _nextRetarget = Time.time + _retargetInterval;
+            _crowd.Field = FlowFields.Request(Grid, _targetCells);
         }
 
         private void RebuildHash()

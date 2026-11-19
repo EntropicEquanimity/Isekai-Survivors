@@ -64,6 +64,11 @@ namespace Isekai
         // Construction progress and pod counts change without events: refresh a few times a second.
         private void Update()
         {
+            using (PerfMarkers.Hud.Auto()) Tick();
+        }
+
+        private void Tick()
+        {
             if (Time.unscaledTime < _nextRefresh) return;
             _nextRefresh = Time.unscaledTime + 0.25f;
             Redraw();
