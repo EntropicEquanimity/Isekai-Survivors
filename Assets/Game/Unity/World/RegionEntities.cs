@@ -109,6 +109,8 @@ namespace Isekai
 
         /// <summary>A registered unit died; it is no longer in <see cref="Living"/>. Cleared at each Region start, so subscribers subscribe after the bootstrap's Awake (OnEnable or Start).</summary>
         public static event Action<UnitDeath> Died;
+        /// <summary>A unit was listed in <see cref="Living"/> (new spawn, revive, or pooled respawn).</summary>
+        public static event Action<RegionEntity> Entered;
 
         /// <summary>How many living units a side has.</summary>
         public static int Count(Side side)
@@ -125,6 +127,7 @@ namespace Isekai
             foreach (RegionEntity u in s_living) u.Index = -1;
             s_living.Clear();
             Died = null;
+            Entered = null;
         }
 
         internal static void Add(RegionEntity unit)
@@ -132,6 +135,8 @@ namespace Isekai
             if (unit.IsListed) return;
             unit.Index = s_living.Count;
             s_living.Add(unit);
+            try { Entered?.Invoke(unit); }
+            catch (Exception e) { UnityEngine.Debug.LogException(e); }
         }
 
         internal static void Remove(RegionEntity unit)
