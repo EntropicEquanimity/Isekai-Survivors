@@ -93,7 +93,7 @@ namespace Isekai
 
             if (Picked == null)
             {
-                if (mouse.leftButton.wasPressedThisFrame && !overUI)
+                if (mouse.leftButton.wasPressedThisFrame && !overUI && !PortalMarking.TookClick)
                 {
                     Building clicked = buildings.At(cell);
                     Select(clicked != null && clicked.IsPlayers ? clicked : null);   // only your own Buildings take orders

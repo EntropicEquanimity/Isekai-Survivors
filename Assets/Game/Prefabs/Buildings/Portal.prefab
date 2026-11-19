@@ -167,7 +167,10 @@ MonoBehaviour:
   _unitPrefab: {fileID: 3349285143978379606, guid: f9ed684faef56e646ac72b53234b713b, type: 3}
   _interval: 6
   _cap: 4
-  _stance: 1
+  _boneDemonPrefab: {fileID: 3349285143978379606, guid: aa586f1db45545f7995154a38a4456e9, type: 3}
+  _order: 0
+  _policy: 0
+  _roster: 0
   _exit: {x: 0, y: -1.4}
 --- !u!114 &9079201601139124891
 MonoBehaviour:

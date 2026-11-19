@@ -45,32 +45,37 @@ namespace Isekai.Tests
         private Int2 BesideMainBase(int dx) => new(_mainBase.Origin.x + dx * RegionTerrain.Current.Layout.Interior.x, _mainBase.Origin.y);
 
         [UnityTest]
-        public IEnumerator A_Portal_costs_stone_blocks_the_horde_builds_and_brings_Imps()
+        public IEnumerator A_Portal_costs_stone_and_souls_blocks_the_horde_builds_and_brings_Imps()
         {
             FlowFieldGrid field = HordeDirector.Current.Grid;
             Assert.AreEqual(FlowFieldGrid.Blocked, field.GetCost(_mainBase.Origin), "the Main Base blocks its ground");
 
             Stockpile pile = RegionEconomy.Current.Stockpile;
             int stone = pile.Get(ResourceType.Stone);
-            BuildingAsset barracks = Catalogue("Portal");
-            Building placed = _buildings.Place(barracks, BesideMainBase(4));
+            BuildingAsset portal = Catalogue("Portal");
+            Assert.IsNull(_buildings.Place(portal, BesideMainBase(4)), "no Souls to pay with");
+            Assert.AreEqual(stone, pile.Get(ResourceType.Stone), "nothing is taken when one line is short");
+            pile.Add(ResourceType.Souls, 7);
+            Building placed = _buildings.Place(portal, BesideMainBase(4));
             Assert.IsNotNull(placed, "placed inside the Main Base's area");
             Assert.AreEqual(stone - 20, pile.Get(ResourceType.Stone));
+            Assert.AreEqual(2, pile.Get(ResourceType.Souls), "5 Souls paid");
             Assert.AreEqual(FlowFieldGrid.Blocked, field.GetCost(BesideMainBase(4)));
             Assert.IsFalse(placed.IsBuilt);
 
             yield return TestWait.Until(() => placed.IsBuilt, "the Portal finishes", 15f);
             var producer = placed.GetComponent<UnitProducer>();
             yield return TestWait.Until(() => producer.Units.Count > 0, "the Portal brings an Imp", 15f);
-            Assert.AreEqual(Stance.Guard, producer.Units[0].Stance, "Units follow their Building's stance");
-            producer.Stance = Stance.Hold;
-            Assert.AreEqual(Stance.Hold, producer.Units[0].Stance);
+            Assert.AreEqual(PortalOrder.Guard, producer.Units[0].Order, "a new Portal guards by default");
+            producer.Order = PortalOrder.Follow;
+            yield return TestWait.Until(() => producer.Units[0].Order == PortalOrder.Follow, "its demons follow the Portal's new order", 5f);
         }
 
         [UnityTest]
         public IEnumerator Buildings_fit_side_by_side_and_their_art_and_ghost_cover_the_footprint()
         {
             RegionEconomy.Current.Stockpile.Add(ResourceType.Stone, 100);
+            RegionEconomy.Current.Stockpile.Add(ResourceType.Souls, 20);
             BuildingAsset barracks = Catalogue("Portal");
             Building left = _buildings.Place(barracks, BesideMainBase(4));
             Building right = _buildings.Place(barracks, BesideMainBase(6));

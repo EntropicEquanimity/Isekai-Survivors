@@ -1,8 +1,8 @@
 namespace Isekai
 {
     /// <summary>
-    /// Shared fight-or-return decision for anything that fights around a spot (its post): the Character while
-    /// idle, and Units by their Building's <see cref="Stance"/>.
+    /// Shared fight-or-return decision for anything that fights around a spot (its post): the Character on
+    /// auto-fight and demons that fight around their post.
     /// </summary>
     public static class Engagement
     {

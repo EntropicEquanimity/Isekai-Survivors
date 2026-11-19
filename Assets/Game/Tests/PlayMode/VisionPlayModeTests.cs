@@ -139,6 +139,7 @@ namespace Isekai.Tests
         {
             Time.timeScale = 4f;
             RegionEconomy.Current.Stockpile.Add(ResourceType.Stone, 100);
+            RegionEconomy.Current.Stockpile.Add(ResourceType.Souls, 20);
             Building mainBase = Building.All.First(b => b.IsMainBase);
             BuildingAsset portal = Object.FindAnyObjectByType<BuildMode>().Catalogue.First(a => a.DisplayName == "Portal");
             Building placed = RegionBuildings.Current.Place(portal, new Int2(mainBase.Origin.x + 4, mainBase.Origin.y));

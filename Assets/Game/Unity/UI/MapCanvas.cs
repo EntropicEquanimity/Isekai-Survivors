@@ -45,6 +45,12 @@ namespace Isekai
             Mathf.FloorToInt((world.x - _origin.x) / Grid.CellSize * PixelsPerCell),
             Mathf.FloorToInt((world.y - _origin.y) / Grid.CellSize * PixelsPerCell));
 
+        /// <summary>The world point under a map pixel (the inverse of <see cref="ToPixel"/>, y up).</summary>
+        public Vector3 ToWorld(Vector2 pixel) => new(
+            _origin.x + pixel.x / PixelsPerCell * Grid.CellSize,
+            _origin.y + pixel.y / PixelsPerCell * Grid.CellSize,
+            0f);
+
         /// <summary>Fills the pixels of one ground cell.</summary>
         public void Cell(Int2 cell, Color32 colour)
         {

@@ -18,5 +18,7 @@ MonoBehaviour:
   _costs:
   - Type: 1
     Amount: 20
+  - Type: 4
+    Amount: 5
   _buildSeconds: 8
   _preview: {fileID: 21300000, guid: 848ae32389b55d64ebac11557be8203f, type: 3}

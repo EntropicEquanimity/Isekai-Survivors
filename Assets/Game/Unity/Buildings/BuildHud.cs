@@ -1,4 +1,3 @@
-using System;
 using Blondie.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -7,7 +6,7 @@ namespace Isekai
 {
     /// <summary>
     /// Placeholder building UI (phase 9 replaces it): the build list with hotkeys and prices bottom-left, why a
-    /// placement is refused, and for a selected Building its state and its Units' stance buttons.
+    /// placement is refused, and for a selected Building its state and, for a Portal, its panel (<see cref="PortalPanel"/>).
     /// </summary>
     [RequireComponent(typeof(BuildMode))]
     public sealed class BuildHud : MonoBehaviour
@@ -20,7 +19,7 @@ namespace Isekai
         private Label _list;
         private VisualElement _selection;
         private Label _selectionText;
-        private VisualElement _stanceRow;
+        private PortalPanel _portalPanel;
         private float _nextRefresh;
 
         private void Awake() => _mode = GetComponent<BuildMode>();
@@ -41,14 +40,9 @@ namespace Isekai
                 },
             };
             _selectionText = new Label { style = { color = Color.white } };
-            _stanceRow = new VisualElement { style = { flexDirection = FlexDirection.Row } };
-            foreach (Stance stance in Enum.GetValues(typeof(Stance)))
-            {
-                Stance s = stance;
-                _stanceRow.Add(new Button(() => SetStance(s)) { text = s.ToString(), name = "stance-" + s });
-            }
+            _portalPanel = new PortalPanel { name = "portal-panel" };
             _selection.Add(_selectionText);
-            _selection.Add(_stanceRow);
+            _selection.Add(_portalPanel);
             root.Add(_selection);
             UIPanels.Created(panel);
 
@@ -71,12 +65,6 @@ namespace Isekai
         {
             if (Time.unscaledTime < _nextRefresh) return;
             _nextRefresh = Time.unscaledTime + 0.25f;
-            Redraw();
-        }
-
-        private void SetStance(Stance stance)
-        {
-            if (_mode.Selected != null && _mode.Selected.TryGetComponent(out UnitProducer producer)) producer.Stance = stance;
             Redraw();
         }
 
@@ -106,10 +94,8 @@ namespace Isekai
             var info = new System.Text.StringBuilder(name);
             info.Append("  ").Append(Mathf.CeilToInt(selected.Damageable.Unit.Health)).Append(" hp");
             if (!selected.IsBuilt) info.Append("  building ").Append(Mathf.FloorToInt(selected.Progress * 100f)).Append('%');
-            bool producer = selected.TryGetComponent(out UnitProducer p);
-            if (producer) info.Append("  Units ").Append(p.Units.Count).Append("  Stance ").Append(p.Stance);
             _selectionText.text = info.ToString();
-            _stanceRow.style.display = producer ? DisplayStyle.Flex : DisplayStyle.None;
+            _portalPanel.Show(selected.IsBuilt && selected.TryGetComponent(out UnitProducer portal) ? portal : null);
         }
     }
 }

@@ -90,22 +90,21 @@ namespace Isekai.Tests
         }
     }
 
-    public class StanceAndEngagementTests
+    public class EngagementTests
     {
         [Test]
-        public void Hold_never_chases_but_still_attacks_in_range()
+        public void With_no_leash_it_never_chases_but_still_attacks_in_range()
         {
-            float leash = Stance.Hold.Leash();
-            Assert.AreEqual(AutoFightOrder.Hold, Engagement.Decide(2f, 2f, 3f, leash, 0f));
-            Assert.AreEqual(AutoFightOrder.Hold, Engagement.Decide(5f, 5f, 3f, leash, 0f), "out of range: stays put");
+            Assert.AreEqual(AutoFightOrder.Hold, Engagement.Decide(2f, 2f, 3f, 0f, 0f));
+            Assert.AreEqual(AutoFightOrder.Hold, Engagement.Decide(5f, 5f, 3f, 0f, 0f), "out of range: stays put");
         }
 
         [Test]
-        public void Guard_and_Hunt_chase_within_their_leash()
+        public void It_chases_within_its_leash_and_returns_beyond_it()
         {
-            Assert.AreEqual(AutoFightOrder.Approach, Engagement.Decide(5f, 5f, 3f, Stance.Guard.Leash(), 0f));
-            Assert.AreEqual(AutoFightOrder.Return, Engagement.Decide(10f, 10f, 3f, Stance.Guard.Leash(), 2f), "too far for Guard");
-            Assert.AreEqual(AutoFightOrder.Approach, Engagement.Decide(10f, 10f, 3f, Stance.Hunt.Leash(), 2f), "close enough for Hunt");
+            Assert.AreEqual(AutoFightOrder.Approach, Engagement.Decide(5f, 5f, 3f, DemonTuning.GuardLeash, 0f));
+            Assert.AreEqual(AutoFightOrder.Return, Engagement.Decide(10f, 10f, 3f, DemonTuning.GuardLeash, 2f), "too far for a Guard");
+            Assert.AreEqual(AutoFightOrder.Approach, Engagement.Decide(10f, 10f, 3f, 14f, 2f), "close enough for a longer leash");
         }
     }
 }

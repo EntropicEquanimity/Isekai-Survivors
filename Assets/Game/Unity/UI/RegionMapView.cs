@@ -69,6 +69,19 @@ namespace Isekai
             return InMap(p.x, p.y) ? _pixels[p.x + p.y * _width] : Outside;
         }
 
+        /// <summary>The world point under a screen position when it is over the map (a click on the map screen).</summary>
+        public bool TryWorldAt(Vector2 screen, out Vector3 world)
+        {
+            world = default;
+            if (panel == null) return false;
+            Vector2 inPanel = RuntimePanelUtils.ScreenToPanel(panel, new Vector2(screen.x, Screen.height - screen.y));
+            Vector2 local = this.WorldToLocal(inPanel);
+            float x = local.x - resolvedStyle.borderLeftWidth, y = local.y - resolvedStyle.borderTopWidth;
+            if (x < 0f || y < 0f || x >= _width || y >= _height) return false;
+            world = _canvas.ToWorld(new Vector2(x, _height - y));
+            return true;
+        }
+
         /// <summary>Runs every registered <see cref="IMapPainter"/> in order and uploads the pixels.</summary>
         public void Redraw()
         {
