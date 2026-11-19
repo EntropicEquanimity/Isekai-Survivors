@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using Blondie.Core;
 using UnityEngine;
 
@@ -18,13 +19,14 @@ namespace Isekai
     public sealed class RegionVision : MonoBehaviour
     {
         private const int RefreshPerFrame = 2;
+        private const int SliceExamined = 256;   // units of the other sides looked at per frame
+        private const int SliceWork = 24;        // of those, viewers that may change cell (or start) per frame
 
         private sealed class Eyes
         {
             public RegionEntity Unit;
             public VisionViewer Viewer;
             public Side Side;
-            public int Seen;
             public int Index;
         }
 
@@ -34,10 +36,9 @@ namespace Isekai
         private readonly VisionMap[] _maps = new VisionMap[5];
         private readonly Dictionary<RegionEntity, Eyes> _eyes = new();
         private readonly List<Eyes> _list = new();
-        private readonly List<Eyes> _gone = new();
         private RegionGrid _grid;
         private CellLayer _sightBlock;
-        private int _frame;
+        private int _cursor;
         private int _refreshCursor;
 
         static RegionVision() => StaticReset.Register(() => { s_multiplier = 1f; s_on = true; });
@@ -101,12 +102,28 @@ namespace Isekai
         private void Update()
         {
             if (!s_on) return;
+            long start = Stopwatch.GetTimestamp();
             if (_grid == null && !TryStart()) return;
-            _frame++;
             IReadOnlyList<RegionEntity> living = RegionEntities.Living;
-            for (int i = 0; i < living.Count; i++) Track(living[i]);
+            int n = living.Count;
+            // Your side's eyes (the Character, demons) look out every frame so the fog answers at once.
+            for (int i = 0; i < n; i++)
+            {
+                RegionEntity unit = living[i];
+                if (unit.Kind == UnitKind.Character || unit.Kind == UnitKind.Demon) Track(unit);
+            }
+            // Everyone else (mortals, wildlife) in turns: a bounded number of looks and of units changing cell per
+            // frame, so a few hundred of them cost a flat amount and each refreshes within a few frames.
+            int work = 0;
+            for (int k = 0; k < SliceExamined && work < SliceWork && n > 0; k++)
+            {
+                if (++_cursor >= n) _cursor = 0;
+                RegionEntity unit = living[_cursor];
+                if (unit.Kind == UnitKind.Mortal || unit.Kind == UnitKind.Wildlife) work += Track(unit);
+            }
             Sweep();
             RefreshSome();
+            VisionCost.Add(Stopwatch.GetTimestamp() - start);
         }
 
         private bool TryStart()
@@ -132,10 +149,11 @@ namespace Isekai
             return map;
         }
 
-        private void Track(RegionEntity unit)
+        // Looks out from where the unit stands now; returns how much work that was (0 when it stayed in its cell).
+        private int Track(RegionEntity unit)
         {
             int baseRange = VisionRanges.For(unit.Kind);
-            if (baseRange == 0) return;
+            if (baseRange == 0) return 0;
             Side side = unit.Side;
             int range = VisionRanges.Scaled(baseRange, s_multiplier);
             Int2 cell = unit.Cell;
@@ -144,31 +162,33 @@ namespace Isekai
                 eyes = new Eyes { Unit = unit, Side = side, Index = _list.Count, Viewer = MapFor(side).Add(cell, range) };
                 _eyes[unit] = eyes;
                 _list.Add(eyes);
+                return 1;
             }
-            else if (eyes.Side != side)
+            if (eyes.Side != side)
             {
                 _maps[(int)eyes.Side].Remove(eyes.Viewer);   // a revolt: it looks out for another side now
                 eyes.Side = side;
                 eyes.Viewer = MapFor(side).Add(cell, range);
+                return 1;
             }
-            else _maps[(int)side].Move(eyes.Viewer, cell, range);
-            eyes.Seen = _frame;
+            VisionViewer v = eyes.Viewer;
+            if (v.Cell.x == cell.x && v.Cell.y == cell.y && v.Range == range) return 0;
+            _maps[(int)side].Move(v, cell, range);
+            return 1;
         }
 
         // Units that left the registry (died, despawned) take their sight with them.
         private void Sweep()
         {
-            _gone.Clear();
-            foreach (Eyes eyes in _list)
-                if (eyes.Seen != _frame) _gone.Add(eyes);
-            if (_gone.Count == 0) return;
-            foreach (Eyes eyes in _gone)
+            for (int i = _list.Count - 1; i >= 0; i--)
             {
+                Eyes eyes = _list[i];
+                if (eyes.Unit.IsListed) continue;
                 _maps[(int)eyes.Side].Remove(eyes.Viewer);
                 _eyes.Remove(eyes.Unit);
                 int last = _list.Count - 1;
-                _list[eyes.Index] = _list[last];
-                _list[eyes.Index].Index = eyes.Index;
+                _list[i] = _list[last];
+                _list[i].Index = i;
                 _list.RemoveAt(last);
             }
         }

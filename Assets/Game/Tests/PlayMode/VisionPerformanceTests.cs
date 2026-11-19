@@ -25,8 +25,9 @@ namespace Isekai.Tests
             yield return null;
         }
 
-        private static IEnumerator AverageFrame(float seconds, float[] result)
+        private static IEnumerator Sample(float seconds, float[] frameMs, float[] visionMs)
         {
+            double cost = VisionCost.TotalMilliseconds;
             float total = 0f;
             int frames = 0;
             float end = Time.realtimeSinceStartup + seconds;
@@ -36,14 +37,15 @@ namespace Isekai.Tests
                 total += Time.unscaledDeltaTime;
                 frames++;
             }
-            result[0] = total / Mathf.Max(1, frames);
+            frameMs[0] = total / Mathf.Max(1, frames) * 1000f;
+            visionMs[0] = (float)((VisionCost.TotalMilliseconds - cost) / Mathf.Max(1, frames));
         }
 
         /// <summary>
-        /// The budget: the average frame over 2 s with fog on may cost at most 1.5x the same Region with fog off, plus
-        /// 2 ms of slack for a frame time that headless can make very small (a 3 ms frame doubling to 6 would
-        /// otherwise fail on noise). Fog on is measured first, while the new mortals still walk and change cells,
-        /// which is the heavier case for vision; fog off comes after, so the comparison favours the fog being slow.
+        /// Fog's own cost is the real budget: the time its systems spend in their updates (measured with a Stopwatch
+        /// round each update) averages under 1 ms a frame with 400+ mortals on top of the horde. Whole-frame time
+        /// is noisy when the machine is shared, so that check is loose: fog on at most 1.5x fog off plus 3 ms.
+        /// Fog on is sampled first, while the new mortals still walk and change cells (the heavier case).
         /// </summary>
         [UnityTest]
         public IEnumerator Vision_with_hundreds_of_mortals_stays_within_the_frame_budget()
@@ -51,17 +53,21 @@ namespace Isekai.Tests
             TestDebug.Press("Spawn 200");
             TestDebug.Press("Spawn 200");
             yield return new WaitForSeconds(2f);
-            Assert.Greater(RegionVision.Current.ViewerCount, 300, "the mortals are looking out");
+            Assert.Greater(RegionVision.Current.ViewerCount, 400, "the mortals are looking out");
 
-            var on = new float[1];
-            yield return AverageFrame(2f, on);
+            var onFrame = new float[1];
+            var onVision = new float[1];
+            yield return Sample(2f, onFrame, onVision);
             TestDebug.Toggle("Fog of war", false);
             yield return new WaitForSeconds(0.5f);
-            var off = new float[1];
-            yield return AverageFrame(2f, off);
+            var offFrame = new float[1];
+            var offVision = new float[1];
+            yield return Sample(2f, offFrame, offVision);
 
-            Debug.Log($"[Vision perf] fog on {on[0] * 1000f:F2} ms, fog off {off[0] * 1000f:F2} ms, viewers {RegionVision.Current.ViewerCount}");
-            Assert.LessOrEqual(on[0], off[0] * 1.5f + 0.002f, $"fog on {on[0] * 1000f:F2} ms vs fog off {off[0] * 1000f:F2} ms");
+            Debug.Log($"[Vision perf] fog on {onFrame[0]:F2} ms (vision {onVision[0]:F3} ms), fog off {offFrame[0]:F2} ms, viewers {RegionVision.Current.ViewerCount}");
+            Assert.Less(onVision[0], 1f, "vision's own update time per frame");
+            Assert.AreEqual(0f, offVision[0], 1e-4f, "nothing runs with fog off");
+            Assert.LessOrEqual(onFrame[0], offFrame[0] * 1.5f + 3f, $"fog on {onFrame[0]:F2} ms vs fog off {offFrame[0]:F2} ms");
         }
     }
 }

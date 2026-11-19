@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using Blondie.Core;
 using UnityEngine;
 
@@ -29,13 +30,13 @@ namespace Isekai
             public bool Players { get; }
         }
 
-        private const int RegatherEvery = 16;
+        private const int Examined = 256;
+        private const int RegatherPerFrame = 4;
 
         private sealed class Hidden
         {
             public RegionEntity Unit;
             public readonly List<Renderer> Renderers = new();
-            public int Seen;
             public int Number;
         }
 
@@ -48,11 +49,11 @@ namespace Isekai
 
         private readonly Dictionary<RegionEntity, Hidden> _hidden = new();
         private readonly List<Hidden> _hiddenList = new();
-        private readonly List<Hidden> _back = new();
         private readonly List<Renderer> _buffer = new();
         private readonly List<Remembered> _ghosts = new();
         private readonly List<Ghost> _ghostInfo = new();
-        private int _frame;
+        private int _cursor;
+        private int _regatherCursor;
         private bool _subscribed;
 
         public static FogUnits Current { get; private set; }
@@ -87,25 +88,30 @@ namespace Isekai
                 ClearGhosts();
                 return;
             }
-            _frame++;
+            long start = Stopwatch.GetTimestamp();
+            DropGone();
+            // A slice of the registry each frame: a unit's drawn or hidden state follows its cell within a few frames.
             IReadOnlyList<RegionEntity> living = RegionEntities.Living;
-            for (int i = 0; i < living.Count; i++)
+            int n = living.Count;
+            for (int k = 0; k < Examined && n > 0; k++)
             {
-                RegionEntity unit = living[i];
-                if (unit.Kind == UnitKind.Building) continue;
-                if (_hidden.TryGetValue(unit, out Hidden h))
-                {
-                    if (unit.Side != Side.Yours && !vision.CanSee(Side.Yours, unit.Cell)) h.Seen = _frame;
-                }
-                else if (unit.Side != Side.Yours && !vision.CanSee(Side.Yours, unit.Cell)) Hide(unit);
+                if (++_cursor >= n) _cursor = 0;
+                RegionEntity unit = living[_cursor];
+                UnitKind kind = unit.Kind;
+                if (kind == UnitKind.Building || kind == UnitKind.Character) continue;
+                bool shouldHide = unit.Side != Side.Yours && !vision.CanSee(Side.Yours, unit.Cell);
+                bool isHidden = _hidden.TryGetValue(unit, out Hidden h);
+                if (shouldHide && !isHidden) Hide(unit);
+                else if (!shouldHide && isHidden) Show(h);
             }
-            Reveal();
+            RegatherSome();
             DropSeenGhosts(vision);
+            VisionCost.Add(Stopwatch.GetTimestamp() - start);
         }
 
         private void Hide(RegionEntity unit)
         {
-            var h = new Hidden { Unit = unit, Seen = _frame, Number = _hiddenList.Count };
+            var h = new Hidden { Unit = unit, Number = _hiddenList.Count };
             Gather(h);
             _hidden[unit] = h;
             _hiddenList.Add(h);
@@ -124,17 +130,21 @@ namespace Isekai
             _buffer.Clear();
         }
 
-        // Hidden units that came into sight (or left the registry) draw again.
-        private void Reveal()
+        // Hidden units that left the registry (died, despawned) draw again.
+        private void DropGone()
         {
-            _back.Clear();
-            for (int i = 0; i < _hiddenList.Count; i++)
+            for (int i = _hiddenList.Count - 1; i >= 0; i--)
+                if (!_hiddenList[i].Unit.IsListed) Show(_hiddenList[i]);
+        }
+
+        // A health bar made after a unit hid would show: look again at a few hidden units each frame.
+        private void RegatherSome()
+        {
+            for (int i = 0; i < RegatherPerFrame && _hiddenList.Count > 0; i++)
             {
-                Hidden h = _hiddenList[i];
-                if (h.Seen != _frame) _back.Add(h);
-                else if ((_frame + i) % RegatherEvery == 0) Gather(h);
+                if (++_regatherCursor >= _hiddenList.Count) _regatherCursor = 0;
+                Gather(_hiddenList[_regatherCursor]);
             }
-            foreach (Hidden h in _back) Show(h);
         }
 
         private void Show(Hidden h)

@@ -53,9 +53,11 @@ namespace Isekai
             if (_texture == null && !TryBuild()) return;
             if (_renderer.enabled != RegionVision.IsOn) _renderer.enabled = RegionVision.IsOn;
             if (!_dirty) return;
+            long start = System.Diagnostics.Stopwatch.GetTimestamp();
             _dirty = false;
             _texture.SetPixels32(_pixels);
             _texture.Apply(false);
+            VisionCost.Add(System.Diagnostics.Stopwatch.GetTimestamp() - start);
         }
 
         private bool TryBuild()
