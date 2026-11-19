@@ -1,7 +1,6 @@
 using System;
 using System.Text;
 using Blondie.Core;
-using Blondie.Input;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -9,7 +8,7 @@ namespace Isekai
 {
     /// <summary>
     /// A plain readout of the Region's stockpile in the top-left corner, and a prompt at the bottom centre while the
-    /// Character stands by a Resource node ("Hold E to mine Stone"). Phase 9 replaces it with the real HUD.
+    /// Character is mining ("Mining Stone: 42 left"). Phase 9 replaces it with the real HUD.
     /// </summary>
     public sealed class StockpileHud : MonoBehaviour
     {
@@ -60,16 +59,8 @@ namespace Isekai
             if (_prompt == null) return;
             _miner = Player.Character != null ? Player.Character.GetComponent<Miner>() : null;
             ResourceNode node = _miner != null ? _miner.Node ?? _miner.InReach : null;
-            string text = node == null ? string.Empty
-                : _miner.Node != null ? $"Mining {node.Type}: {node.Remaining} left"
-                : $"Hold {InteractKey()} to mine {node.Type} ({node.Remaining} left)";
+            string text = node == null ? string.Empty : $"Mining {node.Type}: {node.Remaining} left";
             if (_prompt.text != text) _prompt.text = text;
-        }
-
-        private static string InteractKey()
-        {
-            string key = GameInput.GetBindingDisplay(GameAction.Interact);
-            return string.IsNullOrEmpty(key) ? "E" : key;
         }
 
         private void OnDestroy()

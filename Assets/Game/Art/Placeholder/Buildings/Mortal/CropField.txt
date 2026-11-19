@@ -1,0 +1,3 @@
+Single sprite, 48x48 px. Footprint 3x3 cells (16 px per cell). fenced crop field; fence on all sides, can be placed edge to edge.
+Pivot: bottom-centre of the image sits on the bottom-centre of the footprint; art taller than the footprint rises above it.
+Generated with Cursor CLI GenerateImage (agent model grok-4.7-medium), pixel-finished at 1x with the Isekai master palette (palette/isekai_master.hex in D:/GameDev/Isekai-Art-Forge). Transparent PNG, binary alpha, no filtering: import with Point filter, no compression, 16 pixels per unit.

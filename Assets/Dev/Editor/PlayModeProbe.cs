@@ -1,19 +1,16 @@
 using System.IO;
 using System.Reflection;
-using System.Text;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace Isekai.Dev.Editor
 {
     /// <summary>
     /// Dev-only: plays a scene for a moment so agents can see it. <c>exec Isekai.Dev.Editor.PlayModeProbe.Capture
-    /// Assets/Scenes/MainMenu.unity</c> opens the scene, enters Play Mode, waits two seconds, saves the Game view to
-    /// <c>Logs/Dev/probe.png</c> and every screen-space UI image's size to <c>Logs/Dev/probe.txt</c>, then stops.
-    /// Inactive menu panels named in <see cref="s_panelsToShow"/> are switched on first. <c>scene|Namespace.Type.Method</c>
+    /// Assets/Game/Scenes/Region.unity</c> opens the scene, enters Play Mode, waits two seconds, saves the Game view to
+    /// <c>Logs/Dev/probe.png</c>, then stops. <c>scene|Namespace.Type.Method</c>
     /// also calls that method half a second in (on the scene's instance of a MonoBehaviour type, else a static one), e.g.
     /// <c>Assets/Game/Scenes/Planet.unity|Isekai.PlanetScreen.OpenLegacy</c> to see a window that opens on a click.
     /// </summary>
@@ -22,7 +19,6 @@ namespace Isekai.Dev.Editor
     {
         private const string PendingKey = "Isekai.Dev.PlayModeProbe.Pending";
         private const string CallKey = "Isekai.Dev.PlayModeProbe.Call";
-        private static readonly string[] s_panelsToShow = { "CharacterSelection" };
 
         static PlayModeProbe() => EditorApplication.playModeStateChanged += OnPlayModeChanged;
 
@@ -50,7 +46,6 @@ namespace Isekai.Dev.Editor
             if (change != PlayModeStateChange.EnteredPlayMode || !SessionState.GetBool(PendingKey, false)) return;
             SessionState.EraseBool(PendingKey);
             Application.runInBackground = true; // otherwise Play Mode pauses while the Editor is unfocused
-            ShowPanels();
             string call = SessionState.GetString(CallKey, "");
             SessionState.EraseString(CallKey);
             double callAt = EditorApplication.timeSinceStartup + 0.5;
@@ -68,7 +63,6 @@ namespace Isekai.Dev.Editor
                 {
                     captured = true;
                     ScreenCapture.CaptureScreenshot(Path.GetFullPath("Logs/Dev/probe.png"));
-                    WriteReport();
                 }
                 if (now < stopAt) return;
                 EditorApplication.update -= Tick;
@@ -95,32 +89,5 @@ namespace Isekai.Dev.Editor
             }
             Debug.LogWarning($"PlayModeProbe: couldn't call {target}");
         }
-
-        private static void ShowPanels()
-        {
-            foreach (MonoBehaviour behaviour in Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include))
-            {
-                if (behaviour == null || System.Array.IndexOf(s_panelsToShow, behaviour.GetType().Name) < 0) continue;
-                for (Transform t = behaviour.transform; t != null; t = t.parent) t.gameObject.SetActive(true);
-            }
-        }
-
-        private static void WriteReport()
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine($"Screen {Screen.width}x{Screen.height}");
-            foreach (Canvas canvas in Object.FindObjectsByType<Canvas>(FindObjectsInactive.Exclude))
-                if (canvas.isRootCanvas)
-                    sb.AppendLine($"Canvas '{canvas.name}' {canvas.renderMode} scale {canvas.scaleFactor} refPPU {canvas.referencePixelsPerUnit}");
-            foreach (Image image in Object.FindObjectsByType<Image>(FindObjectsInactive.Exclude))
-            {
-                if (image.sprite == null || image.canvas == null || image.canvas.rootCanvas.renderMode == RenderMode.WorldSpace) continue;
-                Rect r = image.rectTransform.rect;
-                sb.AppendLine($"{HierarchyPath(image.transform)}: {r.width}x{r.height} scale {image.transform.lossyScale.x / image.canvas.rootCanvas.scaleFactor:0.###} sprite '{image.sprite.name}' {image.sprite.rect.width}x{image.sprite.rect.height} @{image.sprite.pixelsPerUnit}ppu type {image.type}");
-            }
-            File.WriteAllText("Logs/Dev/probe.txt", sb.ToString());
-        }
-
-        private static string HierarchyPath(Transform t) => t.parent == null ? t.name : HierarchyPath(t.parent) + "/" + t.name;
     }
 }

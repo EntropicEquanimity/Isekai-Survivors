@@ -58,6 +58,18 @@ namespace Isekai
 
         public bool Contains(Int2 cell) => Field.Contains(cell);
 
+        /// <summary>Makes a cell a wall for paths and building (an <see cref="Obstacle"/> placed after the bake).</summary>
+        public void Block(Int2 cell)
+        {
+            if (Contains(cell)) Field.SetCostRect(cell, new Int2(1, 1), FlowFieldGrid.Blocked);
+        }
+
+        /// <summary>Opens a cell again (an obstacle destroyed).</summary>
+        public void Unblock(Int2 cell)
+        {
+            if (Contains(cell)) Field.SetCostRect(cell, new Int2(1, 1), FlowFieldGrid.DefaultCost);
+        }
+
         public bool IsWalkable(Int2 cell) => Field.IsWalkable(cell);
 
         public bool IsWalkable(Vector3 world) => Field.IsWalkable(CellAt(world));

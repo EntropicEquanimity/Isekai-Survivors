@@ -51,7 +51,7 @@ namespace Isekai.Tests
         {
             yield return TestWait.Until(() => Building.All.Any(b => b.IsMainBase), "the Main Base");
             RegionBuildings buildings = RegionBuildings.Current;
-            BuildingAsset tower = Object.FindAnyObjectByType<BuildMode>().Catalogue.First(a => a.DisplayName == "Tower");
+            BuildingAsset tower = Object.FindAnyObjectByType<BuildMode>().Catalogue.First(a => a.DisplayName == "Spire");
             RegionEconomy.Current.Stockpile.Add(ResourceType.Stone, 100);
             Building home = Building.All.First(b => b.IsMainBase && b.IsPlayers);
             var beside = new Int2(home.Origin.x + 4, home.Origin.y);

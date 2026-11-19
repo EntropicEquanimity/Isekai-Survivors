@@ -1,0 +1,6 @@
+Wang 2-corner autotile, 16 tiles of 16x16 in a 4x4 sheet (64x64 px).
+Tile index = row*4 + col. index = TL*1 + TR*2 + BL*4 + BR*8, where a corner bit is 1 when that corner is fully corrupted ground (L4)
+and 0 when it is untouched grass (L0). Index 0 = all untouched grass (L0), index 15 = all fully corrupted ground (L4). Shared edges match exactly between any two tiles
+whose touching corners agree. Edge shapes are composited from the generated fill tiles (the edge mask is procedural).
+Fill textures: untouched grass (L0) = Grass_A, fully corrupted ground (L4) = Grass_Corrupted_L4_A.
+Generated with Cursor CLI GenerateImage (agent model grok-4.7-medium), pixel-finished at 1x with the Isekai master palette (palette/isekai_master.hex in D:/GameDev/Isekai-Art-Forge). Transparent PNG, binary alpha, no filtering: import with Point filter, no compression, 16 pixels per unit.

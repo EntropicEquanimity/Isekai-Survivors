@@ -17,4 +17,4 @@ MonoBehaviour:
   _size: {x: 2, y: 2}
   _costs: []
   _buildSeconds: 0
-  _preview: {fileID: 21300000, guid: 0d3c51e4806e8294facc48b16d464657, type: 3}
+  _preview: {fileID: 21300000, guid: 2c42f42cfa12e88438b52a431e4064f6, type: 3}

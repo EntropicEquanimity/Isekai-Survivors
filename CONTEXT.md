@@ -1,95 +1,124 @@
-# Isekai Survivors
+# Isekai Conquerors
 
-A Vampire Survivors-like. Pick a Character, survive waves of enemies on a Level, collect XP, and level up into Weapons and Equipment.
+A survivors-like horde strategy game. Jack, isekai'd as a demon, invades a Planet Region by Region with hordes of demons while the mortals defend. The player makes the macro decisions (building, Resources, where to push); the demons decide for themselves. Between Runs, Shards buy Legacy upgrades. The full design is in `docs/plans/isekai-conquerors.md`; this file fixes the words.
 
 ## Language
 
 ### The run
 
-**Character**:
-A playable body chosen before a Run — Knight, Samurai, Rogue, and later ones. Different starting Weapon and stats.
-_Avoid_: class, hero, skin, champion
+**Planet**:
+One Run's whole map, made of Regions around the Capital.
+_Avoid_: level, world map
+
+**Region**:
+One playable map of a Planet, with its own mortals, Resources, Vigilance and rulers.
+_Avoid_: level, stage, zone
+
+**Capital**:
+The Region at the centre of the Planet. Capturing it wins the Run.
+
+**Capture**:
+Taking a Region by taking out its rulers (its seat of power). Killing everything is not required.
+_Avoid_: clear, conquer (as the rule)
 
 **Run**:
-One attempt at a Level, from spawn until the player dies or the Level ends.
-_Avoid_: session, match, game, attempt
+One attempt at a Planet, from landing until the Capital falls or the Main Base does.
+_Avoid_: session, match, game
 
-**Level**:
-A map plus its difficulty settings that a Run is played on — for example Green Pastures - Casual and Green Pastures - Hell.
-_Avoid_: stage, world, planet
+### The player's side
 
-### Combat
+**Jack**:
+The player: a soul in a demon body, who can move between Suits.
+_Avoid_: hero (heroes are mortal), avatar
 
-**Wave Type**:
-How the game brings enemies at a given time. The types are Horde, Flight, Squad, and Mix.
-_Avoid_: spawn table, encounter (as this idea)
+**Suit**:
+A demon body Jack can inhabit (Demon_D, the Black Knights, the Warlock...).
+_Avoid_: skin, class
 
-**Horde**:
-A Wave Type: a spike in count, cheap Chasers, surround.
-_Avoid_: swarm, rush
+**Character**:
+In code and tests today, the body Jack controls (one Suit until possession lands).
+_Avoid_: player unit
 
-**Flight**:
-A Wave Type: Flyers from off-screen. Giant Bat is the prototype.
-_Avoid_: air wave, bat wave
+**Demon** / **Unit**:
+A demon Jack doesn't inhabit, summoned through a Portal. Acts on its own; no micro. Weakened off corrupted ground.
+_Avoid_: minion, soldier (soldiers are mortal)
 
-**Squad**:
-A Wave Type: a small clump of tougher units that spawn together and stay together.
-_Avoid_: pack, patrol, elite wave (as this type)
+**Imp**:
+The first demon Unit (Demon_A), summoned by a Portal.
 
-**Mix**:
-A Wave Type: weighted random spawns around the player. Default filler.
-_Avoid_: normal wave, standard spawn
+**Building**:
+Anything placed: the Main Base, Portals, Spires, Outposts. Goes up over its build time, gaining health as it does.
 
-**Role**:
-What an enemy is for in a fight. An enemy has one Role and may also be Elite. The Roles are Chaser, Exploder, Elite, Flyer, Ranged, Buffer, Summoner, and Hoarder.
-_Avoid_: enemy type (when you mean this job), archetype, class
+**Main Base**:
+The Citadel the Run depends on. Losing it loses the Run.
+_Avoid_: HQ, castle
 
-**Chaser**:
-A Role: walks at the player, contact damage. Most of a Horde.
-_Avoid_: melee, grunt, zombie
+**Portal**:
+The Building that summons demons, paid in Resources and Souls.
+_Avoid_: barracks
 
-**Exploder**:
-A Role: bursts on death or when it closes.
-_Avoid_: bomber, kamikaze, suicide enemy
+**Spire**:
+A defensive tower Building.
 
-**Elite**:
-A Role (and a flag on other Roles): fat, telegraphed, extra XP.
-_Avoid_: champion, mini-boss, rare
+### The defenders
 
-**Flyer**:
-A Role: airborne, ignores ground clutter. Flight waves bias toward this Role.
-_Avoid_: bat, flying enemy
+**Mortal** / **Denizen**:
+Anyone living on the Planet who isn't a demon: humans in villages and castles, orcs, beasts, others. Mortals belong to factions.
+_Avoid_: enemy (too broad), NPC
 
-**Ranged**:
-A Role: keeps distance and shoots.
-_Avoid_: spitter, archer (as the Role)
+**Neutral**:
+A creature that attacks no one by default; some fight back, some flee.
 
-**Buffer**:
-A Role: hangs back and auras allies. The aura is visible.
-_Avoid_: support, shaman, healer (unless it actually heals)
+**Hostile**:
+A creature that attacks everything on sight; some flee when hurt, some fight to the death.
 
-**Summoner**:
-A Role: spawns extras from itself. Those extras hit a global cap so the screen cannot melt.
-_Avoid_: spawner, breeder, necromancer (as the Role)
+**Hero**:
+A named mortal defender of a Region with personality-driven AI: may flee, call reinforcements, build, or hold its castle.
+_Avoid_: boss, champion
 
-**Hoarder**:
-A Role: the loot-drop enemy. Tanky or fleeing. Extra loot on kill.
-_Avoid_: loot bug, treasure enemy, carrier
+**Trait**:
+Data that weights an AI's decisions: Cowardly, Berserk, Sneaky, Ambusher and others.
+_Avoid_: perk (perks are Items), modifier
 
-### Progression within a Run
+**Vigilance**:
+How alert a Region's mortals are, rising Unaware → Uneasy → Alarmed → Mobilized → Crusade. Drives patrols, detection range, enemy strength and Waves.
+_Avoid_: alert, aggro, threat level
 
-**XP**:
-Dropped by enemies and picked up during a Run. Filling the bar levels the player up.
-_Avoid_: essence, soul energy
+**Wave**:
+Mortal reinforcements arriving from the map edge or a spawn circle once Vigilance is high enough. Each Region has a Wave cap.
+_Avoid_: spawn, attack (as this idea)
+
+**Nest**:
+Today's enemy camp: a roaming pack that regrows around it.
+
+### The world
+
+**Corruption**:
+How demonic a ground cell has become, level 0 (untouched) to 4 (fully converted). Spreads from demon territory.
+_Avoid_: taint, creep
+
+**Obstacle**:
+Something that fills its ground cell like a wall (rocks, dead trees, Stone deposits) until mined out.
+
+**Fog of war**:
+Unseen ground. Explored ground keeps a snapshot; enemy units only show while in sight. Walls and cliffs block vision; night shortens it.
+
+**Resource**:
+Wood, Stone, Iron and Gold, mined from nodes into the Region's stockpile.
+
+**Soul**:
+Harvested from mortals; Jack harvests best. Pays for Portals and levels Jack's soul for the Run.
+
+**Shard**:
+The meta currency, earned when a Run ends, spent in the Legacy tree.
+
+### Items
 
 **Item**:
-Anything the player can be offered at level-up and carry during a Run. Weapons and Equipment are both Items.
-_Avoid_: relic, loot (as the whole idea)
+Anything in the inventory: weapons, augments, perks, boons.
 
-**Weapon**:
-An Item that attacks on its own — Cutlass, Rapier, Shortbow, Sai, and the like. A Character starts the Run holding one.
-_Avoid_: gun, spell (as the whole idea)
+**Active inventory** / **Storage**:
+Items in Active take effect; Items in Storage only sit there.
 
-**Equipment**:
-An Item that modifies stats or behaviour instead of attacking — Magnet, Iron Briefs, Duplication Mirror, and the like.
-_Avoid_: passive, accessory, relic
+**Lifetime**:
+Region (gone after this Region) or Run (kept until the Run ends).

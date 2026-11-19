@@ -83,28 +83,29 @@ namespace Isekai.Tests
             int building = home.GetComponentsInChildren<SpriteRenderer>().First(r => r.name == "Art").sortingOrder;
             int stone = ResourceNode.All.First().GetComponentInChildren<SpriteRenderer>().sortingOrder;
             Assert.Less(building, character.sortingOrder, "Buildings draw under units: the Character never hides behind one");
-            Assert.Less(stone, building, "Stone lies on the ground, under everything that stands");
+            Assert.LessOrEqual(stone, building, "Stone deposits stand like Buildings, under units");
         }
 
         [UnityTest]
-        public IEnumerator Rocks_block_the_hordes_ground()
+        public IEnumerator Rocks_are_walls_until_mined_out()
         {
-            var rocks = Object.FindObjectsByType<UnityEngine.Tilemaps.Tilemap>(FindObjectsInactive.Exclude).First(t => t.name == "Obstacles");
-            var cells = new System.Collections.Generic.List<Vector3>();
-            foreach (Vector3Int cell in rocks.cellBounds.allPositionsWithin)
-                if (rocks.HasTile(cell)) cells.Add(rocks.GetCellCenterWorld(cell));
-            Assert.Greater(cells.Count, 50, "the Region has rocks");
-            // Rock colliders get their shapes at the first physics step; the grid bakes them in right after.
-            int Blocked() => cells.Count(c => !HordeDirector.Current.Grid.IsWalkable(new Blondie.Core.Float3(c.x, c.y, 0f)));
-            float end = Time.time + 1f;
-            while (Blocked() < cells.Count && Time.time < end) yield return null;
-            Assert.AreEqual(cells.Count, Blocked(), "every rock cell is blocked for the horde");
-            foreach (var oldFence in new[] { new Vector2(-22.5f, 0.5f), new Vector2(0.5f, -18.5f), new Vector2(0.5f, 20.5f) })
-                Assert.IsTrue(HordeDirector.Current.Grid.IsWalkable(new Blondie.Core.Float3(oldFence.x, oldFence.y, 0f)), $"the old fence at {oldFence} is gone");
+            yield return TestWait.Until(() => RegionBootstrap.Current.IsPopulated, "the Region is ready");
+            RegionGrid grid = RegionGrid.Current;
+            Obstacle[] walls = Object.FindObjectsByType<Obstacle>(FindObjectsInactive.Exclude);
+            Assert.Greater(walls.Length, 50, "the Region has rocks");
+            foreach (Obstacle wall in walls)
+                Assert.IsFalse(grid.IsWalkable(wall.transform.position), $"{wall.name} blocks its cell");
+
+            ResourceNode rock = walls.Select(w => w.GetComponent<ResourceNode>()).First(n => n != null && n.name.StartsWith("Rock"));
+            Vector3 at = rock.transform.position;
+            rock.Take(rock.Remaining);
+            yield return null;
+            Assert.IsFalse(rock.gameObject.activeSelf, "mined out");
+            Assert.IsTrue(grid.IsWalkable(at), "its cell is open again");
         }
 
         [UnityTest]
-        public IEnumerator Standing_by_Stone_shows_how_to_mine_it()
+        public IEnumerator Walking_up_to_Stone_mines_it()
         {
             var character = Object.FindAnyObjectByType<CharacterControl>();
             ResourceNode node = ResourceNode.All.First();
@@ -112,10 +113,33 @@ namespace Isekai.Tests
             character.transform.position = node.transform.position + new Vector3(0.5f, 0f, 0f);
             yield return null;
             yield return null;
-            StringAssert.Contains("to mine Stone", hud.Prompt);
-            character.transform.position = node.transform.position + new Vector3(20f, 0f, 0f);
+            StringAssert.StartsWith("Mining ", hud.Prompt, "whatever is nearest (Stone, a rock, a dead tree) gets mined");
+            int before = Total();
+            yield return TestWait.Until(() => Total() > before, "no key needed: Resources come in", 3f);
+            character.transform.position = FarFromAnyNode(node.transform.position);
+            yield return null;   // the Miner lets go this frame; the HUD may read it before or after
             yield return null;
             Assert.AreEqual(string.Empty, hud.Prompt);
+        }
+
+        private static int Total()
+        {
+            Stockpile pile = RegionEconomy.Current.Stockpile;
+            return pile.Get(ResourceType.Stone) + pile.Get(ResourceType.Wood) + pile.Get(ResourceType.Iron) + pile.Get(ResourceType.Gold);
+        }
+
+        // A walkable spot with nothing minable within reach (rocks are everywhere now).
+        private static Vector3 FarFromAnyNode(Vector3 from)
+        {
+            for (int r = 3; r < 40; r++)
+            for (int k = 0; k < 16; k++)
+            {
+                float a = k * Mathf.PI / 8f;
+                Vector3 p = from + new Vector3(Mathf.Cos(a), Mathf.Sin(a), 0f) * r;
+                if (RegionGrid.Current.IsWalkable(p) && ResourceNode.NearestTo(p, 3f) == null) return p;
+            }
+            Assert.Fail("no open ground away from Resource nodes");
+            return from;
         }
 
         [UnityTest]

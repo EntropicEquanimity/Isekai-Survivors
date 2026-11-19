@@ -149,6 +149,7 @@ MonoBehaviour:
   _activeWhenBuilt: []
   _art:
   - {fileID: 1854208965905577690}
+  _constructionSprite: {fileID: 21300000, guid: a9ea2b4c078a492498bf13f582d953db, type: 3}
   _startBuilt: 1
   _isMainBase: 1
 --- !u!114 &4609690543821339858
@@ -224,7 +225,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6672220058156424703}
@@ -278,8 +279,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 3
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 0d3c51e4806e8294facc48b16d464657, type: 3}
-  m_Color: {r: 0.55, g: 0.42, b: 0.3, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 2c42f42cfa12e88438b52a431e4064f6, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

@@ -9,7 +9,9 @@
         "Blondie.Core",
         "Blondie.Core.Unity",
         "Blondie.Combat",
-        "Blondie.Combat.Unity"
+        "Blondie.Combat.Unity",
+        "Blondie.PixelPerfect",
+        "Blondie.PixelPerfect.Unity"
     ],
     "includePlatforms": [
         "Editor"

@@ -5,13 +5,12 @@ using UnityEngine;
 namespace Isekai
 {
     /// <summary>
-    /// Lets the Character mine: holding Interact next to a <see cref="ResourceNode"/> mines it at the MiningSpeed stat
-    /// (units per second) into the Region's stockpile, with a "+1 Stone" popup per unit.
+    /// Lets the Character mine: walking up to a <see cref="ResourceNode"/> (Stone, a rock in the way) starts hitting it,
+    /// at the MiningSpeed stat (units per second), into the Region's stockpile, with a "+1 Stone" popup per unit.
+    /// No key: being in reach is enough. Workers will take this over later.
     /// </summary>
     public sealed class Miner : MonoBehaviour, IRegionEndListener
     {
-        public const string InteractId = "Interact";
-
         [SerializeField, Min(0f)] private float _reach = 1.25f;
         [Tooltip("Units per second when there is no MiningSpeed stat.")]
         [SerializeField, Min(0f)] private float _baseRate = 1f;
@@ -32,7 +31,12 @@ namespace Isekai
 
         private void Update()
         {
-            ResourceNode node = ActionInput.IsHeld(InteractId) ? ResourceNode.NearestTo(transform.position, _reach) : null;
+            // Keep hitting the node already being mined while it's in reach: switching to whichever is nearest each
+            // frame (two nodes side by side, a nudge from physics) would restart the swing and never finish one.
+            ResourceNode node = _node != null && !_node.IsEmpty && _node.isActiveAndEnabled
+                                && Vector2.Distance(transform.position, _node.transform.position) <= _reach
+                ? _node
+                : ResourceNode.NearestTo(transform.position, _reach);
             Mine(node, Time.deltaTime);
         }
 

@@ -83,7 +83,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 4
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 975244514, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  m_Sprite: {fileID: 8785127103531371532, guid: 24a2fc00459bc4947980e9ed530aa79c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -131,23 +131,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: Isekai.Game::Isekai.WalkAnimation
   _motor: {fileID: 2211162548012431558}
   _idle:
-  - {fileID: 975244514, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
-  - {fileID: 515201930, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
-  - {fileID: 1729982609, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
-  - {fileID: 2012669209, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
-  - {fileID: 1366144851, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
-  - {fileID: -1866999778, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
-  - {fileID: -1727759903, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
-  - {fileID: -1101248912, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: 8785127103531371532, guid: 24a2fc00459bc4947980e9ed530aa79c, type: 3}
+  - {fileID: -8610645300745375028, guid: 24a2fc00459bc4947980e9ed530aa79c, type: 3}
+  - {fileID: -8290349719671171821, guid: 24a2fc00459bc4947980e9ed530aa79c, type: 3}
+  - {fileID: 1968499726362868777, guid: 24a2fc00459bc4947980e9ed530aa79c, type: 3}
+  - {fileID: 3990079480465644019, guid: 24a2fc00459bc4947980e9ed530aa79c, type: 3}
+  - {fileID: -4545139563215443222, guid: 24a2fc00459bc4947980e9ed530aa79c, type: 3}
   _walk:
-  - {fileID: 1962258022, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
-  - {fileID: 1424513955, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
-  - {fileID: 22520187, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
-  - {fileID: 1088380083, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
-  - {fileID: -1370416881, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
-  - {fileID: -1949661700, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
-  - {fileID: -1933053981, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
-  - {fileID: 2022795373, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
+  - {fileID: 8610733412841011058, guid: 650854a127b1a9e4ea4562396f0554db, type: 3}
+  - {fileID: 9053086257595424911, guid: 650854a127b1a9e4ea4562396f0554db, type: 3}
+  - {fileID: -4759869704140724306, guid: 650854a127b1a9e4ea4562396f0554db, type: 3}
+  - {fileID: -1385685976928852908, guid: 650854a127b1a9e4ea4562396f0554db, type: 3}
+  - {fileID: 7103143259945792486, guid: 650854a127b1a9e4ea4562396f0554db, type: 3}
+  - {fileID: -3683021498909426456, guid: 650854a127b1a9e4ea4562396f0554db, type: 3}
+  - {fileID: 4602256350312489923, guid: 650854a127b1a9e4ea4562396f0554db, type: 3}
+  - {fileID: 5025282625303553245, guid: 650854a127b1a9e4ea4562396f0554db, type: 3}
+  _action:
+  - {fileID: -1324305044111654732, guid: 5c0fb1d1bac6cfa469d9122d828216fd, type: 3}
+  - {fileID: -5102190082036595150, guid: 5c0fb1d1bac6cfa469d9122d828216fd, type: 3}
+  - {fileID: 8545417517244957573, guid: 5c0fb1d1bac6cfa469d9122d828216fd, type: 3}
+  - {fileID: -7748681898887094246, guid: 5c0fb1d1bac6cfa469d9122d828216fd, type: 3}
+  - {fileID: -7843303366315871645, guid: 5c0fb1d1bac6cfa469d9122d828216fd, type: 3}
+  - {fileID: 3088012487232008321, guid: 5c0fb1d1bac6cfa469d9122d828216fd, type: 3}
+  - {fileID: 1767903272622733057, guid: 5c0fb1d1bac6cfa469d9122d828216fd, type: 3}
+  - {fileID: -2697315799327310540, guid: 5c0fb1d1bac6cfa469d9122d828216fd, type: 3}
+  - {fileID: 5444028414835302120, guid: 5c0fb1d1bac6cfa469d9122d828216fd, type: 3}
+  - {fileID: 7335331468218051706, guid: 5c0fb1d1bac6cfa469d9122d828216fd, type: 3}
+  - {fileID: -8195255348586659110, guid: 5c0fb1d1bac6cfa469d9122d828216fd, type: 3}
   _movingSpeed: 0.1
 --- !u!1 &3011107552043763039
 GameObject:

@@ -44,23 +44,23 @@ namespace Isekai.Tests
         private Int2 BesideMainBase(int dx) => new(_mainBase.Origin.x + dx, _mainBase.Origin.y);
 
         [UnityTest]
-        public IEnumerator Barracks_costs_stone_blocks_the_horde_builds_and_produces_Militia()
+        public IEnumerator A_Portal_costs_stone_blocks_the_horde_builds_and_brings_Imps()
         {
             FlowFieldGrid field = HordeDirector.Current.Grid;
             Assert.AreEqual(FlowFieldGrid.Blocked, field.GetCost(_mainBase.Origin), "the Main Base blocks its ground");
 
             Stockpile pile = RegionEconomy.Current.Stockpile;
             int stone = pile.Get(ResourceType.Stone);
-            BuildingAsset barracks = Catalogue("Barracks");
+            BuildingAsset barracks = Catalogue("Portal");
             Building placed = _buildings.Place(barracks, BesideMainBase(4));
             Assert.IsNotNull(placed, "placed inside the Main Base's area");
             Assert.AreEqual(stone - 20, pile.Get(ResourceType.Stone));
             Assert.AreEqual(FlowFieldGrid.Blocked, field.GetCost(BesideMainBase(4)));
             Assert.IsFalse(placed.IsBuilt);
 
-            yield return TestWait.Until(() => placed.IsBuilt, "the Barracks finishes", 15f);
+            yield return TestWait.Until(() => placed.IsBuilt, "the Portal finishes", 15f);
             var producer = placed.GetComponent<UnitProducer>();
-            yield return TestWait.Until(() => producer.Units.Count > 0, "the Barracks produces a Militia", 15f);
+            yield return TestWait.Until(() => producer.Units.Count > 0, "the Portal brings an Imp", 15f);
             Assert.AreEqual(Stance.Guard, producer.Units[0].Stance, "Units follow their Building's stance");
             producer.Stance = Stance.Hold;
             Assert.AreEqual(Stance.Hold, producer.Units[0].Stance);
@@ -70,7 +70,7 @@ namespace Isekai.Tests
         public IEnumerator Buildings_fit_side_by_side_and_their_art_and_ghost_cover_the_footprint()
         {
             RegionEconomy.Current.Stockpile.Add(ResourceType.Stone, 100);
-            BuildingAsset barracks = Catalogue("Barracks");
+            BuildingAsset barracks = Catalogue("Portal");
             Building left = _buildings.Place(barracks, BesideMainBase(4));
             Building right = _buildings.Place(barracks, BesideMainBase(6));
             Assert.IsNotNull(left);
@@ -89,7 +89,7 @@ namespace Isekai.Tests
         [UnityTest]
         public IEnumerator Placement_is_refused_outside_a_Base_and_when_too_expensive()
         {
-            BuildingAsset tower = Catalogue("Tower");
+            BuildingAsset tower = Catalogue("Spire");
             Assert.AreEqual(Verdict.OutsideBase, _buildings.Check(tower, BesideMainBase(30)).Verdict);
             Assert.AreEqual(Verdict.Blocked, _buildings.Check(tower, _mainBase.Origin).Verdict, "on the Main Base");
             RegionEconomy.Current.Stockpile.TrySpend(ResourceType.Stone, RegionEconomy.Current.Stockpile.Get(ResourceType.Stone));

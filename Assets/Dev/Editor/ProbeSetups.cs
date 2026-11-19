@@ -26,13 +26,13 @@ namespace Isekai.Dev.Editor
             Player.Character.transform.position = MainBase().transform.position + new Vector3(0.2f, 0.8f, 0f);
         }
 
-        /// <summary>Close up: two Barracks side by side, a ghost beside them, hurt enemies with health bars.</summary>
+        /// <summary>Close up: two Portals side by side, a ghost beside them, hurt enemies with health bars.</summary>
         public static void Showcase()
         {
             Object.FindAnyObjectByType<ScrollZoom>().Zoom(2);
             DebugMenu.AddResources(500);
             var mode = Object.FindAnyObjectByType<BuildMode>();
-            BuildingAsset barracks = mode.Catalogue.First(a => a.DisplayName == "Barracks");
+            BuildingAsset barracks = mode.Catalogue.First(a => a.DisplayName == "Portal");
             Int2 origin = MainBase().Origin;
             foreach (int dx in new[] { 3, 5 }) RegionBuildings.Current.Place(barracks, new Int2(origin.x + dx, origin.y));
             mode.Pick(barracks);

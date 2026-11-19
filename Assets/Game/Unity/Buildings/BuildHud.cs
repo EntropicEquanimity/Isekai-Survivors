@@ -96,7 +96,7 @@ namespace Isekai
             }
             if (_mode.Picked != null)
                 text.Append(_mode.Placement.IsOk ? "Click to place, Shift to keep placing, right click to cancel" : _mode.Placement.Reason);
-            else text.Append("Number keys: build. Click a Building to select it. Hold E by Stone to mine. M: map.");
+            else text.Append("Number keys: build. Click a Building to select it. Walk into Stone or rocks to mine them. M: map.");
             _list.text = text.ToString();
 
             Building selected = _mode.Selected;

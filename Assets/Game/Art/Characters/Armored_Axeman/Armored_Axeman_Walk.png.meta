@@ -1,0 +1,341 @@
+fileFormatVersion: 2
+guid: 444d9b41b3298714db84938ccb696a04
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1194437314075529647
+    second: Armored_Axeman_Walk_0
+  - first:
+      213: -1635849631007657150
+    second: Armored_Axeman_Walk_1
+  - first:
+      213: -8197702234354359247
+    second: Armored_Axeman_Walk_2
+  - first:
+      213: -4239580425612421047
+    second: Armored_Axeman_Walk_3
+  - first:
+      213: -2761500659044184680
+    second: Armored_Axeman_Walk_4
+  - first:
+      213: 4991936706722084043
+    second: Armored_Axeman_Walk_5
+  - first:
+      213: 1195530583568273271
+    second: Armored_Axeman_Walk_6
+  - first:
+      213: -2648115358530637181
+    second: Armored_Axeman_Walk_7
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Armored_Axeman_Walk_0
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 38
+        width: 45
+        height: 33
+      alignment: 9
+      pivot: {x: 0.37777779, y: 0.36363637}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15e6e0c57918c6fe0800000000000000
+      internalID: -1194437314075529647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Armored_Axeman_Walk_1
+      rect:
+        serializedVersion: 2
+        x: 133
+        y: 38
+        width: 45
+        height: 33
+      alignment: 9
+      pivot: {x: 0.37777779, y: 0.36363637}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 243b5dd7d6b4c49e0800000000000000
+      internalID: -1635849631007657150
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Armored_Axeman_Walk_2
+      rect:
+        serializedVersion: 2
+        x: 233
+        y: 38
+        width: 45
+        height: 33
+      alignment: 9
+      pivot: {x: 0.37777779, y: 0.36363637}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 134e1ea4049eb3e80800000000000000
+      internalID: -8197702234354359247
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Armored_Axeman_Walk_3
+      rect:
+        serializedVersion: 2
+        x: 333
+        y: 38
+        width: 45
+        height: 33
+      alignment: 9
+      pivot: {x: 0.37777779, y: 0.36363637}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9481caea01cf925c0800000000000000
+      internalID: -4239580425612421047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Armored_Axeman_Walk_4
+      rect:
+        serializedVersion: 2
+        x: 433
+        y: 38
+        width: 45
+        height: 33
+      alignment: 9
+      pivot: {x: 0.37777779, y: 0.36363637}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89d0aaa18cd2da9d0800000000000000
+      internalID: -2761500659044184680
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Armored_Axeman_Walk_5
+      rect:
+        serializedVersion: 2
+        x: 533
+        y: 38
+        width: 45
+        height: 33
+      alignment: 9
+      pivot: {x: 0.37777779, y: 0.36363637}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc437618cfbe64540800000000000000
+      internalID: 4991936706722084043
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Armored_Axeman_Walk_6
+      rect:
+        serializedVersion: 2
+        x: 633
+        y: 38
+        width: 45
+        height: 33
+      alignment: 9
+      pivot: {x: 0.37777779, y: 0.36363637}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77fc3b74bb0679010800000000000000
+      internalID: 1195530583568273271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Armored_Axeman_Walk_7
+      rect:
+        serializedVersion: 2
+        x: 733
+        y: 38
+        width: 45
+        height: 33
+      alignment: 9
+      pivot: {x: 0.37777779, y: 0.36363637}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 382768a9c11004bd0800000000000000
+      internalID: -2648115358530637181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Armored_Axeman_Walk_0: -1194437314075529647
+      Armored_Axeman_Walk_1: -1635849631007657150
+      Armored_Axeman_Walk_2: -8197702234354359247
+      Armored_Axeman_Walk_3: -4239580425612421047
+      Armored_Axeman_Walk_4: -2761500659044184680
+      Armored_Axeman_Walk_5: 4991936706722084043
+      Armored_Axeman_Walk_6: 1195530583568273271
+      Armored_Axeman_Walk_7: -2648115358530637181
+      Icon19_0: 1708141900530535132
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

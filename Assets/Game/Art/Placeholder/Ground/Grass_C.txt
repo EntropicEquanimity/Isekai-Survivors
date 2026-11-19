@@ -1,0 +1,3 @@
+16x16 ground tile, seamless: its edges are plain base colour, so it joins any other tile of the same level in any order. No outline.
+Untouched grassland (corruption L0): plain grass variant.
+Generated with Cursor CLI GenerateImage (agent model grok-4.7-medium), pixel-finished at 1x with the Isekai master palette (palette/isekai_master.hex in D:/GameDev/Isekai-Art-Forge). Transparent PNG, binary alpha, no filtering: import with Point filter, no compression, 16 pixels per unit.

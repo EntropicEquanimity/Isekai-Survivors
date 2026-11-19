@@ -55,6 +55,9 @@ The premise below is being replaced. A redesign plan follows once the open quest
    - Explored ground keeps a snapshot of what was last seen there (terrain, buildings).
    - Enemy units only show while in a friendly unit's vision, or where the player knows they come from (a known spawn circle, for example).
 8. **Vision.** Jack's vision is much greater than the other demons'. Demons see a little further than the Region's mortals and denizens, so the player's side usually sees first.
+9. **Line of sight and night.** Vision is cast in cones and rays: walls, cliffs and rocks block it for both sides. Night shortens every vision range greatly.
+10. **Mining by walking.** The Character mines a Stone deposit or a rock just by being next to it; no key. Workers take mining over later.
+11. **Rocks are walls.** Rocks, dead trees and Stone deposits fill their cell, stop bodies and block paths and building until mined out (rocks and trees give a little Stone or Wood).
 
 **Blondie RTS** (`com.blondie.rts` and `com.blondie.strategy`, on BU's `feat/settings-extension` branch at `399fa1e` and not yet on main) needs Core 3.8 (the game is on 3.6.1).
 - **What it has:** a full engine-free match model (factions, actors, orders as data), timed construction sites, production queues, stances, a minimap with a visibility hook, and selection, orders, formations and control groups.
@@ -108,6 +111,14 @@ Three reviews (units and AI; buildings and economy; Run, UI and scenes) looked f
 - **Pin:** `com.blondie.flowfields` is pinned to `7129115`, merged into BU's main. The other BU packages are still at `b275a07`. BU's `feat/settings-extension` also bumps flowfields; merging it into main conflicts only in that package's `package.json` version and `CHANGELOG.md` (keep both entries and renumber).
 - **Left:** frames that log to the Editor console cost the console's time (Editor only). Measure in a build before deeper work.
 - **Design for scale:** keep map-wide field requests rare. Per-team crowds should follow fields over slowly changing targets, with local steering for the last stretch.
+
+**Art swap (2026-11-19).**
+- The world is on the 16 px grid (`PixelCamera` 16 pixels per unit; zoom steps doubled, so the same area stays in view).
+- **World art:** the placeholder art in `Art/Placeholder` (pivot: the image's bottom on its footprint's bottom).
+- **Characters:** sliced from the Tiny RPG packs into `Art/Characters`, cropped per character with one shared pivot.
+- **Prefabs** are renamed: Soldier, Armored Axeman, Training Dummy, Imp, Portal, Spire.
+- **Rocks** are `Obstacle` objects (the `Rock` and `Dead Tree` prefabs), one per cell.
+- **Removed legacy:** the survivors code, scenes, prefabs, sprites, tilemaps, data, materials, Odin and the AllIn1 shader. DOTween stays: Blondie Juice uses it. `Items.png` moved to `Art/Items`.
 
 **Designed, built with their feature.**
 

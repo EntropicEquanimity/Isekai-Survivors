@@ -158,13 +158,13 @@ namespace Isekai
         {
             var legend = new VisualElement { style = { marginLeft = 12, width = 160 } };
             Row(legend, Swatch(RegionMapView.You, 6, true), "You");
-            Row(legend, Swatch(RegionMapView.Militia, 4, false), "Militia");
+            Row(legend, Swatch(RegionMapView.Militia, 4, false), "Imps");
             Row(legend, Swatch(RegionMapView.Attacker, 4, false), "Enemy, attacking");
             Row(legend, Swatch(RegionMapView.Roamer, 4, false), "Enemy, roaming");
             Row(legend, Swatch(RegionMapView.Attacker, 8, true), "Elite enemy");
             Row(legend, IconImage("Nest", RegionMapView.Nest), "Enemy nest");
             Row(legend, IconImage("Main Base", RegionMapView.Home), "Main Base");
-            foreach (string building in new[] { "Barracks", "Tower", "Outpost" })
+            foreach (string building in new[] { "Portal", "Spire", "Outpost" })
                 Row(legend, IconImage(building, RegionMapView.Ally), building);
             Row(legend, Swatch(new Color32(196, 196, 186, 255), 4, false), "Stone");
             Row(legend, Swatch(new Color32(235, 235, 240, 255), 8, false, hollow: true), "Camera view");
