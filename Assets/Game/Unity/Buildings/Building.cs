@@ -49,6 +49,16 @@ namespace Isekai
             DrawProgress();
         }
 
+        /// <summary>Finishes construction at once (the debug menu).</summary>
+        public void FinishConstruction()
+        {
+            if (_construction == null || _construction.IsComplete) return;
+            _construction.Tick(float.MaxValue);
+            DrawProgress();
+            SetWorking(true);
+            Completed?.Invoke(this);
+        }
+
         private void Awake()
         {
             _damageable = GetComponent<Damageable>();

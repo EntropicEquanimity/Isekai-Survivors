@@ -27,9 +27,12 @@ namespace Isekai
         [Tooltip("Steps from the Planet's edge toward the Capital. Phase 7 sets it from the Planet map.")]
         [SerializeField, Min(0)] private int _depth;
         [Header("Spawning")]
-        [Tooltip("How far in from the map's edge Waves appear.")]
+        [Tooltip("Waves appear in a ring around the Main Base, at least this far from every player target...")]
+        [SerializeField, Min(0f)] private float _minDistanceFromTargets = 30f;
+        [Tooltip("...and at most this far from the Main Base, so they arrive in good time on a big map.")]
+        [SerializeField, Min(1f)] private float _maxDistanceFromBase = 50f;
+        [Tooltip("Without a Main Base, how far in from the map's edge Waves appear.")]
         [SerializeField, Min(1)] private int _edgeBand = 6;
-        [SerializeField, Min(0f)] private float _minDistanceFromTargets = 20f;
         [SerializeField, Min(1)] private int _perFrame = 80;
         [SerializeField] private int _seed = 7;
 
@@ -84,7 +87,7 @@ namespace Isekai
             int queued = 0;
             bool clumped = wave.Type is WaveType.Horde or WaveType.Squad;
             Vector3 centre = default;
-            if (clumped && !TryEdgeSpot(grid, out centre)) clumped = false;
+            if (clumped && !TrySpawnSpot(grid, out centre)) clumped = false;
             float clump = wave.Type == WaveType.Squad ? 1.5f : 4f;
             for (int i = 0; i < count; i++)
             {
@@ -101,7 +104,7 @@ namespace Isekai
                     }
                     if (!found) continue;
                 }
-                else if (!TryEdgeSpot(grid, out at)) continue;
+                else if (!TrySpawnSpot(grid, out at)) continue;
                 _pending.Enqueue((prefab, at, wave.IsFinal));
                 queued++;
             }
@@ -131,6 +134,37 @@ namespace Isekai
                 RegionGoal.Current?.Capture.FinalWaveEnemyDied();
             }
             damageable.Died += OnDied;
+        }
+
+        private bool TrySpawnSpot(FlowFieldGrid grid, out Vector3 spot) => TryRingSpot(grid, out spot) || TryEdgeSpot(grid, out spot);
+
+        // A walkable cell in the ring around the Main Base, far from every player target.
+        private bool TryRingSpot(FlowFieldGrid grid, out Vector3 spot)
+        {
+            spot = default;
+            Building home = null;
+            foreach (Building b in Building.All)
+                if (b.IsMainBase && b.IsAlive) { home = b; break; }
+            if (home == null) return false;
+            float min = Mathf.Min(_minDistanceFromTargets, _maxDistanceFromBase);
+            for (int attempt = 0; attempt < 30; attempt++)
+            {
+                double angle = _random.NextDouble() * Math.PI * 2.0;
+                float radius = Mathf.Lerp(min, _maxDistanceFromBase, (float)_random.NextDouble());
+                Vector3 at = home.transform.position + new Vector3((float)Math.Cos(angle), (float)Math.Sin(angle), 0f) * radius;
+                Int2 cell = grid.WorldToCell(new Float3(at.x, at.y, 0f));
+                if (!grid.Contains(cell) || !grid.IsWalkable(cell)) continue;
+                if (FarFromTargets(at)) { spot = at; return true; }
+            }
+            return false;
+        }
+
+        private bool FarFromTargets(Vector3 at)
+        {
+            float min2 = _minDistanceFromTargets * _minDistanceFromTargets;
+            foreach (HordeTarget t in HordeTarget.All)
+                if ((t.transform.position - at).sqrMagnitude < min2) return false;
+            return true;
         }
 
         // A walkable cell in the band along the map's edges, far from every player target.

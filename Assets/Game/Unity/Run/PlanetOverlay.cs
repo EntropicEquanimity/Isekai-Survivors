@@ -1,13 +1,14 @@
 using Blondie.Core;
 using Blondie.GameSetup;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 namespace Isekai
 {
     /// <summary>
-    /// Zooming out past the widest Region view shows the Planet map over the Region (read only); scrolling back in or
-    /// Escape returns to the Region. The game keeps running underneath.
+    /// M shows the Planet map over the Region (read only); M again or Escape returns to the Region. The game keeps
+    /// running underneath, and the wheel doesn't zoom the Region while the map is up.
     /// </summary>
     public sealed class PlanetOverlay : MonoBehaviour
     {
@@ -15,6 +16,7 @@ namespace Isekai
         private const string MenuName = "PlanetMap";
 
         [SerializeField] private PanelSettings _panelSettings;
+        [SerializeField] private Key _toggleKey = Key.M;
 
         private ScrollZoom _zoom;
         private VisualElement _shade;
@@ -25,11 +27,6 @@ namespace Isekai
         private void Start()
         {
             _zoom = FindAnyObjectByType<ScrollZoom>();
-            if (_zoom != null)
-            {
-                _zoom.OutPastLimit += Open;
-                _zoom.InWhileBlocked += Close;
-            }
             VisualElement root = GamePanels.Mount(this, PanelName, _panelSettings, out PanelRenderer panel, 90f);
             _shade = new VisualElement
             {
@@ -43,11 +40,12 @@ namespace Isekai
             UIPanels.Created(panel);
         }
 
-        private void OnDestroy()
+        private void Update()
         {
-            if (_zoom == null) return;
-            _zoom.OutPastLimit -= Open;
-            _zoom.InWhileBlocked -= Close;
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard == null || _toggleKey == Key.None || !keyboard[_toggleKey].wasPressedThisFrame) return;
+            if (IsOpen) Close();
+            else Open();
         }
 
         public void Open()
@@ -58,7 +56,7 @@ namespace Isekai
             _shade.Add(new Label(RunSession.Run.Current != null ? $"{RunSession.Run.Current.Name} on the Planet" : "The Planet") { style = { fontSize = PlanetMapView.PixelFontSize * 2, color = Color.white } });
             _map = new PlanetMapView(RunSession.Run, new Vector2(880f, 400f), null);
             _shade.Add(_map);
-            _shade.Add(new Label("Scroll in to return") { style = { fontSize = PlanetMapView.PixelFontSize, color = new Color(0.8f, 0.8f, 0.85f), marginTop = 22 } });
+            _shade.Add(new Label("M or Escape to return") { style = { fontSize = PlanetMapView.PixelFontSize, color = new Color(0.8f, 0.8f, 0.85f), marginTop = 4 } });
             _shade.style.display = DisplayStyle.Flex;
             if (_zoom != null) _zoom.Blocked = true;
             MenuStack.Push(MenuName, Close);

@@ -31,6 +31,9 @@ namespace Isekai
             if (Current == this) Current = null;
         }
 
+        /// <summary>World size of one ground cell.</summary>
+        public float CellSize => Field != null ? Field.CellSize : 1f;
+
         public Int2 CellAt(Vector3 world) => Field.WorldToCell(new Float3(world.x, world.y, 0f));
 
         /// <summary>The world centre of a footprint.</summary>

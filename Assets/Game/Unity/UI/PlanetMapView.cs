@@ -27,6 +27,7 @@ namespace Isekai
         private readonly Vector2 _size;
         private readonly Dictionary<string, Button> _nodes = new();
         private readonly Label _info;
+        private const int InfoLineHeight = 26;
 
         /// <param name="size">Width and height in UI pixels. The rings are drawn as an ellipse filling it: the boxes are wide.</param>
         public PlanetMapView(PlanetRun run, Vector2 size, Action<RegionInfo> onPick)
@@ -37,6 +38,7 @@ namespace Isekai
             style.width = size.x;
             style.height = size.y;
             style.flexShrink = 0;
+            style.marginBottom = InfoLineHeight;   // the hover line sits in this space, below the map
             generateVisualContent += DrawLinks;
 
             foreach (RegionInfo region in run.Planet.Regions)
@@ -60,7 +62,7 @@ namespace Isekai
                 _nodes[r.Id] = node;
                 Add(node);
             }
-            _info = new Label { pickingMode = PickingMode.Ignore, style = { fontSize = PixelFontSize, position = Position.Absolute, left = 0, right = 0, bottom = -22, unityTextAlign = TextAnchor.MiddleCenter, color = Color.white } };
+            _info = new Label { pickingMode = PickingMode.Ignore, style = { fontSize = PixelFontSize, position = Position.Absolute, left = 0, right = 0, bottom = -InfoLineHeight + 2, unityTextAlign = TextAnchor.MiddleCenter, color = Color.white } };
             Add(_info);
             Refresh();
         }

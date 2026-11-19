@@ -81,7 +81,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 4
   m_MaskInteraction: 0
   m_Sprite: {fileID: 975244514, guid: 63e5352fdb570bb4585342857e65820a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -172,6 +172,7 @@ GameObject:
   - component: {fileID: 5251759720067950116}
   - component: {fileID: 1099911240037160439}
   - component: {fileID: 7172010893617079226}
+  - component: {fileID: 5913015002507078040}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -563,3 +564,21 @@ MonoBehaviour:
   _startingStorage:
   - {fileID: 11400000, guid: e4dd3fc1bf6f3904b8843701090e0090, type: 2}
   - {fileID: 11400000, guid: 38f5f519e5cd0ea4c8f15415887d294e, type: 2}
+--- !u!114 &5913015002507078040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3011107552043763039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6c0fb817ba57da44a6d3ec77687799c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Isekai.Game::Isekai.HealthBar
+  _width: 16
+  _height: 2
+  _fill: {r: 0.35, g: 0.9, b: 0.35, a: 1}
+  _back: {r: 0.08, g: 0.08, b: 0.1, a: 0.9}
+  _alwaysShow: 1
+  _gap: 2

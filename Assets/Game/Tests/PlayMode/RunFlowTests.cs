@@ -85,14 +85,17 @@ namespace Isekai.Tests
         }
 
         [UnityTest]
-        public IEnumerator Zooming_out_past_the_widest_view_shows_the_Planet()
+        public IEnumerator The_Planet_map_opens_over_the_Region_and_zooming_out_never_leaves_the_Region()
         {
             SceneManager.LoadScene(RunSession.RegionScene);
             yield return WaitFor(() => Object.FindAnyObjectByType<PlanetOverlay>() != null, "the Region loads");
             yield return null;
             var overlay = Object.FindAnyObjectByType<PlanetOverlay>();
             var zoom = Object.FindAnyObjectByType<ScrollZoom>();
-            for (int i = 0; i < 10 && !overlay.IsOpen; i++) zoom.Zoom(-1);
+            for (int i = 0; i < 10; i++) zoom.Zoom(-1);
+            Assert.IsFalse(overlay.IsOpen, "zooming out stays on the Region");
+            Assert.AreEqual(4, zoom.Levels.PixelDivisor, "the farthest view: 8 pixels per unit");
+            overlay.Open();
             Assert.IsTrue(overlay.IsOpen);
             Assert.IsTrue(zoom.Blocked, "the wheel no longer zooms the Region");
             overlay.Close();

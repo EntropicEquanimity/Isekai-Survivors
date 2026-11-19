@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 8048850546332619431}
   - component: {fileID: 4609690543821339858}
   - component: {fileID: 3000305046524104306}
+  - component: {fileID: 330217615210331550}
   m_Layer: 0
   m_Name: Main Base
   m_TagString: Untagged
@@ -178,6 +179,24 @@ MonoBehaviour:
   _pods: 1
   _cloneSeconds: 8
   _exit: {x: 0, y: -1.6}
+--- !u!114 &330217615210331550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 184761518073094489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6c0fb817ba57da44a6d3ec77687799c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Isekai.Game::Isekai.HealthBar
+  _width: 32
+  _height: 2
+  _fill: {r: 0.35, g: 0.9, b: 0.35, a: 1}
+  _back: {r: 0.08, g: 0.08, b: 0.1, a: 0.9}
+  _alwaysShow: 0
+  _gap: 2
 --- !u!1 &7170723057527251805
 GameObject:
   m_ObjectHideFlags: 0
@@ -205,7 +224,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 4, y: 4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6672220058156424703}
@@ -257,7 +276,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 4
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 0d3c51e4806e8294facc48b16d464657, type: 3}
   m_Color: {r: 0.55, g: 0.42, b: 0.3, a: 1}

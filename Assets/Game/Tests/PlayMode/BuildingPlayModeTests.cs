@@ -70,6 +70,26 @@ namespace Isekai.Tests
         }
 
         [UnityTest]
+        public IEnumerator Buildings_fit_side_by_side_and_their_art_and_ghost_cover_the_footprint()
+        {
+            RegionEconomy.Current.Stockpile.Add(ResourceType.Stone, 100);
+            BuildingAsset barracks = Catalogue("Barracks");
+            Building left = _buildings.Place(barracks, BesideMainBase(4));
+            Building right = _buildings.Place(barracks, BesideMainBase(6));
+            Assert.IsNotNull(left);
+            Assert.IsNotNull(right, "the very next cells over");
+            float cell = _buildings.CellSize;
+            Bounds art = left.GetComponentsInChildren<SpriteRenderer>().First(r => r.name == "Art").bounds;
+            Assert.AreEqual(2f * cell, art.size.x, 1e-3f, "the art is as wide as the footprint");
+
+            _mode.Pick(barracks);
+            var ghost = Object.FindObjectsByType<SpriteRenderer>(FindObjectsInactive.Exclude).First(r => r.name == "Ghost");
+            Assert.AreEqual(2f * cell, ghost.bounds.size.x, 1e-3f, "the ghost too");
+            _mode.Cancel();
+            yield return null;
+        }
+
+        [UnityTest]
         public IEnumerator Placement_is_refused_outside_a_Base_and_when_too_expensive()
         {
             BuildingAsset tower = Catalogue("Tower");

@@ -79,7 +79,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 4
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 51efe9d99ee4cc445ae69dcb74f56e76, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -105,6 +105,7 @@ GameObject:
   - component: {fileID: 1785299630052416389}
   - component: {fileID: 5752222592491507733}
   - component: {fileID: 847106180391539035}
+  - component: {fileID: 7283730080103094522}
   m_Layer: 0
   m_Name: Enemy Nest
   m_TagString: Untagged
@@ -215,6 +216,24 @@ MonoBehaviour:
   _packRadius: 4
   _regrowSeconds: 6
   _alarmRadius: 9
+--- !u!114 &7283730080103094522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5741062361009696739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6c0fb817ba57da44a6d3ec77687799c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Isekai.Game::Isekai.HealthBar
+  _width: 28
+  _height: 2
+  _fill: {r: 0.95, g: 0.25, b: 0.2, a: 1}
+  _back: {r: 0.08, g: 0.08, b: 0.1, a: 0.9}
+  _alwaysShow: 0
+  _gap: 2
 --- !u!1 &7582519933876313854
 GameObject:
   m_ObjectHideFlags: 0

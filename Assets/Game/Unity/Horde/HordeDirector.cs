@@ -28,6 +28,7 @@ namespace Isekai
 
         private readonly List<HordeMember> _members = new();
         private readonly List<HordeMember> _nearby = new();
+        private readonly List<HordeTarget> _targets = new();
         private readonly List<Int2> _targetCells = new();
         private readonly List<Int2> _lastCells = new();
         private SpatialHash<HordeMember> _hash;
@@ -141,8 +142,12 @@ namespace Isekai
             float now = Time.time;
             // The crowd stops enemies anywhere inside a target's goal cells, up to about a cell from its centre.
             float slack = Grid.CellSize * 0.75f;
-            foreach (HordeTarget target in HordeTarget.All)
+            // A copy: a hit can kill a target, which leaves the list (or clones the Character, which joins it).
+            _targets.Clear();
+            _targets.AddRange(HordeTarget.All);
+            foreach (HordeTarget target in _targets)
             {
+                if (target == null) continue;
                 if (!target.IsAlive) continue;
                 Vector3 p = target.transform.position;
                 _nearby.Clear();

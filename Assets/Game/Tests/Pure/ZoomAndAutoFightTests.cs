@@ -37,6 +37,28 @@ namespace Isekai.Tests
         }
 
         [Test]
+        public void Zooming_out_past_the_widest_view_halves_the_pixels_per_unit()
+        {
+            var zoom = new ZoomLevels(1, 6, 3, new Int2(960, 540), farLevels: 2);
+            Assert.IsTrue(zoom.Zoom(-1, FullHd));
+            Assert.AreEqual(2, zoom.EffectiveScale(FullHd), "the widest normal view");
+            Assert.AreEqual(1, zoom.PixelDivisor);
+
+            Assert.IsTrue(zoom.Zoom(-1, FullHd));
+            Assert.AreEqual(2, zoom.PixelDivisor, "same picture size, half the pixels per unit");
+            Assert.AreEqual(new Int2(960, 540), zoom.ViewFor(FullHd));
+            Assert.IsTrue(zoom.Zoom(-1, FullHd));
+            Assert.AreEqual(4, zoom.PixelDivisor);
+            Assert.IsFalse(zoom.Zoom(-1, FullHd), "no further");
+
+            Assert.IsTrue(zoom.Zoom(+2, FullHd));
+            Assert.AreEqual(1, zoom.PixelDivisor, "far levels come back first");
+            Assert.AreEqual(2, zoom.EffectiveScale(FullHd));
+            Assert.IsTrue(zoom.Zoom(+1, FullHd));
+            Assert.AreEqual(3, zoom.EffectiveScale(FullHd));
+        }
+
+        [Test]
         public void Start_scale_is_clamped()
         {
             Assert.AreEqual(6, new ZoomLevels(1, 6, 9, new Int2(4000, 4000)).Scale);

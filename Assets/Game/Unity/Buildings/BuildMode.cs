@@ -42,7 +42,7 @@ namespace Isekai
             {
                 _ghost.gameObject.SetActive(true);
                 if (asset.Preview != null) _ghost.sprite = asset.Preview;
-                _ghost.transform.localScale = new Vector3(asset.Size.x, asset.Size.y, 1f);
+                FitGhost(asset);
             }
             Changed?.Invoke();
         }
@@ -103,6 +103,14 @@ namespace Isekai
             if (!mouse.leftButton.wasPressedThisFrame || overUI || verdict != RegionBuildings.Verdict.Ok) return;
             buildings.Place(Picked, origin);
             if (keyboard == null || !keyboard.shiftKey.isPressed) Cancel();
+        }
+
+        // The ghost covers exactly the cells the footprint takes, whatever the preview sprite's own size.
+        private void FitGhost(BuildingAsset asset)
+        {
+            float cell = RegionBuildings.Current != null ? RegionBuildings.Current.CellSize : 1f;
+            Vector2 sprite = _ghost.sprite != null ? (Vector2)_ghost.sprite.bounds.size : Vector2.one;
+            _ghost.transform.localScale = new Vector3(asset.Size.x * cell / Mathf.Max(sprite.x, 1e-4f), asset.Size.y * cell / Mathf.Max(sprite.y, 1e-4f), 1f);
         }
 
         private static bool PlayerBrainBlocked() => GameSetup.IsPaused;

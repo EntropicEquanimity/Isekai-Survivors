@@ -20,7 +20,7 @@ namespace Isekai
             _label = new Label
             {
                 pickingMode = PickingMode.Ignore,
-                style = { position = Position.Absolute, top = 4, left = 0, right = 0, unityTextAlign = TextAnchor.UpperCenter, color = Color.white },
+                style = { position = Position.Absolute, top = 30, left = 0, right = 0, unityTextAlign = TextAnchor.UpperCenter, color = Color.white },
             };
             root.Add(_label);
             UIPanels.Created(panel);

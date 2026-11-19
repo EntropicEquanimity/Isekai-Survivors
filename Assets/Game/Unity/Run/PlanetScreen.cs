@@ -64,7 +64,7 @@ namespace Isekai
             string earned = run.IsOver && MetaProgress.LastEarned > 0 ? $"   (+{MetaProgress.LastEarned} from this Run)" : "";
             column.Add(new Label($"Shards {MetaProgress.Shards}{earned}")
                 { style = { fontSize = PlanetMapView.PixelFontSize, color = new Color(0.7f, 0.85f, 1f), marginBottom = 6 } });
-            _map = new PlanetMapView(run, new Vector2(880f, 360f), region => RunSession.GoToRegion(region));
+            _map = new PlanetMapView(run, new Vector2(880f, 336f), region => RunSession.GoToRegion(region));
             column.Add(_map);
             var buttons = new VisualElement { style = { flexDirection = FlexDirection.Row, marginTop = 8 } };
             if (CanSpendShards(run)) buttons.Add(new Button(OpenLegacy) { text = "Legacy upgrades" });
