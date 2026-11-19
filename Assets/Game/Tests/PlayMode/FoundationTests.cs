@@ -247,8 +247,8 @@ namespace Isekai.Tests
         {
             yield return TestWait.Until(() => RegionBootstrap.Current.IsPopulated, "the Region fills");
             CollectionAssert.AreEqual(
-                new[] { typeof(GroundPainter), typeof(BuildingsPainter), typeof(UnitsPainter), typeof(CameraPainter) },
-                MapPainters.All.Select(p => p.GetType()).ToArray(), "ground, buildings, units, camera, in drawing order");
+                new[] { typeof(GroundPainter), typeof(BuildingsPainter), typeof(UnitsPainter), typeof(FogPainter), typeof(CameraPainter) },
+                MapPainters.All.Select(p => p.GetType()).ToArray(), "ground, buildings, units, fog, camera, in drawing order");
 
             var map = new RegionMapView(RegionGrid.Current.Field);
             Vector3 spot = RegionGrid.Current.CentreOf(new Int2(30, 30));
