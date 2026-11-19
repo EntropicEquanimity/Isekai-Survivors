@@ -154,13 +154,13 @@ namespace Isekai.Tests
             Assert.AreEqual(BehaviourAction.Idle, BehaviourScoring.Choose(new BehaviourProfile("empty"), BehaviourContext.Calm, BehaviourAction.Fight));
         }
 
-        // ---- Traits are data: modifiers on a copy of the profile ----
+        // ---- Traits are data: changes to a copy of the profile ----
 
-        private static readonly BehaviourModifier Cowardly =
-            BehaviourModifier.Add(BehaviourAction.Flee, new BehaviourTerm(BehaviourFactor.Health, 6f, 0.75f, 0.7f));
+        private static readonly BehaviourChange Cowardly =
+            BehaviourChange.Add(BehaviourAction.Flee, new BehaviourTerm(BehaviourFactor.Health, 6f, 0.75f, 0.7f));
 
         [Test]
-        public void A_Cowardly_modifier_makes_a_soldier_flee_below_75_percent_health_through_data_alone()
+        public void A_Cowardly_trait_makes_a_soldier_flee_below_75_percent_health_through_data_alone()
         {
             BehaviourContext c = Calm(MortalType.Soldier);
             c.ThreatSeen = true;
@@ -178,33 +178,33 @@ namespace Isekai.Tests
         }
 
         [Test]
-        public void A_Berserk_modifier_never_flees()
+        public void A_Berserk_trait_never_flees()
         {
             BehaviourContext c = Calm(MortalType.Soldier);
             c.ThreatSeen = true;
             c.Fear = 1f;
             c.Health = 0.02f;
-            BehaviourProfile berserk = MortalProfiles.For(MortalType.Soldier).Behaviour.With(BehaviourModifier.Off(BehaviourAction.Flee));
+            BehaviourProfile berserk = MortalProfiles.For(MortalType.Soldier).Behaviour.With(BehaviourChange.Off(BehaviourAction.Flee));
             Assert.AreEqual(BehaviourAction.Fight, BehaviourScoring.Choose(berserk, c, BehaviourAction.Fight));
         }
 
         [Test]
-        public void A_modifier_makes_a_copy_and_leaves_the_types_own_profile_alone()
+        public void A_trait_makes_a_copy_and_leaves_the_types_own_profile_alone()
         {
             BehaviourProfile plain = MortalProfiles.For(MortalType.Peasant).Behaviour;
             float before = plain.Of(BehaviourAction.Flee).Base;
             int termsBefore = plain.Of(BehaviourAction.Flee).Terms.Length;
-            plain.With(Cowardly, BehaviourModifier.Bias(BehaviourAction.Flee, 5f));
+            plain.With(Cowardly, BehaviourChange.Bias(BehaviourAction.Flee, 5f));
             Assert.AreEqual(before, plain.Of(BehaviourAction.Flee).Base);
             Assert.AreEqual(termsBefore, plain.Of(BehaviourAction.Flee).Terms.Length);
         }
 
         [Test]
-        public void A_modifier_can_give_a_unit_an_action_it_did_not_have()
+        public void A_trait_can_give_a_unit_an_action_it_did_not_have()
         {
             BehaviourProfile soldier = MortalProfiles.For(MortalType.Soldier).Behaviour;
             Assert.IsFalse(soldier.Of(BehaviourAction.Purify).Enabled);
-            BehaviourProfile purifier = soldier.With(BehaviourModifier.On(BehaviourAction.Purify, 0f, new BehaviourTerm(BehaviourFactor.Corruption, 2f)));
+            BehaviourProfile purifier = soldier.With(BehaviourChange.On(BehaviourAction.Purify, 0f, new BehaviourTerm(BehaviourFactor.Corruption, 2f)));
             BehaviourContext c = Calm(MortalType.Soldier);
             c.CorruptionNear = true;
             Assert.AreEqual(BehaviourAction.Purify, BehaviourScoring.Choose(purifier, c, BehaviourAction.Patrol));
@@ -215,8 +215,8 @@ namespace Isekai.Tests
         {
             BehaviourProfile soldier = MortalProfiles.For(MortalType.Soldier).Behaviour;
             BehaviourProfile atNight = soldier.With(
-                BehaviourModifier.Add(BehaviourAction.Patrol, new BehaviourTerm(BehaviourFactor.Night, -1f)),
-                BehaviourModifier.Add(BehaviourAction.ReturnHome, new BehaviourTerm(BehaviourFactor.Night, 1f)));
+                BehaviourChange.Add(BehaviourAction.Patrol, new BehaviourTerm(BehaviourFactor.Night, -1f)),
+                BehaviourChange.Add(BehaviourAction.ReturnHome, new BehaviourTerm(BehaviourFactor.Night, 1f)));
             BehaviourContext c = Calm(MortalType.Soldier);
             c.DistanceHome = 5f;
             Assert.AreEqual(BehaviourAction.Patrol, BehaviourScoring.Choose(atNight, c, BehaviourAction.Patrol));

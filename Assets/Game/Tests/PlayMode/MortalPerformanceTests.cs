@@ -49,10 +49,10 @@ namespace Isekai.Tests
             int recycledBefore = FlowFields.RecycledCount;
             int brainsBefore = RegionMortals.Current.Brains.Count;
 
-            TestDebug.Press("Spawn 100 townsfolk");
-            TestDebug.Press("Spawn 100 townsfolk");
-            TestDebug.Press("Spawn 100 townsfolk");
-            TestDebug.Press("Spawn 100 townsfolk");
+            TestDebug.Press("Spawn 100 mortals");
+            TestDebug.Press("Spawn 100 mortals");
+            TestDebug.Press("Spawn 100 mortals");
+            TestDebug.Press("Spawn 100 mortals");
             yield return new WaitForSeconds(2f);
             Assert.GreaterOrEqual(RegionMortals.Current.Brains.Count, brainsBefore + 400, "the new mortals are thinking");
 

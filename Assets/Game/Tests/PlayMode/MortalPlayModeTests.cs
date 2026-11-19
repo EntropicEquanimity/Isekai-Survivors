@@ -191,7 +191,7 @@ namespace Isekai.Tests
         [UnityTest]
         public IEnumerator A_trait_is_a_profile_change_a_Cowardly_soldier_flees_a_plain_one_fights()
         {
-            var cowardly = BehaviourModifier.Add(BehaviourAction.Flee, new BehaviourTerm(BehaviourFactor.Health, 6f, 0.75f, 0.7f));
+            var cowardly = BehaviourChange.Add(BehaviourAction.Flee, new BehaviourTerm(BehaviourFactor.Health, 6f, 0.75f, 0.7f));
             MortalBrain coward = Spawn(MortalType.Soldier, FreeSpotNear(_jack.transform.position, 5f));
             MortalBrain plain = Spawn(MortalType.Soldier, FreeSpotNear(_jack.transform.position, 5.5f));
             coward.SetBehaviour(coward.Behaviour.With(cowardly));

@@ -63,30 +63,30 @@ namespace Isekai
             return score;
         }
 
-        internal ActionWeights Changed(in BehaviourModifier modifier)
+        internal ActionWeights Changed(in BehaviourChange change)
         {
-            if (modifier.Disable) return new ActionWeights(false, Base, Terms ?? Array.Empty<BehaviourTerm>());
-            if (modifier.Replace) return new ActionWeights(modifier.BaseDelta, modifier.Terms);
+            if (change.Disable) return new ActionWeights(false, Base, Terms ?? Array.Empty<BehaviourTerm>());
+            if (change.Replace) return new ActionWeights(change.BaseDelta, change.Terms);
             BehaviourTerm[] own = Terms ?? Array.Empty<BehaviourTerm>();
             BehaviourTerm[] terms = own;
-            if (modifier.Terms != null && modifier.Terms.Length > 0)
+            if (change.Terms != null && change.Terms.Length > 0)
             {
-                terms = new BehaviourTerm[own.Length + modifier.Terms.Length];
+                terms = new BehaviourTerm[own.Length + change.Terms.Length];
                 Array.Copy(own, terms, own.Length);
-                Array.Copy(modifier.Terms, 0, terms, own.Length, modifier.Terms.Length);
+                Array.Copy(change.Terms, 0, terms, own.Length, change.Terms.Length);
             }
-            return new ActionWeights(Enabled, Base + modifier.BaseDelta, terms);
+            return new ActionWeights(Enabled, Base + change.BaseDelta, terms);
         }
     }
 
     /// <summary>
     /// A change to one action's weights: what a trait (or a Vigilance stage, or a spell) is, as data. It adds to the base,
     /// adds terms, or switches the action off. Cowardly is
-    /// <c>BehaviourModifier.Add(Flee, new BehaviourTerm(Health, 6, 0.75f, 0.7f))</c>; Berserk is <c>BehaviourModifier.Off(Flee)</c>.
+    /// <c>BehaviourChange.Add(Flee, new BehaviourTerm(Health, 6, 0.75f, 0.7f))</c>; Berserk is <c>BehaviourChange.Off(Flee)</c>.
     /// </summary>
-    public readonly struct BehaviourModifier
+    public readonly struct BehaviourChange
     {
-        private BehaviourModifier(BehaviourAction action, float baseDelta, BehaviourTerm[] terms, bool disable, bool replace = false)
+        private BehaviourChange(BehaviourAction action, float baseDelta, BehaviourTerm[] terms, bool disable, bool replace = false)
         {
             Action = action;
             BaseDelta = baseDelta;
@@ -102,16 +102,16 @@ namespace Isekai
         public bool Replace { get; }
 
         /// <summary>Makes the unit do an action it did not (a Purifier trait), scoring <paramref name="baseScore"/> plus its terms.</summary>
-        public static BehaviourModifier On(BehaviourAction action, float baseScore, params BehaviourTerm[] terms) => new(action, baseScore, terms ?? Array.Empty<BehaviourTerm>(), false, true);
+        public static BehaviourChange On(BehaviourAction action, float baseScore, params BehaviourTerm[] terms) => new(action, baseScore, terms ?? Array.Empty<BehaviourTerm>(), false, true);
 
         /// <summary>Adds terms to an action's score (nothing if the unit does not do the action).</summary>
-        public static BehaviourModifier Add(BehaviourAction action, params BehaviourTerm[] terms) => new(action, 0f, terms, false);
+        public static BehaviourChange Add(BehaviourAction action, params BehaviourTerm[] terms) => new(action, 0f, terms, false);
 
         /// <summary>Adds to an action's base score (nothing if the unit does not do the action).</summary>
-        public static BehaviourModifier Bias(BehaviourAction action, float delta) => new(action, delta, null, false);
+        public static BehaviourChange Bias(BehaviourAction action, float delta) => new(action, delta, null, false);
 
         /// <summary>Switches an action off.</summary>
-        public static BehaviourModifier Off(BehaviourAction action) => new(action, 0f, null, true);
+        public static BehaviourChange Off(BehaviourAction action) => new(action, 0f, null, true);
     }
 
     /// <summary>
@@ -151,11 +151,11 @@ namespace Isekai
             return new BehaviourProfile(Name, Inertia, weights);
         }
 
-        /// <summary>A copy with the modifiers applied (a trait's weights). The original is unchanged.</summary>
-        public BehaviourProfile With(params BehaviourModifier[] modifiers)
+        /// <summary>A copy with the changes applied (a trait's weights). The original is unchanged.</summary>
+        public BehaviourProfile With(params BehaviourChange[] changes)
         {
             var weights = (ActionWeights[])_weights.Clone();
-            foreach (BehaviourModifier m in modifiers) weights[(int)m.Action] = weights[(int)m.Action].Changed(m);
+            foreach (BehaviourChange m in changes) weights[(int)m.Action] = weights[(int)m.Action].Changed(m);
             return new BehaviourProfile(Name, Inertia, weights);
         }
     }

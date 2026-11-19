@@ -31,7 +31,6 @@ namespace Isekai
         private MortalHomes _homes;
         private RegionSettlements _settlements;
         private int _cursor;
-        private float _nextAura;
         private float _nextRelease;
 
         public static RegionMortals Current { get; private set; }
@@ -78,7 +77,6 @@ namespace Isekai
             _homes?.Dispose();
             _homes = null;
             _brains.Clear();
-            if (RegionSouls.Current != null) RegionSouls.Current.DrainDoubled = false;
         }
 
         internal void Register(MortalBrain brain)
@@ -298,11 +296,6 @@ namespace Isekai
 
             for (int i = _brains.Count - 1; i >= 0; i--) _brains[i].Step(dt, now, this);
 
-            if (now >= _nextAura)
-            {
-                _nextAura = now + 0.25f;
-                UpdateDrain();
-            }
             if (now >= _nextRelease)
             {
                 _nextRelease = now + 5f;
@@ -311,27 +304,18 @@ namespace Isekai
             MortalCost.Add(System.Diagnostics.Stopwatch.GetTimestamp() - start);
         }
 
-        // Jack's wisp drains double within a priest's reach and on holy ground (the Seat's cells).
-        private void UpdateDrain()
+        /// <summary>A living priest is within its aura of <paramref name="world"/> (<see cref="RegionSouls"/> doubles the wisp's drain there).</summary>
+        public bool PriestNear(Vector3 world)
         {
-            RegionSouls souls = RegionSouls.Current;
-            if (souls == null) return;
-            if (!souls.IsBodiless || souls.Wisp == null)
-            {
-                souls.DrainDoubled = false;
-                return;
-            }
-            Vector3 w = souls.Wisp.transform.position;
-            bool doubled = IsHolyGround(w);
             float reach = MortalTuning.PriestAuraCells * CellSize;
-            for (int i = 0; i < _brains.Count && !doubled; i++)
+            for (int i = 0; i < _brains.Count; i++)
             {
                 MortalBrain b = _brains[i];
                 if (b.Type != MortalType.Priest || !b.Member.IsAlive) continue;
                 Vector3 p = b.transform.position;
-                doubled = (p.x - w.x) * (p.x - w.x) + (p.y - w.y) * (p.y - w.y) <= reach * reach;
+                if ((p.x - world.x) * (p.x - world.x) + (p.y - world.y) * (p.y - world.y) <= reach * reach) return true;
             }
-            souls.DrainDoubled = doubled;
+            return false;
         }
 
         /// <summary>Holy ground is the Seat's cells.</summary>

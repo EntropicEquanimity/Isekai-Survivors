@@ -39,8 +39,17 @@ namespace Isekai
         /// <summary>Souls ran out while bodiless: the Run is lost.</summary>
         public bool IsLost { get; private set; }
 
-        /// <summary>Priests or holy ground double the drain; whatever owns them sets this (ticket #13).</summary>
-        public bool DrainDoubled { get; set; }
+        /// <summary>The wisp is near a living priest or on holy ground (the Seat's cells), which doubles the drain. Asked of the mortals each time.</summary>
+        public bool DrainDoubled
+        {
+            get
+            {
+                RegionMortals mortals = RegionMortals.Current;
+                if (_wisp == null || mortals == null) return false;
+                Vector3 at = _wisp.transform.position;
+                return mortals.IsHolyGround(at) || mortals.PriestNear(at);
+            }
+        }
 
         public SoulLedger Ledger => SoulRun.Ledger;
 

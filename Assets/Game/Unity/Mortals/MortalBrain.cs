@@ -33,7 +33,7 @@ namespace Isekai
         private BehaviourContext _context;
         private RegionMortals _world;
         private RegionSettlements.Settlement _settlement;
-        private RegionSettlements.Settlement _fleeTo;
+        private RegionSettlements.Settlement _fieldTarget;
         private Vector3 _home;
         private Vector3 _goal;
         private Vector3 _threatAt;
@@ -112,7 +112,7 @@ namespace Isekai
             _stuck = 0f;
             _assigned = false;
             _hasPurifyCell = false;
-            _fleeTo = null;
+            _fieldTarget = null;
             Purified = 0;
             _damageable.Damaged += OnDamaged;
             RegionMortals.Current?.Register(this);
@@ -216,7 +216,7 @@ namespace Isekai
         private void CarryFlee(Vector3 pos, RegionMortals world)
         {
             RegionSettlements.Settlement to = world.Homes.NearestStronghold(pos);
-            _fleeTo = to;
+            _fieldTarget = to;
             if (to != null && MortalHomes.IsAt(to, world.Grid.CellAt(pos))) { _move = Move.None; return; }   // safe at the stronghold
             if (to != null) { Go(Move.Field, MortalTuning.FleeSpeed); return; }
             // No stronghold stands: run from whatever frightened it.
@@ -230,7 +230,7 @@ namespace Isekai
         {
             float away = Distance(pos, _home);
             if (away <= 1.2f * world.CellSize) { _move = Move.None; return; }
-            if (away > 6f * world.CellSize && _settlement != null) { _fleeTo = _settlement; Go(Move.Field, MortalTuning.ReturnSpeed); }
+            if (away > 6f * world.CellSize && _settlement != null) { _fieldTarget = _settlement; Go(Move.Field, MortalTuning.ReturnSpeed); }
             else { _goal = _home; Go(Move.Direct, MortalTuning.ReturnSpeed); }
         }
 
@@ -276,7 +276,7 @@ namespace Isekai
             }
             else
             {
-                RegionSettlements.Settlement target = Action == BehaviourAction.Flee ? _fleeTo : _settlement;
+                RegionSettlements.Settlement target = Action == BehaviourAction.Flee ? _fieldTarget : _settlement;
                 if (target == null) { _move = Move.None; return; }
                 if (Action == BehaviourAction.ReturnHome && Distance(p, _home) <= 5f * cell) { _move = Move.None; return; }
                 if (Action == BehaviourAction.Flee && MortalHomes.IsAt(target, world.Grid.CellAt(p))) { Arrived(world); return; }
