@@ -105,7 +105,7 @@ Three reviews (units and AI; buildings and economy; Run, UI and scenes) looked f
   - Health bars are built when an enemy is created, not on its first hit.
   - Wave pools are prewarmed at setup.
 - **Result in the Editor:** about 180 → about 235 fps; the slowest frame in a typical 5 s window went from 17–20 ms to 9–16 ms.
-- **Pin:** `com.blondie.flowfields` is pinned to BU branch `fix/flowfield-reuse` (`7129115`) until it is merged into BU's main. The other BU packages are still at `b275a07`.
+- **Pin:** `com.blondie.flowfields` is pinned to `7129115`, merged into BU's main. The other BU packages are still at `b275a07`. BU's `feat/settings-extension` also bumps flowfields; merging it into main conflicts only in that package's `package.json` version and `CHANGELOG.md` (keep both entries and renumber).
 - **Left:** frames that log to the Editor console cost the console's time (Editor only). Measure in a build before deeper work.
 - **Design for scale:** keep map-wide field requests rare. Per-team crowds should follow fields over slowly changing targets, with local steering for the last stretch.
 
