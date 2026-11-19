@@ -8,6 +8,7 @@ namespace Isekai
     public sealed class ResourceNode : MonoBehaviour
     {
         private static readonly List<ResourceNode> s_all = new();
+        private object _reservedBy;
 
         [SerializeField] private ResourceType _type = ResourceType.Stone;
         [SerializeField, Min(1)] private int _amount = 50;
@@ -34,11 +35,34 @@ namespace Isekai
             Remaining -= taken;
             if (IsEmpty)
             {
+                _reservedBy = null;
                 Depleted?.Invoke(this);
                 gameObject.SetActive(false);
             }
             return taken;
         }
+
+        /// <summary>Marks this node as claimed by <paramref name="owner"/> while it is being mined.</summary>
+        public bool TryReserve(object owner)
+        {
+            if (owner == null) throw new ArgumentNullException(nameof(owner));
+            if (IsEmpty || !isActiveAndEnabled) return false;
+            if (_reservedBy == null || ReferenceEquals(_reservedBy, owner))
+            {
+                _reservedBy = owner;
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>Releases this node if it was reserved by <paramref name="owner"/>.</summary>
+        public void Release(object owner)
+        {
+            if (owner != null && ReferenceEquals(_reservedBy, owner)) _reservedBy = null;
+        }
+
+        /// <summary>Whether another miner has this node reserved.</summary>
+        public bool IsReservedByOther(object owner) => _reservedBy != null && !ReferenceEquals(_reservedBy, owner);
 
         /// <summary>The nearest non-empty node within <paramref name="reach"/> of <paramref name="position"/>, or null.</summary>
         public static ResourceNode NearestTo(Vector2 position, float reach)
