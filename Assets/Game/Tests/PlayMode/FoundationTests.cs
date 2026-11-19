@@ -69,8 +69,11 @@ namespace Isekai.Tests
             Assert.IsTrue(RegionGrid.Current.IsBaked);
             Assert.AreEqual(1f, boot.Context.HealthMultiplier, "no threat registered: enemies keep their authored health");
 
-            var again = new RegionContext(boot.Context.Region, boot.Context.Run, RunSession.Seed);
-            Assert.AreEqual(boot.Context.Seed, again.Seed, "the same Run gives the Region the same seed");
+            Assert.AreEqual(RegionTestScene.TestSeed, boot.Context.Seed, "tests load the fixed test recipe");
+            var fromRun = new RegionContext(boot.Context.Region, boot.Context.Run, RunSession.Seed);
+            var fromRunAgain = new RegionContext(boot.Context.Region, boot.Context.Run, RunSession.Seed);
+            Assert.AreEqual(fromRun.Seed, fromRunAgain.Seed, "the same Run gives the Region the same seed");
+            var again = new RegionContext(boot.Context.Region, boot.Context.Run, RunSession.Seed, boot.Context.Recipe);
             Assert.AreEqual(boot.Context.Random("wilds").Next(), again.Random("wilds").Next());
             Assert.AreNotEqual(boot.Context.Random("wilds").Next(), boot.Context.Random("waves").Next(), "each system has its own stream");
             Assert.AreEqual(Player.Character, Object.FindAnyObjectByType<CharacterControl>(), "the player's body is known without searching");
