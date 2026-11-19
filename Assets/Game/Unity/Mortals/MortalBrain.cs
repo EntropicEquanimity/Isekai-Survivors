@@ -64,6 +64,9 @@ namespace Isekai
         /// <summary>The weights it decides with now (the type's, or a trait's copy).</summary>
         public BehaviourProfile Behaviour => _behaviour ??= Profile.Behaviour;
 
+        /// <summary>The latest context this brain scored its actions with.</summary>
+        public BehaviourContext DebugContext => _context;
+
         /// <summary>The settlement it belongs to and the spot it starts at and returns to.</summary>
         public RegionSettlements.Settlement Settlement => _settlement;
         public Vector3 Home => _home;

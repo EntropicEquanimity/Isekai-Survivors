@@ -35,7 +35,7 @@ namespace Isekai
         public static IReadOnlyList<Entry> All => s_entries;
 
         /// <summary>The sections the menu draws first, in this order; any other section follows in the order it appeared.</summary>
-        public static readonly string[] SectionOrder = { "Resources", "Character", "Mortals", "Speed", "Info" };
+        public static readonly string[] SectionOrder = { "Run", "Region", "Units", "Jack", "Perf", "Resources", "Character", "Mortals", "Speed", "Info" };
 
         public static void Button(object owner, string section, string label, Action run, string row = null) =>
             s_entries.Add(new Entry { Owner = owner, Section = section, Label = label, Kind = Kind.Button, Run = run, Row = row });

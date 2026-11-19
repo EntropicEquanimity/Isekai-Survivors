@@ -17,6 +17,7 @@ namespace Isekai
         private bool _visible;
         private Vector2 _scroll;
         private GUIStyle _title;
+        private readonly Dictionary<string, bool> _expanded = new();
 
         public static DebugMenu Instance { get; private set; }
 
@@ -47,7 +48,7 @@ namespace Isekai
         {
             if (!_visible) return;
             _title ??= new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold };
-            GUILayout.BeginArea(new Rect(10f, 10f, 300f, Screen.height - 20f), GUI.skin.box);
+            GUILayout.BeginArea(new Rect(10f, 10f, 360f, Screen.height - 20f), GUI.skin.box);
             _scroll = GUILayout.BeginScrollView(_scroll);
             GUILayout.Label($"Debug ({ToggleKey} to hide)", _title);
             DrawRegistered();
@@ -67,13 +68,28 @@ namespace Isekai
             foreach (string section in sections)
             {
                 GUILayout.Space(6f);
-                bool titled = false;
+                bool hasVisible = false;
+                foreach (DebugActions.Entry e in DebugActions.All)
+                    if (e.Section == section && (e.Kind != DebugActions.Kind.Info || !string.IsNullOrEmpty(e.Text?.Invoke())))
+                    {
+                        hasVisible = true;
+                        break;
+                    }
+                if (!hasVisible) continue;
+
+                bool open = _expanded.TryGetValue(section, out bool isOpen) ? isOpen : true;
+                if (GUILayout.Button((open ? "v " : "> ") + section, _title))
+                {
+                    open = !open;
+                    _expanded[section] = open;
+                }
+                if (!open) continue;
+
                 string row = null;
                 foreach (DebugActions.Entry e in DebugActions.All)
                 {
                     if (e.Section != section) continue;
                     if (e.Kind == DebugActions.Kind.Info && string.IsNullOrEmpty(e.Text?.Invoke())) continue;
-                    if (!titled) { titled = true; GUILayout.Label(section, _title); }
                     if (row != null && e.Row != row) { GUILayout.EndHorizontal(); row = null; }
                     if (row == null && e.Row != null) { GUILayout.BeginHorizontal(); row = e.Row; }
                     switch (e.Kind)

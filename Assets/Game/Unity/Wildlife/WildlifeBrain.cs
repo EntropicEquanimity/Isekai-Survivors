@@ -58,6 +58,9 @@ namespace Isekai
         /// <summary>What it is doing now.</summary>
         public BehaviourAction Action { get; private set; }
 
+        /// <summary>The latest context this brain scored its actions with.</summary>
+        public BehaviourContext DebugContext => _context;
+
         /// <summary>The spot it spawned at and returns to.</summary>
         public Vector3 Home => _home;
 
