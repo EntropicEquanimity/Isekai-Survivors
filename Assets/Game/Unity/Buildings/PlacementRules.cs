@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Isekai
 {
     /// <summary>Why a Building can or can't go somewhere.</summary>
-    public enum Verdict { Ok, Blocked, OutsideBase, TooExpensive, NotAllowed }
+    public enum Verdict { Ok, Blocked, TooExpensive, NotAllowed }
 
     /// <summary>A placement check's answer: the verdict and the reason to show the player.</summary>
     public readonly struct Placement
@@ -57,13 +57,6 @@ namespace Isekai
     {
         public Placement Check(in PlacementQuery q) =>
             q.Buildings.IsFree(q.Origin, q.Size) ? Placement.Ok : Placement.No(Verdict.Blocked, "Blocked");
-    }
-
-    /// <summary>The footprint's centre is inside a working Base's build area (<see cref="BaseArea"/>).</summary>
-    public sealed class InsideBaseRule : IPlacementRule
-    {
-        public Placement Check(in PlacementQuery q) =>
-            BaseArea.Covers(q.Centre) ? Placement.Ok : Placement.No(Verdict.OutsideBase, "Too far from a Base");
     }
 
     /// <summary>The Region's stockpile can pay for it.</summary>

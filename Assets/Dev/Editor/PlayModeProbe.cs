@@ -12,7 +12,7 @@ namespace Isekai.Dev.Editor
     /// Assets/Game/Scenes/Region.unity</c> opens the scene, enters Play Mode, waits two seconds, saves the Game view to
     /// <c>Logs/Dev/probe.png</c>, then stops. <c>scene|Namespace.Type.Method</c>
     /// also calls that method half a second in (on the scene's instance of a MonoBehaviour type, else a static one), e.g.
-    /// <c>Assets/Game/Scenes/Planet.unity|Isekai.PlanetScreen.OpenLegacy</c> to see a window that opens on a click.
+    /// <c>scene|Isekai.SomeType.Method</c> to see a window that opens on a click.
     /// </summary>
     [InitializeOnLoad]
     public static class PlayModeProbe

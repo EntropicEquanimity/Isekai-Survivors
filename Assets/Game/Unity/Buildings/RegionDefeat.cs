@@ -6,26 +6,18 @@ using UnityEngine;
 namespace Isekai
 {
     /// <summary>
-    /// Losing the Main Base loses the Run: the game freezes (time stops, the Character and building stop taking orders),
+    /// Jack's body dying loses the Run (until Souls and reviving arrive, ticket #10); losing the Main Base does not: the game freezes (time stops, the Character and building stop taking orders),
     /// it says so on screen and <see cref="Defeated"/> fires. The freeze lifts when the Region unloads.
     /// </summary>
     public sealed class RegionDefeat : MonoBehaviour
     {
-        private bool _hadMainBase;
-
         public bool IsDefeated { get; private set; }
 
         private void Update()
         {
             if (IsDefeated) return;
-            bool alive = false;
-            foreach (Building b in Building.All)
-            {
-                if (!b.IsMainBase || !b.IsPlayers) continue;
-                _hadMainBase = true;
-                alive |= b.IsAlive;
-            }
-            if (_hadMainBase && !alive) Lose();
+            CharacterControl body = Player.Character;
+            if (body != null && body.IsDead) Lose();
         }
 
         private void OnDestroy()
@@ -37,9 +29,9 @@ namespace Isekai
         {
             IsDefeated = true;
             GamePause.Pause(this);
-            BLog.Info("Region", "Main Base destroyed: the Run is lost.");
+            BLog.Info("Region", "Jack's body died: the Run is lost.");
             Camera cam = Camera.main;
-            if (cam != null) FloatingText.Spawn(cam.transform.position + new Vector3(0f, 0f, 10f), "Main Base destroyed", Color.red, 4f);
+            if (cam != null) FloatingText.Spawn(cam.transform.position + new Vector3(0f, 0f, 10f), "Jack has fallen", Color.red, 4f);
             RegionEvents.End(RegionEnd.Defeated);   // each system stops itself (IRegionEndListener)
         }
     }

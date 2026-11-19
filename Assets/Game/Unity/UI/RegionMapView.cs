@@ -18,7 +18,6 @@ namespace Isekai
 
         private static readonly Color32 Outside = new(8, 9, 12, 255);
         private static readonly Color32 Ground = new(56, 82, 38, 255);
-        private static readonly Color32 BaseGround = new(70, 98, 50, 255);
         private static readonly Color32 Rock = new(118, 116, 110, 255);
         private static readonly Color32 Stone = new(196, 196, 186, 255);
         public static readonly Color32 Roamer = new(185, 55, 55, 255);
@@ -120,20 +119,6 @@ namespace Isekai
                 for (int y = 0; y < PixelsPerCell; y++)
                 for (int x = 0; x < PixelsPerCell; x++)
                     _pixels[cx * PixelsPerCell + x + (cy * PixelsPerCell + y) * _width] = c;
-            }
-            // Where Buildings may go: each working Base's build radius, lightened.
-            foreach (BaseArea area in BaseArea.All)
-            {
-                if (!area.IsActive) continue;
-                Vector2Int centre = ToPixel(area.transform.position);
-                int r = Mathf.RoundToInt(area.BuildRadius / _grid.CellSize * PixelsPerCell);
-                for (int y = -r; y <= r; y++)
-                for (int x = -r; x <= r; x++)
-                {
-                    int px = centre.x + x, py = centre.y + y;
-                    if (x * x + y * y > r * r || !InMap(px, py)) continue;
-                    if (_pixels[px + py * _width].Equals(Ground)) _pixels[px + py * _width] = BaseGround;
-                }
             }
         }
 

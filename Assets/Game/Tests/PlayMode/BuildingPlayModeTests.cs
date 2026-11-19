@@ -87,10 +87,10 @@ namespace Isekai.Tests
         }
 
         [UnityTest]
-        public IEnumerator Placement_is_refused_outside_a_Base_and_when_too_expensive()
+        public IEnumerator Placement_is_refused_on_blocked_ground_and_when_too_expensive()
         {
             BuildingAsset tower = Catalogue("Spire");
-            Assert.AreEqual(Verdict.OutsideBase, _buildings.Check(tower, BesideMainBase(30)).Verdict);
+            Assert.AreEqual(Verdict.Ok, _buildings.Check(tower, BesideMainBase(30)).Verdict, "any free ground will do");
             Assert.AreEqual(Verdict.Blocked, _buildings.Check(tower, _mainBase.Origin).Verdict, "on the Main Base");
             RegionEconomy.Current.Stockpile.TrySpend(ResourceType.Stone, RegionEconomy.Current.Stockpile.Get(ResourceType.Stone));
             Assert.AreEqual(Verdict.TooExpensive, _buildings.Check(tower, BesideMainBase(4)).Verdict);
@@ -99,34 +99,27 @@ namespace Isekai.Tests
         }
 
         [UnityTest]
-        public IEnumerator A_Cloning_Pod_brings_the_Character_back_once()
-        {
-            var character = Object.FindAnyObjectByType<CharacterControl>();
-            var damageable = character.GetComponent<Damageable>();
-            character.transform.position = _mainBase.transform.position + new Vector3(10f, 0f, 0f);
-
-            damageable.Unit.TakeDamage(10000f, DamageRules.TrueType);
-            Assert.IsTrue(character.IsDead);
-            yield return TestWait.Until(() => !character.IsDead, "the clone is ready", 15f);
-            Assert.Less(Vector3.Distance(character.transform.position, _mainBase.transform.position), 3f, "cloned at the Main Base");
-            Assert.AreEqual(0, _mainBase.GetComponent<CloningPods>().Bay.Pods);
-
-            damageable.Unit.TakeDamage(10000f, DamageRules.TrueType);
-            yield return new WaitForSeconds(10f);
-            Assert.IsTrue(character.IsDead, "no pods left: stays dead");
-            Assert.IsFalse(Object.FindAnyObjectByType<RegionDefeat>().IsDefeated, "losing the Character alone doesn't lose the Run");
-        }
-
-        [UnityTest]
-        public IEnumerator Losing_the_Main_Base_loses_the_Run()
+        public IEnumerator Losing_the_Main_Base_does_not_end_the_Run()
         {
             var defeat = Object.FindAnyObjectByType<RegionDefeat>();
             _mainBase.Damageable.Unit.TakeDamage(100000f, DamageRules.TrueType);
+            yield return new WaitForSeconds(2f);
+            Assert.IsFalse(_mainBase.IsAlive, "the Main Base fell");
+            Assert.IsFalse(defeat.IsDefeated, "the Run goes on");
+            Assert.IsTrue(_mode.enabled, "building still works");
+        }
+
+        [UnityTest]
+        public IEnumerator Jacks_body_dying_loses_the_Run()
+        {
+            var defeat = Object.FindAnyObjectByType<RegionDefeat>();
+            var character = Object.FindAnyObjectByType<CharacterControl>();
+            character.GetComponent<Damageable>().Unit.TakeDamage(10000f, DamageRules.TrueType);
             yield return TestWait.Until(() => defeat.IsDefeated, "the Run is lost", 3f);
             Assert.IsFalse(Object.FindAnyObjectByType<HordeSpawner>().enabled);
             Assert.IsTrue(GamePause.IsPausedBy(defeat), "the game freezes behind the dialog");
             Assert.AreEqual(0f, Time.timeScale);
-            Assert.IsFalse(Object.FindAnyObjectByType<CharacterControl>().enabled, "the Character takes no more orders");
+            Assert.IsFalse(character.enabled, "the Character takes no more orders");
             Assert.IsFalse(_mode.enabled, "no more building");
         }
 

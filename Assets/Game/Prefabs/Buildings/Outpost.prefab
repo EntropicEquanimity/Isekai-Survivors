@@ -106,7 +106,6 @@ GameObject:
   - component: {fileID: 1738556578887943504}
   - component: {fileID: 4889052002416208072}
   - component: {fileID: 643393340179692765}
-  - component: {fileID: 875251902909564371}
   - component: {fileID: 2882006585703908688}
   m_Layer: 0
   m_Name: Outpost
@@ -243,19 +242,6 @@ MonoBehaviour:
   _constructionSprite: {fileID: 21300000, guid: e06a692e1300f77458d605b0a47f426f, type: 3}
   _startBuilt: 0
   _isMainBase: 0
---- !u!114 &875251902909564371
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4641714708584804874}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e9314a041539ad47b8c54d9ab236de2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Isekai.Game::Isekai.BaseArea
-  _buildRadius: 6
 --- !u!114 &2882006585703908688
 MonoBehaviour:
   m_ObjectHideFlags: 0

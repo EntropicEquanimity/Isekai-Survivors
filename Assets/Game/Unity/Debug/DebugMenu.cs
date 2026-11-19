@@ -10,7 +10,7 @@ namespace Isekai
 {
     /// <summary>
     /// The developer menu (F1), in the Editor and development builds only: resources, god mode, spawning and killing
-    /// enemies, Waves, nests, instant construction, Shards and game speed. It creates itself on the first scene load
+    /// enemies, Waves, nests, instant construction and game speed. It creates itself on the first scene load
     /// and survives scene changes. Buttons that need a Region do nothing on the Planet screen.
     /// </summary>
     public sealed class DebugMenu : MonoBehaviour
@@ -71,10 +71,6 @@ namespace Isekai
             Section("Enemies");
             Row(("Spawn 20 here", () => SpawnNearCharacter(20)), ("Spawn 200", () => SpawnNearCharacter(200)));
             Row(("Kill all", KillAllEnemies), ("Destroy all nests", DestroyNests));
-
-            Section("Run");
-            Row(("+100 Shards", () => MetaProgress.Earn(100)), ("Wipe meta", MetaProgress.Wipe));
-            GUILayout.Label($"Shards {MetaProgress.Shards}");
 
             Section($"Speed ×{Time.timeScale:0.##}");
             GUILayout.BeginHorizontal();

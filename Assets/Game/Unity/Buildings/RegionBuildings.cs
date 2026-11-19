@@ -15,7 +15,7 @@ namespace Isekai
     {
         private readonly Dictionary<Building, byte[]> _savedCosts = new();
         private readonly List<Building> _pending = new();
-        private readonly List<IPlacementRule> _rules = new() { new FreeGroundRule(), new InsideBaseRule(), new AffordableRule() };
+        private readonly List<IPlacementRule> _rules = new() { new FreeGroundRule(), new AffordableRule() };
         private BuildingGrid<Building> _grid;
 
         public static RegionBuildings Current { get; private set; }

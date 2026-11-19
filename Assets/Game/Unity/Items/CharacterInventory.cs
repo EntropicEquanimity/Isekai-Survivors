@@ -53,11 +53,6 @@ namespace Isekai
             {
                 foreach (ItemAsset a in _startingActive) if (a != null) Active.Add(a.Definition);
                 foreach (ItemAsset a in _startingStorage) if (a != null) Storage.Add(a.Definition);
-                foreach (string id in MetaProgress.StartingItems())   // the Legacy tree's starting Items
-                {
-                    ItemDefinition item = ItemDatabase.Find(id);
-                    if (item != null) Storage.Add(item);
-                }
             }
             Rules = new InventoryRules(Active, Storage, () => Time.time);
             Unit.Changed += OnChanged;

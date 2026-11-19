@@ -125,7 +125,7 @@ namespace Isekai.Tests
         private static int Total()
         {
             Stockpile pile = RegionEconomy.Current.Stockpile;
-            return pile.Get(ResourceType.Stone) + pile.Get(ResourceType.Wood) + pile.Get(ResourceType.Iron) + pile.Get(ResourceType.Gold);
+            return pile.Get(ResourceType.Stone) + pile.Get(ResourceType.Wood);
         }
 
         // A walkable spot with nothing minable within reach (rocks are everywhere now).

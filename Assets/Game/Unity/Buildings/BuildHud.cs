@@ -7,7 +7,7 @@ namespace Isekai
 {
     /// <summary>
     /// Placeholder building UI (phase 9 replaces it): the build list with hotkeys and prices bottom-left, why a
-    /// placement is refused, and for a selected Building its state, Cloning Pods and its Units' stance buttons.
+    /// placement is refused, and for a selected Building its state and its Units' stance buttons.
     /// </summary>
     [RequireComponent(typeof(BuildMode))]
     public sealed class BuildHud : MonoBehaviour
@@ -106,7 +106,6 @@ namespace Isekai
             var info = new System.Text.StringBuilder(name);
             info.Append("  ").Append(Mathf.CeilToInt(selected.Damageable.Unit.Health)).Append(" hp");
             if (!selected.IsBuilt) info.Append("  building ").Append(Mathf.FloorToInt(selected.Progress * 100f)).Append('%');
-            if (selected.TryGetComponent(out CloningPods pods)) info.Append("  Cloning Pods ").Append(pods.Bay.Pods);
             bool producer = selected.TryGetComponent(out UnitProducer p);
             if (producer) info.Append("  Units ").Append(p.Units.Count).Append("  Stance ").Append(p.Stance);
             _selectionText.text = info.ToString();

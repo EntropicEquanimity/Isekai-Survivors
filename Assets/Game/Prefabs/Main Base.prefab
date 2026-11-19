@@ -14,8 +14,6 @@ GameObject:
   - component: {fileID: 2486321679374757499}
   - component: {fileID: 3978913869512482257}
   - component: {fileID: 8048850546332619431}
-  - component: {fileID: 4609690543821339858}
-  - component: {fileID: 3000305046524104306}
   - component: {fileID: 330217615210331550}
   m_Layer: 0
   m_Name: Main Base
@@ -152,34 +150,6 @@ MonoBehaviour:
   _constructionSprite: {fileID: 21300000, guid: a9ea2b4c078a492498bf13f582d953db, type: 3}
   _startBuilt: 1
   _isMainBase: 1
---- !u!114 &4609690543821339858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 184761518073094489}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e9314a041539ad47b8c54d9ab236de2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Isekai.Game::Isekai.BaseArea
-  _buildRadius: 8
---- !u!114 &3000305046524104306
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 184761518073094489}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0face964b286c6445a71ebd118ed8318, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Isekai.Game::Isekai.CloningPods
-  _pods: 1
-  _cloneSeconds: 8
-  _exit: {x: 0, y: -1.6}
 --- !u!114 &330217615210331550
 MonoBehaviour:
   m_ObjectHideFlags: 0

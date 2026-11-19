@@ -18,17 +18,17 @@ namespace Isekai
 
     /// <summary>
     /// When the Character fights by itself: after <see cref="IdleDelay"/> seconds without player input it holds and
-    /// attacks, walks to enemies within <see cref="Leash"/> of the spot the player left it (its anchor), and walks back
+    /// attacks, walks to enemies within <see cref="Leash"/> of the spot the player left it (its post), and walks back
     /// when there are none. Any input hands control straight back.
     /// </summary>
     public sealed class AutoFight
     {
         public float IdleDelay { get; set; } = 1.5f;
 
-        /// <summary>How far from its anchor the Character will chase.</summary>
+        /// <summary>How far from its post the Character will chase.</summary>
         public float Leash { get; set; } = 6f;
 
-        /// <summary>How close to its anchor counts as back.</summary>
+        /// <summary>How close to its post counts as back.</summary>
         public float ReturnTolerance { get; set; } = 0.5f;
 
         public float SecondsIdle { get; private set; }
@@ -42,13 +42,13 @@ namespace Isekai
         }
 
         /// <param name="enemyDistance">Distance to the nearest living enemy, or null when there is none.</param>
-        /// <param name="enemyDistanceFromAnchor">That enemy's distance from the anchor (ignored when there is none).</param>
+        /// <param name="enemyDistanceFromPost">That enemy's distance from the post (ignored when there is none).</param>
         /// <param name="attackRange">The reach of the Character's weapons.</param>
-        /// <param name="distanceFromAnchor">The Character's own distance from its anchor.</param>
-        public AutoFightOrder Decide(float? enemyDistance, float enemyDistanceFromAnchor, float attackRange, float distanceFromAnchor)
+        /// <param name="distanceFromPost">The Character's own distance from its post.</param>
+        public AutoFightOrder Decide(float? enemyDistance, float enemyDistanceFromPost, float attackRange, float distanceFromPost)
         {
             if (!IsActive) return AutoFightOrder.PlayerControl;
-            return Engagement.Decide(enemyDistance, enemyDistanceFromAnchor, attackRange, Leash, distanceFromAnchor, ReturnTolerance);
+            return Engagement.Decide(enemyDistance, enemyDistanceFromPost, attackRange, Leash, distanceFromPost, ReturnTolerance);
         }
     }
 }

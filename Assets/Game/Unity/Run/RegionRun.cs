@@ -8,10 +8,9 @@ namespace Isekai
 {
     /// <summary>
     /// Ties a Region scene to the Run (<see cref="RunSession"/>). On start it sets the Waves' depth and Run clock, adds
-    /// the Stone earlier captures (and the Legacy tree) give, points the Run's buffs and the Legacy tree's stat
-    /// upgrades at this Region's Character and brings back its
+    /// the Stone earlier captures give, points the Run's buffs at this Region's Character and brings back its
     /// inventory. While playing it advances the Run clock. On capture it unlocks Items, grants the Region's buff, keeps
-    /// the inventory and returns to the Planet map, or ends the Run as won at the Capital. When the Main Base falls the
+    /// the inventory and returns to the Planet map, or ends the Run as won at the Capital. When Jack's body dies the
     /// Run is lost.
     /// </summary>
     public sealed class RegionRun : MonoBehaviour, IRegionSetup, IRegionEndListener
@@ -28,25 +27,23 @@ namespace Isekai
         {
             _region = region.Region;
             PlanetRun run = region.Run;
-            int stone = run.BonusStone + LegacyTree.StartingStone(MetaProgress.Unit);
+            int stone = run.BonusStone;
             if (RegionEconomy.Current != null && stone > 0) RegionEconomy.Current.Stockpile.Add(ResourceType.Stone, stone);
             Player.Changed += TargetStats;
             TargetStats(Player.Character);
             Say($"{_region.Name}" + (_region.IsCapital ? " - take the Capital!" : $" (depth {_region.Depth})"), Color.white);
         }
 
-        // The Run's buffs and the Legacy tree's upgrades go to whichever body the player controls.
+        // The Run's buffs go to whichever body the player controls.
         private static void TargetStats(CharacterControl body)
         {
             StatBlock stats = body != null ? body.GetComponent<StatBlock>() : null;
             RunBoons.SetTarget(stats);
-            MetaProgress.ApplyTo(stats);
         }
 
         private void OnDestroy()
         {
             Player.Changed -= TargetStats;
-            MetaProgress.ApplyTo(null);
         }
 
         void IRegionEndListener.OnRegionEnded(RegionEnd end)
@@ -87,7 +84,7 @@ namespace Isekai
         {
             RunSession.End(won: false);
             if (GameSetup.IsRunning)
-                ConfirmPresenter.Ask("Main Base destroyed", "The Run is lost. Start a new Run?",
+                ConfirmPresenter.Ask("Jack has fallen", "The Run is lost. Start a new Run?",
                     () => { RunSession.StartNew(); RunSession.GoToPlanet(); }, GameSetup.GoToMainMenu);
         }
 

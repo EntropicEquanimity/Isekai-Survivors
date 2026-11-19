@@ -75,13 +75,12 @@ namespace Isekai
             return data;
         }
 
-        /// <summary>Ends the Run as won or lost and pays its Shards (<see cref="MetaRewards"/>).</summary>
+        /// <summary>Ends the Run as won or lost.</summary>
         public static void End(bool won)
         {
             if (Run == null || Run.IsOver) return;
             if (won) Run.CaptureCurrent();
             else Run.Lose();
-            MetaProgress.Earn(MetaRewards.ShardsFor(Run));
             if (RunManager.HasActiveRun) RunManager.EndRun(won ? RunOutcome.Won : RunOutcome.Lost);
         }
 

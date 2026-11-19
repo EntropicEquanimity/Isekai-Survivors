@@ -29,7 +29,7 @@ namespace Isekai
         private AutoCaster _autoCaster;
         private Damageable _damageable;
         private Renderer[] _renderers;
-        private Vector3 _anchor;
+        private Vector3 _post;
         private float _nextThink;
         private AutoFightOrder _order = AutoFightOrder.PlayerControl;
 
@@ -61,7 +61,7 @@ namespace Isekai
             _damageable.Revived -= OnRevived;
         }
 
-        // Dead: hidden and still until a Cloning Pod brings it back (CloningPods).
+        // Dead: hidden and still until revived.
         private void OnDied(DamageResult result)
         {
             _brain.enabled = false;
@@ -98,7 +98,7 @@ namespace Isekai
             }
             if (!wasActive)
             {
-                _anchor = transform.position;
+                _post = transform.position;
                 SetPlayerControl(false);
                 _nextThink = 0f;
             }
@@ -110,12 +110,12 @@ namespace Isekai
         private void Think()
         {
             Transform enemy = NearestEnemy(out float distance);
-            float fromAnchor = enemy != null ? Vector2.Distance(enemy.position, _anchor) : 0f;
-            _order = _fight.Decide(enemy != null ? distance : null, fromAnchor, _attackRange, Vector2.Distance(transform.position, _anchor));
+            float fromPost = enemy != null ? Vector2.Distance(enemy.position, _post) : 0f;
+            _order = _fight.Decide(enemy != null ? distance : null, fromPost, _attackRange, Vector2.Distance(transform.position, _post));
             switch (_order)
             {
                 case AutoFightOrder.Approach: _motor.MoveTo(enemy.position); break;
-                case AutoFightOrder.Return: _motor.MoveTo(_anchor); break;
+                case AutoFightOrder.Return: _motor.MoveTo(_post); break;
                 default: if (_motor.HasDestination) _motor.Stop(); break;
             }
         }
@@ -147,10 +147,10 @@ namespace Isekai
             return move.x * move.x + move.y * move.y > 0.01f || ActionInput.IsHeld("Interact");
         }
 
-        // The nearest hostile unit around the anchor (inside the leash plus weapon range).
+        // The nearest hostile unit around the post (inside the leash plus weapon range).
         private Transform NearestEnemy(out float distance)
         {
-            CombatUnit unit = Targeting.NearestHostile(_damageable != null ? _damageable.Unit : null, _anchor, _leash + _attackRange, transform.position, _units, out distance);
+            CombatUnit unit = Targeting.NearestHostile(_damageable != null ? _damageable.Unit : null, _post, _leash + _attackRange, transform.position, _units, out distance);
             GameObject go = unit?.GameObject();
             return go != null ? go.transform : null;
         }

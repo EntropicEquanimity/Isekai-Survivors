@@ -9,7 +9,5 @@ namespace Isekai
     {
         Wood = 0,
         Stone = 1,
-        Iron = 2,
-        Gold = 3,
     }
 }

@@ -108,28 +108,4 @@ namespace Isekai.Tests
             Assert.AreEqual(AutoFightOrder.Approach, Engagement.Decide(10f, 10f, 3f, Stance.Hunt.Leash(), 2f), "close enough for Hunt");
         }
     }
-
-    public class CloningBayTests
-    {
-        [Test]
-        public void Each_death_uses_a_pod_and_clones_after_the_delay()
-        {
-            var bay = new CloningBay(pods: 1, cloneSeconds: 5f);
-            Assert.IsTrue(bay.CharacterDied());
-            Assert.AreEqual(0, bay.Pods);
-            Assert.IsFalse(bay.Tick(4f));
-            Assert.IsTrue(bay.Tick(1f));
-            Assert.IsFalse(bay.CharacterDied(), "no pods left: stays dead");
-        }
-
-        [Test]
-        public void Added_pods_allow_more_clones()
-        {
-            var bay = new CloningBay(0, 1f);
-            Assert.IsFalse(bay.CharacterDied());
-            bay.AddPods(2);
-            Assert.IsTrue(bay.CharacterDied());
-            Assert.AreEqual(1, bay.Pods);
-        }
-    }
 }

@@ -34,19 +34,19 @@ namespace Isekai.Tests
             var pile = new Stockpile();
             var seen = new List<(ResourceType, int)>();
             pile.Changed += (t, a) => seen.Add((t, a));
-            pile.Add(ResourceType.Gold, 2);
-            pile.Add(ResourceType.Gold, 0);
-            pile.TrySpend(ResourceType.Gold, 5);
-            pile.TrySpend(ResourceType.Gold, 1);
-            CollectionAssert.AreEqual(new[] { (ResourceType.Gold, 2), (ResourceType.Gold, 1) }, seen);
+            pile.Add(ResourceType.Stone, 2);
+            pile.Add(ResourceType.Stone, 0);
+            pile.TrySpend(ResourceType.Stone, 5);
+            pile.TrySpend(ResourceType.Stone, 1);
+            CollectionAssert.AreEqual(new[] { (ResourceType.Stone, 2), (ResourceType.Stone, 1) }, seen);
         }
 
         [Test]
         public void Negative_amounts_are_refused()
         {
             var pile = new Stockpile();
-            Assert.Throws<ArgumentOutOfRangeException>(() => pile.Add(ResourceType.Iron, -1));
-            Assert.Throws<ArgumentOutOfRangeException>(() => pile.TrySpend(ResourceType.Iron, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => pile.Add(ResourceType.Wood, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => pile.TrySpend(ResourceType.Wood, -1));
         }
     }
 

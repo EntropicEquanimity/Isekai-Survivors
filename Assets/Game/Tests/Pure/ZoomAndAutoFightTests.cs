@@ -83,7 +83,7 @@ namespace Isekai.Tests
         public void Ignores_enemies_beyond_the_leash_and_walks_back()
         {
             AutoFight fight = Idle();
-            Assert.AreEqual(AutoFightOrder.Return, fight.Decide(4f, 7f, 3f, 2f), "enemy is 7 from the anchor, leash is 6");
+            Assert.AreEqual(AutoFightOrder.Return, fight.Decide(4f, 7f, 3f, 2f), "enemy is 7 from the post, leash is 6");
             Assert.AreEqual(AutoFightOrder.Hold, fight.Decide(null, 0f, 3f, 0.2f), "nothing to fight and already home");
         }
     }
