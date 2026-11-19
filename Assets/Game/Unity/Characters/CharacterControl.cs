@@ -125,6 +125,13 @@ namespace Isekai
             if (end == RegionEnd.Defeated) Freeze();
         }
 
+        /// <summary>Moves the body to <paramref name="position"/> at once (a revive at the Anchor).</summary>
+        public void Teleport(Vector3 position)
+        {
+            if (_motor != null) _motor.Teleport(position);
+            else transform.position = position;
+        }
+
         /// <summary>Stops everything: no steering, no fighting, no weapons (the Run is lost).</summary>
         public void Freeze()
         {

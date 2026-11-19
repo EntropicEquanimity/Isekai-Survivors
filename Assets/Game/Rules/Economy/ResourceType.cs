@@ -9,5 +9,6 @@ namespace Isekai
     {
         Wood = 0,
         Stone = 1,
+        Souls = 4,
     }
 }

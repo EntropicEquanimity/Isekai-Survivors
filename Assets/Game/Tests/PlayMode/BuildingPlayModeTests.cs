@@ -111,10 +111,11 @@ namespace Isekai.Tests
         }
 
         [UnityTest]
-        public IEnumerator Jacks_body_dying_loses_the_Run()
+        public IEnumerator Jack_dying_with_no_Souls_loses_the_Run()
         {
             var defeat = Object.FindAnyObjectByType<RegionDefeat>();
             var character = Object.FindAnyObjectByType<CharacterControl>();
+            Assert.AreEqual(0, RegionEconomy.Current.Stockpile.Get(ResourceType.Souls), "no Souls to keep him going");
             character.GetComponent<Damageable>().Unit.TakeDamage(10000f, DamageRules.TrueType);
             yield return TestWait.Until(() => defeat.IsDefeated, "the Run is lost", 3f);
             Assert.IsFalse(Object.FindAnyObjectByType<HordeSpawner>().enabled);

@@ -6,8 +6,9 @@ using UnityEngine;
 namespace Isekai
 {
     /// <summary>
-    /// Jack's body dying loses the Run (until Souls and reviving arrive, ticket #10); losing the Main Base does not: the game freezes (time stops, the Character and building stop taking orders),
-    /// it says so on screen and <see cref="Defeated"/> fires. The freeze lifts when the Region unloads.
+    /// The Run is lost when Jack's Souls run out while he is bodiless (<see cref="RegionSouls.IsLost"/>); his body dying or the
+    /// Anchor falling does not lose it. Then the game freezes (time stops, the Character and building stop taking orders),
+    /// it says so on screen and the Region ends as defeated. The freeze lifts when the Region unloads.
     /// </summary>
     public sealed class RegionDefeat : MonoBehaviour
     {
@@ -16,8 +17,8 @@ namespace Isekai
         private void Update()
         {
             if (IsDefeated) return;
-            CharacterControl body = Player.Character;
-            if (body != null && body.IsDead) Lose();
+            RegionSouls souls = RegionSouls.Current;
+            if (souls != null && souls.IsLost) Lose();
         }
 
         private void OnDestroy()
@@ -29,9 +30,9 @@ namespace Isekai
         {
             IsDefeated = true;
             GamePause.Pause(this);
-            BLog.Info("Region", "Jack's body died: the Run is lost.");
+            BLog.Info("Region", "Jack's Souls ran out: the Run is lost.");
             Camera cam = Camera.main;
-            if (cam != null) FloatingText.Spawn(cam.transform.position + new Vector3(0f, 0f, 10f), "Jack has fallen", Color.red, 4f);
+            if (cam != null) FloatingText.Spawn(cam.transform.position + new Vector3(0f, 0f, 10f), "Jack's soul has faded", Color.red, 4f);
             RegionEvents.End(RegionEnd.Defeated);   // each system stops itself (IRegionEndListener)
         }
     }

@@ -10,8 +10,8 @@ namespace Isekai
     /// Ties a Region scene to the Run (<see cref="RunSession"/>). On start it adds
     /// the Stone earlier captures give, points the Run's buffs at this Region's Character and brings back its
     /// inventory. While playing it advances the Run clock. On capture it unlocks Items, grants the Region's buff, keeps
-    /// the inventory and returns to the Planet map, or ends the Run as won at the Capital. When Jack's body dies the
-    /// Run is lost.
+    /// the inventory and returns to the Planet map, or ends the Run as won at the Capital. When Jack's Souls run out
+    /// while he is bodiless the Run is lost.
     /// </summary>
     public sealed class RegionRun : MonoBehaviour, IRegionSetup, IRegionEndListener
     {
@@ -84,7 +84,7 @@ namespace Isekai
         {
             RunSession.End(won: false);
             if (GameSetup.IsRunning)
-                ConfirmPresenter.Ask("Jack has fallen", "The Run is lost. Start a new Run?",
+                ConfirmPresenter.Ask("Jack's soul has faded", "The Run is lost. Start a new Run?",
                     () => { RunSession.StartNew(); RunSession.GoToPlanet(); }, GameSetup.GoToMainMenu);
         }
 
