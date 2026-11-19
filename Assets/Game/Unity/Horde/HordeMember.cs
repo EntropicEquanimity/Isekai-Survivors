@@ -17,6 +17,8 @@ namespace Isekai
         [SerializeField, Min(0f)] private float _speedMultiplier = 1f;
         [Tooltip("A tougher enemy: drawn bigger on the map.")]
         [SerializeField] private bool _elite;
+        [Tooltip("A mortal with its own brain (MortalBrain): it starts out of the crowd, and the horde's aggro and alarm no longer wake it; its brain joins the crowd (Wake) when it chooses to fight.")]
+        [SerializeField] private bool _brainDriven;
 
         internal ContactAttack Attack;
         private Damageable _damageable;
@@ -47,6 +49,9 @@ namespace Isekai
         public float SpeedMultiplier => _speedMultiplier;
         public bool IsElite => _elite;
 
+        /// <summary>Its own brain decides when it fights (see MortalBrain), so the horde never wakes it.</summary>
+        public bool BrainDriven => _brainDriven;
+
         /// <summary>
         /// Roaming enemies stand where they are until something wakes them: a player target coming near, or being hurt
         /// (which wakes the roamers around them too). Then they attack along the horde's flow field.
@@ -67,7 +72,7 @@ namespace Isekai
         private void OnEnable()
         {
             Attack = new ContactAttack(_contactDamage, _attackInterval, _reach);
-            IsRoaming = false;
+            IsRoaming = _brainDriven;
             if (BaseHealth > 0f && !Mathf.Approximately(Damageable.MaxHealth, BaseHealth)) ScaleHealth(1f);   // undo a previous Wave's scaling
             if (!_subscribed) { Damageable.Damaged += OnDamaged; _subscribed = true; }
             HordeDirector.Current?.Register(this);
@@ -88,7 +93,7 @@ namespace Isekai
 
         private void OnDamaged(DamageResult result)
         {
-            if (!IsRoaming) return;
+            if (!IsRoaming || _brainDriven) return;
             Wake();
             HordeDirector.Current?.Alarm(this);
         }

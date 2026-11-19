@@ -1,0 +1,340 @@
+fileFormatVersion: 2
+guid: 45e497b16ea8153a5e0933ed9684e0c6
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5429906437739388195
+    second: Wizard_Walk_0
+  - first:
+      213: -5974411471096127492
+    second: Wizard_Walk_1
+  - first:
+      213: -2773961177472026167
+    second: Wizard_Walk_2
+  - first:
+      213: -3564107214319119788
+    second: Wizard_Walk_3
+  - first:
+      213: 3422905689847322402
+    second: Wizard_Walk_4
+  - first:
+      213: -6418199436409442977
+    second: Wizard_Walk_5
+  - first:
+      213: 5868318725091398786
+    second: Wizard_Walk_6
+  - first:
+      213: 6754164629801921169
+    second: Wizard_Walk_7
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Wizard_Walk_0
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 40
+        width: 35
+        height: 25
+      alignment: 9
+      pivot: {x: 0.25714287, y: 0.40000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2cb73074391c4ad0800000000000000
+      internalID: -5429906437739388195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wizard_Walk_1
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 40
+        width: 35
+        height: 25
+      alignment: 9
+      pivot: {x: 0.25714287, y: 0.40000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e16c9aed4e1e7c00800000000000000
+      internalID: -5974411471096127492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wizard_Walk_2
+      rect:
+        serializedVersion: 2
+        x: 241
+        y: 40
+        width: 35
+        height: 25
+      alignment: 9
+      pivot: {x: 0.25714287, y: 0.40000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 998aa389cd6670900800000000000000
+      internalID: -2773961177472026167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wizard_Walk_3
+      rect:
+        serializedVersion: 2
+        x: 341
+        y: 40
+        width: 35
+        height: 25
+      alignment: 9
+      pivot: {x: 0.25714287, y: 0.40000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b906a6fe6e2b01610800000000000000
+      internalID: -3564107214319119788
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wizard_Walk_4
+      rect:
+        serializedVersion: 2
+        x: 441
+        y: 40
+        width: 35
+        height: 25
+      alignment: 9
+      pivot: {x: 0.25714287, y: 0.40000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2056297a1f4ae2eb0800000000000000
+      internalID: 3422905689847322402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wizard_Walk_5
+      rect:
+        serializedVersion: 2
+        x: 541
+        y: 40
+        width: 35
+        height: 25
+      alignment: 9
+      pivot: {x: 0.25714287, y: 0.40000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6abcb7183d909a10800000000000000
+      internalID: -6418199436409442977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wizard_Walk_6
+      rect:
+        serializedVersion: 2
+        x: 641
+        y: 40
+        width: 35
+        height: 25
+      alignment: 9
+      pivot: {x: 0.25714287, y: 0.40000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69bb4d9096ec66130800000000000000
+      internalID: 5868318725091398786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wizard_Walk_7
+      rect:
+        serializedVersion: 2
+        x: 741
+        y: 40
+        width: 35
+        height: 25
+      alignment: 9
+      pivot: {x: 0.25714287, y: 0.40000001}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97a9076fe94002ae0800000000000000
+      internalID: 6754164629801921169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Wizard_Walk_0: -5429906437739388195
+      Wizard_Walk_1: -5974411471096127492
+      Wizard_Walk_2: -2773961177472026167
+      Wizard_Walk_3: -3564107214319119788
+      Wizard_Walk_4: 3422905689847322402
+      Wizard_Walk_5: -6418199436409442977
+      Wizard_Walk_6: 5868318725091398786
+      Wizard_Walk_7: 6754164629801921169
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

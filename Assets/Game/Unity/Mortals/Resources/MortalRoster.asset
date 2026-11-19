@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc371a4d1e919786860122ecd66df584, type: 3}
+  m_Name: MortalRoster
+  m_EditorClassIdentifier: Isekai.Game::Isekai.MortalRoster
+  _entries:
+  - Type: 0
+    Prefab: {fileID: 4020166322561681337, guid: b3ee8ab1aa01c6f10dbe91e2ec9f3360, type: 3}
+  - Type: 1
+    Prefab: {fileID: 4020166322561681337, guid: d2ec2710606cf66e520ed780cf4c4dcd, type: 3}
+  - Type: 2
+    Prefab: {fileID: 4020166322561681337, guid: 7c3bd3858939607dcd48a4dca3b0951f, type: 3}
+  - Type: 3
+    Prefab: {fileID: 4020166322561681337, guid: 1568354adac721f7ce43bb56f7b5db32, type: 3}
+  - Type: 4
+    Prefab: {fileID: 4020166322561681337, guid: 46f7817a87c93170238d2331fc0b169e, type: 3}
+  - Type: 5
+    Prefab: {fileID: 4020166322561681337, guid: df0ae4fbf61634ef754818e3f7215737, type: 3}
+  - Type: 6
+    Prefab: {fileID: 4020166322561681337, guid: a3bf5f7811aea6b0a7a710d5782fc7a6, type: 3}
+  - Type: 7
+    Prefab: {fileID: 4020166322561681337, guid: e63b566ea7cfebf231a687d73281e9f8, type: 3}
+  _arrow: {fileID: 1700009093313968395, guid: 3ac7f087adb811e459c884f2441df59f, type: 3}

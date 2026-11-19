@@ -108,7 +108,7 @@ namespace Isekai
             _nearby.Clear();
             Hash.Query(point.x, point.y, radius, _nearby);
             foreach (HordeMember m in _nearby)
-                if (m != null && m.IsAlive && m.IsRoaming) m.Wake();
+                if (m != null && m.IsAlive && m.IsRoaming && !m.BrainDriven) m.Wake();
         }
 
         internal void Alarm(HordeMember hurt) => WakeAround(hurt.transform.position, _alarmRadius);
