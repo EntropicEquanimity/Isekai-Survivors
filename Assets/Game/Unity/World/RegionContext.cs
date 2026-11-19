@@ -10,17 +10,25 @@ namespace Isekai
     /// </summary>
     public sealed class RegionContext
     {
-        public RegionContext(RegionInfo region, PlanetRun run, int runSeed)
+        /// <param name="recipe">What a test or generator asked this Region be made from; without one the Run's seed decides.</param>
+        public RegionContext(RegionInfo region, PlanetRun run, int runSeed, RegionRecipe recipe = null)
         {
             Region = region;
             Run = run;
-            Seed = StableHash.Seed(runSeed, "region/" + (region?.Id ?? "none"));
+            Recipe = recipe ?? new RegionRecipe(StableHash.Seed(runSeed, "region/" + (region?.Id ?? "none")));
+            Seed = Recipe.Seed;
         }
 
         public RegionInfo Region { get; }
         public PlanetRun Run { get; }
 
-        /// <summary>This Region's seed in this Run: the same Run lays the same Region out the same way.</summary>
+        /// <summary>
+        /// The seed and map size this Region is made from: the recipe a test set before loading, else one derived from
+        /// the Run (its seed, and the hand-built Region's size).
+        /// </summary>
+        public RegionRecipe Recipe { get; }
+
+        /// <summary>This Region's seed in this Run: the same Run lays the same Region out the same way (<see cref="RegionRecipe.Seed"/>).</summary>
         public int Seed { get; }
 
         /// <summary>
@@ -48,7 +56,7 @@ namespace Isekai
     /// </summary>
     public interface IRegionSetup
     {
-        int SetupOrder => 0;
+        int SetupOrder => RegionOrder.Settings;
         void Setup(RegionContext region);
     }
 
@@ -58,7 +66,7 @@ namespace Isekai
     /// </summary>
     public interface IRegionPopulate
     {
-        int PopulateOrder => 0;
+        int PopulateOrder => RegionOrder.Wilds;
         void Populate(RegionContext region);
     }
 }

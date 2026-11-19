@@ -21,6 +21,7 @@ namespace Isekai
         [SerializeField] private bool _attractsHorde = true;
 
         private Damageable _damageable;
+        private RegionUnit _unit;
 
         public static IReadOnlyList<HordeTarget> All => s_all;
 
@@ -56,8 +57,23 @@ namespace Isekai
                 cells.Add(new Int2(x, y));
         }
 
-        private void OnEnable() => s_all.Add(this);
+        // A target is a Building, the Character or a Unit: what the Region registers it as.
+        private void Awake()
+        {
+            UnitKind kind = TryGetComponent(out Building _) ? UnitKind.Building : TryGetComponent(out CharacterControl _) ? UnitKind.Jack : UnitKind.Demon;
+            _unit = new RegionUnit(Damageable, kind);
+        }
 
-        private void OnDisable() => s_all.Remove(this);
+        private void OnEnable()
+        {
+            s_all.Add(this);
+            _unit.Enter();
+        }
+
+        private void OnDisable()
+        {
+            s_all.Remove(this);
+            _unit?.Leave();
+        }
     }
 }

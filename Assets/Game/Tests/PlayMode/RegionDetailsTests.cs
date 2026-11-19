@@ -24,7 +24,7 @@ namespace Isekai.Tests
         public IEnumerator Restore()
         {
             Time.timeScale = 1f;
-            if (DebugMenu.Instance != null) DebugMenu.Instance.GodMode = false;
+            DebugActions.Find("God mode")?.Set(false);
             yield return null;
         }
 
@@ -135,17 +135,17 @@ namespace Isekai.Tests
             Assert.IsNotNull(DebugMenu.Instance, "created on scene load");
             Stockpile pile = RegionEconomy.Current.Stockpile;
             int stone = pile.Get(ResourceType.Stone);
-            DebugMenu.AddResources(100);
+            TestDebug.Press("+100 each");
             Assert.AreEqual(stone + 100, pile.Get(ResourceType.Stone));
 
             var character = Object.FindAnyObjectByType<CharacterControl>().GetComponent<Damageable>();
-            DebugMenu.Instance.GodMode = true;
+            TestDebug.Toggle("God mode", true);
             character.Unit.TakeDamage(10000f, DamageRules.PhysicalType);
             Assert.IsFalse(character.IsDead, "god mode");
-            DebugMenu.Instance.GodMode = false;
+            TestDebug.Toggle("God mode", false);
 
             Assert.IsFalse(RegionEvents.HasEnded);
-            DebugMenu.CaptureRegion();
+            TestDebug.Press("Capture Region");
             yield return null;
             Assert.IsTrue(RegionEvents.HasEnded);
             Assert.AreEqual(RegionEnd.Captured, RegionEvents.Outcome, "\"Capture Region\" ends the Region as captured");

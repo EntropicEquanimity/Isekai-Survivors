@@ -21,6 +21,7 @@ namespace Isekai
         internal ContactAttack Attack;
         private Damageable _damageable;
         private bool _subscribed;
+        private RegionUnit _unit;
 
         public Damageable Damageable => _damageable != null ? _damageable : _damageable = GetComponent<Damageable>();
         public CombatUnit Unit => Damageable.Unit;
@@ -36,7 +37,12 @@ namespace Isekai
             Unit.Heal(Damageable.MaxHealth);
         }
 
-        private void Awake() => BaseHealth = Damageable.MaxHealth;
+        private void Awake()
+        {
+            BaseHealth = Damageable.MaxHealth;
+            _unit = new RegionUnit(Damageable, UnitKind.Mortal);
+        }
+
         public float Reach => _reach;
         public float SpeedMultiplier => _speedMultiplier;
         public bool IsElite => _elite;
@@ -65,9 +71,15 @@ namespace Isekai
             if (BaseHealth > 0f && !Mathf.Approximately(Damageable.MaxHealth, BaseHealth)) ScaleHealth(1f);   // undo a previous Wave's scaling
             if (!_subscribed) { Damageable.Damaged += OnDamaged; _subscribed = true; }
             HordeDirector.Current?.Register(this);
+            _unit.Kind = TeamIds.SideOf(Unit.Team) == Side.Wildlife ? UnitKind.Wildlife : UnitKind.Mortal;
+            _unit.Enter();
         }
 
-        private void OnDisable() => HordeDirector.Current?.Unregister(this);
+        private void OnDisable()
+        {
+            _unit?.Leave();
+            HordeDirector.Current?.Unregister(this);
+        }
 
         private void OnDestroy()
         {

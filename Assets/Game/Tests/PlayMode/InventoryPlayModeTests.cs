@@ -109,7 +109,7 @@ namespace Isekai.Tests
         [UnityTest]
         public IEnumerator The_debug_entry_opens_an_Item_draft_that_pauses_the_game()
         {
-            DebugMenu.OpenItemDraft();
+            TestDebug.Press("Open Item draft");
             yield return null;
             DraftOffer offer = RunDrafts.Current;
             Assert.IsNotNull(offer, "a draft is open");

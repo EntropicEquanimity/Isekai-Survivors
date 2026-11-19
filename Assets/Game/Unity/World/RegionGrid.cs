@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Blondie.Core;
 using Blondie.FlowFields;
 using UnityEngine;
@@ -21,6 +22,7 @@ namespace Isekai
     public sealed class RegionGrid : MonoBehaviour
     {
         private FlowFieldGridComponent _component;
+        private readonly Dictionary<string, CellLayer> _layers = new();
 
         public static RegionGrid Current { get; private set; }
 
@@ -57,6 +59,29 @@ namespace Isekai
         }
 
         public bool Contains(Int2 cell) => Field.Contains(cell);
+
+        /// <summary>
+        /// A named byte per cell (vision, explored ground, corruption), made on first use at the map's size. Layers
+        /// notify their own listeners and never touch <see cref="Field"/>'s costs, so writing one never invalidates a path.
+        /// </summary>
+        public CellLayer Layer(string name)
+        {
+            if (!_layers.TryGetValue(name, out CellLayer layer)) _layers[name] = layer = new CellLayer(name, Width, Height);
+            return layer;
+        }
+
+        /// <summary>
+        /// Gives the map a new size. Only while the Region is starting (before the grid is baked or any path asked
+        /// for): the walls are lost and layers start again.
+        /// </summary>
+        public void Resize(int width, int height)
+        {
+            if (Width == width && Height == height) return;
+            Component.Width = width;
+            Component.Height = height;
+            Component.Rebuild();
+            _layers.Clear();
+        }
 
         /// <summary>Makes a cell a wall for paths and building (an <see cref="Obstacle"/> placed after the bake).</summary>
         public void Block(Int2 cell)

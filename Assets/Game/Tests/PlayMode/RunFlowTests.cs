@@ -120,7 +120,7 @@ namespace Isekai.Tests
         {
             yield return null;
             RegionTestScene.DisableDrafts();
-            DebugMenu.CaptureRegion();
+            TestDebug.Press("Capture Region");
             yield return TestWait.Until(() => RegionEvents.HasEnded && RegionEvents.Outcome == RegionEnd.Captured, "captured", Timeout);
             yield return null;
         }

@@ -13,8 +13,12 @@ namespace Isekai.Tests
         /// Loads the Region and waits for its setup. Item drafts are off by default: a draft pauses the game, so a test
         /// that destroys a nest would otherwise stall the tests after it.
         /// </summary>
-        public static IEnumerator Load(bool drafts = false)
+        public static IEnumerator Load(bool drafts = false) => Load(null, drafts);
+
+        /// <summary>Loads the Region made from <paramref name="recipe"/> (its seed and map size); null keeps the Run's own.</summary>
+        public static IEnumerator Load(RegionRecipe recipe, bool drafts = false)
         {
+            RegionRecipes.Pending = recipe;
             SceneManager.LoadScene(RunSession.RegionScene);
             yield return null;
             if (!drafts) DisableDrafts();
