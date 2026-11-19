@@ -128,7 +128,8 @@ namespace Isekai
         {
             if (b.IsMainBase)
             {
-                source = CorruptionTuning.Anchor;
+                // Each Anchor is its own source (the War Throne spreads faster); the scene's own Main Base is the plain one.
+                source = AnchorCatalog.KindOf(b) is { } kind ? AnchorTuning.Source(kind) : CorruptionTuning.Anchor;
                 return true;
             }
             if (b.Asset != null && b.Asset.DisplayName == OutpostName)

@@ -28,6 +28,9 @@ namespace Isekai
         public static int Seed { get; private set; }
         public static bool HasRun => Run != null && !Run.IsOver;
 
+        /// <summary>The Anchor this Run picked on the Planet screen (null: none picked, the Region keeps its scene's Main Base).</summary>
+        public static AnchorKind? Anchor { get; set; }
+
         /// <summary>Starts a new Run on a new Planet.</summary>
         public static PlanetRun StartNew(int? seed = null) => StartNew(seed, Rings);
 
@@ -37,6 +40,7 @@ namespace Isekai
             Seed = seed ?? Environment.TickCount;
             Run = new PlanetRun(Planet.Generate(Seed, rings, RegionBuffs.Ids));
             s_inventory = null;
+            Anchor = null;
             RunBoons.Clear();
             if (RunManager.HasActiveRun) RunManager.EndRun(RunOutcome.Abandoned);
             RunManager.StartRun(seed: unchecked((ulong)(uint)Seed));   // Blondie's Run streams follow the Planet's seed
@@ -88,6 +92,7 @@ namespace Isekai
         public static void Clear()
         {
             Run = null;
+            Anchor = null;
             s_inventory = null;
         }
 

@@ -27,6 +27,45 @@ namespace Isekai
             Build();
         }
 
+        // The Anchor is picked before landing on the first Region and fixed for the rest of the Run.
+        private static bool PickingOpen(PlanetRun run) => !run.IsOver && run.CapturedInOrder.Count == 0;
+
+        /// <summary>Picks the Run's Anchor; false once the first Region is captured (or the Run is over).</summary>
+        public bool ChooseAnchor(AnchorKind kind)
+        {
+            if (!PickingOpen(RunSession.Run)) return false;
+            RunSession.Anchor = kind;
+            Build();
+            return true;
+        }
+
+        private VisualElement AnchorPicker(PlanetRun run)
+        {
+            bool open = PickingOpen(run);
+            if (open) RunSession.Anchor ??= AnchorKind.Shrine;
+            var row = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, marginBottom = 6 } };
+            row.Add(GameStyle.Label(open ? "Anchor:" : "Anchor: " + (RunSession.Anchor is { } kept ? AnchorTuning.Name(kept) : "none"), TextRole.Muted));
+            if (!open) return row;
+            foreach (AnchorKind kind in new[] { AnchorKind.Shrine, AnchorKind.WarThrone })
+            {
+                AnchorKind picked = kind;
+                var button = new Button(() => ChooseAnchor(picked))
+                {
+                    text = (RunSession.Anchor == kind ? "[x] " : "[ ] ") + AnchorTuning.Name(kind),
+                    name = "Anchor " + AnchorTuning.Name(kind),
+                };
+                button.style.marginLeft = 6;
+                row.Add(button);
+            }
+            string detail = RunSession.Anchor == AnchorKind.WarThrone
+                ? "In plain sight, Vigilance starts at Uneasy, a strong aura for demons, faster corruption."
+                : "Small and hidden until a patrol finds it; being found raises Vigilance a stage.";
+            Label about = GameStyle.Label(detail, TextRole.Muted);
+            about.style.marginLeft = 8;
+            row.Add(about);
+            return row;
+        }
+
         private void Build()
         {
             VisualElement root = GamePanels.Mount(this, PanelName, _panelSettings, out PanelRenderer panel);
@@ -53,6 +92,7 @@ namespace Isekai
             stats.style.marginBottom = 6;
             column.Add(stats);
             _map = new PlanetMapView(run, new Vector2(880f, 336f), region => RunSession.GoToRegion(region));
+            column.Add(AnchorPicker(run));
             column.Add(_map);
             var buttons = new VisualElement { style = { flexDirection = FlexDirection.Row, marginTop = 8 } };
             if (run.IsOver)

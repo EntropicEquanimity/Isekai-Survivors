@@ -186,9 +186,10 @@ namespace Isekai
             Vector3 at = grid.CentreOf(Layout.Character);
             var control = FindAnyObjectByType<CharacterControl>();
             if (control != null) control.transform.position = at;
-            foreach (Building b in FindObjectsByType<Building>(FindObjectsInactive.Exclude))
+            foreach (Building scene in FindObjectsByType<Building>(FindObjectsInactive.Exclude))
             {
-                if (!b.IsMainBase) continue;
+                if (!scene.IsMainBase) continue;
+                Building b = AnchorPlacement.ChosenFor(scene);
                 Vector2Int size = b.Asset != null ? b.Asset.Size : new Vector2Int(RegionLayout.AnchorSize, RegionLayout.AnchorSize);
                 b.transform.position = grid.CentreOf(Layout.Anchor, size);
             }

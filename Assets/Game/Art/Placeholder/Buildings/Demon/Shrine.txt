@@ -1,0 +1,2 @@
+Single sprite, 18x21 px. Footprint 1x1 cell. Shrine (small Anchor), placeholder: the Citadel shrunk to half size and tinted cold, snapped to the Isekai master palette. To be redrawn through the Art Forge.
+Pivot: the centre of the footprint.

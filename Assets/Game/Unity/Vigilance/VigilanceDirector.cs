@@ -147,6 +147,14 @@ namespace Isekai
             if (_machine.RaiseStage()) Reached();
         }
 
+        /// <summary>The Region starts at this stage (the War Throne's Uneasy): reached without sending the Waves a stage owes.</summary>
+        public void StartAt(VigilanceStage stage)
+        {
+            while (_machine.Stage < stage && _machine.RaiseStage()) { }
+            Reached();
+            while (_planner.Pending > 0 && _planner.Sent()) _planner.Ended();
+        }
+
         /// <summary>Debug: lowers a stage.</summary>
         public void LowerStage()
         {
