@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Isekai
 {
-    /// <summary>The horde's debug rows: spawn enemies round the Character, kill them all, and the enemy counts.</summary>
+    /// <summary>The horde's debug rows: spawn mortals round the Character, kill them all, and the mortal counts.</summary>
     [RegionSystem]
     public sealed class HordeDebug : MonoBehaviour
     {
@@ -11,13 +11,13 @@ namespace Isekai
 
         private void OnEnable()
         {
-            DebugActions.Button(this, "Enemies", "Spawn 20 here", () => SpawnNearCharacter(20), "spawn");
-            DebugActions.Button(this, "Enemies", "Spawn 200", () => SpawnNearCharacter(200), "spawn");
-            DebugActions.Button(this, "Enemies", "Kill all", KillAllEnemies);
+            DebugActions.Button(this, "Mortals", "Spawn 20 here", () => SpawnNearCharacter(20), "spawn");
+            DebugActions.Button(this, "Mortals", "Spawn 200", () => SpawnNearCharacter(200), "spawn");
+            DebugActions.Button(this, "Mortals", "Kill all", KillAllMortals);
             DebugActions.Info(this, "Info", () =>
             {
                 HordeDirector horde = HordeDirector.Current;
-                return horde != null ? $"Enemies {horde.Count} ({horde.Attacking} attacking) · kills {horde.Kills}" : null;
+                return horde != null ? $"Mortals {horde.Count} ({horde.Attacking} attacking) · kills {horde.Kills}" : null;
             });
             DebugActions.Info(this, "Info", () =>
             {
@@ -40,7 +40,7 @@ namespace Isekai
             }
         }
 
-        private static void KillAllEnemies()
+        private static void KillAllMortals()
         {
             foreach (HordeMember m in FindObjectsByType<HordeMember>(FindObjectsInactive.Exclude))
                 if (m.IsAlive) m.Damageable.Kill();

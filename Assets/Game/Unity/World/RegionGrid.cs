@@ -72,10 +72,12 @@ namespace Isekai
 
         /// <summary>
         /// Gives the map a new size. Only while the Region is starting (before the grid is baked or any path asked
-        /// for): the walls are lost and layers start again.
+        /// for): the walls are lost and layers start again, so it throws once the grid is baked or a
+        /// <see cref="CellLayer"/> has been handed out (it would be orphaned).
         /// </summary>
         public void Resize(int width, int height)
         {
+            if (IsBaked || _layers.Count > 0) throw new InvalidOperationException("RegionGrid.Resize is only for Region start: the grid is already baked or has layers.");
             if (Width == width && Height == height) return;
             Component.Width = width;
             Component.Height = height;

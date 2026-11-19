@@ -9,8 +9,8 @@ namespace Isekai
         Mortals,
         /// <summary>Creatures that attack no one by default.</summary>
         Neutral,
-        /// <summary>Hostile wildlife.</summary>
-        Wildlife,
+        /// <summary>Creatures that attack everything on sight.</summary>
+        Hostile,
         /// <summary>Revolted demons: hostile to everyone.</summary>
         Rogue,
     }
@@ -19,21 +19,21 @@ namespace Isekai
     public enum SideRelation { Allied, Neutral, Hostile }
 
     /// <summary>
-    /// The relation table between sides (symmetric). Yours, mortals and hostile wildlife fight each other; rogues
-    /// fight everyone; a neutral side starts no fight. A side is allied with itself, so rogues don't brawl among
-    /// themselves and wildlife leaves wildlife alone.
+    /// The relation table between sides (symmetric). Yours and mortals fight each other; rogues and hostile
+    /// creatures fight everyone, neutral creatures included; a neutral side starts no fight. A side is allied with
+    /// itself, so rogues don't brawl among themselves and hostile creatures leave each other alone.
     /// </summary>
     public static class SideRelations
     {
         /// <summary>Every side.</summary>
-        public static readonly Side[] All = { Side.Yours, Side.Mortals, Side.Neutral, Side.Wildlife, Side.Rogue };
+        public static readonly Side[] All = { Side.Yours, Side.Mortals, Side.Neutral, Side.Hostile, Side.Rogue };
 
         public static SideRelation Between(Side a, Side b)
         {
             if (a == b) return SideRelation.Allied;
-            if (a == Side.Rogue || b == Side.Rogue) return SideRelation.Hostile;   // hostile to everyone, neutral creatures included
+            if (a == Side.Rogue || b == Side.Rogue || a == Side.Hostile || b == Side.Hostile) return SideRelation.Hostile;   // rogues and hostile creatures attack everyone, neutral creatures included
             if (a == Side.Neutral || b == Side.Neutral) return SideRelation.Neutral;
-            return SideRelation.Hostile;   // yours / mortals / wildlife: every pair of different sides
+            return SideRelation.Hostile;   // yours / mortals: every pair of different sides
         }
 
         public static bool AreHostile(Side a, Side b) => Between(a, b) == SideRelation.Hostile;

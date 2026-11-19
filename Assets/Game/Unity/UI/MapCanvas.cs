@@ -34,8 +34,6 @@ namespace Isekai
         public int Width { get; }
         public int Height { get; }
 
-        public Color32 Get(int x, int y) => InMap(x, y) ? _pixels[x + y * Width] : default;
-
         public void Set(int x, int y, Color32 colour)
         {
             if (InMap(x, y)) _pixels[x + y * Width] = colour;

@@ -158,7 +158,7 @@ namespace Isekai
         {
             var legend = new VisualElement { style = { marginLeft = 12, width = 160 } };
             Row(legend, Swatch(RegionMapView.You, 6, true), "You");
-            Row(legend, Swatch(RegionMapView.Militia, 4, false), "Imps");
+            Row(legend, Swatch(RegionMapView.Demon, 4, false), "Demons");
             Row(legend, Swatch(RegionMapView.Attacker, 4, false), "Enemy, attacking");
             Row(legend, Swatch(RegionMapView.Roamer, 4, false), "Enemy, roaming");
             Row(legend, Swatch(RegionMapView.Attacker, 8, true), "Elite enemy");

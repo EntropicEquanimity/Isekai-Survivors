@@ -38,11 +38,6 @@ namespace Isekai
             if (keyboard != null && keyboard[ToggleKey].wasPressedThisFrame) _visible = !_visible;
         }
 
-        // Thin forwards for the editor probes under Assets/Dev, which call them by name; the rows themselves belong to the systems.
-        public static void AddResources(int amount) => EconomyDebug.AddResources(amount);
-        public static void FinishBuildings() => BuildingsDebug.FinishBuildings();
-        public static void SpawnNearCharacter(int count) => HordeDebug.SpawnNearCharacter(count);
-
         private void OnDestroy()
         {
             if (Instance == this) Instance = null;

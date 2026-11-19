@@ -25,12 +25,13 @@ namespace Isekai.Tests
         }
 
         [Test]
-        public void Hostile_wildlife_attacks_everyone_but_neutral_creatures()
+        public void Hostile_creatures_attack_everyone_neutral_creatures_included()
         {
-            Assert.IsTrue(SideRelations.AreHostile(Side.Wildlife, Side.Yours));
-            Assert.IsTrue(SideRelations.AreHostile(Side.Wildlife, Side.Mortals));
-            Assert.IsFalse(SideRelations.AreHostile(Side.Wildlife, Side.Neutral));
-            Assert.AreEqual(SideRelation.Allied, SideRelations.Between(Side.Wildlife, Side.Wildlife));
+            Assert.IsTrue(SideRelations.AreHostile(Side.Hostile, Side.Yours));
+            Assert.IsTrue(SideRelations.AreHostile(Side.Hostile, Side.Mortals));
+            Assert.IsTrue(SideRelations.AreHostile(Side.Hostile, Side.Neutral));
+            Assert.IsTrue(SideRelations.AreHostile(Side.Neutral, Side.Hostile));
+            Assert.AreEqual(SideRelation.Allied, SideRelations.Between(Side.Hostile, Side.Hostile));
         }
 
         [Test]
@@ -38,7 +39,6 @@ namespace Isekai.Tests
         {
             Assert.IsFalse(SideRelations.AreHostile(Side.Neutral, Side.Yours));
             Assert.IsFalse(SideRelations.AreHostile(Side.Neutral, Side.Mortals));
-            Assert.IsFalse(SideRelations.AreHostile(Side.Neutral, Side.Wildlife));
             Assert.AreEqual(SideRelation.Neutral, SideRelations.Between(Side.Neutral, Side.Yours));
         }
 

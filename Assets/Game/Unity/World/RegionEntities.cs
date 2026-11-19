@@ -9,14 +9,14 @@ namespace Isekai
     /// <summary>
     /// One living thing the Region keeps track of (a horde member, a Unit, the Character, a Building). The owning
     /// component creates it once, calls <see cref="Enter"/> when it enables and <see cref="Leave"/> when it disables;
-    /// it lists itself while alive and raises <see cref="RegionUnits.Died"/> when it dies. Side and cell are read when
+    /// it lists itself while alive and raises <see cref="RegionEntities.Died"/> when it dies. Side and cell are read when
     /// asked, so a moving unit costs nothing per frame.
     /// </summary>
-    public sealed class RegionUnit
+    public sealed class RegionEntity
     {
         private bool _entered;
 
-        public RegionUnit(Damageable damageable, UnitKind kind)
+        public RegionEntity(Damageable damageable, UnitKind kind)
         {
             Damageable = damageable;
             Kind = kind;
@@ -32,7 +32,7 @@ namespace Isekai
         /// <summary>The ground cell it stands in now.</summary>
         public Int2 Cell => RegionGrid.Current != null ? RegionGrid.Current.CellAt(Damageable.transform.position) : default;
 
-        /// <summary>Listed in <see cref="RegionUnits.Living"/>.</summary>
+        /// <summary>Listed in <see cref="RegionEntities.Living"/>.</summary>
         public bool IsListed => Index >= 0;
 
         internal int Index { get; set; } = -1;
@@ -44,7 +44,7 @@ namespace Isekai
             _entered = true;
             Damageable.Died += OnDied;
             Damageable.Revived += OnRevived;
-            if (!Damageable.IsDead) RegionUnits.Add(this);
+            if (!Damageable.IsDead) RegionEntities.Add(this);
         }
 
         /// <summary>The component disabled (or despawned): unlist the unit and stop watching.</summary>
@@ -57,7 +57,7 @@ namespace Isekai
                 Damageable.Died -= OnDied;
                 Damageable.Revived -= OnRevived;
             }
-            RegionUnits.Remove(this);
+            RegionEntities.Remove(this);
         }
 
         private void OnDied(DamageResult result)
@@ -65,20 +65,20 @@ namespace Isekai
             if (!IsListed) return;
             Side? killer = result.Info?.Source != null ? TeamIds.SideOf(result.Info.Source.Team) : null;
             var death = new UnitDeath(this, Side, Kind, killer, Cell);
-            RegionUnits.Remove(this);
-            RegionUnits.Raise(death);
+            RegionEntities.Remove(this);
+            RegionEntities.Raise(death);
         }
 
         private void OnRevived()
         {
-            if (!IsListed) RegionUnits.Add(this);
+            if (!IsListed) RegionEntities.Add(this);
         }
     }
 
     /// <summary>One death: who died, what side and kind it was, whose side killed it (null when unknown) and where.</summary>
     public readonly struct UnitDeath
     {
-        public UnitDeath(RegionUnit unit, Side side, UnitKind kind, Side? killerSide, Int2 cell)
+        public UnitDeath(RegionEntity unit, Side side, UnitKind kind, Side? killerSide, Int2 cell)
         {
             Unit = unit;
             Side = side;
@@ -87,7 +87,7 @@ namespace Isekai
             Cell = cell;
         }
 
-        public RegionUnit Unit { get; }
+        public RegionEntity Unit { get; }
         public Side Side { get; }
         public UnitKind Kind { get; }
         public Side? KillerSide { get; }
@@ -98,23 +98,23 @@ namespace Isekai
     /// The Region-wide list of living units and the one place deaths are announced, so Souls, Vigilance, bones and the
     /// map read one source instead of searching the scene. Cleared when a Region starts.
     /// </summary>
-    public static class RegionUnits
+    public static class RegionEntities
     {
-        private static readonly List<RegionUnit> s_living = new();
+        private static readonly List<RegionEntity> s_living = new();
 
-        static RegionUnits() => StaticReset.Register(Reset);
+        static RegionEntities() => StaticReset.Register(Reset);
 
         /// <summary>Every living registered unit (order changes as units come and go).</summary>
-        public static IReadOnlyList<RegionUnit> Living => s_living;
+        public static IReadOnlyList<RegionEntity> Living => s_living;
 
-        /// <summary>A registered unit died; it is no longer in <see cref="Living"/>. Cleared when a Region starts.</summary>
+        /// <summary>A registered unit died; it is no longer in <see cref="Living"/>. Cleared at each Region start, so subscribers subscribe after the bootstrap's Awake (OnEnable or Start).</summary>
         public static event Action<UnitDeath> Died;
 
         /// <summary>How many living units a side has.</summary>
         public static int Count(Side side)
         {
             int n = 0;
-            foreach (RegionUnit u in s_living)
+            foreach (RegionEntity u in s_living)
                 if (u.Side == side) n++;
             return n;
         }
@@ -122,19 +122,19 @@ namespace Isekai
         /// <summary>A new Region is starting.</summary>
         public static void Reset()
         {
-            foreach (RegionUnit u in s_living) u.Index = -1;
+            foreach (RegionEntity u in s_living) u.Index = -1;
             s_living.Clear();
             Died = null;
         }
 
-        internal static void Add(RegionUnit unit)
+        internal static void Add(RegionEntity unit)
         {
             if (unit.IsListed) return;
             unit.Index = s_living.Count;
             s_living.Add(unit);
         }
 
-        internal static void Remove(RegionUnit unit)
+        internal static void Remove(RegionEntity unit)
         {
             int i = unit.Index;
             if (i < 0) return;

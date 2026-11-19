@@ -9,7 +9,7 @@ namespace Isekai
     /// <summary>
     /// The strategic map of the Region: a small point-filtered texture, a few pixels per ground cell, redrawn on
     /// <see cref="Redraw"/> by the registered <see cref="IMapPainter"/>s in order: ground and rock, Stone and
-    /// Buildings, enemies as red squares (darker while roaming, bigger for elites), demons blue, the Character white,
+    /// Buildings, mortals as red squares (darker while roaming, bigger for elites), demons blue, the Character white,
     /// and the camera's view as an outline.
     /// </summary>
     public sealed class RegionMapView : VisualElement
@@ -19,7 +19,7 @@ namespace Isekai
         private static readonly Color32 Outside = new(8, 9, 12, 255);
         public static readonly Color32 Roamer = new(185, 55, 55, 255);
         public static readonly Color32 Attacker = new(255, 72, 48, 255);
-        public static readonly Color32 Militia = new(90, 150, 255, 255);
+        public static readonly Color32 Demon = new(90, 150, 255, 255);
         public static readonly Color32 You = new(255, 255, 255, 255);
         public static readonly Color32 Ally = new(120, 220, 120, 255);
         public static readonly Color32 Home = new(255, 214, 90, 255);
@@ -65,7 +65,7 @@ namespace Isekai
         /// <summary>The map pixel over a world point (for tests).</summary>
         public Color32 PixelAt(Vector3 world)
         {
-            Vector2Int p = ToPixel(world);
+            Vector2Int p = _canvas.ToPixel(world);
             return InMap(p.x, p.y) ? _pixels[p.x + p.y * _width] : Outside;
         }
 
@@ -78,8 +78,6 @@ namespace Isekai
         }
 
         private bool InMap(int x, int y) => (uint)x < (uint)_width && (uint)y < (uint)_height;
-
-        private Vector2Int ToPixel(Vector3 world) => _canvas.ToPixel(world);
 
         /// <summary>A small texture of one icon (for the legend), each icon pixel drawn <paramref name="scale"/> wide.</summary>
         public static Texture2D IconTexture(string[] rows, Color32 colour, int scale = 2)

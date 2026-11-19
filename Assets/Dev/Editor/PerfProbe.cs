@@ -67,7 +67,7 @@ namespace Isekai.Dev.Editor
                 if (!batchSent && t > duration / 3f)
                 {
                     batchSent = true;
-                    DebugMenu.SpawnNearCharacter(200);
+                    HordeDebug.SpawnNearCharacter(200);
                     Debug.Log("[Perf] probe: horde batch spawned");
                 }
                 if (EditorApplication.timeSinceStartup >= nextScan)

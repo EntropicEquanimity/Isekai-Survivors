@@ -16,7 +16,7 @@ namespace Isekai
                 Teams.SetRelation(TeamIds.Of(a), TeamIds.Of(b), ToTeam(SideRelations.Between(a, b)));
         }
 
-        private static TeamRelation ToTeam(SideRelation relation) => relation switch
+        internal static TeamRelation ToTeam(SideRelation relation) => relation switch
         {
             SideRelation.Hostile => TeamRelation.Hostile,
             SideRelation.Allied => TeamRelation.Allied,

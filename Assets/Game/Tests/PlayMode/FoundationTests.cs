@@ -152,15 +152,10 @@ namespace Isekai.Tests
             foreach (Side a in SideRelations.All)
             foreach (Side b in SideRelations.All)
             {
-                TeamRelation expected = SideRelations.Between(a, b) switch
-                {
-                    SideRelation.Hostile => TeamRelation.Hostile,
-                    SideRelation.Allied => TeamRelation.Allied,
-                    _ => TeamRelation.Neutral,
-                };
+                TeamRelation expected = RegionSides.ToTeam(SideRelations.Between(a, b));
                 Assert.AreEqual(expected, Teams.Relation(TeamIds.Of(a), TeamIds.Of(b)), $"{a} / {b}");
             }
-            Assert.AreEqual(TeamRelation.Hostile, Teams.Relation(TeamIds.Player, TeamIds.Enemy), "the existing prefabs teams are still enemies");
+            Assert.AreEqual(TeamRelation.Hostile, Teams.Relation(TeamIds.Player, TeamIds.Enemy), "the existing prefabs teams are still mortals");
         }
 
         [UnityTest]
@@ -197,26 +192,26 @@ namespace Isekai.Tests
             CharacterControl character = Player.Character;
             GameObject prefab = Object.FindAnyObjectByType<HordeSpawner>().Prefab;
             Vector3 where = character.transform.position + new Vector3(6f, 0f, 0f);
-            GameObject enemy = Pools.Spawn(prefab, where, Quaternion.identity);
+            GameObject mortal = Pools.Spawn(prefab, where, Quaternion.identity);
             yield return null;
-            var member = enemy.GetComponent<HordeMember>();
+            var member = mortal.GetComponent<HordeMember>();
 
-            Assert.IsTrue(RegionUnits.Living.Any(u => u.GameObject == enemy && u.Kind == UnitKind.Mortal && u.Side == Side.Mortals), "a living mortal");
-            Assert.IsTrue(RegionUnits.Living.Any(u => u.GameObject == character.gameObject && u.Kind == UnitKind.Jack && u.Side == Side.Yours), "Jack");
-            Assert.IsTrue(RegionUnits.Living.Any(u => u.Kind == UnitKind.Building && u.Side == Side.Yours), "the Main Base");
+            Assert.IsTrue(RegionEntities.Living.Any(u => u.GameObject == mortal && u.Kind == UnitKind.Mortal && u.Side == Side.Mortals), "a living mortal");
+            Assert.IsTrue(RegionEntities.Living.Any(u => u.GameObject == character.gameObject && u.Kind == UnitKind.Character && u.Side == Side.Yours), "the Character");
+            Assert.IsTrue(RegionEntities.Living.Any(u => u.Kind == UnitKind.Building && u.Side == Side.Yours), "the Main Base");
 
             var deaths = new List<UnitDeath>();
-            RegionUnits.Died += deaths.Add;
-            int mortals = RegionUnits.Count(Side.Mortals);
+            RegionEntities.Died += deaths.Add;
+            int mortals = RegionEntities.Count(Side.Mortals);
             member.Unit.TakeDamage(100000f, DamageRules.PhysicalType, character.GetComponent<Damageable>().Unit);
             Assert.AreEqual(1, deaths.Count);
             UnitDeath death = deaths[0];
-            Assert.AreSame(enemy, death.Unit.GameObject);
+            Assert.AreSame(mortal, death.Unit.GameObject);
             Assert.AreEqual(Side.Mortals, death.Side);
             Assert.AreEqual(UnitKind.Mortal, death.Kind);
             Assert.AreEqual(Side.Yours, death.KillerSide);
             Assert.AreEqual(RegionGrid.Current.CellAt(where), death.Cell);
-            Assert.AreEqual(mortals - 1, RegionUnits.Count(Side.Mortals), "the dead leave the registry");
+            Assert.AreEqual(mortals - 1, RegionEntities.Count(Side.Mortals), "the dead leave the registry");
 
             GameObject second = Pools.Spawn(prefab, where, Quaternion.identity);
             yield return null;
@@ -226,7 +221,7 @@ namespace Isekai.Tests
         }
 
         [UnityTest]
-        public IEnumerator A_pooled_enemy_that_comes_back_is_registered_again()
+        public IEnumerator A_pooled_mortal_that_comes_back_is_registered_again()
         {
             yield return TestWait.Until(() => RegionBootstrap.Current.IsPopulated, "the Region fills");
             RegionTestScene.ClearHorde();
@@ -238,10 +233,10 @@ namespace Isekai.Tests
             first.GetComponent<HordeMember>().Damageable.Kill();
             Pools.Despawn(first);
             yield return null;
-            Assert.IsFalse(RegionUnits.Living.Any(u => u.GameObject == first && !u.Damageable.IsDead && first.activeInHierarchy), "gone while pooled");
+            Assert.IsFalse(RegionEntities.Living.Any(u => u.GameObject == first && !u.Damageable.IsDead && first.activeInHierarchy), "gone while pooled");
             GameObject again = Pools.Spawn(prefab, where, Quaternion.identity);
             yield return null;
-            Assert.AreEqual(1, RegionUnits.Living.Count(u => u.GameObject == again && !u.Damageable.IsDead), "listed again, once");
+            Assert.AreEqual(1, RegionEntities.Living.Count(u => u.GameObject == again && !u.Damageable.IsDead), "listed again, once");
         }
 
         [UnityTest]

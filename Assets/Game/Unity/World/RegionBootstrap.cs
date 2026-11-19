@@ -35,7 +35,7 @@ namespace Isekai
         {
             Current = this;
             RegionEvents.Reset();
-            RegionUnits.Reset();
+            RegionEntities.Reset();
             MapPainters.Reset();
             RegionSides.Apply();
             RegionRecipe recipe = RegionRecipes.Take();

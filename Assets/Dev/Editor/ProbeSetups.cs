@@ -9,12 +9,12 @@ namespace Isekai.Dev.Editor
     /// <summary>Scenes staged for <see cref="PlayModeProbe"/> screenshots (<c>scene|Isekai.Dev.Editor.ProbeSetups.Method</c>).</summary>
     public static class ProbeSetups
     {
-        /// <summary>Zoomed all the way out: the map screen, with Buildings, Militia and a crowd near the Character.</summary>
+        /// <summary>Zoomed all the way out: the map screen, with Buildings, demons and a crowd near the Character.</summary>
         public static void MapShowcase()
         {
             Showcase();
-            DebugMenu.FinishBuildings();
-            DebugMenu.SpawnNearCharacter(60);
+            BuildingsDebug.FinishBuildings();
+            HordeDebug.SpawnNearCharacter(60);
             var zoom = Object.FindAnyObjectByType<ScrollZoom>();
             for (int i = 0; i < 10; i++) zoom.Zoom(-1);
         }
@@ -30,7 +30,7 @@ namespace Isekai.Dev.Editor
         public static void Showcase()
         {
             Object.FindAnyObjectByType<ScrollZoom>().Zoom(2);
-            DebugMenu.AddResources(500);
+            EconomyDebug.AddResources(500);
             var mode = Object.FindAnyObjectByType<BuildMode>();
             BuildingAsset barracks = mode.Catalogue.First(a => a.DisplayName == "Portal");
             Int2 origin = MainBase().Origin;

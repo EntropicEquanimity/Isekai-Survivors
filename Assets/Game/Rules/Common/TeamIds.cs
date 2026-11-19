@@ -15,8 +15,8 @@ namespace Isekai
         /// <summary>Creatures that attack no one by default.</summary>
         public const string Neutral = "Neutrals";
 
-        /// <summary>Hostile wildlife.</summary>
-        public const string Wildlife = "Wildlife";
+        /// <summary>Creatures that attack everything on sight.</summary>
+        public const string Hostile = "Hostile";
 
         /// <summary>Revolted demons: their own team, hostile to everyone.</summary>
         public const string Rogue = "Rogues";
@@ -26,7 +26,7 @@ namespace Isekai
         {
             Side.Yours => Player,
             Side.Mortals => Enemy,
-            Side.Wildlife => Wildlife,
+            Side.Hostile => Hostile,
             Side.Rogue => Rogue,
             _ => Neutral,
         };
@@ -36,7 +36,7 @@ namespace Isekai
         {
             Player => Side.Yours,
             Enemy => Side.Mortals,
-            Wildlife => Side.Wildlife,
+            Hostile => Side.Hostile,
             Rogue => Side.Rogue,
             _ => Side.Neutral,
         };

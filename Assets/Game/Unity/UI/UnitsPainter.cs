@@ -4,8 +4,8 @@ using UnityEngine;
 namespace Isekai
 {
     /// <summary>
-    /// The living: the horde's enemies as red squares (darker while roaming, bigger for elites), demons from the
-    /// <see cref="RegionUnits"/> registry in blue, and the Character in white.
+    /// The living: the mortals as red squares (darker while roaming, bigger for elites), demons from the
+    /// <see cref="RegionEntities"/> registry in blue, and the Character in white.
     /// </summary>
     [RegionSystem]
     public sealed class UnitsPainter : MonoBehaviour, IMapPainter
@@ -30,8 +30,8 @@ namespace Isekai
                     if (m.IsAlive && !m.IsRoaming) { if (m.IsElite) _elites.Add(m); else canvas.Square(canvas.ToPixel(m.transform.position), 2, RegionMapView.Attacker); }
             }
             foreach (HordeMember m in _elites) canvas.Outlined(canvas.ToPixel(m.transform.position), 4, m.IsRoaming ? RegionMapView.Roamer : RegionMapView.Attacker);
-            foreach (RegionUnit unit in RegionUnits.Living)
-                if (unit.Kind == UnitKind.Demon) canvas.Square(canvas.ToPixel(unit.GameObject.transform.position), 2, RegionMapView.Militia);
+            foreach (RegionEntity unit in RegionEntities.Living)
+                if (unit.Kind == UnitKind.Demon) canvas.Square(canvas.ToPixel(unit.GameObject.transform.position), 2, RegionMapView.Demon);
             CharacterControl character = Player.Character;
             if (character != null && !character.IsDead) canvas.Outlined(canvas.ToPixel(character.transform.position), 4, RegionMapView.You);
         }
