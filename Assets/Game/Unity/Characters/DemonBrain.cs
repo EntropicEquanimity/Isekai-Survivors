@@ -22,7 +22,7 @@ namespace Isekai
     /// left) it guards the spot it stands on. <see cref="IgnoresOrders"/> is the hook for the Unruly trait (#20).
     /// </summary>
     [RequireComponent(typeof(CharacterMotor), typeof(AutoCaster))]
-    public sealed class DefenderBrain : MonoBehaviour
+    public sealed class DemonBrain : MonoBehaviour
     {
         [SerializeField] private DemonType _type = DemonType.Imp;
         [SerializeField, Min(0f)] private float _attackRange = 1.2f;
@@ -40,13 +40,13 @@ namespace Isekai
         private Vector3 _ownPost;
         private Vector3 _goal;
         private bool _goalSet;
-        private int _ring;
+        private int _slot;
         private float _nextThink;
 
         public DemonType Type => _type;
         public UnitProducer Portal => _portal;
 
-        /// <summary>The order it follows and the point it gathers at now (its Portal's order, in its own spot of the ring).</summary>
+        /// <summary>The order it follows and the point it gathers at now (its Portal's order, in its own slot).</summary>
         public DemonPost Post => _post;
         public Vector3 PostAt => _postAt;
         public PortalOrder Order => _post.Order;
@@ -66,10 +66,10 @@ namespace Isekai
         /// <summary>A trait's weights: the brain decides with this copy from now on.</summary>
         public void SetBehaviour(BehaviourProfile profile) => _behaviour = profile;
 
-        internal void Assign(UnitProducer portal, int ring)
+        internal void Assign(UnitProducer portal, int slot)
         {
             _portal = portal;
-            _ring = ring;
+            _slot = slot;
             _behaviour = null;
             Action = BehaviourAction.Idle;
             _goalSet = false;
@@ -102,14 +102,14 @@ namespace Isekai
             Resolve();
             Vector3 position = transform.position;
             float reach = _post.Leash + _attackRange;
-            CombatUnit enemy = Nearest(_postAt, reach, out float distance);
+            CombatUnit hostile = Nearest(_postAt, reach, out float distance);
             // On the march it still fights what it walks into.
-            if (enemy == null) enemy = Nearest(position, _attackRange + 0.5f, out distance);
+            if (hostile == null) hostile = Nearest(position, _attackRange + 0.5f, out distance);
             float fromPost = Vector2.Distance(position, _postAt);
 
             _context.Health = _damageable != null && _damageable.MaxHealth > 0f ? _damageable.Unit.Health / _damageable.MaxHealth : 1f;
-            _context.ThreatSeen = enemy != null;
-            _context.ThreatCloseness = enemy != null ? Mathf.Clamp01(1f - distance / reach) : 0f;
+            _context.ThreatSeen = hostile != null;
+            _context.ThreatCloseness = hostile != null ? Mathf.Clamp01(1f - distance / reach) : 0f;
             _context.DistanceHome = fromPost;
             _context.Leash = _post.Leash;
             Action = BehaviourScoring.Choose(Behaviour, _context, Action);
@@ -117,9 +117,9 @@ namespace Isekai
             DestroyBones(position);
             switch (Action)
             {
-                case BehaviourAction.Fight when enemy != null:
+                case BehaviourAction.Fight when hostile != null:
                     if (distance <= _attackRange) Halt();
-                    else GoTo(new Vector3(enemy.Position.x, enemy.Position.y, 0f));
+                    else GoTo(new Vector3(hostile.Position.x, hostile.Position.y, 0f));
                     break;
                 case BehaviourAction.ReturnHome:
                     if (fromPost > 0.5f) GoTo(_postAt);
@@ -134,7 +134,7 @@ namespace Isekai
             }
         }
 
-        // Where it stands now: its Portal's order resolved (a Raid mark and Jack both move), in its own spot of the ring.
+        // Where it stands now: its Portal's order resolved (a Raid mark and Jack both move), in its own slot.
         private void Resolve()
         {
             if (_portal == null || IgnoresOrders)
@@ -144,7 +144,7 @@ namespace Isekai
                 return;
             }
             _post = _portal.Resolve();
-            DemonPosts.RingOffset(_ring, out float dx, out float dy);
+            DemonPosts.SlotOffset(_slot, out float dx, out float dy);
             _postAt = new Vector3(_post.X + dx, _post.Y + dy, 0f);
         }
 

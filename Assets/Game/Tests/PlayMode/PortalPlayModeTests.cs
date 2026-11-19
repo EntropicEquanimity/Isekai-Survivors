@@ -94,8 +94,8 @@ namespace Isekai.Tests
         private static bool AllNear(UnitProducer portal, Vector3 at, float radius) =>
             portal.Units.Count > 0 && portal.Units.All(u => Distance(u, at) <= radius);
 
-        // The ring of posts is DemonTuning.RingRadius wide; a little over that counts as arrived.
-        private const float Arrived = DemonTuning.RingRadius + 1.5f;
+        // The slots are DemonTuning.SlotRadius wide; a little over that counts as arrived.
+        private const float Arrived = DemonTuning.SlotRadius + 1.5f;
 
         [UnityTest]
         public IEnumerator A_Raid_order_sends_the_Portals_demons_to_the_mark()
@@ -122,7 +122,7 @@ namespace Isekai.Tests
             Assert.IsTrue(PortalMarking.Mark(portal, PortalMark.Rally, rally));
             yield return TestWait.Until(() => AllNear(portal, rally, Arrived), "the demons gather at the rally point", 30f);
 
-            DefenderBrain stray = portal.Units[0];
+            DemonBrain stray = portal.Units[0];
             Vector3 away = ClearSpot(rally, 14f);
             stray.transform.position = away;
             yield return TestWait.Until(() => Distance(stray, rally) <= Arrived, "the stray comes back to its post", 30f);
@@ -162,7 +162,7 @@ namespace Isekai.Tests
         {
             UnitProducer portal = MakePortal();
             yield return TestWait.Until(() => portal.Units.Count >= 1, "the Portal brings an Imp", 30f);
-            DefenderBrain imp = portal.Units[0];
+            DemonBrain imp = portal.Units[0];
             Vector3 beside = imp.transform.position + Vector3.right;
 
             BonePile ignored = _bones.Drop(beside, BoneKind.Human);
@@ -186,7 +186,7 @@ namespace Isekai.Tests
         {
             UnitProducer portal = MakePortal(DemonType.BoneDemon);
             yield return TestWait.Until(() => portal.Units.Count >= 1, "the Portal brings a bone demon", 30f);
-            DefenderBrain demon = portal.Units[0];
+            DemonBrain demon = portal.Units[0];
             Assert.AreEqual(DemonType.BoneDemon, demon.Type);
             var raiser = demon.GetComponent<BoneRaiser>();
             raiser.SkeletonSeconds = 3f;
@@ -204,7 +204,7 @@ namespace Isekai.Tests
             Assert.IsFalse(_bones.Take(pile), "a pile is used once");
             Skeleton skeleton = Object.FindObjectsByType<Skeleton>(FindObjectsInactive.Exclude).Single();
             Assert.AreEqual("Players", skeleton.GetComponent<Damageable>().Unit.Team, "it fights on your side");
-            Assert.IsNotNull(skeleton.GetComponent<DefenderBrain>().Portal, "under the Portal's orders");
+            Assert.IsNotNull(skeleton.GetComponent<DemonBrain>().Portal, "under the Portal's orders");
 
             yield return TestWait.Until(() => !skeleton.isActiveAndEnabled, "the skeleton crumbles", 20f);
             Assert.AreEqual(0, raiser.Alive);

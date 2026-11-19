@@ -147,7 +147,7 @@ namespace Isekai.Tests
             placed.FinishConstruction();
             var producer = placed.GetComponent<UnitProducer>();
             yield return TestWait.Until(() => producer.Units.Count > 0, "the Portal brings an Imp", 15f);
-            DefenderBrain imp = producer.Units[0];
+            DemonBrain imp = producer.Units[0];
 
             // Jack goes far from the Imp, so only the Imp's eyes are near the Portal.
             Int2 start = _grid.CellAt(imp.transform.position);

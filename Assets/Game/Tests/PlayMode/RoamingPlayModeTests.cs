@@ -38,12 +38,31 @@ namespace Isekai.Tests
         private static HordeMember[] Roamers() =>
             Object.FindObjectsByType<HordeMember>(FindObjectsInactive.Exclude).Where(m => m.IsRoaming && m.IsAlive && !m.BrainDriven).ToArray();
 
+        // Anything of another side (Jack, demons, wildlife) near a band would wake it, as it should; the test wants a band with
+        // nothing but its own side about, so the one it watches wakes only when the test brings Jack.
+        private const float Quiet = 15f;
+
+        private static HordeMember QuietestRoamer(HordeMember[] roamers)
+        {
+            float Clearance(HordeMember m)
+            {
+                float nearest = float.MaxValue;
+                foreach (RegionEntity e in RegionEntities.Living)
+                    if (e.Side != Side.Mortals && e.GameObject != m.gameObject)
+                        nearest = Mathf.Min(nearest, Vector3.Distance(e.GameObject.transform.position, m.transform.position));
+                return nearest;
+            }
+            HordeMember best = roamers.OrderByDescending(Clearance).First();
+            Assert.Greater(Clearance(best), Quiet, "a roaming band with no other side near it");
+            return best;
+        }
+
         [UnityTest]
         public IEnumerator Wild_groups_roam_in_place_until_a_target_comes_near()
         {
             HordeMember[] roamers = Roamers();
             Assert.That(roamers.Length, Is.GreaterThan(0), "the wilds have roaming groups");
-            HordeMember one = roamers[0];
+            HordeMember one = QuietestRoamer(roamers);
             Vector3 start = one.transform.position;
             yield return new WaitForSeconds(1f);
             Assert.IsTrue(one.IsRoaming);

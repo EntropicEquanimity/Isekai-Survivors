@@ -42,12 +42,12 @@ namespace Isekai
             return new DemonPost(PortalOrder.Guard, rallyX, rallyY, Leash(PortalOrder.Guard));
         }
 
-        /// <summary>The offset of the <paramref name="index"/>th demon's spot in the ring around a gathering point, so demons do not stand on each other.</summary>
-        public static void RingOffset(int index, out float dx, out float dy)
+        /// <summary>The offset of the <paramref name="index"/>th demon's slot around a gathering point, so demons do not stand on each other.</summary>
+        public static void SlotOffset(int index, out float dx, out float dy)
         {
             double angle = Math.Max(0, index) * 2.399963;   // the golden angle
-            dx = (float)Math.Cos(angle) * DemonTuning.RingRadius;
-            dy = (float)Math.Sin(angle) * DemonTuning.RingRadius;
+            dx = (float)Math.Cos(angle) * DemonTuning.SlotRadius;
+            dy = (float)Math.Sin(angle) * DemonTuning.SlotRadius;
         }
     }
 }

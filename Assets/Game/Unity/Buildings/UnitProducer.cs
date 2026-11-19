@@ -25,7 +25,7 @@ namespace Isekai
         [Tooltip("Where Units appear, from the Building's centre.")]
         [SerializeField] private Vector2 _exit = new(0f, -1.4f);
 
-        private readonly List<DefenderBrain> _units = new();
+        private readonly List<DemonBrain> _units = new();
         private Production _production;
         private Vector3 _rally;
         private Vector3 _raid;
@@ -62,7 +62,7 @@ namespace Isekai
         public bool HasRaidTarget => _hasRaid;
         public Vector3 RaidTarget => _raid;
 
-        public IReadOnlyList<DefenderBrain> Units => _units;
+        public IReadOnlyList<DemonBrain> Units => _units;
         public Production Production => _production;
 
         /// <summary>The order, rally point, raid target, policy or roster changed.</summary>
@@ -94,8 +94,8 @@ namespace Isekai
             return DemonPosts.Resolve(_order, rally.x, rally.y, _hasRaid, _raid.x, _raid.y, hasJack, jackAt.x, jackAt.y);
         }
 
-        /// <summary>Puts a demon of this Portal's (a raised skeleton) in the ring, without counting it against the cap.</summary>
-        internal void Adopt(DefenderBrain unit) => unit.Assign(this, _units.Count + 1 + _extras++ % 8);
+        /// <summary>Puts a demon of this Portal's (a raised skeleton) in a slot, without counting it against the cap.</summary>
+        internal void Adopt(DemonBrain unit) => unit.Assign(this, _units.Count + 1 + _extras++ % 8);
 
         private void Awake() => _production = new Production(_interval, _cap);
 
@@ -106,7 +106,7 @@ namespace Isekai
             GameObject prefab = _roster == DemonType.BoneDemon && _boneDemonPrefab != null ? _boneDemonPrefab : _unitPrefab;
             Vector3 at = transform.position + (Vector3)_exit;
             GameObject go = Pools.Spawn(prefab, at, Quaternion.identity);
-            var unit = go.GetComponent<DefenderBrain>();
+            var unit = go.GetComponent<DemonBrain>();
             unit.Assign(this, _units.Count);
             _units.Add(unit);
         }

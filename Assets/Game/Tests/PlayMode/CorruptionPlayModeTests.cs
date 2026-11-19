@@ -163,7 +163,7 @@ namespace Isekai.Tests
             Assert.IsNotNull(portal);
             var producer = portal.GetComponent<UnitProducer>();
             yield return TestWait.Until(() => producer.Units.Count >= 2, "the Portal brings two Imps", 30f);
-            DefenderBrain failing = producer.Units[0], succeeding = producer.Units[1];
+            DemonBrain failing = producer.Units[0], succeeding = producer.Units[1];
             Int2 a = Far, b = Far2;
 
             Time.timeScale = 0f;
@@ -185,7 +185,7 @@ namespace Isekai.Tests
             Building portal = _buildings.Place(Catalogue("Portal"), Beside);
             var producer = portal.GetComponent<UnitProducer>();
             yield return TestWait.Until(() => producer.Units.Count >= 1, "the Portal brings an Imp", 30f);
-            DefenderBrain imp = producer.Units[0];
+            DemonBrain imp = producer.Units[0];
             Time.timeScale = 0f;
             Int2 cell = Far;
             imp.transform.position = RegionGrid.Current.CentreOf(cell);
@@ -240,7 +240,7 @@ namespace Isekai.Tests
             Building portal = _buildings.Place(Catalogue("Portal"), Beside);
             var producer = portal.GetComponent<UnitProducer>();
             yield return TestWait.Until(() => producer.Units.Count >= 1, "the Portal brings an Imp", 30f);
-            DefenderBrain imp = producer.Units[0];
+            DemonBrain imp = producer.Units[0];
             var stats = imp.GetComponent<Damageable>().Stats;
             Time.timeScale = 1f;
             imp.transform.position = RegionGrid.Current.CentreOf(Far);

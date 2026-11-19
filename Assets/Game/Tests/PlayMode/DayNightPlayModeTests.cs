@@ -73,6 +73,7 @@ namespace Isekai.Tests
         private UnitProducer PlacePortal()
         {
             RegionEconomy.Current.Stockpile.Add(ResourceType.Stone, 200);
+            RegionEconomy.Current.Stockpile.Add(ResourceType.Souls, 20);
             Building mainBase = Building.All.First(b => b.IsMainBase);
             BuildingAsset portal = Object.FindAnyObjectByType<BuildMode>().Catalogue.First(a => a.DisplayName == "Portal");
             Building built = RegionBuildings.Current.Place(portal, new Int2(mainBase.Origin.x + 4, mainBase.Origin.y));
@@ -101,7 +102,7 @@ namespace Isekai.Tests
         {
             UnitProducer producer = PlacePortal();
             yield return TestWait.Until(() => producer.Units.Count > 0, "the Portal brings an Imp", 15f);
-            DefenderBrain imp = producer.Units[0];
+            DemonBrain imp = producer.Units[0];
 
             Damageable jackDamageable = _jack.GetComponent<Damageable>();
             Damageable impDamageable = imp.GetComponent<Damageable>();

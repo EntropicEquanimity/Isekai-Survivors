@@ -130,12 +130,12 @@ namespace Isekai.Tests
             Assert.AreSame(imp, body.gameObject, "the Imp is the Player's Character");
             Assert.AreEqual(body.transform, _souls.CameraTarget, "the camera follows the new body");
             Assert.IsTrue(body.enabled && ((Behaviour)body.GetComponent("PlayerBrain")).enabled, "the player steers it");
-            Assert.IsFalse(imp.GetComponent<DefenderBrain>().enabled, "its own brain stands down");
+            Assert.IsFalse(imp.GetComponent<DemonBrain>().enabled, "its own brain stands down");
             Assert.IsFalse(DemonKing.IsKing(body));
 
             // The old body is an ordinary unit of his again, and the inventory stays usable.
             Assert.IsFalse(_jack.enabled, "not steered any more");
-            Assert.IsTrue(_jack.TryGetComponent(out DefenderBrain brain) && brain.enabled, "the old Demon King fights on its own");
+            Assert.IsTrue(_jack.TryGetComponent(out DemonBrain brain) && brain.enabled, "the old Demon King fights on its own");
             Assert.IsFalse(_jack.IsDead);
             Assert.IsNotNull(CharacterInventory.Current, "the grid inventory still works");
         }
@@ -205,7 +205,7 @@ namespace Isekai.Tests
             StringAssert.Contains(SoulRules.PossessCost(1, bodyAlive: true).ToString(), _possession.Refusal);
             Assert.AreEqual(10, _pile.Get(ResourceType.Souls), "nothing is spent");
             Assert.AreSame(_jack, Player.Character);
-            Assert.IsTrue(imp.GetComponent<DefenderBrain>().enabled);
+            Assert.IsTrue(imp.GetComponent<DemonBrain>().enabled);
         }
 
         [UnityTest]

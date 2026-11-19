@@ -11,7 +11,7 @@ namespace Isekai
     /// <summary>
     /// Jack changing bodies. While bodiless, the wisp touching one of his demons possesses it for the possession cost;
     /// while his body lives, P next to a demon does the same for 25% less. The demon becomes the Player's Character
-    /// (it gets a <see cref="CharacterControl"/> if it has none, its <see cref="DefenderBrain"/> stops), the camera and
+    /// (it gets a <see cref="CharacterControl"/> if it has none, its <see cref="DemonBrain"/> stops), the camera and
     /// HUD follow, and the body he left becomes an ordinary unit of his again. In a body that is not a
     /// <see cref="DemonKing"/> Jack is weaker (<see cref="SoulTuning.OrdinaryDemonPenalty"/>) and spreads no corruption
     /// (<see cref="RegionCorruption"/> asks the marker). Demon Kings are summoned at the Anchor for Souls
@@ -145,7 +145,7 @@ namespace Isekai
         // Jack takes the demon: the player steers it, its own brain stands down.
         private CharacterControl Enter(GameObject demon)
         {
-            if (demon.TryGetComponent(out DefenderBrain brain)) brain.enabled = false;
+            if (demon.TryGetComponent(out DemonBrain brain)) brain.enabled = false;
             Damageable damageable = demon.GetComponent<Damageable>();
             _restoreDespawn = damageable.DespawnOnDeath;
             damageable.DespawnOnDeath = false;   // a dead body waits for a revive; it isn't pooled with Jack's controls on it
@@ -182,7 +182,7 @@ namespace Isekai
             }
             if (dead) return;
             // A Demon King's body keeps its inventory and everything else; it just stands and fights where it was left.
-            if (!go.TryGetComponent(out DefenderBrain brain)) brain = go.AddComponent<DefenderBrain>();
+            if (!go.TryGetComponent(out DemonBrain brain)) brain = go.AddComponent<DemonBrain>();
             brain.enabled = true;
         }
 

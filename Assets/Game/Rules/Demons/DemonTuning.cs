@@ -8,8 +8,8 @@ namespace Isekai
         public const float RaidLeash = 8f;
         public const float FollowLeash = 5f;
 
-        /// <summary>The radius of the ring of posts the Portal's demons stand in around the point they gather at.</summary>
-        public const float RingRadius = 2f;
+        /// <summary>The radius of the slots the Portal's demons stand in around the point they gather at.</summary>
+        public const float SlotRadius = 2f;
 
         /// <summary>Seconds between a demon's thoughts (each is staggered by a random start).</summary>
         public const float ThinkSeconds = 0.3f;

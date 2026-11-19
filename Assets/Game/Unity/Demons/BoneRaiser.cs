@@ -8,7 +8,7 @@ namespace Isekai
     /// What makes a bone demon a bone demon: when its Portal's bones policy is Harvest it walks to a pile near its post,
     /// spends it (<see cref="RegionBones.Take"/>, so each pile is used once) and raises a skeleton there, a few at a time.
     /// The skeletons fight on your side under the same Portal's order and crumble after <see cref="SkeletonSeconds"/>.
-    /// Asked by its <see cref="DefenderBrain"/> when it chooses Work.
+    /// Asked by its <see cref="DemonBrain"/> when it chooses Work.
     /// </summary>
     public sealed class BoneRaiser : MonoBehaviour
     {
@@ -90,7 +90,7 @@ namespace Isekai
                 skeleton.Raise(SkeletonSeconds);
                 _raised.Add(skeleton);
             }
-            if (go.TryGetComponent(out DefenderBrain brain)) portal.Adopt(brain);
+            if (go.TryGetComponent(out DemonBrain brain)) portal.Adopt(brain);
             Raised++;
             _readyAt = Time.time + DemonTuning.RaiseCooldown;
         }

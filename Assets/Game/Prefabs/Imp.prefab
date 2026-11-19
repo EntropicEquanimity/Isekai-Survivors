@@ -410,7 +410,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 394bbae49bdf38540bcde3b6c93e6726, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Isekai.Game::Isekai.DefenderBrain
+  m_EditorClassIdentifier: Isekai.Game::Isekai.DemonBrain
   _attackRange: 1.2
   _thinkInterval: 0.25
 --- !u!114 &1522794100149971968

@@ -35,11 +35,11 @@ namespace Isekai.Tests
         }
 
         [Test]
-        public void Demons_stand_in_a_ring_and_not_on_each_other()
+        public void Demons_stand_in_slots_and_not_on_each_other()
         {
-            DemonPosts.RingOffset(0, out float ax, out float ay);
-            DemonPosts.RingOffset(1, out float bx, out float by);
-            Assert.AreEqual(DemonTuning.RingRadius, System.MathF.Sqrt(ax * ax + ay * ay), 1e-3f);
+            DemonPosts.SlotOffset(0, out float ax, out float ay);
+            DemonPosts.SlotOffset(1, out float bx, out float by);
+            Assert.AreEqual(DemonTuning.SlotRadius, System.MathF.Sqrt(ax * ax + ay * ay), 1e-3f);
             Assert.Greater(System.MathF.Sqrt((ax - bx) * (ax - bx) + (ay - by) * (ay - by)), 1f);
         }
 
