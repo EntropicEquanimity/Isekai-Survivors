@@ -141,10 +141,10 @@ namespace Isekai
         }
 
         /// <summary>
-        /// Whether a body spreads corruption as it walks. Today any Character does; ticket #16 limits this to Demon
-        /// Kings (Jack in an ordinary demon spreads none).
+        /// Whether a body spreads corruption as it walks: only a living Demon King does (Jack in an ordinary demon
+        /// spreads none).
         /// </summary>
-        private static bool BodySpreads(CharacterControl body) => !body.IsDead;
+        private static bool BodySpreads(CharacterControl body) => SoulRules.BodySpreads(DemonKing.IsKing(body), !body.IsDead);
 
         private void TickBody(float dt)
         {

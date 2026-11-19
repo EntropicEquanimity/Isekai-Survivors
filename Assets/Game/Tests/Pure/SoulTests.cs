@@ -20,6 +20,32 @@ namespace Isekai.Tests
         }
 
         [Test]
+        public void Possessing_needs_the_Souls_the_cost_asks()
+        {
+            Assert.IsFalse(SoulRules.CanPossess(82, 1, bodyAlive: true));
+            Assert.IsTrue(SoulRules.CanPossess(83, 1, bodyAlive: true));
+            Assert.IsFalse(SoulRules.CanPossess(109, 1, bodyAlive: false), "bodiless pays the full price");
+            Assert.IsTrue(SoulRules.CanPossess(110, 1, bodyAlive: false));
+        }
+
+        [Test]
+        public void Only_a_living_Demon_King_body_spreads_and_an_ordinary_demon_is_weaker()
+        {
+            Assert.IsTrue(SoulRules.BodySpreads(demonKing: true, alive: true));
+            Assert.IsFalse(SoulRules.BodySpreads(demonKing: true, alive: false));
+            Assert.IsFalse(SoulRules.BodySpreads(demonKing: false, alive: true), "Jack in an ordinary demon spreads none");
+            Assert.AreEqual(1f, SoulRules.BodyMultiplier(true));
+            Assert.AreEqual(0.7f, SoulRules.BodyMultiplier(false), 1e-5f);
+        }
+
+        [Test]
+        public void Summoning_a_Demon_King_costs_more_than_possessing()
+        {
+            Assert.AreEqual(220, SoulRules.SummonKingCost(1));
+            Assert.Greater(SoulRules.SummonKingCost(1), SoulRules.PossessCost(1, bodyAlive: false));
+        }
+
+        [Test]
         public void Possession_costs_a_hundred_plus_ten_per_soul_level_and_a_quarter_less_while_alive()
         {
             Assert.AreEqual(110, SoulRules.PossessCost(1, bodyAlive: false));

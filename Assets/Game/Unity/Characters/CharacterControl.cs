@@ -132,6 +132,33 @@ namespace Isekai
             else transform.position = position;
         }
 
+        /// <summary>
+        /// Jack takes this body (possession): the player steers it, its weapons fire, and it is the Player's Character.
+        /// A body that was a Character before (a Demon King) comes back to life here; a demon given a CharacterControl
+        /// by possession is already set up by its Awake.
+        /// </summary>
+        public void TakeControl()
+        {
+            enabled = true;
+            if (_autoCaster != null && !IsDead) _autoCaster.enabled = true;
+            _fight.Tick(0f, playerInput: true);
+            SetPlayerControl(!IsDead);
+            Player.Control(this);
+        }
+
+        /// <summary>Jack leaves this body: it stops following the player and the body is left to its own devices.</summary>
+        public void Vacate()
+        {
+            if (_brain != null) _brain.enabled = false;
+            if (_motor != null)
+            {
+                if (_motor.HasDestination) _motor.Stop();
+                _motor.MoveInput = Vector2.zero;
+            }
+            enabled = false;
+            Player.Release(this);
+        }
+
         /// <summary>Stops everything: no steering, no fighting, no weapons (the Run is lost).</summary>
         public void Freeze()
         {

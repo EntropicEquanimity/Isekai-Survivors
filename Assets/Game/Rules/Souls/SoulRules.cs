@@ -22,6 +22,18 @@ namespace Isekai
             return Whole(bodyAlive ? cost * (1f - SoulTuning.PossessWhileAliveDiscount) : cost);
         }
 
+        /// <summary>Whether the Souls cover a possession.</summary>
+        public static bool CanPossess(int souls, int soulLevel, bool bodyAlive) => souls >= PossessCost(soulLevel, bodyAlive);
+
+        /// <summary>Souls to summon a Demon King at the Anchor.</summary>
+        public static int SummonKingCost(int soulLevel) => Whole(SoulTuning.SummonKingBase + SoulTuning.SummonKingPerLevel * soulLevel);
+
+        /// <summary>What Jack's damage and health are multiplied by in a body: a Demon King is whole, an ordinary demon is weaker.</summary>
+        public static float BodyMultiplier(bool demonKing) => demonKing ? 1f : 1f - SoulTuning.OrdinaryDemonPenalty;
+
+        /// <summary>Only a living Demon King body spreads corruption as it walks.</summary>
+        public static bool BodySpreads(bool demonKing, bool alive) => demonKing && alive;
+
         /// <summary>Souls to raise soul level from <paramref name="soulLevel"/> to the next.</summary>
         public static int LevelUpCost(int soulLevel) => SoulTuning.LevelUpCostPerLevel * soulLevel;
 

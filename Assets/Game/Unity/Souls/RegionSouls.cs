@@ -114,9 +114,25 @@ namespace Isekai
 
         private void EndWisp(CharacterControl body)
         {
-            if (_wisp != null) Destroy(_wisp.gameObject);
+            if (_wisp != null) RemoveWisp();
             _wisp = null;
             Follow(body.transform);
+        }
+
+        /// <summary>Jack has a new body (possession): the wisp is gone, the camera and the soul level's stats follow it.</summary>
+        internal void Adopt(CharacterControl body)
+        {
+            if (_wisp != null) RemoveWisp();
+            _wisp = null;
+            _appliedBody = null;
+            Follow(body.transform);
+        }
+
+        // Gone at once (the Region finds no wisp this frame), destroyed at the end of it.
+        private void RemoveWisp()
+        {
+            _wisp.gameObject.SetActive(false);
+            Destroy(_wisp.gameObject);
         }
 
         private void DrainSouls()
@@ -194,7 +210,7 @@ namespace Isekai
             return bounds.Contains(point);
         }
 
-        private static Bounds BoundsOf(Building building)
+        internal static Bounds BoundsOf(Building building)
         {
             Renderer[] renderers = building.GetComponentsInChildren<Renderer>();
             if (renderers.Length == 0) return new Bounds(building.transform.position, Vector3.one);

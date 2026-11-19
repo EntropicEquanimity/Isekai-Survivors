@@ -17,6 +17,13 @@ namespace Isekai
         public const float PossessPerLevel = 10f;
         public const float PossessWhileAliveDiscount = 0.25f;
 
+        // Jack in an ordinary demon (not a Demon King) deals and survives this much less (0.3 = 30%).
+        public const float OrdinaryDemonPenalty = 0.3f;
+
+        // Summoning a Demon King at the Anchor: many Souls.
+        public const float SummonKingBase = 200f;
+        public const float SummonKingPerLevel = 20f;
+
         // Raising soul level costs this x the current level.
         public const int LevelUpCostPerLevel = 50;
 
