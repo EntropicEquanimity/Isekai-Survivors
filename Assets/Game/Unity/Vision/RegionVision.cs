@@ -31,6 +31,7 @@ namespace Isekai
         }
 
         private static float s_multiplier = 1f;
+        private static float s_dayNightMultiplier = 1f;
         private static bool s_on = true;
 
         private readonly VisionMap[] _maps = new VisionMap[5];
@@ -41,7 +42,7 @@ namespace Isekai
         private int _cursor;
         private int _refreshCursor;
 
-        static RegionVision() => StaticReset.Register(() => { s_multiplier = 1f; s_on = true; });
+        static RegionVision() => StaticReset.Register(() => { s_multiplier = 1f; s_dayNightMultiplier = 1f; s_on = true; });
 
         public static RegionVision Current { get; private set; }
 
@@ -53,6 +54,13 @@ namespace Isekai
         {
             get => s_multiplier;
             set => s_multiplier = Mathf.Max(0.01f, value);
+        }
+
+        /// <summary>Extra multiplier the day-night cycle owns (1 by day, 0.5 at night).</summary>
+        public static float DayNightMultiplier
+        {
+            get => s_dayNightMultiplier;
+            set => s_dayNightMultiplier = Mathf.Max(0.01f, value);
         }
 
         /// <summary>Fog of war is on. Off (the debug menu, a test measuring its cost) the Region is fully shown and nothing updates.</summary>
@@ -155,7 +163,7 @@ namespace Isekai
             int baseRange = VisionRanges.For(unit.Kind);
             if (baseRange == 0) return 0;
             Side side = unit.Side;
-            int range = VisionRanges.Scaled(baseRange, s_multiplier);
+            int range = VisionRanges.Scaled(baseRange, s_multiplier * s_dayNightMultiplier);
             Int2 cell = unit.Cell;
             if (!_eyes.TryGetValue(unit, out Eyes eyes))
             {
