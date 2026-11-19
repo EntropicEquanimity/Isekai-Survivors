@@ -9,16 +9,17 @@ using Random = System.Random;
 namespace Isekai
 {
     /// <summary>
-    /// Fills the open Region with life once the horde's grid is ready: small groups of roaming enemies that amble around
-    /// their home spot until a player target comes near (then they attack like any roamer). They keep away from the
+    /// Fills the open Region with life once the horde's grid is ready: small groups of roaming mortal bands that amble
+    /// around their home spot until a player target comes near (then they attack like any roamer). They keep away from the
     /// Main Base. Wanderers get the same health escalation as the Region's Waves. (Resource nodes, rocks and cliffs are
-    /// <see cref="RegionTerrain"/>'s.)
+    /// <see cref="RegionTerrain"/>'s; the settlements' own mortals are <see cref="RegionMortals"/>'s and the wild animals
+    /// <see cref="RegionWildlife"/>'s. The camps already hold their guards, so only a few wandering bands remain on the roads.)
     /// </summary>
     public sealed class RegionWilds : MonoBehaviour, IRegionPopulate
     {
         [Header("Wanderers")]
         [SerializeField] private GameObject _wandererPrefab;
-        [SerializeField, Min(0)] private int _groups = 45;
+        [SerializeField, Min(0)] private int _bands = 18;
         [SerializeField] private Vector2Int _groupSize = new(2, 6);
         [SerializeField, Min(0f)] private float _wanderRadius = 4f;
         [SerializeField, Min(0f)] private float _wanderSpeed = 0.5f;
@@ -69,10 +70,10 @@ namespace Isekai
             _random = region.Random("wilds");
             float health = region.HealthMultiplier;
 
-            for (int i = 0; i < _groups && _wandererPrefab != null; i++)
+            for (int i = 0; i < _bands && _wandererPrefab != null; i++)
             {
                 if (!TryPickSpot(grid, out Vector3 home)) continue;
-                var group = new Group { Home = home, Goal = home, Rest = (float)_random.NextDouble() * 4f };
+                var group = new Group { Home = home, Goal = home, Rest = 2f + (float)_random.NextDouble() * 4f };   // a band stands a while before its first stroll
                 int size = _random.Next(Mathf.Max(1, _groupSize.x), Mathf.Max(_groupSize.x, _groupSize.y) + 1);
                 for (int k = 0; k < size; k++)
                 {

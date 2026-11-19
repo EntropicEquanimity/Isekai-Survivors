@@ -34,8 +34,9 @@ namespace Isekai.Tests
             yield return null;
         }
 
+        // The wilds' wandering bands only: settlement mortals and wildlife are brain-driven (they start out of the crowd too, and the horde never wakes them).
         private static HordeMember[] Roamers() =>
-            Object.FindObjectsByType<HordeMember>(FindObjectsInactive.Exclude).Where(m => m.IsRoaming && m.IsAlive).ToArray();
+            Object.FindObjectsByType<HordeMember>(FindObjectsInactive.Exclude).Where(m => m.IsRoaming && m.IsAlive && !m.BrainDriven).ToArray();
 
         [UnityTest]
         public IEnumerator Wild_groups_roam_in_place_until_a_target_comes_near()
