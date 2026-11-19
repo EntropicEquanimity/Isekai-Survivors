@@ -33,7 +33,7 @@ namespace Isekai.Tests
         {
             var spawner = Object.FindAnyObjectByType<HordeSpawner>();
             var control = Object.FindAnyObjectByType<CharacterControl>();
-            GameObject go = Pools.Spawn(spawner.Prefab, control.transform.position + new Vector3(30f, 0f, 0f), Quaternion.identity);
+            GameObject go = Pools.Spawn(spawner.Prefab, control.transform.position + new Vector3(3f, 0f, 0f), Quaternion.identity);
             go.GetComponent<HordeMember>().SetRoaming(true);
             var bar = go.GetComponent<HealthBar>();
             var damageable = go.GetComponent<Damageable>();
@@ -51,7 +51,7 @@ namespace Isekai.Tests
         [UnityTest]
         public IEnumerator The_Region_is_big_and_has_wandering_groups_away_from_the_Main_Base()
         {
-            Assert.GreaterOrEqual(HordeDirector.Current.Grid.Width, 250);
+            Assert.GreaterOrEqual(HordeDirector.Current.Grid.Width, 150);
             var wilds = Object.FindAnyObjectByType<RegionWilds>();
             yield return TestWait.Until(() => wilds.GroupCount > 0, "the wilds fill in", 3f);
             Assert.Greater(wilds.Roaming, wilds.GroupCount, "groups of several roaming enemies");

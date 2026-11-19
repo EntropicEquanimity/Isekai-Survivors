@@ -10,7 +10,8 @@ namespace Isekai.Tests
     public static class RegionTestScene
     {
         /// <summary>
-        /// Loads the Region and waits for its setup. Item drafts are off by default: a draft pauses the game, so a test
+        /// Loads the Region and waits for it to be set up, baked and populated (the generated terrain, the Main Base's
+        /// claim on its ground). Item drafts are off by default: a draft pauses the game, so a test
         /// that destroys a nest would otherwise stall the tests after it.
         /// </summary>
         public static IEnumerator Load(bool drafts = false) => Load(null, drafts);
@@ -23,6 +24,7 @@ namespace Isekai.Tests
             yield return null;
             if (!drafts) DisableDrafts();
             yield return null;
+            yield return TestWait.Until(() => RegionBootstrap.Current != null && RegionBootstrap.Current.IsPopulated, "the Region is populated", 10f);
         }
 
         public static void DisableDrafts()

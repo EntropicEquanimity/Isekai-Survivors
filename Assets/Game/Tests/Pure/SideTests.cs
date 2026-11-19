@@ -118,13 +118,13 @@ namespace Isekai.Tests
         }
 
         [Test]
-        public void The_default_map_is_the_hand_built_Regions_size()
+        public void The_default_map_is_an_outer_ring_Regions_size()
         {
             var recipe = new RegionRecipe(1);
             Assert.AreEqual(RegionRecipe.DefaultWidth, recipe.Width);
             Assert.AreEqual(RegionRecipe.DefaultHeight, recipe.Height);
-            Assert.AreEqual(288, RegionRecipe.DefaultWidth);
-            Assert.AreEqual(192, RegionRecipe.DefaultHeight);
+            Assert.AreEqual(160, RegionRecipe.DefaultWidth);
+            Assert.AreEqual(110, RegionRecipe.DefaultHeight);
         }
 
         [Test]

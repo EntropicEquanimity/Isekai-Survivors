@@ -8,8 +8,8 @@ namespace Isekai
     /// </summary>
     public sealed class RegionRecipe
     {
-        /// <summary>The hand-built Region's map size, in cells.</summary>
-        public const int DefaultWidth = 288, DefaultHeight = 192;
+        /// <summary>An outer-ring Region's map size, in cells, when no recipe asks for another.</summary>
+        public const int DefaultWidth = 160, DefaultHeight = 110;
 
         public RegionRecipe(int seed, int width = DefaultWidth, int height = DefaultHeight)
         {

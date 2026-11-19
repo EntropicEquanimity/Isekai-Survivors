@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using Blondie.Combat;
+using Blondie.Core;
 using Blondie.FlowFields;
 using Blondie.PixelPerfect;
 using Blondie.Pooling;
@@ -29,12 +30,15 @@ namespace Isekai.Tests
             var spawner = Object.FindAnyObjectByType<HordeSpawner>();
             RegionTestScene.ClearHorde();
             Object.FindAnyObjectByType<FlowFieldCrowd>().Speed = 0f;   // they stand still, so the Character must walk
+            var control = Object.FindAnyObjectByType<CharacterControl>();
+            // The start area is clear ground in every corner: a few cells in from the Character, toward the map.
+            Int2 inward = RegionTerrain.Current.Layout.Interior;
+            Vector3 from = control.transform.position;
             Damageable[] enemies =
             {
-                Pools.Spawn(spawner.Prefab, new Vector3(-4.5f, 1.5f, 0f), Quaternion.identity).GetComponent<Damageable>(),
-                Pools.Spawn(spawner.Prefab, new Vector3(-5f, 2f, 0f), Quaternion.identity).GetComponent<Damageable>(),
+                Pools.Spawn(spawner.Prefab, from + new Vector3(4.5f * inward.x, 1.5f * inward.y, 0f), Quaternion.identity).GetComponent<Damageable>(),
+                Pools.Spawn(spawner.Prefab, from + new Vector3(5f * inward.x, 2f * inward.y, 0f), Quaternion.identity).GetComponent<Damageable>(),
             };
-            var control = Object.FindAnyObjectByType<CharacterControl>();
             Vector3 start = control.transform.position;
 
             yield return TestWait.Until(() => control.IsAutoFighting, "the Character takes over after the idle delay", 5f);

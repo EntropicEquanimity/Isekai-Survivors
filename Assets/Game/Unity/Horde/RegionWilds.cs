@@ -10,8 +10,9 @@ namespace Isekai
 {
     /// <summary>
     /// Fills the open Region with life once the horde's grid is ready: small groups of roaming enemies that amble around
-    /// their home spot until a player target comes near (then they attack like any roamer), and extra Resource nodes.
-    /// Both keep away from the Main Base. Wanderers get the same health escalation as the Region's Waves.
+    /// their home spot until a player target comes near (then they attack like any roamer). They keep away from the
+    /// Main Base. Wanderers get the same health escalation as the Region's Waves. (Resource nodes, rocks and cliffs are
+    /// <see cref="RegionTerrain"/>'s.)
     /// </summary>
     public sealed class RegionWilds : MonoBehaviour, IRegionPopulate
     {
@@ -21,9 +22,6 @@ namespace Isekai
         [SerializeField] private Vector2Int _groupSize = new(2, 6);
         [SerializeField, Min(0f)] private float _wanderRadius = 4f;
         [SerializeField, Min(0f)] private float _wanderSpeed = 0.5f;
-        [Header("Resources")]
-        [SerializeField] private GameObject _nodePrefab;
-        [SerializeField, Min(0)] private int _nodes = 24;
         [Header("Placement")]
         [Tooltip("Nothing appears closer than this to a player target.")]
         [SerializeField, Min(0f)] private float _minDistanceFromTargets = 25f;
@@ -62,7 +60,7 @@ namespace Isekai
             using (PerfMarkers.WildsWander.Auto()) Wander(Time.deltaTime);
         }
 
-        /// <summary>Fills the Region once its walls are known: Resource nodes, then wandering groups.</summary>
+        /// <summary>Fills the Region once its walls are known: wandering groups.</summary>
         void IRegionPopulate.Populate(RegionContext region)
         {
             RegionGrid grid = RegionGrid.Current;
@@ -70,9 +68,6 @@ namespace Isekai
             _populated = true;
             _random = region.Random("wilds");
             float health = region.HealthMultiplier;
-
-            for (int i = 0; i < _nodes && _nodePrefab != null; i++)
-                if (TryPickSpot(grid, out Vector3 at)) Instantiate(_nodePrefab, at, Quaternion.identity, transform);
 
             for (int i = 0; i < _groups && _wandererPrefab != null; i++)
             {

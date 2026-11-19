@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +13,9 @@ namespace Isekai
         [SerializeField, Min(1)] private int _amount = 50;
 
         public static IReadOnlyList<ResourceNode> All => s_all;
+
+        /// <summary>A node was mined out, just before it switches itself off (its rock stops cutting sight, its ground opens).</summary>
+        public static event Action<ResourceNode> Depleted;
 
         public ResourceType Type => _type;
         public int Remaining { get; private set; }
@@ -28,7 +32,11 @@ namespace Isekai
         {
             int taken = Mathf.Clamp(units, 0, Remaining);
             Remaining -= taken;
-            if (IsEmpty) gameObject.SetActive(false);
+            if (IsEmpty)
+            {
+                Depleted?.Invoke(this);
+                gameObject.SetActive(false);
+            }
             return taken;
         }
 

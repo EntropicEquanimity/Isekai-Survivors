@@ -41,7 +41,8 @@ namespace Isekai.Tests
 
         private BuildingAsset Catalogue(string name) => _mode.Catalogue.First(a => a.DisplayName == name);
 
-        private Int2 BesideMainBase(int dx) => new(_mainBase.Origin.x + dx, _mainBase.Origin.y);
+        // Cells along the way into the map from the start corner (the Main Base can be in any corner).
+        private Int2 BesideMainBase(int dx) => new(_mainBase.Origin.x + dx * RegionTerrain.Current.Layout.Interior.x, _mainBase.Origin.y);
 
         [UnityTest]
         public IEnumerator A_Portal_costs_stone_blocks_the_horde_builds_and_brings_Imps()
@@ -90,7 +91,7 @@ namespace Isekai.Tests
         public IEnumerator Placement_is_refused_on_blocked_ground_and_when_too_expensive()
         {
             BuildingAsset tower = Catalogue("Spire");
-            Assert.AreEqual(Verdict.Ok, _buildings.Check(tower, BesideMainBase(30)).Verdict, "any free ground will do");
+            Assert.AreEqual(Verdict.Ok, _buildings.Check(tower, BesideMainBase(8)).Verdict, "any free ground will do");
             Assert.AreEqual(Verdict.Blocked, _buildings.Check(tower, _mainBase.Origin).Verdict, "on the Main Base");
             RegionEconomy.Current.Stockpile.TrySpend(ResourceType.Stone, RegionEconomy.Current.Stockpile.Get(ResourceType.Stone));
             Assert.AreEqual(Verdict.TooExpensive, _buildings.Check(tower, BesideMainBase(4)).Verdict);

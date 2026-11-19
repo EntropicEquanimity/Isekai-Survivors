@@ -21,6 +21,7 @@ namespace Isekai.Tests
         {
             CharacterControl body = Player.Character;
             Vector3 start = body.transform.position;
+            int inward = RegionTerrain.Current.Layout.Interior.x;   // into the map, whichever corner Jack starts in
             yield return new WaitForSeconds(0.5f);
             int cached = FlowFields.CachedCount;
             int recycled = FlowFields.RecycledCount;
@@ -28,7 +29,7 @@ namespace Isekai.Tests
             // Walk 12 cells, one cell every 0.25 s: each step is a new target set for the horde.
             for (int i = 1; i <= 12; i++)
             {
-                body.transform.position = start + new Vector3(i * RegionGrid.Current.CellSize, 0f, 0f);
+                body.transform.position = start + new Vector3(i * inward * RegionGrid.Current.CellSize, 0f, 0f);
                 yield return new WaitForSeconds(0.25f);
             }
 
