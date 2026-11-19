@@ -8,14 +8,22 @@ namespace Isekai.Dev.Editor
     /// <summary>Scenes staged for <see cref="PlayModeProbe"/> screenshots (<c>scene|Isekai.Dev.Editor.ProbeSetups.Method</c>). Game types by name.</summary>
     public static class ProbeSetups
     {
-        /// <summary>Zoomed all the way out.</summary>
-        public static void FarZoom() => Call("Isekai.ScrollZoom", "Zoom", -10);
-
-        /// <summary>Halfway out: the first far level.</summary>
-        public static void MidZoom()
+        /// <summary>Zoomed all the way out: the map screen, with Buildings, Militia and a crowd near the Character.</summary>
+        public static void MapShowcase()
         {
-            Call("Isekai.ScrollZoom", "Zoom", -10);
-            Call("Isekai.ScrollZoom", "Zoom", 1);
+            Showcase();
+            GameType("Isekai.DebugMenu").GetMethod("FinishBuildings").Invoke(null, null);
+            GameType("Isekai.DebugMenu").GetMethod("SpawnNearCharacter").Invoke(null, new object[] { 60 });
+            for (int i = 0; i < 10; i++) Call("Isekai.ScrollZoom", "Zoom", -1);
+        }
+
+        /// <summary>The Character pressed against the top edge of the Main Base, zoomed in.</summary>
+        public static void BehindBase()
+        {
+            Call("Isekai.ScrollZoom", "Zoom", 3);
+            Component home = Object.FindObjectsByType(GameType("Isekai.Building"), FindObjectsInactive.Exclude).Cast<Component>()
+                .First(b => (bool)b.GetType().GetProperty("IsMainBase").GetValue(b));
+            Find("Isekai.CharacterControl").transform.position = home.transform.position + new Vector3(0.2f, 0.8f, 0f);
         }
 
         /// <summary>Close up: two Barracks side by side, a ghost beside them, hurt enemies with health bars.</summary>

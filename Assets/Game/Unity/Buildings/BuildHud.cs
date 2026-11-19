@@ -97,7 +97,7 @@ namespace Isekai
                     RegionBuildings.Verdict.TooExpensive => "Not enough Resources",
                     _ => "Click to place, Shift to keep placing, right click to cancel",
                 });
-            else text.Append("Number keys: build. Click a Building to select it.");
+            else text.Append("Number keys: build. Click a Building to select it. Hold E by Stone to mine. M: map.");
             _list.text = text.ToString();
 
             Building selected = _mode.Selected;

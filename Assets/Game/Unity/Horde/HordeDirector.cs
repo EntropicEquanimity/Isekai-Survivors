@@ -1,9 +1,11 @@
+using System.Collections;
 using System.Collections.Generic;
 using Blondie.Abilities;
 using Blondie.Combat;
 using Blondie.Core;
 using Blondie.FlowFields;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace Isekai
 {
@@ -40,6 +42,9 @@ namespace Isekai
 
         public int Count => _members.Count;
 
+        /// <summary>Every horde enemy now, roaming or attacking.</summary>
+        public IReadOnlyList<HordeMember> Members => _members;
+
         /// <summary>Enemies in the attacking crowd (the rest are roaming).</summary>
         public int Attacking => _crowd.Count;
 
@@ -47,6 +52,19 @@ namespace Isekai
         public int Kills { get; private set; }
         public FlowFieldGrid Grid => _grid.Grid;
         public SpatialHash<HordeMember> Hash => _hash ??= new SpatialHash<HordeMember>(_hashCellSize);
+
+        // The grid bakes its walls from colliders in Start, but tilemap colliders can build late when a scene loads at
+        // runtime: make them build now, give them a frame, then bake again, keep the ground Buildings already claimed
+        // blocked and recompute the horde's paths.
+        private IEnumerator Start()
+        {
+            foreach (TilemapCollider2D t in FindObjectsByType<TilemapCollider2D>(FindObjectsInactive.Exclude)) t.ProcessTilemapChanges();
+            Physics2D.SyncTransforms();
+            yield return null;
+            _grid.Bake();
+            RegionBuildings.Current?.Reblock();
+            _lastCells.Clear();
+        }
 
         private void OnEnable()
         {

@@ -83,6 +83,43 @@ namespace Isekai.Tests
             var character = Object.FindAnyObjectByType<CharacterControl>().GetComponentInChildren<SpriteRenderer>();
             var enemy = Object.FindAnyObjectByType<HordeSpawner>().Prefab.GetComponentInChildren<SpriteRenderer>();
             Assert.AreEqual(character.sortingOrder, enemy.sortingOrder, "units share an order, so height decides who's in front");
+            Building home = Building.All.First(b => b.IsMainBase);
+            int building = home.GetComponentsInChildren<SpriteRenderer>().First(r => r.name == "Art").sortingOrder;
+            int stone = ResourceNode.All.First().GetComponentInChildren<SpriteRenderer>().sortingOrder;
+            Assert.Less(building, character.sortingOrder, "Buildings draw under units: the Character never hides behind one");
+            Assert.Less(stone, building, "Stone lies on the ground, under everything that stands");
+        }
+
+        [UnityTest]
+        public IEnumerator Rocks_block_the_hordes_ground()
+        {
+            var rocks = Object.FindObjectsByType<UnityEngine.Tilemaps.Tilemap>(FindObjectsInactive.Exclude).First(t => t.name == "Obstacles");
+            var cells = new System.Collections.Generic.List<Vector3>();
+            foreach (Vector3Int cell in rocks.cellBounds.allPositionsWithin)
+                if (rocks.HasTile(cell)) cells.Add(rocks.GetCellCenterWorld(cell));
+            Assert.Greater(cells.Count, 50, "the Region has rocks");
+            // Rock colliders get their shapes at the first physics step; the grid bakes them in right after.
+            int Blocked() => cells.Count(c => !HordeDirector.Current.Grid.IsWalkable(new Blondie.Core.Float3(c.x, c.y, 0f)));
+            float end = Time.time + 1f;
+            while (Blocked() < cells.Count && Time.time < end) yield return null;
+            Assert.AreEqual(cells.Count, Blocked(), "every rock cell is blocked for the horde");
+            foreach (var oldFence in new[] { new Vector2(-22.5f, 0.5f), new Vector2(0.5f, -18.5f), new Vector2(0.5f, 20.5f) })
+                Assert.IsTrue(HordeDirector.Current.Grid.IsWalkable(new Blondie.Core.Float3(oldFence.x, oldFence.y, 0f)), $"the old fence at {oldFence} is gone");
+        }
+
+        [UnityTest]
+        public IEnumerator Standing_by_Stone_shows_how_to_mine_it()
+        {
+            var character = Object.FindAnyObjectByType<CharacterControl>();
+            ResourceNode node = ResourceNode.All.First();
+            var hud = Object.FindAnyObjectByType<StockpileHud>();
+            character.transform.position = node.transform.position + new Vector3(0.5f, 0f, 0f);
+            yield return null;
+            yield return null;
+            StringAssert.Contains("to mine Stone", hud.Prompt);
+            character.transform.position = node.transform.position + new Vector3(20f, 0f, 0f);
+            yield return null;
+            Assert.AreEqual(string.Empty, hud.Prompt);
         }
 
         [UnityTest]

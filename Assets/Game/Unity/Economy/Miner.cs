@@ -23,6 +23,9 @@ namespace Isekai
         /// <summary>The node being mined this frame, or null.</summary>
         public ResourceNode Node => _node;
 
+        /// <summary>The node that holding Interact would mine now, or null.</summary>
+        public ResourceNode InReach => ResourceNode.NearestTo(transform.position, _reach);
+
         public float Rate => _stats != null && _stats.HasStat(nameof(StatId.MiningSpeed)) ? _stats.GetStatValue(nameof(StatId.MiningSpeed)) : _baseRate;
 
         private void Awake() => _stats = GetComponent<IStatModifierTarget>();

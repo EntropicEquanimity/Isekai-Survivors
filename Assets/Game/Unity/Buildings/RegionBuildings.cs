@@ -95,6 +95,18 @@ namespace Isekai
             Occupy(building, origin, size);
         }
 
+        /// <summary>After the ground was baked again: block every placed Building's cells again, remembering the new ground under them.</summary>
+        internal void Reblock()
+        {
+            if (Field == null) return;
+            foreach (Building building in new List<Building>(_savedCosts.Keys))
+            {
+                if (building == null) continue;
+                _savedCosts.Remove(building);
+                Occupy(building, building.Origin, building.Asset.Size, alreadyInGrid: true);
+            }
+        }
+
         internal void Remove(Building building)
         {
             Grid.Remove(building);
@@ -106,9 +118,9 @@ namespace Isekai
                 Field.SetCostRect(new Int2(building.Origin.x + x, building.Origin.y + y), new Int2(1, 1), costs[x + y * size.x]);
         }
 
-        private void Occupy(Building building, Int2 origin, Vector2Int size)
+        private void Occupy(Building building, Int2 origin, Vector2Int size, bool alreadyInGrid = false)
         {
-            Grid.Place(building, origin, new Int2(size.x, size.y));
+            if (!alreadyInGrid) Grid.Place(building, origin, new Int2(size.x, size.y));
             building.Origin = origin;
             var costs = new byte[size.x * size.y];
             for (int x = 0; x < size.x; x++)

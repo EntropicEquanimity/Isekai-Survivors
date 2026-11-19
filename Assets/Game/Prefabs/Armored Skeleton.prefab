@@ -145,6 +145,7 @@ MonoBehaviour:
   _attackInterval: 1
   _reach: 0.4
   _speedMultiplier: 0.85
+  _elite: 1
 --- !u!114 &2070477745206422842
 MonoBehaviour:
   m_ObjectHideFlags: 0

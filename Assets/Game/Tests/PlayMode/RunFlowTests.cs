@@ -85,21 +85,29 @@ namespace Isekai.Tests
         }
 
         [UnityTest]
-        public IEnumerator The_Planet_map_opens_over_the_Region_and_zooming_out_never_leaves_the_Region()
+        public IEnumerator Zooming_out_past_the_widest_view_opens_the_map_screen_on_the_Region()
         {
+            RunSession.StartNew(3);
             SceneManager.LoadScene(RunSession.RegionScene);
-            yield return WaitFor(() => Object.FindAnyObjectByType<PlanetOverlay>() != null, "the Region loads");
+            yield return WaitFor(() => Object.FindAnyObjectByType<MapScreen>() != null, "the Region loads");
             yield return null;
-            var overlay = Object.FindAnyObjectByType<PlanetOverlay>();
+            yield return null;
+            var map = Object.FindAnyObjectByType<MapScreen>();
             var zoom = Object.FindAnyObjectByType<ScrollZoom>();
-            for (int i = 0; i < 10; i++) zoom.Zoom(-1);
-            Assert.IsFalse(overlay.IsOpen, "zooming out stays on the Region");
-            Assert.AreEqual(4, zoom.Levels.PixelDivisor, "the farthest view: 8 pixels per unit");
-            overlay.Open();
-            Assert.IsTrue(overlay.IsOpen);
+            for (int i = 0; i < 10 && !map.IsOpen; i++) zoom.Zoom(-1);
+            Assert.IsTrue(map.IsOpen);
+            Assert.AreEqual(MapScreen.Tab.Region, map.Current);
             Assert.IsTrue(zoom.Blocked, "the wheel no longer zooms the Region");
-            overlay.Close();
+
+            var character = Object.FindAnyObjectByType<CharacterControl>();
+            Color32 you = map.RegionMap.PixelAt(character.transform.position);
+            Assert.AreEqual(RegionMapView.You, you, "the Character is a white square on the map");
+
+            map.Show(MapScreen.Tab.Planet);
+            Assert.AreEqual(MapScreen.Tab.Planet, map.Current);
+            map.Close();
             Assert.IsFalse(zoom.Blocked);
+            RunSession.Clear();
         }
 
         private static IEnumerator InRegion(RegionInfo region) =>

@@ -15,6 +15,8 @@ namespace Isekai
         [Tooltip("How far past a target's edge this enemy can hit.")]
         [SerializeField, Min(0f)] private float _reach = 0.4f;
         [SerializeField, Min(0f)] private float _speedMultiplier = 1f;
+        [Tooltip("A tougher enemy: drawn bigger on the map.")]
+        [SerializeField] private bool _elite;
 
         internal ContactAttack Attack;
         private Damageable _damageable;
@@ -37,6 +39,7 @@ namespace Isekai
         private void Awake() => BaseHealth = Damageable.MaxHealth;
         public float Reach => _reach;
         public float SpeedMultiplier => _speedMultiplier;
+        public bool IsElite => _elite;
 
         /// <summary>
         /// Roaming enemies stand where they are until something wakes them: a player target coming near, or being hurt
