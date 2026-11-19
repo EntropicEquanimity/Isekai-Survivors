@@ -28,6 +28,9 @@ namespace Isekai.Tests
             _mainBase = Building.All.First(b => b.IsMainBase);
             _mode = Object.FindAnyObjectByType<BuildMode>();
             EconomyDebug.AddResources(1000);
+            Int2 baseCell = RegionGrid.Current.CellAt(_mainBase.transform.position);
+            Far = FindSpot(baseCell, null);
+            Far2 = FindSpot(baseCell, Far);
             Time.timeScale = 4f;
         }
 
@@ -40,7 +43,46 @@ namespace Isekai.Tests
 
         private BuildingAsset Catalogue(string name) => _mode.Catalogue.First(a => a.DisplayName == name);
 
-        private Int2 Far => new(_mainBase.Origin.x + 30, _mainBase.Origin.y);
+        // Open ground out of the Anchor reach (set per Region: the map size and start corner are generated).
+        private Int2 Far;
+
+        // Free corrupted ground next to the Main Base (the start corner is generated, so look around it).
+        private Int2 Beside
+        {
+            get
+            {
+                Int2 o = _mainBase.Origin;
+                foreach (int d in new[] { 4, -4, 6, -6, 8, -8 })
+                foreach (int e in new[] { 0, 4, -4 })
+                {
+                    var c = new Int2(o.x + d, o.y + e);
+                    if (_buildings.Check(Catalogue("Portal"), c).IsOk) return c;
+                }
+                Assert.Fail("no free corrupted ground beside the Main Base");
+                return default;
+            }
+        }
+        private Int2 Far2;
+
+        private bool OpenSpot(Int2 c, Int2 baseCell, Int2? other)
+        {
+            if (System.Math.Max(System.Math.Abs(c.x - baseCell.x), System.Math.Abs(c.y - baseCell.y)) < 20) return false;
+            if (other.HasValue && System.Math.Max(System.Math.Abs(c.x - other.Value.x), System.Math.Abs(c.y - other.Value.y)) < 12) return false;
+            for (int dx = -3; dx <= 4; dx++)
+            for (int dy = -3; dy <= 4; dy++)
+                if (!RegionGrid.Current.IsWalkable(new Int2(c.x + dx, c.y + dy))) return false;
+            return _buildings.IsFree(c, new Vector2Int(2, 2));
+        }
+
+        private Int2 FindSpot(Int2 baseCell, Int2? other)
+        {
+            RegionGrid g = RegionGrid.Current;
+            for (int x = g.Width - 1; x >= 0; x--)
+            for (int y = g.Height - 1; y >= 0; y--)
+                if (OpenSpot(new Int2(x, y), baseCell, other)) return new Int2(x, y);
+            Assert.Fail("no open ground far from the Main Base");
+            return default;
+        }
 
         private Int2 CellOf(Vector3 world) => RegionGrid.Current.CellAt(world);
 
@@ -67,7 +109,7 @@ namespace Isekai.Tests
             Assert.AreEqual(Verdict.NotCorrupted, refused.Verdict);
             Assert.AreEqual("not corrupted enough", refused.Reason);
             Assert.IsNull(_buildings.Place(tower, Far));
-            Assert.IsTrue(_buildings.Check(tower, new Int2(_mainBase.Origin.x + 4, _mainBase.Origin.y)).IsOk, "beside the Main Base it is fine");
+            Assert.IsTrue(_buildings.Check(tower, Beside).IsOk, "beside the Main Base it is fine");
         }
 
         [Test]
@@ -98,7 +140,7 @@ namespace Isekai.Tests
         public IEnumerator A_Spire_does_not_spread_but_an_Outpost_does()
         {
             Int2 spireAt = Far;
-            Int2 outpostAt = new(Far.x, Far.y + 10);
+            Int2 outpostAt = Far2;
             _corruption.Field.Seed(spireAt, 2, 2);
             _corruption.Field.Seed(outpostAt, 2, 2);
             Building spire = _buildings.Place(Catalogue("Spire"), spireAt);
@@ -117,12 +159,12 @@ namespace Isekai.Tests
         [UnityTest]
         public IEnumerator A_dying_demon_raises_its_cell_when_the_roll_succeeds_and_not_when_it_fails()
         {
-            Building portal = _buildings.Place(Catalogue("Portal"), new Int2(_mainBase.Origin.x + 4, _mainBase.Origin.y));
+            Building portal = _buildings.Place(Catalogue("Portal"), Beside);
             Assert.IsNotNull(portal);
             var producer = portal.GetComponent<UnitProducer>();
             yield return TestWait.Until(() => producer.Units.Count >= 2, "the Portal brings two Imps", 30f);
             DefenderBrain failing = producer.Units[0], succeeding = producer.Units[1];
-            Int2 a = new(Far.x, Far.y), b = new(Far.x, Far.y + 10);
+            Int2 a = Far, b = Far2;
 
             Time.timeScale = 0f;
             failing.transform.position = RegionGrid.Current.CentreOf(a);
@@ -140,7 +182,7 @@ namespace Isekai.Tests
         [UnityTest]
         public IEnumerator A_dying_demon_on_level_4_changes_nothing()
         {
-            Building portal = _buildings.Place(Catalogue("Portal"), new Int2(_mainBase.Origin.x + 4, _mainBase.Origin.y));
+            Building portal = _buildings.Place(Catalogue("Portal"), Beside);
             var producer = portal.GetComponent<UnitProducer>();
             yield return TestWait.Until(() => producer.Units.Count >= 1, "the Portal brings an Imp", 30f);
             DefenderBrain imp = producer.Units[0];
@@ -195,7 +237,7 @@ namespace Isekai.Tests
         [UnityTest]
         public IEnumerator An_Imp_below_level_2_is_weakened_too()
         {
-            Building portal = _buildings.Place(Catalogue("Portal"), new Int2(_mainBase.Origin.x + 4, _mainBase.Origin.y));
+            Building portal = _buildings.Place(Catalogue("Portal"), Beside);
             var producer = portal.GetComponent<UnitProducer>();
             yield return TestWait.Until(() => producer.Units.Count >= 1, "the Portal brings an Imp", 30f);
             DefenderBrain imp = producer.Units[0];
