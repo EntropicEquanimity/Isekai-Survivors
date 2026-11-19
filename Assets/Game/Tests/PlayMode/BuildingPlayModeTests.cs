@@ -91,7 +91,7 @@ namespace Isekai.Tests
         public IEnumerator Placement_is_refused_on_blocked_ground_and_when_too_expensive()
         {
             BuildingAsset tower = Catalogue("Spire");
-            Assert.AreEqual(Verdict.Ok, _buildings.Check(tower, BesideMainBase(8)).Verdict, "any free ground will do");
+            Assert.AreEqual(Verdict.Ok, _buildings.Check(tower, BesideMainBase(8)).Verdict, "free, corrupted ground beside the Main Base will do");
             Assert.AreEqual(Verdict.Blocked, _buildings.Check(tower, _mainBase.Origin).Verdict, "on the Main Base");
             RegionEconomy.Current.Stockpile.TrySpend(ResourceType.Stone, RegionEconomy.Current.Stockpile.Get(ResourceType.Stone));
             Assert.AreEqual(Verdict.TooExpensive, _buildings.Check(tower, BesideMainBase(4)).Verdict);

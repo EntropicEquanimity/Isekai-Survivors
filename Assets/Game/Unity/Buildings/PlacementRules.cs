@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Isekai
 {
     /// <summary>Why a Building can or can't go somewhere.</summary>
-    public enum Verdict { Ok, Blocked, TooExpensive, NotAllowed }
+    public enum Verdict { Ok, Blocked, TooExpensive, NotAllowed, NotCorrupted }
 
     /// <summary>A placement check's answer: the verdict and the reason to show the player.</summary>
     public readonly struct Placement
@@ -66,6 +66,19 @@ namespace Isekai
         {
             Stockpile pile = RegionEconomy.Current != null ? RegionEconomy.Current.Stockpile : null;
             return pile != null && pile.CanAfford(q.Asset.Costs) ? Placement.Ok : Placement.No(Verdict.TooExpensive, "Not enough Resources");
+        }
+    }
+
+    /// <summary>Every footprint cell is corrupted to level 2 or higher: Buildings go up only on ground the demons have taken.</summary>
+    public sealed class CorruptedGroundRule : IPlacementRule
+    {
+        public const string Reason = "not corrupted enough";
+
+        public Placement Check(in PlacementQuery q)
+        {
+            RegionCorruption corruption = RegionCorruption.Current;
+            if (corruption == null || corruption.Field.CanBuild(q.Origin, new Int2(q.Size.x, q.Size.y))) return Placement.Ok;
+            return Placement.No(Verdict.NotCorrupted, Reason);
         }
     }
 }
