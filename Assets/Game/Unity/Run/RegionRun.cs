@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Isekai
 {
     /// <summary>
-    /// Ties a Region scene to the Run (<see cref="RunSession"/>). On start it sets the Waves' depth and Run clock, adds
+    /// Ties a Region scene to the Run (<see cref="RunSession"/>). On start it adds
     /// the Stone earlier captures give, points the Run's buffs at this Region's Character and brings back its
     /// inventory. While playing it advances the Run clock. On capture it unlocks Items, grants the Region's buff, keeps
     /// the inventory and returns to the Planet map, or ends the Run as won at the Capital. When Jack's body dies the

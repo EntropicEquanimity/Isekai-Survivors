@@ -162,7 +162,6 @@ namespace Isekai
             Row(legend, Swatch(RegionMapView.Attacker, 4, false), "Enemy, attacking");
             Row(legend, Swatch(RegionMapView.Roamer, 4, false), "Enemy, roaming");
             Row(legend, Swatch(RegionMapView.Attacker, 8, true), "Elite enemy");
-            Row(legend, IconImage("Nest", RegionMapView.Nest), "Enemy nest");
             Row(legend, IconImage("Main Base", RegionMapView.Home), "Main Base");
             foreach (string building in new[] { "Portal", "Spire", "Outpost" })
                 Row(legend, IconImage(building, RegionMapView.Ally), building);

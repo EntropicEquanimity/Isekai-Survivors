@@ -36,8 +36,7 @@ namespace Isekai.Tests
             Assert.IsNotNull(boot, "the Region scene has a bootstrap");
             yield return TestWait.Until(() => boot.IsPopulated, "the Region fills once its walls are baked");
             Assert.IsTrue(RegionGrid.Current.IsBaked);
-            Assert.IsNotNull(boot.Context.Threat, "the Waves registered as the Region's threat during setup");
-            Assert.AreEqual(boot.Context.Region.Depth, Object.FindAnyObjectByType<WaveDirector>().Depth, "the Waves were set up from the context");
+            Assert.AreEqual(1f, boot.Context.HealthMultiplier, "no threat registered: enemies keep their authored health");
 
             var again = new RegionContext(boot.Context.Region, boot.Context.Run, RunSession.Seed);
             Assert.AreEqual(boot.Context.Seed, again.Seed, "the same Run gives the Region the same seed");
@@ -92,13 +91,13 @@ namespace Isekai.Tests
         public IEnumerator Systems_add_their_own_debug_entries()
         {
             yield return null;
-            var waves = Object.FindAnyObjectByType<WaveDirector>();
-            Assert.IsTrue(DebugActions.All.Any(e => e.Owner == (object)waves && e.Label == "Next Wave now"));
-            float before = waves.SecondsUntilNext;
-            DebugActions.All.First(e => e.Owner == (object)waves && e.Label == "Next Wave now").Run();
-            Assert.Less(waves.SecondsUntilNext, before, "the entry runs the Waves' own action");
-            waves.enabled = false;
-            Assert.IsFalse(DebugActions.All.Any(e => e.Owner == (object)waves), "a stopped system takes its entries away");
+            var owner = new object();
+            int runs = 0;
+            DebugActions.Button(owner, "Test", "Run me", () => runs++);
+            DebugActions.All.First(e => e.Owner == owner && e.Label == "Run me").Run();
+            Assert.AreEqual(1, runs, "the entry runs its action");
+            DebugActions.Remove(owner);
+            Assert.IsFalse(DebugActions.All.Any(e => e.Owner == owner), "a removed system takes its entries away");
         }
     }
 }

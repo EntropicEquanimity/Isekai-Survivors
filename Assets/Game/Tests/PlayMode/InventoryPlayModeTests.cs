@@ -107,10 +107,9 @@ namespace Isekai.Tests
         }
 
         [UnityTest]
-        public IEnumerator Destroying_a_nest_offers_an_Item_draft_that_pauses_the_game()
+        public IEnumerator The_debug_entry_opens_an_Item_draft_that_pauses_the_game()
         {
-            EnemyNest nest = EnemyNest.All.First();
-            nest.GetComponent<Damageable>().Unit.TakeDamage(100000f, DamageRules.TrueType);
+            DebugMenu.OpenItemDraft();
             yield return null;
             DraftOffer offer = RunDrafts.Current;
             Assert.IsNotNull(offer, "a draft is open");

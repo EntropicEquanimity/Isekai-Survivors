@@ -22,25 +22,22 @@ namespace Isekai
     }
 
     /// <summary>
-    /// Item rewards: destroying an enemy Base offers a pick of Items (Blondie Roguelike's draft window). Starts a Run if
+    /// Item rewards: a debug entry offers (razing a settlement will) a pick of Items (Blondie Roguelike's draft window). Starts a Run if
     /// none is going (phase 7 makes the Run proper), and pauses the game while a draft is open.
     /// </summary>
     public sealed class ItemDrafts : MonoBehaviour
     {
         [SerializeField] private ItemAsset[] _pool = Array.Empty<ItemAsset>();
         [SerializeField, Min(1)] private int _choices = 3;
-        [SerializeField] private string _title = "Spoils of the Nest";
+        [SerializeField] private string _title = "Spoils";
 
         private List<Offerable> _offers;
         private bool _paused;
 
         public IReadOnlyList<Offerable> Offers => _offers ??= BuildOffers();
 
-        private void OnEnable() => EnemyNest.Destroyed += OnNestDestroyed;
-
         private void OnDisable()
         {
-            EnemyNest.Destroyed -= OnNestDestroyed;
             if (_paused) { GamePause.Resume(this); _paused = false; }
         }
 
@@ -51,8 +48,6 @@ namespace Isekai
 
         /// <summary>Offers a pick of Items now (also used by tests and debugging).</summary>
         public DraftOffer Present() => RunDrafts.Present(new DraftRequest { Pool = Offers.ToList(), Choices = _choices, Title = _title });
-
-        private void OnNestDestroyed(EnemyNest nest) => Present();
 
         // Gameplay waits while a draft is open. Through GamePause, so closing a draft never undoes another pause (a defeat).
         private void Update()

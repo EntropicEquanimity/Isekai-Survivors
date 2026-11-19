@@ -10,7 +10,7 @@ namespace Isekai
 {
     /// <summary>
     /// The developer menu (F1), in the Editor and development builds only: resources, god mode, spawning and killing
-    /// enemies, Waves, nests, instant construction and game speed. It creates itself on the first scene load
+    /// enemies, capturing the Region, Item drafts, instant construction and game speed. It creates itself on the first scene load
     /// and survives scene changes. Buttons that need a Region do nothing on the Planet screen.
     /// </summary>
     public sealed class DebugMenu : MonoBehaviour
@@ -70,7 +70,8 @@ namespace Isekai
 
             Section("Enemies");
             Row(("Spawn 20 here", () => SpawnNearCharacter(20)), ("Spawn 200", () => SpawnNearCharacter(200)));
-            Row(("Kill all", KillAllEnemies), ("Destroy all nests", DestroyNests));
+            Row(("Kill all", KillAllEnemies), ("Capture Region", CaptureRegion));
+            Row(("Open Item draft", OpenItemDraft));
 
             Section($"Speed ×{Time.timeScale:0.##}");
             GUILayout.BeginHorizontal();
@@ -83,7 +84,7 @@ namespace Isekai
             if (horde != null) GUILayout.Label($"Enemies {horde.Count} ({horde.Attacking} attacking) · kills {horde.Kills}");
             var wilds = Object.FindAnyObjectByType<RegionWilds>();
             if (wilds != null) GUILayout.Label($"Wanderers roaming {wilds.Roaming} in {wilds.GroupCount} groups");
-            GUILayout.Label($"Nests left {CountNests()} · {1f / Mathf.Max(Time.smoothDeltaTime, 1e-4f):0} fps");
+            GUILayout.Label($"{1f / Mathf.Max(Time.smoothDeltaTime, 1e-4f):0} fps");
 
             DrawRegistered();
 
@@ -177,18 +178,10 @@ namespace Isekai
                 if (m.IsAlive) m.Damageable.Kill();
         }
 
-        public static void DestroyNests()
-        {
-            foreach (EnemyNest nest in Object.FindObjectsByType<EnemyNest>(FindObjectsInactive.Exclude))
-                if (!nest.IsDestroyed) nest.GetComponent<Damageable>().Kill();
-        }
+        /// <summary>Ends the Region as captured; stands in until the Seat's destruction does it.</summary>
+        public static void CaptureRegion() => RegionEvents.End(RegionEnd.Captured);
 
-        private static int CountNests()
-        {
-            int n = 0;
-            foreach (EnemyNest nest in EnemyNest.All)
-                if (!nest.IsDestroyed) n++;
-            return n;
-        }
+        /// <summary>Offers a pick of Items; stands in until razing a settlement does it.</summary>
+        public static void OpenItemDraft() => Object.FindAnyObjectByType<ItemDrafts>()?.Present();
     }
 }

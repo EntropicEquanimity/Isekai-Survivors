@@ -60,19 +60,6 @@ namespace Isekai.Tests
                 Assert.Greater(Vector3.Distance(m.transform.position, home.transform.position), 15f, "nothing roams next to the Base");
         }
 
-        [UnityTest]
-        public IEnumerator Waves_appear_within_reach_of_the_Main_Base()
-        {
-            var waves = Object.FindAnyObjectByType<WaveDirector>();
-            Building home = Building.All.First(b => b.IsMainBase);
-            int before = HordeDirector.Current.Attacking;
-            waves.Skip(waves.SecondsUntilNext + 0.01f);
-            yield return TestWait.Until(() => HordeDirector.Current.Attacking > before + 3, "a Wave spawns", 5f);
-            int near = Object.FindObjectsByType<HordeMember>(FindObjectsInactive.Exclude)
-                .Count(m => !m.IsRoaming && Vector3.Distance(m.transform.position, home.transform.position) < 60f);
-            Assert.Greater(near, 3, "the Wave starts within 60 units, not at the far edge");
-        }
-
         [Test]
         public void Sprites_sort_by_their_height_on_screen()
         {
@@ -157,10 +144,11 @@ namespace Isekai.Tests
             Assert.IsFalse(character.IsDead, "god mode");
             DebugMenu.Instance.GodMode = false;
 
-            Assert.Greater(EnemyNest.All.Count, 0);
-            DebugMenu.DestroyNests();
+            Assert.IsFalse(RegionEvents.HasEnded);
+            DebugMenu.CaptureRegion();
             yield return null;
-            Assert.AreEqual(0, EnemyNest.All.Count, "destroyed nests leave the list");
+            Assert.IsTrue(RegionEvents.HasEnded);
+            Assert.AreEqual(RegionEnd.Captured, RegionEvents.Outcome, "\"Capture Region\" ends the Region as captured");
         }
 
     }

@@ -16,8 +16,6 @@ namespace Isekai
         public static readonly ProfilerMarker WildsWander = new("Isekai.Wilds.Wander");
         public static readonly ProfilerMarker MapRedraw = new("Isekai.Map.Redraw");
         public static readonly ProfilerMarker Targeting = new("Isekai.Targeting");
-        public static readonly ProfilerMarker Waves = new("Isekai.Waves");
-        public static readonly ProfilerMarker Nests = new("Isekai.Nests");
         public static readonly ProfilerMarker Character = new("Isekai.Character");
         public static readonly ProfilerMarker Hud = new("Isekai.Hud");
         public static readonly ProfilerMarker Build = new("Isekai.Build");
@@ -26,7 +24,7 @@ namespace Isekai
         public static readonly string[] Names =
         {
             "Isekai.Horde.Retarget", "Isekai.Horde.CrowdJobs", "Isekai.Horde.Hash", "Isekai.Horde.Hits", "Isekai.Horde.Aggro",
-            "Isekai.Wilds.Wander", "Isekai.Map.Redraw", "Isekai.Targeting", "Isekai.Waves", "Isekai.Nests", "Isekai.Character",
+            "Isekai.Wilds.Wander", "Isekai.Map.Redraw", "Isekai.Targeting", "Isekai.Character",
             "Isekai.Hud", "Isekai.Build",
         };
     }

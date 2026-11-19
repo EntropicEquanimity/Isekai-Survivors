@@ -8,7 +8,7 @@ namespace Isekai
 {
     /// <summary>
     /// The strategic map of the Region: a small point-filtered texture, a few pixels per ground cell, redrawn on
-    /// <see cref="Redraw"/>. Ground and rock, the Bases' build areas, Stone as dots, Buildings and enemy nests as pixel
+    /// <see cref="Redraw"/>. Ground and rock, the Bases' build areas, Stone as dots, Buildings as pixel
     /// icons, enemies as red squares (darker while roaming, bigger for elites), Militia blue, the Character white, and
     /// the camera's view as an outline.
     /// </summary>
@@ -26,7 +26,7 @@ namespace Isekai
         public static readonly Color32 You = new(255, 255, 255, 255);
         public static readonly Color32 Ally = new(120, 220, 120, 255);
         public static readonly Color32 Home = new(255, 214, 90, 255);
-        public static readonly Color32 Nest = new(235, 70, 60, 255);
+        public static readonly Color32 Hostile = new(235, 70, 60, 255);
         private static readonly Color32 Footprint = new(40, 70, 46, 255);
         private static readonly Color32 Ink = new(10, 10, 12, 255);
         private static readonly Color32 View = new(235, 235, 240, 255);
@@ -38,7 +38,6 @@ namespace Isekai
             ["Portal"] = new[] { "#.....#", ".#...#.", "..#.#..", "...#...", "..#.#..", ".#...#.", "#.....#" },
             ["Spire"] = new[] { "#.#.#.#", "#######", ".#####.", ".##.##.", ".#####.", ".#####.", "#######" },
             ["Outpost"] = new[] { ".####..", ".#####.", ".####..", ".#.....", ".#.....", ".#.....", "###...." },
-            ["Nest"] = new[] { ".#####.", "#######", "#..#..#", "#######", ".#####.", ".#.#.#.", "......." },
             ["Building"] = new[] { "#######", "#.....#", "#.....#", "#.....#", "#.....#", "#.....#", "#######" },
         };
 
@@ -87,8 +86,6 @@ namespace Isekai
                 if (!node.IsEmpty) Square(ToPixel(node.transform.position), 2, Stone);
             foreach (Building b in Building.All)
                 if (b.IsAlive) DrawBuilding(b);
-            foreach (EnemyNest nest in EnemyNest.All)
-                if (!nest.IsDestroyed) Icon(ToPixel(nest.transform.position), Icons["Nest"], Nest);
 
             _elites.Clear();
             if (HordeDirector.Current != null)
@@ -129,7 +126,7 @@ namespace Isekai
             int w = size.x * PixelsPerCell, h = size.y * PixelsPerCell;
             Rect(centre.x - w / 2, centre.y - h / 2, w, h, Footprint);
             string name = b.Asset != null ? b.Asset.DisplayName : "Building";
-            Color32 colour = !b.IsPlayers ? Nest : b.IsMainBase ? Home : Ally;   // a defender's Building reads as hostile
+            Color32 colour = !b.IsPlayers ? Hostile : b.IsMainBase ? Home : Ally;   // a defender's Building reads as hostile
             if (!b.IsBuilt) colour = new Color32((byte)(colour.r / 2), (byte)(colour.g / 2), (byte)(colour.b / 2), 255);
             Icon(centre, Icons.TryGetValue(name, out string[] icon) ? icon : Icons["Building"], colour);
         }

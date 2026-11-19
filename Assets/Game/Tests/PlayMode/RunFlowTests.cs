@@ -47,7 +47,6 @@ namespace Isekai.Tests
             RegionInfo first = run.Available().First();
             Assert.IsTrue(RunSession.GoToRegion(first));
             yield return InRegion(first);
-            Assert.AreEqual(first.Depth, Object.FindAnyObjectByType<WaveDirector>().Depth);
             CharacterInventory.Current.Give(ItemDatabase.Find("heart_charm"));
             int stone = RegionEconomy.Current.Stockpile.Get(ResourceType.Stone);
 
@@ -116,21 +115,13 @@ namespace Isekai.Tests
             TestWait.Until(() => Object.FindAnyObjectByType<RegionRun>()?.Region == region && CharacterInventory.Current != null && RegionEconomy.Current != null,
                 $"in {region.Name}", Timeout);
 
-        // Every nest destroyed, the final Wave sent and killed. Drafts are off: they'd pause the game.
+        // The debug entry that stands in for destroying the Seat. Drafts are off: they'd pause the game.
         private static IEnumerator CaptureRegion()
         {
             yield return null;
             RegionTestScene.DisableDrafts();
-            var character = Object.FindAnyObjectByType<CharacterControl>();
-            character.GetComponent<AutoCaster>().enabled = false;
-            yield return null;
-            foreach (EnemyNest nest in EnemyNest.All.ToArray()) nest.GetComponent<Damageable>().Unit.TakeDamage(100000f, DamageRules.TrueType);
-            var waves = Object.FindAnyObjectByType<WaveDirector>();
-            waves.Skip(1000f);
-            yield return TestWait.Until(() => RegionGoal.Current.Capture.FinalWaveReleased && waves.PendingSpawns == 0, "every Wave has spawned", Timeout);
-            foreach (HordeMember m in Object.FindObjectsByType<HordeMember>(FindObjectsInactive.Exclude))
-                if (m.IsAlive && !m.IsRoaming) m.Unit.TakeDamage(100000f, DamageRules.TrueType);
-            yield return TestWait.Until(() => RegionGoal.Current.Capture.IsCaptured, "captured", Timeout);
+            DebugMenu.CaptureRegion();
+            yield return TestWait.Until(() => RegionEvents.HasEnded && RegionEvents.Outcome == RegionEnd.Captured, "captured", Timeout);
             yield return null;
         }
 

@@ -21,7 +21,7 @@ namespace Isekai
 
     /// <summary>
     /// One Run across a Planet: which Regions are captured, which may be entered next (the Planet's edge at first, then
-    /// any Region touching a captured one), the Run clock that drives escalation, and the buffs and Stone captures have
+    /// any Region touching a captured one), the Run clock (a display only), and the buffs and Stone captures have
     /// earned. Capturing the Capital wins; losing a Main Base loses.
     /// </summary>
     public sealed class PlanetRun

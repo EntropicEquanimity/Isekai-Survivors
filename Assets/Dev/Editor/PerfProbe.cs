@@ -11,8 +11,8 @@ namespace Isekai.Dev.Editor
 {
     /// <summary>
     /// Dev-only performance run: <c>exec Isekai.Dev.Editor.PerfProbe.Run 30</c> plays the Region for that many seconds
-    /// with the Character walking a wide loop (so it crosses cells and wakes roamers, as in real play), brings the
-    /// first Wave in a third of the way through, then stops. <see cref="FrameStats"/> logs fps windows and spike
+    /// with the Character walking a wide loop (so it crosses cells and wakes roamers, as in real play), spawns a
+    /// horde batch a third of the way through, then stops. <see cref="FrameStats"/> logs fps windows and spike
     /// breakdowns; this probe also records the Profiler and, for each slow frame, logs which scripts' updates took the
     /// time ("[Perf] who ..."), so costs inside packages show up by name.
     /// </summary>
@@ -50,7 +50,7 @@ namespace Isekai.Dev.Editor
             ProfilerDriver.enabled = true;
             double start = EditorApplication.timeSinceStartup, nextScan = start + 0.5;
             int scanned = ProfilerDriver.lastFrameIndex, whoLines = 0;
-            bool waveSent = false;
+            bool batchSent = false;
             Vector3 centre = Vector3.zero;
             bool centred = false;
             Debug.Log($"[Perf] probe start: {duration:0} s, walking a loop");
@@ -64,12 +64,11 @@ namespace Isekai.Dev.Editor
                     float angle = t * 0.25f;   // about 4 units/s along a 16-unit-radius loop
                     body.transform.position = centre + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * 16f;
                 }
-                if (!waveSent && t > duration / 3f)
+                if (!batchSent && t > duration / 3f)
                 {
-                    waveSent = true;
-                    var waves = Object.FindAnyObjectByType<WaveDirector>();
-                    if (waves != null) waves.Skip(waves.SecondsUntilNext + 0.01f);
-                    Debug.Log("[Perf] probe: first Wave sent");
+                    batchSent = true;
+                    DebugMenu.SpawnNearCharacter(200);
+                    Debug.Log("[Perf] probe: horde batch spawned");
                 }
                 if (EditorApplication.timeSinceStartup >= nextScan)
                 {
