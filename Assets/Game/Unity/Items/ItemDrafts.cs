@@ -22,8 +22,8 @@ namespace Isekai
     }
 
     /// <summary>
-    /// Item rewards: a debug entry offers (razing a settlement will) a pick of Items (Blondie Roguelike's draft window). Starts a Run if
-    /// none is going (phase 7 makes the Run proper), and pauses the game while a draft is open.
+    /// Item rewards: razing a settlement (<see cref="RegionSettlements"/>) offers a pick of Items (Blondie Roguelike's draft
+    /// window). Starts a Run if none is going (phase 7 makes the Run proper), and pauses the game while a draft is open.
     /// </summary>
     public sealed class ItemDrafts : MonoBehaviour
     {
@@ -46,7 +46,7 @@ namespace Isekai
             if (!RunManager.HasActiveRun) RunManager.StartRun();
         }
 
-        /// <summary>Offers a pick of Items now (also used by tests and debugging).</summary>
+        /// <summary>Offers a pick of Items now (a razed settlement calls this; tests use it too).</summary>
         public DraftOffer Present() => RunDrafts.Present(new DraftRequest { Pool = Offers.ToList(), Choices = _choices, Title = _title });
 
         // Gameplay waits while a draft is open. Through GamePause, so closing a draft never undoes another pause (a defeat).

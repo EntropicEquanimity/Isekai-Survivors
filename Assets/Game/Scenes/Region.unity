@@ -1377,6 +1377,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3000000002}
   - component: {fileID: 3000000003}
+  - component: {fileID: 3000000010}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -1425,6 +1426,50 @@ MonoBehaviour:
   _stoneNodePrefab: {fileID: 1678454756759285725, guid: 9f7460f9858950c4fa350624e7469a7f, type: 3}
   _woodNodePrefab: {fileID: 1678454756759285725, guid: 8ea9dff86466452388983e3204a5a440, type: 3}
   _edgeThickness: 4
+--- !u!114 &3000000010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65e9e6543659df149579337ad7db3490, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Isekai.Game::Isekai.RegionSettlements
+  _buildings:
+  - Kind: 0
+    Asset: {fileID: 11400000, guid: 2364a6063176d770dd99c03711b3f92c, type: 2}
+  - Kind: 1
+    Asset: {fileID: 11400000, guid: 5c7b010067f0b1e342c2713870c7d48b, type: 2}
+  - Kind: 2
+    Asset: {fileID: 11400000, guid: ac9a6e64755f135e1705dd3ace7300a3, type: 2}
+  - Kind: 3
+    Asset: {fileID: 11400000, guid: dd7d96d6207743d3ba0802e83a5facc2, type: 2}
+  - Kind: 4
+    Asset: {fileID: 11400000, guid: 16022c29a706e0f40ba05fe20abb2075, type: 2}
+  - Kind: 5
+    Asset: {fileID: 11400000, guid: 59f6c79d67ea1c4daa6a8a66e64561bc, type: 2}
+  - Kind: 6
+    Asset: {fileID: 11400000, guid: 1e2ab87852c9b8feb4bf720928c3f22b, type: 2}
+  - Kind: 7
+    Asset: {fileID: 11400000, guid: 7182ca8b824b2e0df60e547464089208, type: 2}
+  - Kind: 8
+    Asset: {fileID: 11400000, guid: e922ff406a199da7ffd00e03d914df57, type: 2}
+  - Kind: 9
+    Asset: {fileID: 11400000, guid: 37930397a2c821aa476e2b5add0fa68f, type: 2}
+  - Kind: 10
+    Asset: {fileID: 11400000, guid: 51efbc166fabf9816ccb052912f367da, type: 2}
+  - Kind: 11
+    Asset: {fileID: 11400000, guid: 812507ea7b437d29db2ce25b30e9a63c, type: 2}
+  - Kind: 12
+    Asset: {fileID: 11400000, guid: 787aab59db460424deb6c153172042e1, type: 2}
+  - Kind: 13
+    Asset: {fileID: 11400000, guid: 052d95da192e449eab2fe93647825bf9, type: 2}
+  - Kind: 14
+    Asset: {fileID: 11400000, guid: c700cc107ffd70294928678c942e8ce3, type: 2}
+  _pathTile: {fileID: 11400000, guid: f78db20025c9515498280be2e1f417e8, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

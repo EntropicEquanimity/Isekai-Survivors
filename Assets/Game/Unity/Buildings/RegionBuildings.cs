@@ -80,6 +80,9 @@ namespace Isekai
         /// <summary>A Building already in the scene (the Main Base) takes its ground on the next Update, after the flow grid has baked.</summary>
         internal void RegisterExisting(Building building) => _pending.Add(building);
 
+        /// <summary>A Building put into the scene after the grid has baked (a settlement's) takes its ground at once, so what is placed next sees the cells as taken.</summary>
+        internal void ClaimNow(Building building) => Claim(building);
+
         private void Update()
         {
             if (_pending.Count == 0 || Field == null) return;

@@ -145,10 +145,10 @@ namespace Isekai.Tests
             TestDebug.Toggle("God mode", false);
 
             Assert.IsFalse(RegionEvents.HasEnded);
-            TestDebug.Press("Capture Region");
+            TestDebug.Press("Destroy the Seat");
             yield return null;
             Assert.IsTrue(RegionEvents.HasEnded);
-            Assert.AreEqual(RegionEnd.Captured, RegionEvents.Outcome, "\"Capture Region\" ends the Region as captured");
+            Assert.AreEqual(RegionEnd.Captured, RegionEvents.Outcome, "destroying the Seat ends the Region as captured");
         }
 
     }

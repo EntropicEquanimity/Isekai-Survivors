@@ -115,12 +115,13 @@ namespace Isekai.Tests
             TestWait.Until(() => Object.FindAnyObjectByType<RegionRun>()?.Region == region && CharacterInventory.Current != null && RegionEconomy.Current != null,
                 $"in {region.Name}", Timeout);
 
-        // The debug entry that stands in for destroying the Seat. Drafts are off: they'd pause the game.
+        // Destroys the Seat's keep (the debug row does it by damage, as a fight would). Drafts are off: they'd pause the game.
         private static IEnumerator CaptureRegion()
         {
             yield return null;
             RegionTestScene.DisableDrafts();
-            TestDebug.Press("Capture Region");
+            yield return TestWait.Until(() => RegionSettlements.Current?.Seat?.Keep != null, "the Seat's keep stands", Timeout);
+            TestDebug.Press("Destroy the Seat");
             yield return TestWait.Until(() => RegionEvents.HasEnded && RegionEvents.Outcome == RegionEnd.Captured, "captured", Timeout);
             yield return null;
         }

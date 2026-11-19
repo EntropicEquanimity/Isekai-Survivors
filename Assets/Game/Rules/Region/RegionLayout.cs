@@ -25,8 +25,9 @@ namespace Isekai
 
     /// <summary>
     /// Where everything on a generated Region's ground goes, decided from its <see cref="RegionRecipe"/> alone and with
-    /// no engine: Jack and the Main Base (the Anchor) in one far corner, the Seat's reserved spot in the opposite one,
-    /// then rocks, cliffs, Stone and Wood nodes and wildlife spawn spots. The same recipe lays out the same Region.
+    /// no engine: Jack and the Main Base (the Anchor) in one far corner, the Seat's fort in the opposite one, then
+    /// villages, farms and camps with their roads and walls (<see cref="Settlements"/>), then rocks, cliffs, Stone and
+    /// Wood nodes and wildlife spawn spots in the ground they leave (<see cref="PlacementOrder"/>). The same recipe lays out the same Region.
     /// Cells are map cells, (0,0) at the lower-left. Nothing lands on the start area, the Seat's area or the map's
     /// edge, every free cell can be walked to from the start, and nodes stand clear of everything so they never wall
     /// anything off. The Unity side (<c>RegionTerrain</c>) turns this into tiles, colliders and prefabs.
@@ -64,7 +65,10 @@ namespace Isekai
         private readonly List<Int2> _wood = new();
         private readonly List<Int2> _wildlife = new();
 
-        private RegionLayout(RegionRecipe recipe)
+        private readonly SettlementPlan _plan;
+        private readonly List<LayoutStep> _steps = new();
+
+        private RegionLayout(RegionRecipe recipe, SettlementPlan plan)
         {
             Recipe = recipe;
             Width = recipe.Width;
@@ -79,6 +83,10 @@ namespace Isekai
             Anchor = new Int2(east ? Width - CornerInset - AnchorSize : CornerInset, north ? Height - CornerInset - AnchorSize : CornerInset);
             Character = new Int2(Anchor.x + (east ? -2 : AnchorSize + 1), Anchor.y + (north ? -2 : AnchorSize + 1));
             Seat = new Int2(Width - 1 - Anchor.x, Height - 1 - Anchor.y);
+            // The Seat, villages, farms and camps, roads and walls come first; the rocks, nodes and wildlife that follow keep clear of them.
+            _plan = plan ?? SettlementPlan.Generate(recipe, Seat, new CellRect(
+                Anchor.x - StartClearRadius, Anchor.y - StartClearRadius, Anchor.x + AnchorSize - 1 + StartClearRadius, Anchor.y + AnchorSize - 1 + StartClearRadius));
+            _steps.AddRange(_plan.Steps);
         }
 
         public RegionRecipe Recipe { get; }
@@ -99,6 +107,12 @@ namespace Isekai
 
         /// <summary>The reserved spot for the Seat, mirrored through the map's centre from the Anchor: the far side from the start.</summary>
         public Int2 Seat { get; }
+
+        /// <summary>The mortal places: the Seat's fort, villages, farms and camps, their roads and walls.</summary>
+        public SettlementPlan Settlements => _plan;
+
+        /// <summary>The steps the layout was made in, in order: Seat, villages, farms, camps, roads, walls, rocks, nodes, wildlife.</summary>
+        public IReadOnlyList<LayoutStep> PlacementOrder => _steps;
 
         public IReadOnlyList<Int2> Rocks => _rocks;
         public IReadOnlyList<Int2> Cliffs => _cliffs;
@@ -129,13 +143,15 @@ namespace Isekai
                 throw new ArgumentOutOfRangeException(nameof(recipe), $"A Region layout needs a map of at least {MinSize}x{MinSize} cells, not {recipe.Width}x{recipe.Height}.");
             // A try that walls the Seat off (or most of the map) is thrown away and tried with another roll; the last
             // try has no cliffs and half the rocks, which cannot.
+            SettlementPlan plan = null;
             for (int attempt = 0; attempt < MaxAttempts; attempt++)
             {
-                var layout = new RegionLayout(recipe);
+                var layout = new RegionLayout(recipe, plan);
+                plan = layout._plan;
                 layout.Fill(attempt, lean: false);
                 if (layout.IsOpen()) return layout;
             }
-            var last = new RegionLayout(recipe);
+            var last = new RegionLayout(recipe, plan);
             last.Fill(MaxAttempts, lean: true);
             return last;
         }
@@ -153,9 +169,12 @@ namespace Isekai
             int area = Width * Height;
             PlaceRocks(rnd, (int)(area * (lean ? 0.006 : 0.012)));
             if (!lean) PlaceCliffs(rnd, (int)(area * 0.008));
+            _steps.Add(LayoutStep.Rocks);
             bool[] reach = Reach(Character);
             PlaceNodes(rnd, reach);
+            _steps.Add(LayoutStep.Nodes);
             PlaceWildlife(rnd, reach);
+            _steps.Add(LayoutStep.Wildlife);
         }
 
         private bool IsOpen()
@@ -174,7 +193,7 @@ namespace Isekai
 
         private bool CanHold(Int2 cell, int margin) =>
             cell.x >= margin && cell.y >= margin && cell.x < Width - margin && cell.y < Height - margin &&
-            !InStartArea(cell) && !InSeatArea(cell) && !IsBlocked(cell);
+            !InStartArea(cell) && !InSeatArea(cell) && !IsBlocked(cell) && !_plan.IsKeepOut(cell);
 
         private void Block(Int2 cell, List<Int2> into)
         {

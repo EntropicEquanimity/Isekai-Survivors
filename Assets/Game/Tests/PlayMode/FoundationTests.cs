@@ -268,7 +268,7 @@ namespace Isekai.Tests
         public IEnumerator The_debug_menu_rows_are_entries_owned_by_their_systems()
         {
             yield return null;
-            foreach (string label in new[] { "+100 each", "+1000 each", "God mode", "Heal", "Finish buildings", "Spawn 20 here", "Spawn 200", "Kill all", "Capture Region", "Open Item draft", "×1" })
+            foreach (string label in new[] { "+100 each", "+1000 each", "God mode", "Heal", "Finish buildings", "Spawn 20 here", "Spawn 200", "Kill all", "Destroy the Seat", "Raze a settlement", "×1" })
             {
                 DebugActions.Entry e = DebugActions.Find(label);
                 Assert.IsNotNull(e, label);

@@ -107,9 +107,10 @@ namespace Isekai.Tests
         }
 
         [UnityTest]
-        public IEnumerator The_debug_entry_opens_an_Item_draft_that_pauses_the_game()
+        public IEnumerator Razing_a_settlement_opens_an_Item_draft_that_pauses_the_game()
         {
-            TestDebug.Press("Open Item draft");
+            yield return TestWait.Until(() => RegionBootstrap.Current != null && RegionBootstrap.Current.IsPopulated, "the Region is populated", 10f);
+            TestDebug.Press("Raze a settlement");
             yield return null;
             DraftOffer offer = RunDrafts.Current;
             Assert.IsNotNull(offer, "a draft is open");
