@@ -18,6 +18,8 @@ namespace Isekai.Tests
     /// <summary>Phase 7: a Run across the Planet, through the real Planet and Region scenes.</summary>
     public class RunFlowTests
     {
+        private const float Timeout = 15f;
+
         [UnitySetUp]
         public IEnumerator Clean()
         {
@@ -38,7 +40,7 @@ namespace Isekai.Tests
         public IEnumerator Land_capture_and_return_to_the_Planet_with_the_Runs_rewards()
         {
             SceneManager.LoadScene(RunSession.PlanetScene);
-            yield return WaitFor(() => Object.FindAnyObjectByType<PlanetScreen>()?.Map != null, "the Planet map shows");
+            yield return TestWait.Until(() => Object.FindAnyObjectByType<PlanetScreen>()?.Map != null, "the Planet map shows", Timeout);
             PlanetRun run = RunSession.Run;
             Assert.AreEqual(6, run.Available().Count(), "land on any edge Region");
 
@@ -50,7 +52,7 @@ namespace Isekai.Tests
             int stone = RegionEconomy.Current.Stockpile.Get(ResourceType.Stone);
 
             yield return CaptureRegion();
-            yield return WaitFor(() => SceneManager.GetActiveScene().name == RunSession.PlanetScene, "back on the Planet map");
+            yield return TestWait.Until(() => SceneManager.GetActiveScene().name == RunSession.PlanetScene, "back on the Planet map", Timeout);
             Assert.IsTrue(run.IsCaptured(first));
             Assert.AreEqual(PlanetRunState.Choosing, run.State);
             CollectionAssert.Contains(run.Buffs, first.BuffId);
@@ -74,7 +76,7 @@ namespace Isekai.Tests
             RunSession.GoToRegion(run.Available().Single());
             yield return InRegion(run.Current);
             yield return CaptureRegion();
-            yield return WaitFor(() => SceneManager.GetActiveScene().name == RunSession.PlanetScene, "back on the Planet map");
+            yield return TestWait.Until(() => SceneManager.GetActiveScene().name == RunSession.PlanetScene, "back on the Planet map", Timeout);
 
             Assert.IsTrue(RunSession.GoToRegion(run.Planet.Capital));
             yield return InRegion(run.Planet.Capital);
@@ -89,7 +91,7 @@ namespace Isekai.Tests
         {
             RunSession.StartNew(3);
             SceneManager.LoadScene(RunSession.RegionScene);
-            yield return WaitFor(() => Object.FindAnyObjectByType<MapScreen>() != null, "the Region loads");
+            yield return TestWait.Until(() => Object.FindAnyObjectByType<MapScreen>() != null, "the Region loads", Timeout);
             yield return null;
             yield return null;
             var map = Object.FindAnyObjectByType<MapScreen>();
@@ -111,36 +113,26 @@ namespace Isekai.Tests
         }
 
         private static IEnumerator InRegion(RegionInfo region) =>
-            WaitFor(() => Object.FindAnyObjectByType<RegionRun>()?.Region == region && CharacterInventory.Current != null && RegionEconomy.Current != null,
-                $"in {region.Name}");
+            TestWait.Until(() => Object.FindAnyObjectByType<RegionRun>()?.Region == region && CharacterInventory.Current != null && RegionEconomy.Current != null,
+                $"in {region.Name}", Timeout);
 
         // Every nest destroyed, the final Wave sent and killed. Drafts are off: they'd pause the game.
         private static IEnumerator CaptureRegion()
         {
             yield return null;
-            ItemDrafts drafts = Object.FindAnyObjectByType<ItemDrafts>();
-            if (drafts != null) drafts.enabled = false;
+            RegionTestScene.DisableDrafts();
             var character = Object.FindAnyObjectByType<CharacterControl>();
             character.GetComponent<AutoCaster>().enabled = false;
             yield return null;
             foreach (EnemyNest nest in EnemyNest.All.ToArray()) nest.GetComponent<Damageable>().Unit.TakeDamage(100000f, DamageRules.TrueType);
             var waves = Object.FindAnyObjectByType<WaveDirector>();
             waves.Skip(1000f);
-            yield return WaitFor(() => RegionGoal.Current.Capture.FinalWaveReleased && waves.PendingSpawns == 0, "every Wave has spawned");
+            yield return TestWait.Until(() => RegionGoal.Current.Capture.FinalWaveReleased && waves.PendingSpawns == 0, "every Wave has spawned", Timeout);
             foreach (HordeMember m in Object.FindObjectsByType<HordeMember>(FindObjectsInactive.Exclude))
                 if (m.IsAlive && !m.IsRoaming) m.Unit.TakeDamage(100000f, DamageRules.TrueType);
-            yield return WaitFor(() => RegionGoal.Current.Capture.IsCaptured, "captured");
+            yield return TestWait.Until(() => RegionGoal.Current.Capture.IsCaptured, "captured", Timeout);
             yield return null;
         }
 
-        private static IEnumerator WaitFor(Func<bool> condition, string what, float seconds = 15f)
-        {
-            float end = Time.realtimeSinceStartup + seconds;
-            while (!condition())
-            {
-                if (Time.realtimeSinceStartup > end) Assert.Fail("Timed out: " + what);
-                yield return null;
-            }
-        }
     }
 }

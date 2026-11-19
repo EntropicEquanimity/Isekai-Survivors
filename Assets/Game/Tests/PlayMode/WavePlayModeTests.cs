@@ -19,12 +19,8 @@ namespace Isekai.Tests
         [UnitySetUp]
         public IEnumerator LoadRegion()
         {
-            SceneManager.LoadScene("Region");
-            yield return null;
-            yield return null;
+            yield return RegionTestScene.Load();
             yield return null;   // nests have spawned their packs
-            ItemDrafts drafts = Object.FindAnyObjectByType<ItemDrafts>();
-            if (drafts != null) drafts.enabled = false;   // a draft pauses the game; these tests don't pick Items
             _character = Object.FindAnyObjectByType<CharacterControl>();
             _character.enabled = false;
             _character.GetComponent<AutoCaster>().enabled = false;   // the tests do the killing
@@ -53,7 +49,7 @@ namespace Isekai.Tests
             Assert.Less(Vector3.Distance(start, one.transform.position), 0.01f, "roamers stand still");
 
             _character.transform.position = one.transform.position + new Vector3(3f, 0f, 0f);
-            yield return WaitFor(() => !one.IsRoaming, 2f, "a target in aggro range wakes it");
+            yield return TestWait.Until(() => !one.IsRoaming, "a target in aggro range wakes it", 2f);
         }
 
         [UnityTest]
@@ -92,24 +88,15 @@ namespace Isekai.Tests
             Assert.IsFalse(goal.Capture.IsCaptured, "the final Wave hasn't come yet");
 
             waves.Skip(1000f);
-            yield return WaitFor(() => goal.Capture.FinalWaveReleased, 2f, "the final Wave is released");
-            yield return WaitFor(() => waves.PendingSpawns == 0, 3f, "every Wave's enemies have spawned");
+            yield return TestWait.Until(() => goal.Capture.FinalWaveReleased, "the final Wave is released", 2f);
+            yield return TestWait.Until(() => waves.PendingSpawns == 0, "every Wave's enemies have spawned", 3f);
             Assert.IsFalse(goal.Capture.IsCaptured);
             foreach (HordeMember m in Object.FindObjectsByType<HordeMember>(FindObjectsInactive.Exclude))
                 if (m.IsAlive && !m.IsRoaming) m.Unit.TakeDamage(100000f, DamageRules.TrueType);
-            yield return WaitFor(() => goal.Capture.IsCaptured, 2f, "captured");
+            yield return TestWait.Until(() => goal.Capture.IsCaptured, "captured", 2f);
             yield return null;
             Assert.IsFalse(waves.enabled, "no more Waves after capture");
         }
 
-        private static IEnumerator WaitFor(Func<bool> condition, float seconds, string what)
-        {
-            float end = Time.time + seconds;
-            while (!condition())
-            {
-                if (Time.time > end) Assert.Fail("Timed out: " + what);
-                yield return null;
-            }
-        }
     }
 }

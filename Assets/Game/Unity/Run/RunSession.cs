@@ -39,7 +39,7 @@ namespace Isekai
             s_inventory = null;
             RunBoons.Clear();
             if (RunManager.HasActiveRun) RunManager.EndRun(RunOutcome.Abandoned);
-            RunManager.StartRun();
+            RunManager.StartRun(seed: unchecked((ulong)(uint)Seed));   // Blondie's Run streams follow the Planet's seed
             return Run;
         }
 

@@ -12,7 +12,7 @@ namespace Isekai
     /// and (optionally) replaces the ones that die. Phase 5's wave director takes over from this; for now it is the
     /// horde stress test. A <c>-horde N</c> command-line argument overrides the count in builds.
     /// </summary>
-    public sealed class HordeSpawner : MonoBehaviour
+    public sealed class HordeSpawner : MonoBehaviour, IRegionEndListener
     {
         [SerializeField] private GameObject _prefab;
         [SerializeField, Min(0)] private int _count = 3000;
@@ -40,29 +40,21 @@ namespace Isekai
         private void Update()
         {
             HordeDirector director = HordeDirector.Current;
-            if (director == null || (_filled && !_replaceDead)) return;
+            RegionGrid grid = RegionGrid.Current;
+            if (director == null || grid == null || (_filled && !_replaceDead)) return;
             int missing = _count - director.Count;
             if (missing <= 0) { _filled = true; return; }
             for (int k = 0; k < Mathf.Min(missing, _perFrame); k++)
-                if (TryPickSpot(director.Grid, out Vector3 spot)) Pools.Spawn(_prefab, spot, Quaternion.identity);
+                if (TryPickSpot(grid, out Vector3 spot)) Pools.Spawn(_prefab, spot, Quaternion.identity);
         }
 
-        private bool TryPickSpot(FlowFieldGrid grid, out Vector3 spot)
+        private bool TryPickSpot(RegionGrid grid, out Vector3 spot) =>
+            grid.TryPickSpot(_random, grid.Anywhere(), at => HordeTarget.NoneHostileWithin(at, _minDistance), out spot, jitter: 0.6f, attempts: 20);
+
+
+        void IRegionEndListener.OnRegionEnded(RegionEnd end)
         {
-            float min2 = _minDistance * _minDistance;
-            for (int attempt = 0; attempt < 20; attempt++)
-            {
-                var cell = new Int2(_random.Next(grid.Width), _random.Next(grid.Height));
-                if (!grid.IsWalkable(cell)) continue;
-                Float3 w = grid.CellToWorld(cell);
-                spot = new Vector3(w.x + (float)_random.NextDouble() * 0.6f - 0.3f, w.y + (float)_random.NextDouble() * 0.6f - 0.3f, 0f);
-                bool farEnough = true;
-                foreach (HordeTarget target in HordeTarget.All)
-                    if ((target.transform.position - spot).sqrMagnitude < min2) { farEnough = false; break; }
-                if (farEnough) return true;
-            }
-            spot = default;
-            return false;
+            if (end == RegionEnd.Defeated) enabled = false;
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Isekai.Tests
         {
             var spawner = Object.FindAnyObjectByType<HordeSpawner>();
             HordeDirector director = HordeDirector.Current;
-            yield return WaitFor(() => director.Count >= spawner.Count, 10f, "the horde fills up");
+            yield return TestWait.Until(() => director.Count >= spawner.Count, "the horde fills up", 10f);
             Assert.IsInstanceOf<HordeWorld>(AbilityWorld.Current, "the director installs its world");
 
             yield return null;   // one LateUpdate to rebuild the hash
@@ -53,17 +53,8 @@ namespace Isekai.Tests
             for (int i = 0; i < 3; i++)
                 Pools.Spawn(spawner.Prefab, mainBase.transform.position + new Vector3(i - 1f, -2.5f, 0f), Quaternion.identity);
 
-            yield return WaitFor(() => mainBase.Damageable.Unit.Health < max, 10f, "the base takes contact damage");
+            yield return TestWait.Until(() => mainBase.Damageable.Unit.Health < max, "the base takes contact damage", 10f);
         }
 
-        private static IEnumerator WaitFor(Func<bool> condition, float seconds, string what)
-        {
-            float end = Time.time + seconds;
-            while (!condition())
-            {
-                if (Time.time > end) Assert.Fail("Timed out: " + what);
-                yield return null;
-            }
-        }
     }
 }

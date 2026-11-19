@@ -12,15 +12,13 @@ namespace Isekai
     /// opens it on the Region tab (<see cref="RegionMapView"/>, redrawn a few times a second); the Planet tab shows the
     /// Run's Planet (read only). Scrolling in, M or Escape returns to the Region. The game keeps running underneath.
     /// </summary>
-    public sealed class MapScreen : MonoBehaviour
+    public sealed class MapScreen : MonoBehaviour, IRegionEndListener
     {
         public enum Tab { Region, Planet }
 
         private const string PanelName = "Map Screen";
         private const string MenuName = "MapScreen";
         private const float RedrawSeconds = 0.12f;
-        private static readonly Color Backdrop = new(0.055f, 0.06f, 0.08f, 1f);
-        private static readonly Color Dim = new(0.75f, 0.76f, 0.82f);
 
         [SerializeField] private PanelSettings _panelSettings;
         [SerializeField] private Key _toggleKey = Key.M;
@@ -62,11 +60,12 @@ namespace Isekai
                 style =
                 {
                     position = Position.Absolute, left = 0, right = 0, top = 0, bottom = 0, display = DisplayStyle.None,
-                    backgroundColor = Backdrop, alignItems = Align.Center, justifyContent = Justify.Center,
+                    backgroundColor = GameStyle.Backdrop, alignItems = Align.Center, justifyContent = Justify.Center,
                 },
             };
             var header = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, marginBottom = 6 } };
-            _title = new Label { style = { fontSize = PlanetMapView.PixelFontSize * 2, color = Color.white, marginRight = 16 } };
+            _title = GameStyle.Label("", TextRole.Title);
+            _title.style.marginRight = 16;
             _regionTab = new Button(() => Show(Tab.Region)) { text = "Region" };
             _planetTab = new Button(() => Show(Tab.Planet)) { text = "Planet" };
             header.Add(_title);
@@ -75,7 +74,9 @@ namespace Isekai
             _content = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.FlexStart } };
             _shade.Add(header);
             _shade.Add(_content);
-            _shade.Add(new Label("Scroll in, M or Escape to return") { style = { fontSize = PlanetMapView.PixelFontSize, color = Dim, marginTop = 6 } });
+            Label hint = GameStyle.Label("Scroll in, M or Escape to return", TextRole.Muted);
+            hint.style.marginTop = 6;
+            _shade.Add(hint);
             root.Add(_shade);
             UIPanels.Created(panel);
         }
@@ -176,7 +177,9 @@ namespace Isekai
             var slot = new VisualElement { style = { width = 22, alignItems = Align.Center, justifyContent = Justify.Center } };
             slot.Add(mark);
             row.Add(slot);
-            row.Add(new Label(text) { style = { fontSize = PlanetMapView.PixelFontSize, color = Color.white, marginLeft = 6 } });
+            Label label = GameStyle.Label(text);
+            label.style.marginLeft = 6;
+            row.Add(label);
             parent.Add(row);
         }
 
@@ -201,6 +204,13 @@ namespace Isekai
         {
             Texture2D tex = RegionMapView.IconTexture(RegionMapView.Icons[icon], colour);
             return new VisualElement { style = { width = tex.width, height = tex.height, backgroundImage = Background.FromTexture2D(tex) } };
+        }
+
+        void IRegionEndListener.OnRegionEnded(RegionEnd end)
+        {
+            if (end != RegionEnd.Defeated) return;
+            Close();
+            enabled = false;
         }
     }
 }

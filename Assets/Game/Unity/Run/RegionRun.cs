@@ -14,7 +14,7 @@ namespace Isekai
     /// the inventory and returns to the Planet map, or ends the Run as won at the Capital. When the Main Base falls the
     /// Run is lost.
     /// </summary>
-    public sealed class RegionRun : MonoBehaviour
+    public sealed class RegionRun : MonoBehaviour, IRegionSetup, IRegionEndListener
     {
         [Tooltip("Seconds between capture and going back to the Planet map.")]
         [SerializeField, Min(0f)] private float _returnDelay = 3f;
@@ -24,31 +24,35 @@ namespace Isekai
 
         public RegionInfo Region => _region;
 
-        private void Awake() => _region = RunSession.EnsureInRegion();
-
-        private void Start()
+        void IRegionSetup.Setup(RegionContext region)
         {
-            PlanetRun run = RunSession.Run;
-            WaveDirector waves = FindAnyObjectByType<WaveDirector>();
-            if (waves != null) waves.SetRun(_region.Depth, run.RunSeconds);
+            _region = region.Region;
+            PlanetRun run = region.Run;
             int stone = run.BonusStone + LegacyTree.StartingStone(MetaProgress.Unit);
             if (RegionEconomy.Current != null && stone > 0) RegionEconomy.Current.Stockpile.Add(ResourceType.Stone, stone);
-            CharacterControl character = FindAnyObjectByType<CharacterControl>();
-            if (character != null && character.TryGetComponent(out StatBlock stats))
-            {
-                RunBoons.SetTarget(stats);
-                MetaProgress.ApplyTo(stats);
-            }
-            if (RegionGoal.Current != null) RegionGoal.Current.Captured += OnCaptured;
-            RegionDefeat defeat = FindAnyObjectByType<RegionDefeat>();
-            if (defeat != null) defeat.Defeated += OnDefeated;
+            Player.Changed += TargetStats;
+            TargetStats(Player.Character);
             Say($"{_region.Name}" + (_region.IsCapital ? " - take the Capital!" : $" (depth {_region.Depth})"), Color.white);
+        }
+
+        // The Run's buffs and the Legacy tree's upgrades go to whichever body the player controls.
+        private static void TargetStats(CharacterControl body)
+        {
+            StatBlock stats = body != null ? body.GetComponent<StatBlock>() : null;
+            RunBoons.SetTarget(stats);
+            MetaProgress.ApplyTo(stats);
         }
 
         private void OnDestroy()
         {
+            Player.Changed -= TargetStats;
             MetaProgress.ApplyTo(null);
-            if (RegionGoal.Current != null) RegionGoal.Current.Captured -= OnCaptured;
+        }
+
+        void IRegionEndListener.OnRegionEnded(RegionEnd end)
+        {
+            if (end == RegionEnd.Captured) OnCaptured();
+            else OnDefeated();
         }
 
         private void Update()

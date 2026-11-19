@@ -13,7 +13,7 @@ namespace Isekai
     /// their home spot until a player target comes near (then they attack like any roamer), and extra Resource nodes.
     /// Both keep away from the Main Base. Wanderers get the same health escalation as the Region's Waves.
     /// </summary>
-    public sealed class RegionWilds : MonoBehaviour
+    public sealed class RegionWilds : MonoBehaviour, IRegionPopulate
     {
         [Header("Wanderers")]
         [SerializeField] private GameObject _wandererPrefab;
@@ -27,7 +27,6 @@ namespace Isekai
         [Header("Placement")]
         [Tooltip("Nothing appears closer than this to a player target.")]
         [SerializeField, Min(0f)] private float _minDistanceFromTargets = 25f;
-        [SerializeField] private int _seed = 11;
 
         private readonly List<Group> _wanderers = new();
         private Random _random;
@@ -59,18 +58,17 @@ namespace Isekai
 
         private void Update()
         {
-            if (!_populated) TryPopulate();
-            else Wander(Time.deltaTime);
+            if (_populated) Wander(Time.deltaTime);
         }
 
-        private void TryPopulate()
+        /// <summary>Fills the Region once its walls are known: Resource nodes, then wandering groups.</summary>
+        void IRegionPopulate.Populate(RegionContext region)
         {
-            HordeDirector director = HordeDirector.Current;
-            if (director == null || director.Grid == null || !director.Grid.IsCreated) return;
+            RegionGrid grid = RegionGrid.Current;
+            if (grid == null) return;
             _populated = true;
-            _random = new Random(_seed + (RunSession.Run?.Current?.Id?.GetHashCode() ?? 0));
-            FlowFieldGrid grid = director.Grid;
-            float health = FindAnyObjectByType<WaveDirector>() is { } waves ? waves.Multiplier : 1f;
+            _random = region.Random("wilds");
+            float health = region.HealthMultiplier;
 
             for (int i = 0; i < _nodes && _nodePrefab != null; i++)
                 if (TryPickSpot(grid, out Vector3 at)) Instantiate(_nodePrefab, at, Quaternion.identity, transform);
@@ -97,7 +95,7 @@ namespace Isekai
         // Each group strolls to a spot near its home, rests, and picks another. Woken members leave the group's control.
         private void Wander(float dt)
         {
-            FlowFieldGrid grid = HordeDirector.Current != null ? HordeDirector.Current.Grid : null;
+            RegionGrid grid = RegionGrid.Current;
             foreach (Group g in _wanderers)
             {
                 // Dead or woken members leave for good: the pool may hand the same object to a nest or a Wave later.
@@ -112,34 +110,19 @@ namespace Isekai
                     Transform t = m.transform;
                     Vector3 target = g.Goal + g.Offsets[i];
                     Vector3 next = Vector3.MoveTowards(t.position, target, _wanderSpeed * dt);
-                    if (grid != null && !grid.IsWalkable(new Float3(next.x, next.y, 0f))) continue;
+                    if (grid != null && !grid.IsWalkable(next)) continue;
                     t.position = next;
                     if ((target - next).sqrMagnitude > 0.0025f) arrived = false;
                 }
                 if (!arrived) continue;
                 g.Rest = 2f + (float)_random.NextDouble() * 5f;
-                Vector2 step = UnityEngine.Random.insideUnitCircle * _wanderRadius;
+                var step = new Vector2((float)_random.NextDouble() * 2f - 1f, (float)_random.NextDouble() * 2f - 1f) * _wanderRadius;
                 Vector3 goal = g.Home + new Vector3(step.x, step.y, 0f);
-                if (grid == null || grid.IsWalkable(new Float3(goal.x, goal.y, 0f))) g.Goal = goal;
+                if (grid == null || grid.IsWalkable(goal)) g.Goal = goal;
             }
         }
 
-        private bool TryPickSpot(FlowFieldGrid grid, out Vector3 spot)
-        {
-            float min2 = _minDistanceFromTargets * _minDistanceFromTargets;
-            for (int attempt = 0; attempt < 40; attempt++)
-            {
-                var cell = new Int2(_random.Next(grid.Width), _random.Next(grid.Height));
-                if (!grid.IsWalkable(cell)) continue;
-                Float3 w = grid.CellToWorld(cell);
-                spot = new Vector3(w.x, w.y, 0f);
-                bool far = true;
-                foreach (HordeTarget target in HordeTarget.All)
-                    if ((target.transform.position - spot).sqrMagnitude < min2) { far = false; break; }
-                if (far) return true;
-            }
-            spot = default;
-            return false;
-        }
+        private bool TryPickSpot(RegionGrid grid, out Vector3 spot) =>
+            grid.TryPickSpot(_random, grid.Anywhere(), at => HordeTarget.NoneHostileWithin(at, _minDistanceFromTargets), out spot, attempts: 40);
     }
 }

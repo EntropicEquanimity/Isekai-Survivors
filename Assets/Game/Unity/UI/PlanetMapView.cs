@@ -20,7 +20,6 @@ namespace Isekai
         private static readonly Color CapitalColor = new(0.85f, 0.25f, 0.25f);
 
         /// <summary>The bundled pixel font's native size; text sizes must be whole multiples of it.</summary>
-        public const int PixelFontSize = 12;
 
         private readonly PlanetRun _run;
         private readonly Action<RegionInfo> _onPick;
@@ -52,7 +51,7 @@ namespace Isekai
                 node.style.top = Mathf.Round(at.y - 10f);
                 node.style.width = w;
                 node.style.height = 20f;
-                node.style.fontSize = PixelFontSize;   // the pixel font's native size: anything else blurs
+                node.style.fontSize = GameStyle.FontSize;   // the pixel font's native size: anything else blurs
                 node.style.whiteSpace = WhiteSpace.NoWrap;
                 node.style.paddingLeft = 0;
                 node.style.paddingRight = 0;
@@ -62,7 +61,7 @@ namespace Isekai
                 _nodes[r.Id] = node;
                 Add(node);
             }
-            _info = new Label { pickingMode = PickingMode.Ignore, style = { fontSize = PixelFontSize, position = Position.Absolute, left = 0, right = 0, bottom = -InfoLineHeight + 2, unityTextAlign = TextAnchor.MiddleCenter, color = Color.white } };
+            _info = new Label { pickingMode = PickingMode.Ignore, style = { fontSize = GameStyle.FontSize, position = Position.Absolute, left = 0, right = 0, bottom = -InfoLineHeight + 2, unityTextAlign = TextAnchor.MiddleCenter, color = Color.white } };
             Add(_info);
             Refresh();
         }

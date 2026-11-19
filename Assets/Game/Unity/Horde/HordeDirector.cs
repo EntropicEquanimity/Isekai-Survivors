@@ -1,11 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using Blondie.Abilities;
 using Blondie.Combat;
 using Blondie.Core;
 using Blondie.FlowFields;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace Isekai
 {
@@ -18,6 +16,8 @@ namespace Isekai
     public sealed class HordeDirector : MonoBehaviour
     {
         [SerializeField] private FlowFieldGridComponent _grid;
+        [Tooltip("The horde's team: it walks to and hits only targets hostile to this team (Blondie Combat's Teams).")]
+        [SerializeField] private string _team = TeamIds.Enemy;
         [SerializeField] private FlowFieldCrowd _crowd;
         [SerializeField, Min(0.25f)] private float _hashCellSize = 1f;
         [Tooltip("An enemy's body radius, for ability hits.")]
@@ -51,24 +51,18 @@ namespace Isekai
         /// <summary>Horde enemies killed since this director started.</summary>
         public int Kills { get; private set; }
         public FlowFieldGrid Grid => _grid.Grid;
+
+        /// <summary>The team this horde fights for.</summary>
+        public string Team => _team;
         public SpatialHash<HordeMember> Hash => _hash ??= new SpatialHash<HordeMember>(_hashCellSize);
 
-        // The grid bakes its walls from colliders in Start, but tilemap colliders can build late when a scene loads at
-        // runtime: make them build now, give them a frame, then bake again, keep the ground Buildings already claimed
-        // blocked and recompute the horde's paths.
-        private IEnumerator Start()
-        {
-            foreach (TilemapCollider2D t in FindObjectsByType<TilemapCollider2D>(FindObjectsInactive.Exclude)) t.ProcessTilemapChanges();
-            Physics2D.SyncTransforms();
-            yield return null;
-            _grid.Bake();
-            RegionBuildings.Current?.Reblock();
-            _lastCells.Clear();
-        }
+        // When the Region's walls are baked again, the field over the targets must be requested again.
+        private void OnGridBaked() => _lastCells.Clear();
 
         private void OnEnable()
         {
             Current = this;
+            if (RegionGrid.Current != null) RegionGrid.Current.Baked += OnGridBaked;
             _world ??= new HordeWorld(Hash, _memberRadius);
             _previousWorld = AbilityWorld.Current;
             AbilityWorld.Current = _world;
@@ -78,6 +72,7 @@ namespace Isekai
         private void OnDisable()
         {
             if (Current == this) Current = null;
+            if (RegionGrid.Current != null) RegionGrid.Current.Baked -= OnGridBaked;
             if (AbilityWorld.Current == _world) AbilityWorld.Current = _previousWorld;
         }
 
@@ -128,7 +123,7 @@ namespace Isekai
             if (Time.time < _nextAggro) return;
             _nextAggro = Time.time + _aggroInterval;
             foreach (HordeTarget target in HordeTarget.All)
-                if (target.IsAlive) WakeAround(target.transform.position, _aggroRadius + target.Radius);
+                if (target.IsAlive && IsHostile(target)) WakeAround(target.transform.position, _aggroRadius + target.Radius);
         }
 
         // One field over every living target's cells; a new one only when that set of cells changes.
@@ -136,7 +131,7 @@ namespace Isekai
         {
             _targetCells.Clear();
             foreach (HordeTarget target in HordeTarget.All)
-                if (target.IsAlive && target.AttractsHorde) target.AddCells(Grid, _targetCells);
+                if (target.IsAlive && target.AttractsHorde && IsHostile(target)) target.AddCells(Grid, _targetCells);
             if (SameCells(_targetCells, _lastCells)) return;
             _lastCells.Clear();
             _lastCells.AddRange(_targetCells);
@@ -166,13 +161,13 @@ namespace Isekai
             foreach (HordeTarget target in _targets)
             {
                 if (target == null) continue;
-                if (!target.IsAlive) continue;
+                if (!target.IsAlive || !IsHostile(target)) continue;
                 Vector3 p = target.transform.position;
                 _nearby.Clear();
                 Hash.Query(p.x, p.y, target.Radius + slack + 1f, _nearby);
                 foreach (HordeMember m in _nearby)
                 {
-                    if (!m.IsAlive) continue;
+                    if (!m.IsAlive || !Teams.AreHostile(m.Unit, target.Damageable.Unit)) continue;
                     float reach = target.Radius + m.Reach + slack;
                     if ((m.transform.position - p).sqrMagnitude > reach * reach) continue;
                     if (!m.Attack.TryHit(now)) continue;
@@ -181,6 +176,8 @@ namespace Isekai
                 }
             }
         }
+
+        private bool IsHostile(HordeTarget target) => Teams.Relation(_team, target.Team) == TeamRelation.Hostile;
 
         private static bool SameCells(List<Int2> a, List<Int2> b)
         {

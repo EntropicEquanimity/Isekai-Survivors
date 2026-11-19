@@ -15,7 +15,7 @@ namespace Isekai
     /// now) spread around the edges. Wave enemies attack at once. The final Wave's deaths count toward
     /// <see cref="RegionGoal"/>. Spawns a batch per frame so a big Wave doesn't hitch.
     /// </summary>
-    public sealed class WaveDirector : MonoBehaviour
+    public sealed class WaveDirector : MonoBehaviour, IRegionSetup, IThreat, IRegionEndListener
     {
         [SerializeField] private Wave[] _waves = Array.Empty<Wave>();
         [SerializeField] private GameObject _chaserPrefab;
@@ -70,6 +70,27 @@ namespace Isekai
 
         private void Awake() => _random = new Random(_seed);
 
+        /// <summary>Depth and Run clock from the Region; its own random stream; it is the Region's threat for now.</summary>
+        void IRegionSetup.Setup(RegionContext region)
+        {
+            if (region.Region != null) SetRun(region.Region.Depth, region.Run?.RunSeconds ?? 0f);
+            _random = region.Random("waves");
+            region.Threat = this;
+        }
+
+        float IThreat.HealthMultiplier => Multiplier;
+
+        private void OnEnable()
+        {
+            DebugActions.Button(this, "Waves", "Next Wave now", () => Skip(SecondsUntilNext + 0.01f));
+            DebugActions.Toggle(this, "Waves", "Fast Waves (×4 Wave clock)", () => ClockSpeed > 1f, on => ClockSpeed = on ? 4f : 1f);
+            DebugActions.Info(this, "Waves", () => $"Next Wave in {SecondsUntilNext:0}s · ×{Multiplier:0.00} health");
+        }
+
+        private void OnDisable() => DebugActions.Remove(this);
+
+        void IRegionEndListener.OnRegionEnded(RegionEnd end) => enabled = false;
+
         private void Update()
         {
             _clock += Time.deltaTime * ClockSpeed;
@@ -82,7 +103,7 @@ namespace Isekai
         private void Queue(Wave wave)
         {
             _released++;
-            FlowFieldGrid grid = HordeDirector.Current != null ? HordeDirector.Current.Grid : null;
+            RegionGrid grid = RegionGrid.Current;
             if (grid == null) return;
             bool squad = wave.Type == WaveType.Squad && _squadPrefab != null;
             GameObject prefab = squad ? _squadPrefab : _chaserPrefab;
@@ -103,7 +124,7 @@ namespace Isekai
                     {
                         float r = clump * (1f + tries * 0.25f);
                         at = centre + new Vector3((float)(_random.NextDouble() * 2 - 1) * r, (float)(_random.NextDouble() * 2 - 1) * r, 0f);
-                        found = grid.IsWalkable(new Float3(at.x, at.y, 0f));
+                        found = grid.IsWalkable(at);
                     }
                     if (!found) continue;
                 }
@@ -139,64 +160,23 @@ namespace Isekai
             damageable.Died += OnDied;
         }
 
-        private bool TrySpawnSpot(FlowFieldGrid grid, out Vector3 spot) => TryRingSpot(grid, out spot) || TryEdgeSpot(grid, out spot);
+        private bool TrySpawnSpot(RegionGrid grid, out Vector3 spot) => TryRingSpot(grid, out spot) || TryEdgeSpot(grid, out spot);
 
         // A walkable cell in the ring around the Main Base, far from every player target.
-        private bool TryRingSpot(FlowFieldGrid grid, out Vector3 spot)
+        private bool TryRingSpot(RegionGrid grid, out Vector3 spot)
         {
             spot = default;
             Building home = null;
             foreach (Building b in Building.All)
-                if (b.IsMainBase && b.IsAlive) { home = b; break; }
+                if (b.IsMainBase && b.IsPlayers && b.IsAlive) { home = b; break; }
             if (home == null) return false;
             float min = Mathf.Min(_minDistanceFromTargets, _maxDistanceFromBase);
-            for (int attempt = 0; attempt < 30; attempt++)
-            {
-                double angle = _random.NextDouble() * Math.PI * 2.0;
-                float radius = Mathf.Lerp(min, _maxDistanceFromBase, (float)_random.NextDouble());
-                Vector3 at = home.transform.position + new Vector3((float)Math.Cos(angle), (float)Math.Sin(angle), 0f) * radius;
-                Int2 cell = grid.WorldToCell(new Float3(at.x, at.y, 0f));
-                if (!grid.Contains(cell) || !grid.IsWalkable(cell)) continue;
-                if (FarFromTargets(at)) { spot = at; return true; }
-            }
-            return false;
-        }
-
-        private bool FarFromTargets(Vector3 at)
-        {
-            float min2 = _minDistanceFromTargets * _minDistanceFromTargets;
-            foreach (HordeTarget t in HordeTarget.All)
-                if ((t.transform.position - at).sqrMagnitude < min2) return false;
-            return true;
+            return grid.TryPickSpot(_random, grid.Ring(home.transform.position, min, _maxDistanceFromBase), FarFromTargets, out spot);
         }
 
         // A walkable cell in the band along the map's edges, far from every player target.
-        private bool TryEdgeSpot(FlowFieldGrid grid, out Vector3 spot)
-        {
-            float min2 = _minDistanceFromTargets * _minDistanceFromTargets;
-            int band = Mathf.Min(_edgeBand, Mathf.Min(grid.Width, grid.Height) / 2);
-            for (int attempt = 0; attempt < 30; attempt++)
-            {
-                int side = _random.Next(4);
-                int along = _random.Next(side < 2 ? grid.Width : grid.Height);
-                int depth = _random.Next(band);
-                Int2 cell = side switch
-                {
-                    0 => new Int2(along, depth),
-                    1 => new Int2(along, grid.Height - 1 - depth),
-                    2 => new Int2(depth, along),
-                    _ => new Int2(grid.Width - 1 - depth, along),
-                };
-                if (!grid.IsWalkable(cell)) continue;
-                Float3 w = grid.CellToWorld(cell);
-                spot = new Vector3(w.x, w.y, 0f);
-                bool far = true;
-                foreach (HordeTarget t in HordeTarget.All)
-                    if ((t.transform.position - spot).sqrMagnitude < min2) { far = false; break; }
-                if (far) return true;
-            }
-            spot = default;
-            return false;
-        }
+        private bool TryEdgeSpot(RegionGrid grid, out Vector3 spot) => grid.TryPickSpot(_random, grid.EdgeBand(_edgeBand), FarFromTargets, out spot);
+
+        private bool FarFromTargets(Vector3 at) => HordeTarget.NoneHostileWithin(at, _minDistanceFromTargets);
     }
 }

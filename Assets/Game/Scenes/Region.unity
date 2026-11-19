@@ -1101,6 +1101,7 @@ GameObject:
   - component: {fileID: 1012556094}
   - component: {fileID: 1012556093}
   - component: {fileID: 1012556092}
+  - component: {fileID: 1012556095}
   m_Layer: 0
   m_Name: Run
   m_TagString: Untagged
@@ -1150,6 +1151,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1012556095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1012556091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 202f276b3f4b31f4a89359dbc052cf98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Isekai.Game::Isekai.RegionBootstrap
 --- !u!1 &1040949438
 GameObject:
   m_ObjectHideFlags: 0
@@ -1628,6 +1641,7 @@ GameObject:
   - component: {fileID: 1723579439}
   - component: {fileID: 1723579438}
   - component: {fileID: 1723579437}
+  - component: {fileID: 1723579443}
   m_Layer: 0
   m_Name: Horde
   m_TagString: Untagged
@@ -1680,6 +1694,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Isekai.Game::Isekai.HordeDirector
   _grid: {fileID: 1723579441}
+  _team: Enemies
   _crowd: {fileID: 1723579440}
   _hashCellSize: 1
   _memberRadius: 0.25
@@ -1744,6 +1759,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1723579443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1723579436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8efbb54d1e21cae43b5f820cb1eed0e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Isekai.Game::Isekai.RegionGrid
 --- !u!1 &1794253444
 GameObject:
   m_ObjectHideFlags: 0
@@ -1947,7 +1974,6 @@ MonoBehaviour:
   _nodePrefab: {fileID: 1678454756759285725, guid: 9f7460f9858950c4fa350624e7469a7f, type: 3}
   _nodes: 24
   _minDistanceFromTargets: 25
-  _seed: 11
 --- !u!4 &2072771090
 Transform:
   m_ObjectHideFlags: 0

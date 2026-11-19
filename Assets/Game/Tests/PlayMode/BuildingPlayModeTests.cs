@@ -23,11 +23,8 @@ namespace Isekai.Tests
         [UnitySetUp]
         public IEnumerator LoadRegion()
         {
-            SceneManager.LoadScene("Region");
-            yield return null;
-            Object.FindAnyObjectByType<HordeSpawner>().enabled = false;
-            foreach (HordeMember m in Object.FindObjectsByType<HordeMember>(FindObjectsInactive.Exclude)) Pools.Despawn(m.gameObject);
-            yield return null;
+            yield return RegionTestScene.Load();
+            RegionTestScene.ClearHorde();
             yield return null;   // RegionBuildings claims the Main Base's ground after the grid bakes
             _buildings = RegionBuildings.Current;
             _mainBase = Building.All.First(b => b.IsMainBase);
@@ -61,9 +58,9 @@ namespace Isekai.Tests
             Assert.AreEqual(FlowFieldGrid.Blocked, field.GetCost(BesideMainBase(4)));
             Assert.IsFalse(placed.IsBuilt);
 
-            yield return WaitFor(() => placed.IsBuilt, 15f, "the Barracks finishes");
+            yield return TestWait.Until(() => placed.IsBuilt, "the Barracks finishes", 15f);
             var producer = placed.GetComponent<UnitProducer>();
-            yield return WaitFor(() => producer.Units.Count > 0, 15f, "the Barracks produces a Militia");
+            yield return TestWait.Until(() => producer.Units.Count > 0, "the Barracks produces a Militia", 15f);
             Assert.AreEqual(Stance.Guard, producer.Units[0].Stance, "Units follow their Building's stance");
             producer.Stance = Stance.Hold;
             Assert.AreEqual(Stance.Hold, producer.Units[0].Stance);
@@ -93,10 +90,10 @@ namespace Isekai.Tests
         public IEnumerator Placement_is_refused_outside_a_Base_and_when_too_expensive()
         {
             BuildingAsset tower = Catalogue("Tower");
-            Assert.AreEqual(RegionBuildings.Verdict.OutsideBase, _buildings.Check(tower, BesideMainBase(30)));
-            Assert.AreEqual(RegionBuildings.Verdict.Blocked, _buildings.Check(tower, _mainBase.Origin), "on the Main Base");
+            Assert.AreEqual(Verdict.OutsideBase, _buildings.Check(tower, BesideMainBase(30)).Verdict);
+            Assert.AreEqual(Verdict.Blocked, _buildings.Check(tower, _mainBase.Origin).Verdict, "on the Main Base");
             RegionEconomy.Current.Stockpile.TrySpend(ResourceType.Stone, RegionEconomy.Current.Stockpile.Get(ResourceType.Stone));
-            Assert.AreEqual(RegionBuildings.Verdict.TooExpensive, _buildings.Check(tower, BesideMainBase(4)));
+            Assert.AreEqual(Verdict.TooExpensive, _buildings.Check(tower, BesideMainBase(4)).Verdict);
             Assert.IsNull(_buildings.Place(tower, BesideMainBase(4)));
             yield return null;
         }
@@ -110,7 +107,7 @@ namespace Isekai.Tests
 
             damageable.Unit.TakeDamage(10000f, DamageRules.TrueType);
             Assert.IsTrue(character.IsDead);
-            yield return WaitFor(() => !character.IsDead, 15f, "the clone is ready");
+            yield return TestWait.Until(() => !character.IsDead, "the clone is ready", 15f);
             Assert.Less(Vector3.Distance(character.transform.position, _mainBase.transform.position), 3f, "cloned at the Main Base");
             Assert.AreEqual(0, _mainBase.GetComponent<CloningPods>().Bay.Pods);
 
@@ -125,7 +122,7 @@ namespace Isekai.Tests
         {
             var defeat = Object.FindAnyObjectByType<RegionDefeat>();
             _mainBase.Damageable.Unit.TakeDamage(100000f, DamageRules.TrueType);
-            yield return WaitFor(() => defeat.IsDefeated, 3f, "the Run is lost");
+            yield return TestWait.Until(() => defeat.IsDefeated, "the Run is lost", 3f);
             Assert.IsFalse(Object.FindAnyObjectByType<HordeSpawner>().enabled);
             Assert.IsTrue(GamePause.IsPausedBy(defeat), "the game freezes behind the dialog");
             Assert.AreEqual(0f, Time.timeScale);
@@ -133,14 +130,5 @@ namespace Isekai.Tests
             Assert.IsFalse(_mode.enabled, "no more building");
         }
 
-        private static IEnumerator WaitFor(Func<bool> condition, float seconds, string what)
-        {
-            float end = Time.time + seconds;
-            while (!condition())
-            {
-                if (Time.time > end) Assert.Fail("Timed out: " + what);
-                yield return null;
-            }
-        }
     }
 }

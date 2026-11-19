@@ -53,7 +53,7 @@ namespace Isekai
         private void UpdatePrompt()
         {
             if (_prompt == null) return;
-            if (_miner == null || !_miner.isActiveAndEnabled) _miner = FindAnyObjectByType<Miner>();
+            _miner = Player.Character != null ? Player.Character.GetComponent<Miner>() : null;
             ResourceNode node = _miner != null ? _miner.Node ?? _miner.InReach : null;
             string text = node == null ? string.Empty
                 : _miner.Node != null ? $"Mining {node.Type}: {node.Remaining} left"

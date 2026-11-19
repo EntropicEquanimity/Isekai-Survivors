@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Blondie.Core;
 using Blondie.Inventory;
 using Blondie.Roguelike;
 using Blondie.Roguelike.Drafts;
@@ -40,7 +41,7 @@ namespace Isekai
         private void OnDisable()
         {
             EnemyNest.Destroyed -= OnNestDestroyed;
-            if (_paused) { Time.timeScale = 1f; _paused = false; }
+            if (_paused) { GamePause.Resume(this); _paused = false; }
         }
 
         private void Start()
@@ -53,13 +54,14 @@ namespace Isekai
 
         private void OnNestDestroyed(EnemyNest nest) => Present();
 
-        // Gameplay waits while a draft is open.
+        // Gameplay waits while a draft is open. Through GamePause, so closing a draft never undoes another pause (a defeat).
         private void Update()
         {
             bool open = RunDrafts.Current != null;
             if (open == _paused) return;
             _paused = open;
-            Time.timeScale = open ? 0f : 1f;
+            if (open) GamePause.Pause(this);
+            else GamePause.Resume(this);
         }
 
         private List<Offerable> BuildOffers()

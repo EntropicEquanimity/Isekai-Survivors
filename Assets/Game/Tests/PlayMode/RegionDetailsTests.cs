@@ -17,11 +17,7 @@ namespace Isekai.Tests
         [UnitySetUp]
         public IEnumerator LoadRegion()
         {
-            SceneManager.LoadScene(RunSession.RegionScene);
-            yield return null;
-            ItemDrafts drafts = Object.FindAnyObjectByType<ItemDrafts>();
-            if (drafts != null) drafts.enabled = false;   // a draft (after a nest falls) pauses the game
-            yield return null;
+            yield return RegionTestScene.Load();
         }
 
         [UnityTearDown]
@@ -57,7 +53,7 @@ namespace Isekai.Tests
         {
             Assert.GreaterOrEqual(HordeDirector.Current.Grid.Width, 250);
             var wilds = Object.FindAnyObjectByType<RegionWilds>();
-            yield return WaitFor(() => wilds.GroupCount > 0, 3f, "the wilds fill in");
+            yield return TestWait.Until(() => wilds.GroupCount > 0, "the wilds fill in", 3f);
             Assert.Greater(wilds.Roaming, wilds.GroupCount, "groups of several roaming enemies");
             Building home = Building.All.First(b => b.IsMainBase);
             foreach (HordeMember m in Object.FindObjectsByType<HordeMember>(FindObjectsInactive.Exclude).Where(m => m.IsRoaming))
@@ -71,7 +67,7 @@ namespace Isekai.Tests
             Building home = Building.All.First(b => b.IsMainBase);
             int before = HordeDirector.Current.Attacking;
             waves.Skip(waves.SecondsUntilNext + 0.01f);
-            yield return WaitFor(() => HordeDirector.Current.Attacking > before + 3, 5f, "a Wave spawns");
+            yield return TestWait.Until(() => HordeDirector.Current.Attacking > before + 3, "a Wave spawns", 5f);
             int near = Object.FindObjectsByType<HordeMember>(FindObjectsInactive.Exclude)
                 .Count(m => !m.IsRoaming && Vector3.Distance(m.transform.position, home.transform.position) < 60f);
             Assert.Greater(near, 3, "the Wave starts within 60 units, not at the far edge");
@@ -143,14 +139,5 @@ namespace Isekai.Tests
             Assert.AreEqual(0, EnemyNest.All.Count, "destroyed nests leave the list");
         }
 
-        private static IEnumerator WaitFor(Func<bool> condition, float seconds, string what)
-        {
-            float end = Time.time + seconds;
-            while (!condition())
-            {
-                if (Time.time > end) Assert.Fail("Timed out: " + what);
-                yield return null;
-            }
-        }
     }
 }

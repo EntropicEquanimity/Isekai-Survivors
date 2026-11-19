@@ -19,7 +19,7 @@ namespace Isekai
 
         private readonly List<CombatUnit> _units = new();
         private CharacterMotor _motor;
-        private Team _team;
+        private Damageable _damageable;
         private UnitProducer _producer;
         private Vector3 _post;
         private float _nextThink;
@@ -38,7 +38,7 @@ namespace Isekai
         private void Awake()
         {
             _motor = GetComponent<CharacterMotor>();
-            _team = GetComponent<Team>();
+            _damageable = GetComponent<Damageable>();
             _post = transform.position;
         }
 
@@ -58,21 +58,9 @@ namespace Isekai
             }
         }
 
-        private CombatUnit Nearest(float radius, out float distance)
-        {
-            distance = float.MaxValue;
-            CombatUnit best = null;
-            _units.Clear();
-            AbilityWorld.Current.FindUnits(new Float3(_post.x, _post.y, 0f), Mathf.Max(radius, _attackRange + 0.5f), true, _units);
-            string own = _team != null ? _team.Id : null;
-            foreach (CombatUnit unit in _units)
-            {
-                if (unit.IsDead || string.IsNullOrEmpty(unit.Team) || unit.Team == own) continue;
-                float d = Distance(unit.Position, transform.position);
-                if (d < distance) { distance = d; best = unit; }
-            }
-            return best;
-        }
+        // The nearest hostile unit around the post.
+        private CombatUnit Nearest(float radius, out float distance) =>
+            Targeting.NearestHostile(_damageable != null ? _damageable.Unit : null, _post, Mathf.Max(radius, _attackRange + 0.5f), transform.position, _units, out distance);
 
         private static float Distance(Float3 a, Vector3 b) => Vector2.Distance(new Vector2(a.x, a.y), b);
     }

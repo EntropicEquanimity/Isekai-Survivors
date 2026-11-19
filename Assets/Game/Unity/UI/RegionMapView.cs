@@ -66,7 +66,7 @@ namespace Isekai
             style.flexShrink = 0;
             style.backgroundImage = Background.FromTexture2D(_texture);
             style.borderTopWidth = style.borderBottomWidth = style.borderLeftWidth = style.borderRightWidth = 1;
-            style.borderTopColor = style.borderBottomColor = style.borderLeftColor = style.borderRightColor = new Color(0.3f, 0.32f, 0.38f);
+            style.borderTopColor = style.borderBottomColor = style.borderLeftColor = style.borderRightColor = GameStyle.Border;
             pickingMode = PickingMode.Ignore;
             Redraw();
         }
@@ -103,7 +103,7 @@ namespace Isekai
             foreach (HordeMember m in _elites) Outlined(ToPixel(m.transform.position), 4, m.IsRoaming ? Roamer : Attacker);
             foreach (DefenderBrain unit in Object.FindObjectsByType<DefenderBrain>(FindObjectsInactive.Exclude))
                 Square(ToPixel(unit.transform.position), 2, Militia);
-            var character = Object.FindAnyObjectByType<CharacterControl>();
+            CharacterControl character = Player.Character;
             if (character != null && !character.IsDead) Outlined(ToPixel(character.transform.position), 4, You);
             DrawView();
 
@@ -144,7 +144,7 @@ namespace Isekai
             int w = size.x * PixelsPerCell, h = size.y * PixelsPerCell;
             Rect(centre.x - w / 2, centre.y - h / 2, w, h, Footprint);
             string name = b.Asset != null ? b.Asset.DisplayName : "Building";
-            Color32 colour = b.IsMainBase ? Home : Ally;
+            Color32 colour = !b.IsPlayers ? Nest : b.IsMainBase ? Home : Ally;   // a defender's Building reads as hostile
             if (!b.IsBuilt) colour = new Color32((byte)(colour.r / 2), (byte)(colour.g / 2), (byte)(colour.b / 2), 255);
             Icon(centre, Icons.TryGetValue(name, out string[] icon) ? icon : Icons["Building"], colour);
         }

@@ -14,7 +14,7 @@ namespace Isekai
     /// (hold Shift to keep placing), right click or Escape cancels. Without a Building picked, left click selects the
     /// Building under the mouse.
     /// </summary>
-    public sealed class BuildMode : MonoBehaviour
+    public sealed class BuildMode : MonoBehaviour, IRegionEndListener
     {
         private const string MenuName = "BuildMode";
         private static readonly Color Ok = new(0.4f, 1f, 0.4f, 0.55f);
@@ -27,7 +27,8 @@ namespace Isekai
         public IReadOnlyList<BuildingAsset> Catalogue => _catalogue;
         public BuildingAsset Picked { get; private set; }
         public Building Selected { get; private set; }
-        public RegionBuildings.Verdict Verdict { get; private set; }
+        /// <summary>Whether the picked Building can go under the mouse, and why not.</summary>
+        public Placement Placement { get; private set; }
 
         /// <summary>What's picked or selected changed.</summary>
         public event Action Changed;
@@ -87,20 +88,24 @@ namespace Isekai
 
             if (Picked == null)
             {
-                if (mouse.leftButton.wasPressedThisFrame && !overUI) Select(buildings.At(cell));
+                if (mouse.leftButton.wasPressedThisFrame && !overUI)
+                {
+                    Building clicked = buildings.At(cell);
+                    Select(clicked != null && clicked.IsPlayers ? clicked : null);   // only your own Buildings take orders
+                }
                 return;
             }
 
             if (mouse.rightButton.wasPressedThisFrame) { Cancel(); return; }
             Int2 origin = BuildingGrid<Building>.OriginCentredOn(cell, new Int2(Picked.Size.x, Picked.Size.y));
-            RegionBuildings.Verdict verdict = buildings.Check(Picked, origin);
-            if (verdict != Verdict) { Verdict = verdict; Changed?.Invoke(); }
+            Placement placement = buildings.Check(Picked, origin);
+            if (placement.Verdict != Placement.Verdict || placement.Reason != Placement.Reason) { Placement = placement; Changed?.Invoke(); }
             if (_ghost != null)
             {
                 _ghost.transform.position = buildings.CentreOf(origin, Picked.Size);
-                _ghost.color = verdict == RegionBuildings.Verdict.Ok ? Ok : verdict == RegionBuildings.Verdict.TooExpensive ? Poor : Bad;
+                _ghost.color = placement.IsOk ? Ok : placement.Verdict == Verdict.TooExpensive ? Poor : Bad;
             }
-            if (!mouse.leftButton.wasPressedThisFrame || overUI || verdict != RegionBuildings.Verdict.Ok) return;
+            if (!mouse.leftButton.wasPressedThisFrame || overUI || !placement.IsOk) return;
             buildings.Place(Picked, origin);
             if (keyboard == null || !keyboard.shiftKey.isPressed) Cancel();
         }
@@ -120,6 +125,12 @@ namespace Isekai
             if (PixelCamera.Main != null) return PixelCamera.Main.ScreenToWorld(screen);
             Camera cam = Camera.main;
             return cam != null ? cam.ScreenToWorldPoint(new Vector3(screen.x, screen.y, -cam.transform.position.z)) : Vector3.zero;
+        }
+
+
+        void IRegionEndListener.OnRegionEnded(RegionEnd end)
+        {
+            if (end == RegionEnd.Defeated) enabled = false;
         }
     }
 }

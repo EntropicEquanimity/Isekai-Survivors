@@ -86,7 +86,7 @@ namespace Isekai.Tests
         {
             MetaProgress.Earn(20);
             SceneManager.LoadScene(RunSession.PlanetScene);
-            yield return WaitFor(() => Object.FindAnyObjectByType<PlanetScreen>()?.Map != null, "the Planet map shows");
+            yield return TestWait.Until(() => Object.FindAnyObjectByType<PlanetScreen>()?.Map != null, "the Planet map shows");
             var screen = Object.FindAnyObjectByType<PlanetScreen>();
             Assert.IsTrue(PlanetScreen.CanSpendShards(RunSession.Run), "before landing");
 
@@ -114,14 +114,5 @@ namespace Isekai.Tests
 
         private static int Count(ItemGrid grid, string id) => grid.Items.Count(e => e.Item.Definition.Id == id);
 
-        private static IEnumerator WaitFor(Func<bool> condition, string what, float seconds = 5f)
-        {
-            float end = Time.realtimeSinceStartup + seconds;
-            while (!condition())
-            {
-                if (Time.realtimeSinceStartup > end) Assert.Fail("Timed out: " + what);
-                yield return null;
-            }
-        }
     }
 }

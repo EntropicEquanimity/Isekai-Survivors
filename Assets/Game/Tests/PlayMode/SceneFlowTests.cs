@@ -73,31 +73,21 @@ namespace Isekai.Tests
             GameSetupSettings s = GameSetupSettings.Current;
             SceneManager.LoadScene(s.BootScene);
 
-            yield return WaitFor(() => GameSetup.State == GameSetupState.MainMenu && ActiveScene == s.MainMenuScene, "Boot reaches the Menu scene");
+            yield return TestWait.Until(() => GameSetup.State == GameSetupState.MainMenu && ActiveScene == s.MainMenuScene, "Boot reaches the Menu scene", TimeoutSeconds);
 
             GameSetup.Play();
-            yield return WaitFor(() => GameSetup.State == GameSetupState.Gameplay && ActiveScene == s.GameScene, "Play loads the Region scene");
+            yield return TestWait.Until(() => GameSetup.State == GameSetupState.Gameplay && ActiveScene == s.GameScene, "Play loads the Region scene", TimeoutSeconds);
 
             GameSetup.Pause();
             Assert.IsTrue(GameSetup.IsPaused, "Pause pauses");
             Assert.IsNotNull(MenuStack.Top, "the pause menu is open");
 
             GameSetup.GoToMainMenu();
-            yield return WaitFor(() => GameSetup.State == GameSetupState.MainMenu && ActiveScene == s.MainMenuScene, "Main Menu goes back to the Menu scene");
+            yield return TestWait.Until(() => GameSetup.State == GameSetupState.MainMenu && ActiveScene == s.MainMenuScene, "Main Menu goes back to the Menu scene", TimeoutSeconds);
             Assert.IsFalse(GameSetup.IsPaused, "leaving gameplay unpauses");
         }
 
         private static string ActiveScene => SceneManager.GetActiveScene().name;
 
-        private static IEnumerator WaitFor(Func<bool> condition, string what)
-        {
-            float end = Time.realtimeSinceStartup + TimeoutSeconds;
-            while (!condition())
-            {
-                if (Time.realtimeSinceStartup > end)
-                    Assert.Fail($"Timed out: {what} (state {GameSetup.State}, scene {ActiveScene}).");
-                yield return null;
-            }
-        }
     }
 }

@@ -90,13 +90,7 @@ namespace Isekai
                 text.Append('\n');
             }
             if (_mode.Picked != null)
-                text.Append(_mode.Verdict switch
-                {
-                    RegionBuildings.Verdict.OutsideBase => "Too far from a Base",
-                    RegionBuildings.Verdict.Blocked => "Blocked",
-                    RegionBuildings.Verdict.TooExpensive => "Not enough Resources",
-                    _ => "Click to place, Shift to keep placing, right click to cancel",
-                });
+                text.Append(_mode.Placement.IsOk ? "Click to place, Shift to keep placing, right click to cancel" : _mode.Placement.Reason);
             else text.Append("Number keys: build. Click a Building to select it. Hold E by Stone to mine. M: map.");
             _list.text = text.ToString();
 

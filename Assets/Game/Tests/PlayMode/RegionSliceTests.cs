@@ -19,9 +19,7 @@ namespace Isekai.Tests
         [UnitySetUp]
         public IEnumerator LoadRegion()
         {
-            SceneManager.LoadScene("Region");
-            yield return null;
-            yield return null;
+            yield return RegionTestScene.Load();
         }
 
         [UnityTest]
@@ -29,9 +27,8 @@ namespace Isekai.Tests
         {
             // A small fight of our own: no horde, two enemies inside the leash.
             var spawner = Object.FindAnyObjectByType<HordeSpawner>();
-            spawner.enabled = false;
+            RegionTestScene.ClearHorde();
             Object.FindAnyObjectByType<FlowFieldCrowd>().Speed = 0f;   // they stand still, so the Character must walk
-            foreach (HordeMember m in Object.FindObjectsByType<HordeMember>(FindObjectsInactive.Exclude)) Pools.Despawn(m.gameObject);
             Damageable[] enemies =
             {
                 Pools.Spawn(spawner.Prefab, new Vector3(-4.5f, 1.5f, 0f), Quaternion.identity).GetComponent<Damageable>(),
@@ -40,8 +37,8 @@ namespace Isekai.Tests
             var control = Object.FindAnyObjectByType<CharacterControl>();
             Vector3 start = control.transform.position;
 
-            yield return WaitFor(() => control.IsAutoFighting, 5f, "the Character takes over after the idle delay");
-            yield return WaitFor(() => enemies.Any(e => e == null || !e.isActiveAndEnabled || e.Unit.IsDead), 20f, "an enemy dies");
+            yield return TestWait.Until(() => control.IsAutoFighting, "the Character takes over after the idle delay", 5f);
+            yield return TestWait.Until(() => enemies.Any(e => e == null || !e.isActiveAndEnabled || e.Unit.IsDead), "an enemy dies", 20f);
             Assert.Greater(Vector3.Distance(start, control.transform.position), 0.5f, "it walked to reach the enemy");
         }
 
@@ -49,16 +46,15 @@ namespace Isekai.Tests
         public IEnumerator Weapons_fire_while_the_player_is_in_control()
         {
             var spawner = Object.FindAnyObjectByType<HordeSpawner>();
-            spawner.enabled = false;
+            RegionTestScene.ClearHorde();
             Object.FindAnyObjectByType<FlowFieldCrowd>().Speed = 0f;
-            foreach (HordeMember m in Object.FindObjectsByType<HordeMember>(FindObjectsInactive.Exclude)) Pools.Despawn(m.gameObject);
             var control = Object.FindAnyObjectByType<CharacterControl>();
             var enemy = Pools.Spawn(spawner.Prefab, control.transform.position + new Vector3(2f, 0f, 0f), Quaternion.identity).GetComponent<Damageable>();
             bool hit = false;
             enemy.Damaged += _ => hit = true;
 
             // Well before the idle delay: the player still has the Character, and its weapons already fire.
-            yield return WaitFor(() => hit, 1f, "the enemy in range is shot");
+            yield return TestWait.Until(() => hit, "the enemy in range is shot", 1f);
             Assert.IsFalse(control.IsAutoFighting);
             Assert.AreEqual(AutoFightOrder.PlayerControl, control.Order);
         }
@@ -102,14 +98,5 @@ namespace Isekai.Tests
             Assert.AreEqual(zoom.Levels.ViewFor(cam.OutputSize), cam.ReferenceResolution);
         }
 
-        private static IEnumerator WaitFor(Func<bool> condition, float seconds, string what)
-        {
-            float end = Time.time + seconds;
-            while (!condition())
-            {
-                if (Time.time > end) Assert.Fail("Timed out: " + what);
-                yield return null;
-            }
-        }
     }
 }

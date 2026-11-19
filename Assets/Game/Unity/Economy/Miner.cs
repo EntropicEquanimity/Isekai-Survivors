@@ -8,7 +8,7 @@ namespace Isekai
     /// Lets the Character mine: holding Interact next to a <see cref="ResourceNode"/> mines it at the MiningSpeed stat
     /// (units per second) into the Region's stockpile, with a "+1 Stone" popup per unit.
     /// </summary>
-    public sealed class Miner : MonoBehaviour
+    public sealed class Miner : MonoBehaviour, IRegionEndListener
     {
         public const string InteractId = "Interact";
 
@@ -49,6 +49,12 @@ namespace Isekai
             if (economy != null) economy.Stockpile.Add(node.Type, mined);
             FloatingText.Spawn(transform.position + Vector3.up, $"+{mined} {node.Type}", Color.white);
             return mined;
+        }
+
+
+        void IRegionEndListener.OnRegionEnded(RegionEnd end)
+        {
+            if (end == RegionEnd.Defeated) enabled = false;
         }
     }
 }

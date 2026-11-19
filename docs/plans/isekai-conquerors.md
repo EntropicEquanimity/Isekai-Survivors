@@ -30,6 +30,53 @@ The premise below is being replaced. A redesign plan follows once the open quest
 
 **Branches.** `main` keeps the legacy survivors game. `conquerors` becomes the main line. Once the swap is done, the old code, scenes, art and text that are no longer used get deleted from `conquerors`.
 
+## Architecture for the redesign (review, 2026-11-19)
+
+Three reviews (units and AI; buildings and economy; Run, UI and scenes) looked for friction in adding the redesign's mechanics. The foundations below were built. The larger items are the redesign features themselves, so they are designed here and built with their feature, on top of these foundations.
+
+**Built.**
+- **Region startup** (`World/RegionBootstrap`, `RegionContext`): setup runs in a fixed order, whatever order Unity wakes things in.
+  - `IRegionSetup` steps run before any other `Start`.
+  - `IRegionPopulate` steps run once `RegionGrid` has baked the walls.
+  - The context carries the Region, the Run, a stable seed with per-system random streams (`Random("waves")`), and the current threat (`IThreat`; the Waves today, Vigilance later).
+  - A Region generator adds setup and populate steps.
+- **Region end** (`World/RegionEvents`, `IRegionEndListener`): capture and defeat are announced once. Each system stops itself, so there are no hand-written disable lists.
+- **Region grid** (`World/RegionGrid`): one owner of cell size, origin and every world↔cell conversion. It also does the re-bake once tilemap colliders exist, raising `Baked`. Corruption becomes a layer here, and the 16 px switch is a cell-size change here.
+- **Spawn placement** (`Rules/Common/SpawnPlacement`, `RegionGrid.TryPickSpot`): shapes (anywhere, ring, edge band, near) plus walkable and accept tests, replacing four copied pickers.
+- **Teams**:
+  - Hostility comes from Blondie Combat's `Teams` relations (`TeamIds`), not from component types.
+  - Hordes walk to and hit only targets hostile to their team, and `Targeting.NearestHostile` is the one search every brain uses.
+  - `Building.Team` and `IsPlayers` tell your Buildings from a defender's.
+- **Player** (`World/Player`): the controlled body and a `Changed` event. Stat targets, the HUD, the map and the debug menu follow it instead of searching for the Character. Possession swaps the body here.
+- **Placement rules** (`Buildings/PlacementRules`): `IPlacementRule` gives a verdict plus a reason shown on the HUD. "Only on corrupted ground" or "not near enemies" is a new rule added to `RegionBuildings.Rules`.
+- **Debug entries** (`Debug/DebugActions`): systems register their own buttons, toggles and readouts while they run. The Waves are the first.
+- **UI style** (`UI/GameStyle`): pixel font sizes, the palette and text roles in one place, ready for the demon restyle.
+- **Smaller fixes:**
+  - Item drafts pause through `GamePause`, so they no longer undo the defeat freeze.
+  - Health bars measure in the art's own pixels.
+  - Blondie's Run uses the Planet's seed.
+  - The dev tools reference the game assembly.
+- **Tests:**
+  - `Support/TestWait` waits on real time, so tests can't hang while the game is paused.
+  - `Support/RegionTestScene` loads the Region with drafts off.
+  - `FoundationTests` covers each seam above.
+
+**Designed, built with their feature.**
+
+| Feature | Build it as |
+|---|---|
+| Both sides field hordes | Split `HordeDirector` into a per-Region `UnitIndex` (spatial hash, ability world) and one `HordeCrowd` per team (a flow-field crowd over targets hostile to that team). Horde members become targets for hostile crowds, so crowd fights crowd. Spawners hand each unit its crowd. |
+| New units from the packs | A `UnitDefinition` asset: id, faction, sprites, health, speed, attack, radius, elite flag, abilities, mobility (crowd or motor), brain or traits. `Units.Spawn(def, pos)` pools one base prefab per mobility. Crowd units get a light stat holder (`CrowdStats`), so corruption and Vigilance modifiers apply. |
+| Possession and Suits | `Jack`, a persistent soul that owns the inventory, soul level and stat sources. `Suit`, a component on demon bodies. `Possession`, which moves the player brain, Miner, camera and modifiers between bodies and calls `Player.Control`. |
+| Patrols, fleeing, reinforcements, heroes | `FighterBrain : AiBrain` (Blondie Controllers) with a priority list of `IUnitBehaviour`s: Engage, GuardPost, Patrol, Flee, CallReinforcements, Summon, StayInKeep. A `HeroTraits` asset picks and weights them. Decision logic stays pure in Rules, like `Engagement`. A `CrowdSquad` gives whole crowds a switchable goal (attack, rally, patrol, flee). |
+| Souls and Portals | A `ResourceDefinition` asset with an id and a scope (Region or Run), replacing the `ResourceType` enum. Unity saves enums as numbers, so never reorder it until then. A `Wallet` covers the Region stockpile and the Run's currencies. A `SoulYield` on mortals pays the killer's `Harvester` scaled by a HarvestEfficiency stat. `UnitRecipe` assets (prefab, costs, interval, cap) let a Portal summon several demon kinds. |
+| Settlements, fortifications, capture | Defender Buildings carry the enemy team. Nest pack logic becomes a `PackSpawner` component, and a `Fortification` marker counts toward capture. Capture becomes an `ICaptureRule` (fortifications and mortals), announced through `RegionEvents`. |
+| Corruption | A pure `CorruptionMap` (a level per cell, spread ticks, change events) as a `RegionGrid` layer, a `CorruptionRule` for placement, and corruption-scaled stats for demons. |
+| Jack's soul tree | Generalise `MetaProgress` into a `TreeProgress` (definition, holder, save target, stat target). Use one for Legacy (saved) and one per Run (Souls). BU needs a per-tree points label, because the Shards wording overrides a global key today. |
+| Procedural Regions and factions | A `PlanetRecipe` (rings, names, buffs, factions). `RegionInfo` gains faction, archetype and hero. The generator is setup and populate steps on `RegionContext`. Tests get a fixed-seed recipe and `RegionQuery` helpers instead of scene positions. |
+| HUD and restyle | One HUD root with `IHudWidget`s bound to the `RegionContext`. A Blondie `UITheme` asset (demon palette) plus `GameStyle`. The map's layers and legend become `IMapLayer`s. |
+| 16 px grid | Express hard-coded world distances (Unit exits and posts, stance leashes, mining reach, Base radius) in cells × `RegionGrid.CellSize`. |
+
 ## The game in one paragraph
 
 You land on a Planet as your Character with one Main Base. The Planet is split into Regions. You pick which neighbouring Region to take next. Inside a Region you mine, build, and capture or place Bases while thousands of enemies roam, and Waves hit your Bases on a timer. Buildings spawn defenders that fight on their own based on a Stance. The Character fights on their own when you are not steering them. Taking a Region gives Items, Resources and a Region buff. Taking the Capital wins the Run. The longer the Run lasts, the stronger the enemies. Losing the Main Base loses the Run. Losing the Character does not. Between Runs, meta upgrades carry over (more Cloning Pods, rebuildable pods, and so on). Inside a Run, Items go into a limited Active inventory, which grows through Items and buffs, plus a Storage area. Each Item has its own rules for how long it lasts and when it can be swapped out.

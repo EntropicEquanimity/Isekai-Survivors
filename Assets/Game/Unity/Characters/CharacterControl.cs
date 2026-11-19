@@ -14,7 +14,7 @@ namespace Isekai
     /// (<see cref="AutoFight"/>).
     /// </summary>
     [RequireComponent(typeof(CharacterMotor), typeof(PlayerBrain), typeof(AutoCaster))]
-    public sealed class CharacterControl : MonoBehaviour
+    public sealed class CharacterControl : MonoBehaviour, IRegionEndListener
     {
         [SerializeField, Min(0f)] private float _idleDelay = 1.5f;
         [SerializeField, Min(0f)] private float _leash = 6f;
@@ -27,7 +27,6 @@ namespace Isekai
         private CharacterMotor _motor;
         private PlayerBrain _brain;
         private AutoCaster _autoCaster;
-        private Team _team;
         private Damageable _damageable;
         private Renderer[] _renderers;
         private Vector3 _anchor;
@@ -43,12 +42,12 @@ namespace Isekai
             _motor = GetComponent<CharacterMotor>();
             _brain = GetComponent<PlayerBrain>();
             _autoCaster = GetComponent<AutoCaster>();
-            _team = GetComponent<Team>();
             _damageable = GetComponent<Damageable>();
             _renderers = GetComponentsInChildren<Renderer>(true);
             _fight.IdleDelay = _idleDelay;
             _fight.Leash = _leash;
             SetPlayerControl(true);
+            Player.Control(this);
             if (_damageable == null) return;
             _damageable.Died += OnDied;
             _damageable.Revived += OnRevived;
@@ -56,6 +55,7 @@ namespace Isekai
 
         private void OnDestroy()
         {
+            Player.Release(this);
             if (_damageable == null) return;
             _damageable.Died -= OnDied;
             _damageable.Revived -= OnRevived;
@@ -115,6 +115,11 @@ namespace Isekai
             }
         }
 
+        void IRegionEndListener.OnRegionEnded(RegionEnd end)
+        {
+            if (end == RegionEnd.Defeated) Freeze();
+        }
+
         /// <summary>Stops everything: no steering, no fighting, no weapons (the Run is lost).</summary>
         public void Freeze()
         {
@@ -137,28 +142,12 @@ namespace Isekai
             return move.x * move.x + move.y * move.y > 0.01f || ActionInput.IsHeld("Interact");
         }
 
-        // Every unit near the anchor through the ability world (the horde's spatial hash plus physics), nearest hostile one.
+        // The nearest hostile unit around the anchor (inside the leash plus weapon range).
         private Transform NearestEnemy(out float distance)
         {
-            distance = float.MaxValue;
-            Transform best = null;
-            _units.Clear();
-            Vector3 a = _anchor;
-            AbilityWorld.Current.FindUnits(new Float3(a.x, a.y, a.z), _leash + _attackRange, true, _units);
-            string ownTeam = _team != null ? _team.Id : null;
-            Vector3 p = transform.position;
-            foreach (CombatUnit unit in _units)
-            {
-                if (unit.IsDead || unit.Team == ownTeam || string.IsNullOrEmpty(unit.Team)) continue;
-                Float3 u = unit.Position;
-                float d = Vector2.Distance(p, new Vector2(u.x, u.y));
-                if (d >= distance) continue;
-                GameObject go = unit.GameObject();
-                if (go == null) continue;
-                distance = d;
-                best = go.transform;
-            }
-            return best;
+            CombatUnit unit = Targeting.NearestHostile(_damageable != null ? _damageable.Unit : null, _anchor, _leash + _attackRange, transform.position, _units, out distance);
+            GameObject go = unit?.GameObject();
+            return go != null ? go.transform : null;
         }
     }
 }

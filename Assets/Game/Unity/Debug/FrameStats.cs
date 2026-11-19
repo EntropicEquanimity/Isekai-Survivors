@@ -64,7 +64,7 @@ namespace Isekai
 
         private static string CharacterState()
         {
-            var control = FindAnyObjectByType<CharacterControl>();
+            CharacterControl control = Player.Character;
             var damageable = control != null ? control.GetComponent<Blondie.Combat.Damageable>() : null;
             return damageable == null ? "none" : damageable.Unit.IsDead ? "dead" : $"{damageable.Unit.Health:F0} hp";
         }

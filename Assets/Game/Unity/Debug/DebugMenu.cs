@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Blondie.Combat;
 using Blondie.Pooling;
 using UnityEngine;
@@ -69,14 +70,7 @@ namespace Isekai
 
             Section("Enemies");
             Row(("Spawn 20 here", () => SpawnNearCharacter(20)), ("Spawn 200", () => SpawnNearCharacter(200)));
-            Row(("Kill all", KillAllEnemies), ("Next Wave now", NextWave));
-            Row(("Destroy all nests", DestroyNests));
-            var waves = Object.FindAnyObjectByType<WaveDirector>();
-            if (waves != null)
-            {
-                bool fast = GUILayout.Toggle(waves.ClockSpeed > 1f, " Fast Waves (×4 Wave clock)");
-                waves.ClockSpeed = fast ? 4f : 1f;
-            }
+            Row(("Kill all", KillAllEnemies), ("Destroy all nests", DestroyNests));
 
             Section("Run");
             Row(("+100 Shards", () => MetaProgress.Earn(100)), ("Wipe meta", MetaProgress.Wipe));
@@ -93,11 +87,42 @@ namespace Isekai
             if (horde != null) GUILayout.Label($"Enemies {horde.Count} ({horde.Attacking} attacking) · kills {horde.Kills}");
             var wilds = Object.FindAnyObjectByType<RegionWilds>();
             if (wilds != null) GUILayout.Label($"Wanderers roaming {wilds.Roaming} in {wilds.GroupCount} groups");
-            if (waves != null) GUILayout.Label($"Next Wave in {waves.SecondsUntilNext:0}s · ×{waves.Multiplier:0.00} health");
             GUILayout.Label($"Nests left {CountNests()} · {1f / Mathf.Max(Time.smoothDeltaTime, 1e-4f):0} fps");
+
+            DrawRegistered();
 
             GUILayout.EndScrollView();
             GUILayout.EndArea();
+        }
+
+        // Entries systems added through DebugActions, grouped by section in the order they were added.
+        private void DrawRegistered()
+        {
+            var sections = new List<string>();
+            foreach (DebugActions.Entry e in DebugActions.All)
+                if (!sections.Contains(e.Section)) sections.Add(e.Section);
+            foreach (string section in sections)
+            {
+                Section(section);
+                foreach (DebugActions.Entry e in DebugActions.All)
+                {
+                    if (e.Section != section) continue;
+                    switch (e.Kind)
+                    {
+                        case DebugActions.Kind.Button:
+                            if (GUILayout.Button(e.Label)) e.Run?.Invoke();
+                            break;
+                        case DebugActions.Kind.Toggle:
+                            bool on = e.Get?.Invoke() ?? false;
+                            bool now = GUILayout.Toggle(on, " " + e.Label);
+                            if (now != on) e.Set?.Invoke(now);
+                            break;
+                        default:
+                            GUILayout.Label(e.Text?.Invoke() ?? "");
+                            break;
+                    }
+                }
+            }
         }
 
         private void Section(string title)
@@ -123,13 +148,13 @@ namespace Isekai
 
         private void ApplyGodMode()
         {
-            var character = Object.FindAnyObjectByType<CharacterControl>();
+            CharacterControl character = Player.Character;
             if (character != null && character.TryGetComponent(out Damageable d)) d.Invulnerable = _godMode;
         }
 
         private static void HealCharacter()
         {
-            var character = Object.FindAnyObjectByType<CharacterControl>();
+            CharacterControl character = Player.Character;
             if (character != null && character.TryGetComponent(out Damageable d) && !d.IsDead) d.Heal(d.MaxHealth);
         }
 
@@ -141,7 +166,7 @@ namespace Isekai
         public static void SpawnNearCharacter(int count)
         {
             var spawner = Object.FindAnyObjectByType<HordeSpawner>();
-            var character = Object.FindAnyObjectByType<CharacterControl>();
+            CharacterControl character = Player.Character;
             if (spawner == null || spawner.Prefab == null || character == null) return;
             for (int i = 0; i < count; i++)
             {
@@ -154,12 +179,6 @@ namespace Isekai
         {
             foreach (HordeMember m in Object.FindObjectsByType<HordeMember>(FindObjectsInactive.Exclude))
                 if (m.IsAlive) m.Damageable.Kill();
-        }
-
-        private static void NextWave()
-        {
-            var waves = Object.FindAnyObjectByType<WaveDirector>();
-            if (waves != null) waves.Skip(waves.SecondsUntilNext + 0.01f);
         }
 
         public static void DestroyNests()

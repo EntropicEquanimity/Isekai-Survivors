@@ -15,16 +15,13 @@ namespace Isekai
 
         public bool IsDefeated { get; private set; }
 
-        /// <summary>The Main Base fell (<see cref="RegionRun"/> ends the Run).</summary>
-        public event System.Action Defeated;
-
         private void Update()
         {
             if (IsDefeated) return;
             bool alive = false;
             foreach (Building b in Building.All)
             {
-                if (!b.IsMainBase) continue;
+                if (!b.IsMainBase || !b.IsPlayers) continue;
                 _hadMainBase = true;
                 alive |= b.IsAlive;
             }
@@ -39,16 +36,11 @@ namespace Isekai
         private void Lose()
         {
             IsDefeated = true;
-            HordeSpawner spawner = FindAnyObjectByType<HordeSpawner>();
-            if (spawner != null) spawner.enabled = false;
             GamePause.Pause(this);
-            foreach (CharacterControl c in FindObjectsByType<CharacterControl>(FindObjectsInactive.Exclude)) c.Freeze();
-            foreach (Behaviour b in new Behaviour[] { FindAnyObjectByType<BuildMode>(), FindAnyObjectByType<Miner>(), FindAnyObjectByType<MapScreen>() })
-                if (b != null) b.enabled = false;
             BLog.Info("Region", "Main Base destroyed: the Run is lost.");
             Camera cam = Camera.main;
             if (cam != null) FloatingText.Spawn(cam.transform.position + new Vector3(0f, 0f, 10f), "Main Base destroyed", Color.red, 4f);
-            Defeated?.Invoke();
+            RegionEvents.End(RegionEnd.Defeated);   // each system stops itself (IRegionEndListener)
         }
     }
 }

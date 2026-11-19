@@ -6,60 +6,69 @@ using UnityEngine;
 namespace Isekai
 {
     /// <summary>
-    /// Where Buildings may go in a Region and placing them: footprints sit on the horde's flow-field cells, must be on
-    /// open ground inside a working Base's area, and cost Resources from the Region's stockpile. Placed Buildings block
-    /// their cells in the flow field (enemies walk up to them) and unblock them when destroyed.
+    /// The Region's Buildings on its cell grid (<see cref="RegionGrid"/>): which cells each one stands on, placing new
+    /// ones (checked by the <see cref="Rules"/>, paid from the stockpile) and blocking their cells for the hordes'
+    /// flow fields, unblocking them when destroyed. Pre-placed Buildings (the Main Base) take their ground once the
+    /// grid has baked.
     /// </summary>
     public sealed class RegionBuildings : MonoBehaviour
     {
-        public enum Verdict { Ok, Blocked, OutsideBase, TooExpensive }
-
         private readonly Dictionary<Building, byte[]> _savedCosts = new();
         private readonly List<Building> _pending = new();
+        private readonly List<IPlacementRule> _rules = new() { new FreeGroundRule(), new InsideBaseRule(), new AffordableRule() };
         private BuildingGrid<Building> _grid;
 
         public static RegionBuildings Current { get; private set; }
 
-        private FlowFieldGrid Field => HordeDirector.Current != null ? HordeDirector.Current.Grid : null;
+        /// <summary>The placement conditions, checked in order. Add or replace rules to change where Buildings may go.</summary>
+        public IList<IPlacementRule> Rules => _rules;
 
-        private BuildingGrid<Building> Grid => _grid ??= new BuildingGrid<Building>(cell => Field != null && Field.IsWalkable(cell));
+        private static RegionGrid Ground => RegionGrid.Current;
+        private FlowFieldGrid Field => Ground != null ? Ground.Field : null;
+        private BuildingGrid<Building> Grid => _grid ??= new BuildingGrid<Building>(cell => Ground != null && Ground.IsWalkable(cell));
 
-        private void OnEnable() => Current = this;
+        private void OnEnable()
+        {
+            Current = this;
+            if (Ground != null) Ground.Baked += Reblock;
+        }
 
         private void OnDisable()
         {
             if (Current == this) Current = null;
+            if (Ground != null) Ground.Baked -= Reblock;
         }
 
         /// <summary>World size of one ground cell.</summary>
-        public float CellSize => Field != null ? Field.CellSize : 1f;
+        public float CellSize => Ground != null ? Ground.CellSize : 1f;
 
-        public Int2 CellAt(Vector3 world) => Field.WorldToCell(new Float3(world.x, world.y, 0f));
+        public Int2 CellAt(Vector3 world) => Ground.CellAt(world);
 
         /// <summary>The world centre of a footprint.</summary>
-        public Vector3 CentreOf(Int2 origin, Vector2Int size)
-        {
-            Float3 a = Field.CellToWorld(origin);
-            Float3 b = Field.CellToWorld(new Int2(origin.x + size.x - 1, origin.y + size.y - 1));
-            return new Vector3((a.x + b.x) * 0.5f, (a.y + b.y) * 0.5f, 0f);
-        }
+        public Vector3 CentreOf(Int2 origin, Vector2Int size) => Ground.CentreOf(origin, size);
 
         public Building At(Int2 cell) => Grid.At(cell);
 
-        public Verdict Check(BuildingAsset asset, Int2 origin)
+        /// <summary>Whether every cell of the footprint is open ground with no Building on it.</summary>
+        public bool IsFree(Int2 origin, Vector2Int size) => Field != null && Grid.CanPlace(origin, new Int2(size.x, size.y));
+
+        /// <summary>Whether <paramref name="asset"/> may go with its footprint's corner at <paramref name="origin"/>, and why not.</summary>
+        public Placement Check(BuildingAsset asset, Int2 origin)
         {
-            Int2 size = new(asset.Size.x, asset.Size.y);
-            if (Field == null || !Grid.CanPlace(origin, size)) return Verdict.Blocked;
-            if (!BaseArea.Covers(CentreOf(origin, asset.Size))) return Verdict.OutsideBase;
-            Stockpile pile = RegionEconomy.Current != null ? RegionEconomy.Current.Stockpile : null;
-            if (pile == null || !pile.CanAfford(asset.Costs)) return Verdict.TooExpensive;
-            return Verdict.Ok;
+            if (Ground == null) return Placement.No(Verdict.Blocked, "No ground");
+            var query = new PlacementQuery(asset, origin, Ground, this);
+            foreach (IPlacementRule rule in _rules)
+            {
+                Placement result = rule.Check(query);
+                if (!result.IsOk) return result;
+            }
+            return Placement.Ok;
         }
 
         /// <summary>Pays for and places <paramref name="asset"/> with its footprint's corner at <paramref name="origin"/>; null if it can't.</summary>
         public Building Place(BuildingAsset asset, Int2 origin)
         {
-            if (Check(asset, origin) != Verdict.Ok) return null;
+            if (!Check(asset, origin).IsOk) return null;
             if (!RegionEconomy.Current.Stockpile.TrySpend(asset.Costs)) return null;
             GameObject go = Instantiate(asset.Prefab, CentreOf(origin, asset.Size), Quaternion.identity);
             var building = go.GetComponent<Building>();
@@ -83,10 +92,7 @@ namespace Isekai
         {
             if (Field == null || building.Asset == null) return;
             Vector2Int size = building.Asset.Size;
-            // The footprint whose centre is the Building's position: its lower-left cell holds the lower-left corner point.
-            float cs = Field.CellSize;
-            Vector3 corner = building.transform.position - new Vector3((size.x - 1) * 0.5f * cs, (size.y - 1) * 0.5f * cs, 0f);
-            Int2 origin = CellAt(corner);
+            Int2 origin = Ground.FootprintOrigin(building.transform.position, size);
             if (!Grid.CanPlace(origin, new Int2(size.x, size.y)))
             {
                 Debug.LogWarning($"{building.name} stands on ground that is blocked or taken; it won't block the horde.", building);
@@ -95,7 +101,7 @@ namespace Isekai
             Occupy(building, origin, size);
         }
 
-        /// <summary>After the ground was baked again: block every placed Building's cells again, remembering the new ground under them.</summary>
+        /// <summary>After the walls were baked again: block every placed Building's cells again, remembering the new ground under them.</summary>
         internal void Reblock()
         {
             if (Field == null) return;

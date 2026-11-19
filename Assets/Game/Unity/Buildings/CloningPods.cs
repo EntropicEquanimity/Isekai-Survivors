@@ -26,7 +26,7 @@ namespace Isekai
 
         private void Start()
         {
-            _character = FindAnyObjectByType<CharacterControl>();
+            _character = Player.Character;
             if (_character != null && _character.TryGetComponent(out Blondie.Combat.Damageable d)) d.Died += _ => OnCharacterDied();
         }
 

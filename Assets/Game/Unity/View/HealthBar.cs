@@ -11,7 +11,6 @@ namespace Isekai
     [DisallowMultipleComponent]
     public sealed class HealthBar : MonoBehaviour
     {
-        private const int PixelsPerUnit = 32;
         private const int SortingOrder = 20;
         private static Sprite s_pixel;
 
@@ -29,6 +28,7 @@ namespace Isekai
         private Transform _bar;
         private Transform _fillPart;
         private bool _subscribed;
+        private float _ppu = 32f;   // the art's pixels per unit, read when the bar is built
 
         public bool IsShown => _bar != null && _bar.gameObject.activeSelf;
 
@@ -77,17 +77,18 @@ namespace Isekai
             if (_bar == null) Build();
             _bar.gameObject.SetActive(true);
             FilledPixels = Mathf.Clamp(Mathf.CeilToInt(fraction * _width), fraction > 0f ? 1 : 0, _width);
-            _fillPart.localScale = new Vector3(FilledPixels, _height, 1f);
-            _fillPart.localPosition = new Vector3((FilledPixels - _width) * 0.5f / PixelsPerUnit, 0f, 0f);
+            _fillPart.localScale = new Vector3(FilledPixels / _ppu, _height / _ppu, 1f);
+            _fillPart.localPosition = new Vector3((FilledPixels - _width) * 0.5f / _ppu, 0f, 0f);
         }
 
         private void Build()
         {
+            _ppu = ArtPixelsPerUnit();
             float top = ArtTop();
             _bar = new GameObject("Health Bar").transform;
             _bar.SetParent(transform, false);
-            _bar.localPosition = new Vector3(_width % 2 == 0 ? 0f : 0.5f / PixelsPerUnit, top + (_gap + _height * 0.5f) / PixelsPerUnit, 0f);
-            Part("Back", _back, 0).localScale = new Vector3(_width, _height, 1f);
+            _bar.localPosition = new Vector3(_width % 2 == 0 ? 0f : 0.5f / _ppu, top + (_gap + _height * 0.5f) / _ppu, 0f);
+            Part("Back", _back, 0).localScale = new Vector3(_width / _ppu, _height / _ppu, 1f);
             _fillPart = Part("Fill", _fill, 1);
         }
 
@@ -100,6 +101,14 @@ namespace Isekai
             r.color = color;
             r.sortingOrder = SortingOrder + order;
             return go.transform;
+        }
+
+        // Bars are measured in the art's own pixels, whatever grid it was drawn for (32 px today, 16 px after the swap).
+        private float ArtPixelsPerUnit()
+        {
+            foreach (SpriteRenderer r in GetComponentsInChildren<SpriteRenderer>(true))
+                if (r.sprite != null) return r.sprite.pixelsPerUnit;
+            return 32f;
         }
 
         // The highest point of this object's art, in local units, at the moment the bar is built.
@@ -129,7 +138,7 @@ namespace Isekai
                 var tex = new Texture2D(1, 1, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, name = "Health Bar Pixel" };
                 tex.SetPixel(0, 0, Color.white);
                 tex.Apply();
-                s_pixel = Sprite.Create(tex, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), PixelsPerUnit);
+                s_pixel = Sprite.Create(tex, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), 1f);   // one unit: parts scale to whole art pixels
                 return s_pixel;
             }
         }

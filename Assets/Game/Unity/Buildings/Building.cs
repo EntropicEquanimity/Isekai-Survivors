@@ -35,6 +35,11 @@ namespace Isekai
         public bool IsMainBase => _isMainBase;
         public bool IsAlive => _damageable != null && !_damageable.Unit.IsDead;
         public Int2 Origin { get; internal set; }
+
+        /// <summary>The side that owns it (its Blondie Combat team, <see cref="TeamIds"/>): the player's or a defender's.</summary>
+        public string Team => _damageable != null ? _damageable.Unit.Team : GetComponent<Damageable>().Unit.Team;
+
+        public bool IsPlayers => Team == TeamIds.Player;
         public Damageable Damageable => _damageable;
 
         public event Action<Building> Completed;
