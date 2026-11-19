@@ -107,7 +107,8 @@ namespace Isekai
             const BehaviourAction Idle = BehaviourAction.Idle, Work = BehaviourAction.Work, Patrol = BehaviourAction.Patrol,
                 Fight = BehaviourAction.Fight, Flee = BehaviourAction.Flee, Return = BehaviourAction.ReturnHome, Purify = BehaviourAction.Purify;
             const BehaviourFactor Health = BehaviourFactor.Health, Threat = BehaviourFactor.Threat, Fear = BehaviourFactor.Fear,
-                Far = BehaviourFactor.Far, Alarm = BehaviourFactor.Alarm, Corruption = BehaviourFactor.Corruption;
+                Far = BehaviourFactor.Far, Alarm = BehaviourFactor.Alarm, Corruption = BehaviourFactor.Corruption,
+                Night = BehaviourFactor.Night;
 
             // Peasants work, and run at the sight of anyone hostile or a hit; they go home when they have strayed.
             BehaviourProfile peasant = new BehaviourProfile("Peasant")
@@ -117,13 +118,15 @@ namespace Isekai
                 .Allow(Return, 0f, T(Far, 1.5f, 0.5f, 1f));
 
             // A guard patrols and fights whatever it sees. It flees only when hurt AND scared: the base cancels the
-            // health term when it is not afraid, so a wounded guard at peace does not hide forever.
+            // health term when it is not afraid, so a wounded guard at peace does not hide forever. At night it stops
+            // patrolling and pulls back home ("At night patrols pull back toward settlements"), still fighting what
+            // it sees.
             BehaviourProfile Guard(float fightWeight, float fleeBelow) => new BehaviourProfile("Guard")
                 .Allow(Idle, 0.2f)
-                .Allow(Patrol, 0.6f)
+                .Allow(Patrol, 0.6f, T(Night, -0.5f))
                 .Allow(Fight, 0f, T(Threat, fightWeight))
                 .Allow(Flee, -3f, T(Fear, 3f), T(Health, 3f, fleeBelow, fleeBelow * 0.5f))
-                .Allow(Return, 0f, T(Far, 1.5f, 0.6f, 1.2f));
+                .Allow(Return, 0f, T(Far, 1.5f, 0.6f, 1.2f), T(Night, 0.35f));
 
             // A priest tends the settlement, purifies corrupted ground nearby and runs from trouble. It never fights.
             BehaviourProfile priest = new BehaviourProfile("Priest")

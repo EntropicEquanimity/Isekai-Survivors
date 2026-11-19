@@ -17,6 +17,19 @@ namespace Isekai.Tests
             return c;
         }
 
+        [TestCase(MortalType.Soldier)]
+        [TestCase(MortalType.Archer)]
+        [TestCase(MortalType.Knight)]
+        public void At_night_a_guard_pulls_back_home_but_still_fights_what_it_sees(MortalType type)
+        {
+            BehaviourContext c = Calm(type);
+            c.Night = true;
+            Assert.AreEqual(BehaviourAction.ReturnHome, Decide(type, c, BehaviourAction.Patrol), "night: patrols pull back toward settlements");
+            c.ThreatSeen = true;
+            c.ThreatCloseness = 0.5f;
+            Assert.AreEqual(BehaviourAction.Fight, Decide(type, c, BehaviourAction.ReturnHome));
+        }
+
         [Test]
         public void A_calm_peasant_works()
         {
