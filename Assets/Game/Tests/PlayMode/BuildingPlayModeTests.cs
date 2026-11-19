@@ -127,6 +127,10 @@ namespace Isekai.Tests
             _mainBase.Damageable.Unit.TakeDamage(100000f, DamageRules.TrueType);
             yield return WaitFor(() => defeat.IsDefeated, 3f, "the Run is lost");
             Assert.IsFalse(Object.FindAnyObjectByType<HordeSpawner>().enabled);
+            Assert.IsTrue(GamePause.IsPausedBy(defeat), "the game freezes behind the dialog");
+            Assert.AreEqual(0f, Time.timeScale);
+            Assert.IsFalse(Object.FindAnyObjectByType<CharacterControl>().enabled, "the Character takes no more orders");
+            Assert.IsFalse(_mode.enabled, "no more building");
         }
 
         private static IEnumerator WaitFor(Func<bool> condition, float seconds, string what)

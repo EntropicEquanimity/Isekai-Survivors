@@ -2,6 +2,34 @@
 
 Supersedes `blondieutils-migration.md`. That plan moved the *survivors* game onto BlondieUtils (BU). This one changes the game itself, so most of the survivors code will be replaced, not ported.
 
+## Direction change (2026-11-19): the demon invasion
+
+The premise below is being replaced. A redesign plan follows once the open questions are answered; until then, the old sections describe the code as it is.
+
+**Premise.** The player is **Jack**, isekai'd as a demon. Jack's soul inhabits demon bodies (**Suits**) and can take over others. Jack's demons invade a Planet, and the mortals (towns, villages and other parts of the Planet) defend themselves.
+
+**Art.** Both "Tiny RPG Character Asset Pack" sets (16x16-style sprites in 100x100 frames, at `D:\GameDev\Assets\16x16PixelArt\`). Pack 02 is the demons and v1.03 is the mortals. The look and the UI theme follow the demon army (dark reds, black, ember). World tiles, resources and icons are placeholders until a matching tileset is found.
+- **Suits** (bodies Jack can inhabit): Demon_D, Demon_E, Demoness_A, Demoness_B, Black Knight_A, Black Knight_B, Black Knight_C, Flame Golem, Warlock.
+- **Units:** Demon_A, Demon_B, Demon_C, Hellhound, Lava Slime, Ghostfire, Blood Monster_A, Blood Monster_B, Minotaur, Eyeball Monster, Hellbat.
+
+**Gameplay changes asked for.**
+- Barracks become **Portals**. Portals cost Resources and **Souls**.
+- **Souls** are harvested from mortals. Jack is the best harvester; other demons harvest less efficiently. Souls also level up Jack's soul, and that growth lasts between Regions (like the Legacy tree, but within a Run).
+- **Corruption:** ground your demons take over turns demonic, with at least 4 levels per cell, from untouched to fully converted.
+- **Alert** (working name): mortals start unaware, with few patrols and few enemies. Higher alert brings more patrols, stronger enemies, longer detection range and stronger responses.
+- **Settlements:** each Region has small concentrations of mortals (village, farm, small town, outpost, camp) and at least one major fortification (castle or fort).
+- **Capture:** destroy every fortification and kill every mortal.
+- **Named hero:** at least one per Region, with smarter AI and personality-driven behaviour, such as fleeing when hurt, calling reinforcements, building defences, or staying in their castle (a named wizard).
+
+**Settled (2026-11-19).**
+1. **Both sides are numerous.** Jack summons hordes of demons. Demons are weakened on ground that isn't corrupted. Denizens bring massive armies and attacks. Depending on the Region, a response might be a few elite units or an army of peasants.
+2. **Alert is called Vigilance**, rising Unaware → Uneasy → Alarmed → Mobilized → Crusade.
+3. **Other factions too**, beyond humans (orcs, beasts and others from the mortal pack). Factions have summoners that bring in non-standard units.
+4. **16 px is the standard** for sprites and tiles from now on (the world moves from 32 to 16 pixels per unit).
+5. **Placeholder art** (tiles, resources, icons) comes from agent-sprite-forge, run through the local Grok Build CLI on the player's own Grok sign-in, and only for pixel art.
+
+**Branches.** `main` keeps the legacy survivors game. `conquerors` becomes the main line. Once the swap is done, the old code, scenes, art and text that are no longer used get deleted from `conquerors`.
+
 ## The game in one paragraph
 
 You land on a Planet as your Character with one Main Base. The Planet is split into Regions. You pick which neighbouring Region to take next. Inside a Region you mine, build, and capture or place Bases while thousands of enemies roam, and Waves hit your Bases on a timer. Buildings spawn defenders that fight on their own based on a Stance. The Character fights on their own when you are not steering them. Taking a Region gives Items, Resources and a Region buff. Taking the Capital wins the Run. The longer the Run lasts, the stronger the enemies. Losing the Main Base loses the Run. Losing the Character does not. Between Runs, meta upgrades carry over (more Cloning Pods, rebuildable pods, and so on). Inside a Run, Items go into a limited Active inventory, which grows through Items and buffs, plus a Storage area. Each Item has its own rules for how long it lasts and when it can be swapped out.

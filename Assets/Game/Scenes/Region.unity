@@ -847,23 +847,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Isekai.Game::Isekai.WaveDirector
   _waves:
-  - Time: 60
+  - Time: 120
     Type: 3
     Count: 20
     IsFinal: 0
-  - Time: 120
+  - Time: 240
     Type: 0
     Count: 40
     IsFinal: 0
-  - Time: 180
+  - Time: 360
     Type: 2
     Count: 24
     IsFinal: 0
-  - Time: 240
+  - Time: 480
     Type: 0
     Count: 60
     IsFinal: 0
-  - Time: 300
+  - Time: 600
     Type: 3
     Count: 80
     IsFinal: 1

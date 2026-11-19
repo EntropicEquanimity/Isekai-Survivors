@@ -6,7 +6,8 @@ using UnityEngine;
 namespace Isekai
 {
     /// <summary>
-    /// Losing the Main Base loses the Run: the horde stops spawning, it says so on screen and <see cref="Defeated"/> fires.
+    /// Losing the Main Base loses the Run: the game freezes (time stops, the Character and building stop taking orders),
+    /// it says so on screen and <see cref="Defeated"/> fires. The freeze lifts when the Region unloads.
     /// </summary>
     public sealed class RegionDefeat : MonoBehaviour
     {
@@ -30,11 +31,20 @@ namespace Isekai
             if (_hadMainBase && !alive) Lose();
         }
 
+        private void OnDestroy()
+        {
+            if (IsDefeated) GamePause.Resume(this);
+        }
+
         private void Lose()
         {
             IsDefeated = true;
             HordeSpawner spawner = FindAnyObjectByType<HordeSpawner>();
             if (spawner != null) spawner.enabled = false;
+            GamePause.Pause(this);
+            foreach (CharacterControl c in FindObjectsByType<CharacterControl>(FindObjectsInactive.Exclude)) c.Freeze();
+            foreach (Behaviour b in new Behaviour[] { FindAnyObjectByType<BuildMode>(), FindAnyObjectByType<Miner>(), FindAnyObjectByType<MapScreen>() })
+                if (b != null) b.enabled = false;
             BLog.Info("Region", "Main Base destroyed: the Run is lost.");
             Camera cam = Camera.main;
             if (cam != null) FloatingText.Spawn(cam.transform.position + new Vector3(0f, 0f, 10f), "Main Base destroyed", Color.red, 4f);

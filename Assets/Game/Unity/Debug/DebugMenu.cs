@@ -71,6 +71,12 @@ namespace Isekai
             Row(("Spawn 20 here", () => SpawnNearCharacter(20)), ("Spawn 200", () => SpawnNearCharacter(200)));
             Row(("Kill all", KillAllEnemies), ("Next Wave now", NextWave));
             Row(("Destroy all nests", DestroyNests));
+            var waves = Object.FindAnyObjectByType<WaveDirector>();
+            if (waves != null)
+            {
+                bool fast = GUILayout.Toggle(waves.ClockSpeed > 1f, " Fast Waves (×4 Wave clock)");
+                waves.ClockSpeed = fast ? 4f : 1f;
+            }
 
             Section("Run");
             Row(("+100 Shards", () => MetaProgress.Earn(100)), ("Wipe meta", MetaProgress.Wipe));
@@ -87,7 +93,6 @@ namespace Isekai
             if (horde != null) GUILayout.Label($"Enemies {horde.Count} ({horde.Attacking} attacking) · kills {horde.Kills}");
             var wilds = Object.FindAnyObjectByType<RegionWilds>();
             if (wilds != null) GUILayout.Label($"Wanderers roaming {wilds.Roaming} in {wilds.GroupCount} groups");
-            var waves = Object.FindAnyObjectByType<WaveDirector>();
             if (waves != null) GUILayout.Label($"Next Wave in {waves.SecondsUntilNext:0}s · ×{waves.Multiplier:0.00} health");
             GUILayout.Label($"Nests left {CountNests()} · {1f / Mathf.Max(Time.smoothDeltaTime, 1e-4f):0} fps");
 

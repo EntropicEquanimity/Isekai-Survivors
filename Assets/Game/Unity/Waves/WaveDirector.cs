@@ -65,11 +65,14 @@ namespace Isekai
         /// <summary>Jumps the Region clock forward (tests and debugging).</summary>
         public void Skip(float seconds) => _clock += Mathf.Max(0f, seconds);
 
+        /// <summary>How fast the Wave clock runs (the debug menu's fast Waves); 1 is normal.</summary>
+        public float ClockSpeed { get; set; } = 1f;
+
         private void Awake() => _random = new Random(_seed);
 
         private void Update()
         {
-            _clock += Time.deltaTime;
+            _clock += Time.deltaTime * ClockSpeed;
             _due.Clear();
             Schedule.Release(_clock, _due);
             foreach (Wave wave in _due) Queue(wave);

@@ -115,6 +115,15 @@ namespace Isekai
             }
         }
 
+        /// <summary>Stops everything: no steering, no fighting, no weapons (the Run is lost).</summary>
+        public void Freeze()
+        {
+            if (_brain != null) _brain.enabled = false;
+            if (_autoCaster != null) _autoCaster.enabled = false;
+            if (_motor != null && _motor.HasDestination) _motor.Stop();
+            enabled = false;
+        }
+
         private void SetPlayerControl(bool player)
         {
             _order = player ? AutoFightOrder.PlayerControl : AutoFightOrder.Hold;
