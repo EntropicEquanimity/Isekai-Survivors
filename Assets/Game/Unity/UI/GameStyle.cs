@@ -7,7 +7,7 @@ namespace Isekai
     public enum TextRole { Body, Title, Muted, Accent, Warning }
 
     /// <summary>
-    /// The game's look in one place for code-built UI: the pixel font's sizes (multiples of its native 12 px, anything
+    /// The game's look (dark reds, black, ember) in one place for code-built UI: the pixel font's sizes (multiples of its native 12 px, anything
     /// else blurs) and the palette. Screens ask for a role ("title", "muted") instead of writing sizes and colours, so
     /// a restyle (the demon theme) changes this file, not every screen.
     /// </summary>
@@ -19,14 +19,14 @@ namespace Isekai
         public const int TitleSize = FontSize * 2;
 
         public static readonly Color Text = Color.white;
-        public static readonly Color Muted = new(0.78f, 0.79f, 0.84f);
-        public static readonly Color Accent = new(0.7f, 0.85f, 1f);
+        public static readonly Color Muted = new(0.78f, 0.67f, 0.64f);
+        public static readonly Color Accent = new(1f, 0.48f, 0.15f);   // ember
         public static readonly Color Warning = new(1f, 0.82f, 0.35f);
 
         /// <summary>Full-screen backdrops behind windows (solid: nothing shows through).</summary>
-        public static readonly Color Backdrop = new(0.055f, 0.06f, 0.08f, 1f);
+        public static readonly Color Backdrop = new(0.04f, 0.015f, 0.02f, 1f);
 
-        public static readonly Color Border = new(0.3f, 0.32f, 0.38f);
+        public static readonly Color Border = new(0.42f, 0.12f, 0.11f);
 
         public static int SizeOf(TextRole role) => role == TextRole.Title ? TitleSize : FontSize;
 

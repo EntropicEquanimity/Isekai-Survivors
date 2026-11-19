@@ -13,6 +13,16 @@ namespace Isekai
 
         static SoulRun() => StaticReset.Register(() => { s_ledger = null; s_owner = null; });
 
+        /// <summary>Puts a saved soul level and death count back on the Run in progress (the Run's save, see <see cref="RunSave"/>).</summary>
+        public static void Restore(int level, int deaths)
+        {
+            var ledger = new SoulLedger();
+            while (ledger.Level < level && ledger.TryRaiseLevel(_ => true)) { }
+            for (int i = 0; i < deaths; i++) ledger.RecordDeath();
+            s_ledger = ledger;
+            s_owner = RunSession.Run;
+        }
+
         public static SoulLedger Ledger
         {
             get

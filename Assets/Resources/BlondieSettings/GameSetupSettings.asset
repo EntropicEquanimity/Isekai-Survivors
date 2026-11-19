@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Blondie.GameSetup::Blondie.GameSetup.GameSetupSettingsAsset
   _settings:
     Enabled: 0
-    GameTitle: 
+    GameTitle: Isekai Conquerors
     BootScene: Boot
     MainMenuScene: Menu
     GameScene: Planet
@@ -49,7 +49,7 @@ MonoBehaviour:
     SplashVideoMaxStep: 0.05
     FirstLaunchLanguage: 1
     FirstLaunchSettings: 0
-    MainMenuItems: 000000000100000002000000030000000400000005000000060000000700000008000000i
+    MainMenuItems: 000000000300000008000000i
     MusicFadeSeconds: 0
     ShowVersion: 1
     VersionFormat: v{version}
@@ -58,7 +58,7 @@ MonoBehaviour:
     UseSaveSlots: 1
     ConfirmNewGame: 1
     PauseEnabled: 1
-    PauseMenuItems: 00000000010000000200000003000000i
+    PauseMenuItems: 000000000100000002000000i
     PauseTimeScale: 1
     PauseGameClock: 1
     BlockPlayerInput: 1
@@ -78,7 +78,7 @@ MonoBehaviour:
     - <Gamepad>/rightShoulder
     HideCursorWithGamepad: 1
     ShowButtonPrompts: 1
-    SettingsTabs: 0000000001000000020000000300000004000000i
+    SettingsTabs: 00000000010000000200000003000000i
     ShowVoiceVolume: 1
     ShowUISoundVolume: 1
     ShowMuteWhenUnfocused: 1

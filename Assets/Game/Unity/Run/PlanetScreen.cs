@@ -71,6 +71,7 @@ namespace Isekai
             VisualElement root = GamePanels.Mount(this, PanelName, _panelSettings, out PanelRenderer panel);
             root.Clear();
             PlanetRun run = RunSession.Run;
+            RunSave.Save();   // the Planet screen is where a Run is saved: between Regions, never inside one
             var column = new VisualElement
             {
                 pickingMode = PickingMode.Ignore,

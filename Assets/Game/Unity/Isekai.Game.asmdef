@@ -41,7 +41,8 @@
         "Blondie.Juice",
         "Blondie.Juice.Unity",
         "Blondie.SkillTrees",
-        "Blondie.SkillTrees.Unity"
+        "Blondie.SkillTrees.Unity",
+        "Blondie.Save"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
