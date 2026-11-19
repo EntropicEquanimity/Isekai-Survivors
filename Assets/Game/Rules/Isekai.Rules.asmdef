@@ -5,7 +5,8 @@
         "Blondie.Core",
         "Blondie.Stats",
         "Blondie.Inventory",
-        "Blondie.GridInventory"
+        "Blondie.GridInventory",
+        "Blondie.SkillTrees"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

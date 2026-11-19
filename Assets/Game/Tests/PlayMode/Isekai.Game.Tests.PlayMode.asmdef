@@ -32,7 +32,9 @@
         "Blondie.Roguelike.Drafts",
         "Blondie.Stats",
         "Blondie.Stats.Unity",
-        "Blondie.Roguelike.Boons"
+        "Blondie.Roguelike.Boons",
+        "Blondie.SkillTrees",
+        "Blondie.SkillTrees.Unity"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -37,7 +37,9 @@
         "Blondie.Roguelike.Boons",
         "Blondie.Roguelike.Boons.Unity",
         "Blondie.Juice",
-        "Blondie.Juice.Unity"
+        "Blondie.Juice.Unity",
+        "Blondie.SkillTrees",
+        "Blondie.SkillTrees.Unity"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

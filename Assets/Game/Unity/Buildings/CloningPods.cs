@@ -5,7 +5,8 @@ namespace Isekai
 {
     /// <summary>
     /// The Main Base's Cloning Pods (<see cref="CloningBay"/>): when the Character dies, a pod clones it back at the
-    /// Base after a delay. With no pods left (or no Base) it stays dead; that alone doesn't lose the Run.
+    /// Base after a delay. With no pods left (or no Base) it stays dead; that alone doesn't lose the Run. The Legacy tree
+    /// adds pods and can make used ones rebuild (<see cref="LegacyTree"/>).
     /// </summary>
     [RequireComponent(typeof(Building))]
     public sealed class CloningPods : MonoBehaviour
@@ -18,7 +19,8 @@ namespace Isekai
         private CharacterControl _character;
         private Building _building;
 
-        public CloningBay Bay => _bay ??= new CloningBay(_pods, _cloneSeconds);
+        public CloningBay Bay => _bay ??= new CloningBay(_pods + LegacyTree.ExtraPods(MetaProgress.Unit), _cloneSeconds,
+            LegacyTree.RebuildsPods(MetaProgress.Unit) ? LegacyTree.PodRebuildSeconds : 0f);
 
         private void Awake() => _building = GetComponent<Building>();
 
@@ -37,7 +39,10 @@ namespace Isekai
 
         private void Update()
         {
-            if (!Bay.Tick(Time.deltaTime) || _character == null || !_building.IsAlive) return;
+            int pods = Bay.Pods;
+            bool ready = Bay.Tick(Time.deltaTime);
+            if (Bay.Pods > pods) FloatingText.Spawn(transform.position + Vector3.up, $"Cloning Pod rebuilt ({Bay.Pods} ready)", Color.cyan);
+            if (!ready || _character == null || !_building.IsAlive) return;
             _character.transform.position = transform.position + (Vector3)_exit;
             _character.GetComponent<Blondie.Combat.Damageable>().Revive();
         }

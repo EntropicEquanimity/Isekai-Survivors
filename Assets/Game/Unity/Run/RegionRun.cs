@@ -8,7 +8,8 @@ namespace Isekai
 {
     /// <summary>
     /// Ties a Region scene to the Run (<see cref="RunSession"/>). On start it sets the Waves' depth and Run clock, adds
-    /// the Stone earlier captures earned, points the Run's buffs at this Region's Character and brings back its
+    /// the Stone earlier captures (and the Legacy tree) give, points the Run's buffs and the Legacy tree's stat
+    /// upgrades at this Region's Character and brings back its
     /// inventory. While playing it advances the Run clock. On capture it unlocks Items, grants the Region's buff, keeps
     /// the inventory and returns to the Planet map, or ends the Run as won at the Capital. When the Main Base falls the
     /// Run is lost.
@@ -30,9 +31,14 @@ namespace Isekai
             PlanetRun run = RunSession.Run;
             WaveDirector waves = FindAnyObjectByType<WaveDirector>();
             if (waves != null) waves.SetRun(_region.Depth, run.RunSeconds);
-            if (RegionEconomy.Current != null && run.BonusStone > 0) RegionEconomy.Current.Stockpile.Add(ResourceType.Stone, run.BonusStone);
+            int stone = run.BonusStone + LegacyTree.StartingStone(MetaProgress.Unit);
+            if (RegionEconomy.Current != null && stone > 0) RegionEconomy.Current.Stockpile.Add(ResourceType.Stone, stone);
             CharacterControl character = FindAnyObjectByType<CharacterControl>();
-            if (character != null && character.TryGetComponent(out StatBlock stats)) RunBoons.SetTarget(stats);
+            if (character != null && character.TryGetComponent(out StatBlock stats))
+            {
+                RunBoons.SetTarget(stats);
+                MetaProgress.ApplyTo(stats);
+            }
             if (RegionGoal.Current != null) RegionGoal.Current.Captured += OnCaptured;
             RegionDefeat defeat = FindAnyObjectByType<RegionDefeat>();
             if (defeat != null) defeat.Defeated += OnDefeated;
@@ -41,6 +47,7 @@ namespace Isekai
 
         private void OnDestroy()
         {
+            MetaProgress.ApplyTo(null);
             if (RegionGoal.Current != null) RegionGoal.Current.Captured -= OnCaptured;
         }
 
