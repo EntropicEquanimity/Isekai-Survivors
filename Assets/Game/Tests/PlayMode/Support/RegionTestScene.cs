@@ -14,7 +14,13 @@ namespace Isekai.Tests
         /// claim on its ground). Item drafts are off by default: a draft pauses the game, so a test
         /// that destroys a nest would otherwise stall the tests after it.
         /// </summary>
-        public static IEnumerator Load(bool drafts = false) => Load(null, drafts);
+        public static IEnumerator Load(bool drafts = false) => Load(Default, drafts);
+
+        /// <summary>The seed tests use unless they ask for another, so a test sees the same Region every run.</summary>
+        public const int TestSeed = 20261119;
+
+        /// <summary>The Region tests load by default: a fixed seed at the outer ring's usual size.</summary>
+        public static RegionRecipe Default => new RegionRecipe(TestSeed);
 
         /// <summary>Loads the Region made from <paramref name="recipe"/> (its seed and map size); null keeps the Run's own.</summary>
         public static IEnumerator Load(RegionRecipe recipe, bool drafts = false)
