@@ -68,6 +68,7 @@ namespace Isekai.Tests
         {
             var miner = Object.FindAnyObjectByType<Miner>();
             miner.enabled = false;   // its Update would stop mining every frame: Interact isn't held in a test
+            miner.Mine(null, 0f);    // drop progress its Update may have made if the start corner touches a node
             ResourceNode node = ResourceNode.All.First();
             int before = node.Remaining;
             Stockpile pile = RegionEconomy.Current.Stockpile;
