@@ -59,7 +59,6 @@ Shader "Isekai/Sprite Lit Side Outline"
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
             UNITY_TEXTURE_STREAMING_DEBUG_VARS_FOR_TEX(_MainTex);
-            float4 _MainTex_TexelSize;
             TEXTURE2D(_MaskTex);
             SAMPLER(sampler_MaskTex);
             TEXTURE2D(_NormalMap);
@@ -73,25 +72,29 @@ Shader "Isekai/Sprite Lit Side Outline"
                 half _DarkThreshold;
             CBUFFER_END
 
+            float2 TexelOf(Texture2D tex)
+            {
+                float w, h;
+                tex.GetDimensions(w, h);
+                return 1.0 / max(float2(w, h), 1.0);
+            }
+
             bool IsOutlinePixel(float2 uv, half4 mainTex)
             {
                 if (mainTex.a <= 0.001h) return false;
 
-                half3 delta = abs(mainTex.rgb - _OutlineSourceColor.rgb);
-                bool nearSource = all(delta <= _OutlineTolerance.xxx);
-
-                half luminance = dot(mainTex.rgb, half3(0.2126h, 0.7152h, 0.0722h));
-                bool isDark = luminance <= _DarkThreshold;
-
-                float2 stepX = float2(_MainTex_TexelSize.x, 0);
-                float2 stepY = float2(0, _MainTex_TexelSize.y);
+                // The texel size comes from the bound texture itself: a sprite's texture is set per renderer, and a
+                // uniform declared outside the material's constant buffer is not refreshed for each SRP-batched draw.
+                float2 texel = TexelOf(_MainTex);
+                float2 stepX = float2(texel.x, 0);
+                float2 stepY = float2(0, texel.y);
                 bool nearTransparent =
                     SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv + stepX).a <= 0.001h ||
                     SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv - stepX).a <= 0.001h ||
                     SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv + stepY).a <= 0.001h ||
                     SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv - stepY).a <= 0.001h;
 
-                return nearSource || (nearTransparent && isDark);
+                return nearTransparent;
             }
 
             Varyings LitVertex(Attributes input)
@@ -217,7 +220,6 @@ Shader "Isekai/Sprite Lit Side Outline"
             };
 
             #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/2DCommon.hlsl"
-            float4 _MainTex_TexelSize;
 
             CBUFFER_START(UnityPerMaterial)
                 half4 _Color;
@@ -227,24 +229,29 @@ Shader "Isekai/Sprite Lit Side Outline"
                 half _DarkThreshold;
             CBUFFER_END
 
+            float2 TexelOf(Texture2D tex)
+            {
+                float w, h;
+                tex.GetDimensions(w, h);
+                return 1.0 / max(float2(w, h), 1.0);
+            }
+
             bool IsOutlinePixel(float2 uv, half4 mainTex)
             {
                 if (mainTex.a <= 0.001h) return false;
 
-                half3 delta = abs(mainTex.rgb - _OutlineSourceColor.rgb);
-                bool nearSource = all(delta <= _OutlineTolerance.xxx);
-                half luminance = dot(mainTex.rgb, half3(0.2126h, 0.7152h, 0.0722h));
-                bool isDark = luminance <= _DarkThreshold;
-
-                float2 stepX = float2(_MainTex_TexelSize.x, 0);
-                float2 stepY = float2(0, _MainTex_TexelSize.y);
+                // The texel size comes from the bound texture itself: a sprite's texture is set per renderer, and a
+                // uniform declared outside the material's constant buffer is not refreshed for each SRP-batched draw.
+                float2 texel = TexelOf(_MainTex);
+                float2 stepX = float2(texel.x, 0);
+                float2 stepY = float2(0, texel.y);
                 bool nearTransparent =
                     SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv + stepX).a <= 0.001h ||
                     SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv - stepX).a <= 0.001h ||
                     SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv + stepY).a <= 0.001h ||
                     SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv - stepY).a <= 0.001h;
 
-                return nearSource || (nearTransparent && isDark);
+                return nearTransparent;
             }
 
             Varyings UnlitVertex(Attributes input)

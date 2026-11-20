@@ -48,6 +48,8 @@ namespace Isekai.Tests
             Assert.AreEqual(7, VisionRanges.For(UnitKind.Mortal));
             Assert.AreEqual(6, VisionRanges.For(UnitKind.Wildlife));
             Assert.AreEqual(0, VisionRanges.For(UnitKind.Building), "a Building doesn't see");
+            Assert.AreEqual(6, VisionRanges.ForBuilding(true), "the Anchor looks around itself 6 cells");
+            Assert.AreEqual(4, VisionRanges.ForBuilding(false), "any other of your Buildings, 4");
         }
 
         [Test]

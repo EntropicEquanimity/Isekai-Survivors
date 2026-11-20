@@ -72,6 +72,43 @@ namespace Isekai.Tests
         }
 
         [UnityTest]
+        public IEnumerator Your_Anchor_does_not_hide_the_ground_behind_it_from_you()
+        {
+            Building anchor = Building.All.First(b => b.IsMainBase && b.IsPlayers);
+            yield return TestWait.Until(() => RegionBuildings.Current.At(anchor.Origin) == anchor, "the Anchor holds its ground");
+            Vector2Int size = anchor.Asset.Size;
+            Int2 o = anchor.Origin;
+
+            // Jack goes far away, so only the Anchor's own eyes can light the ground around it.
+            Int2 away = WalkableAt(o, 40);
+            _jack.transform.position = _grid.CentreOf(away);
+            var around = new System.Collections.Generic.List<Int2>();
+            var sightBlock = _grid.Layer(TerrainLayers.SightBlock);
+            for (int x = o.x - 3; x < o.x + size.x + 3; x++)
+            for (int y = o.y - 3; y < o.y + size.y + 3; y++)
+            {
+                var cell = new Int2(x, y);
+                bool inside = x >= o.x && x < o.x + size.x && y >= o.y && y < o.y + size.y;
+                if (!inside && _grid.Contains(cell) && _grid.IsWalkable(cell) && sightBlock.Get(cell) == 0) around.Add(cell);
+            }
+            Assert.Greater(around.Count, 8, "free ground around the Anchor");
+            yield return TestWait.Until(() => around.All(c => _vision.CanSee(Side.Yours, c)), "every free cell within 3 of the Anchor is in your sight, front and back");
+        }
+
+        [UnityTest]
+        public IEnumerator A_mortal_Building_still_hides_ground_from_you_but_not_from_the_mortals()
+        {
+            RegionSettlements.Settlement seat = RegionSettlements.Current.Seat;
+            Building keep = seat.Keep;
+            Assert.IsNotNull(keep);
+            Int2 cell = _grid.CellAt(keep.transform.position);
+            Assert.IsFalse(_grid.IsWalkable(cell), "the keep's ground is blocked");
+            Assert.IsTrue(RegionVision.BlocksFor(Side.Yours, cell), "it blocks you");
+            Assert.IsFalse(RegionVision.BlocksFor(Side.Mortals, cell), "but not the mortals it belongs to");
+            yield return null;
+        }
+
+        [UnityTest]
         public IEnumerator Fog_hides_a_mortal_until_the_Character_sees_it()
         {
             Int2 far = WalkableAt(JackCell, 40);
@@ -194,20 +231,24 @@ namespace Isekai.Tests
         [UnityTest]
         public IEnumerator A_Building_destroyed_out_of_sight_stays_on_the_map_until_seen_again()
         {
-            RegionEconomy.Current.Stockpile.Add(ResourceType.Stone, 200);
-            Building mainBase = Building.All.First(b => b.IsMainBase);
-            BuildingAsset spire = Object.FindAnyObjectByType<BuildMode>().Catalogue.First(a => a.DisplayName == "Spire");
-            Building tower = RegionBuildings.Current.Place(spire, new Int2(mainBase.Origin.x + 4, mainBase.Origin.y));
-            Assert.IsNotNull(tower);
-            Int2 cell = _grid.CellAt(tower.transform.position);
-            yield return TestWait.Until(() => _vision.CanSee(Side.Yours, cell), "Jack sees the Spire's ground");
+            // One of the mortals' fence pieces (your own Buildings always see themselves, and razing a village or taking the Seat's keep would end things).
+            RegionSettlements.Settlement seat = RegionSettlements.Current.Seat;
+            Building wall = null;
+            for (int i = 0; i < seat.Buildings.Count && wall == null; i++)
+                if (seat.Plan.Buildings[i].IsWall && seat.Buildings[i] != null) wall = seat.Buildings[i];
+            Assert.IsNotNull(wall, "the Seat has a wall piece");
+            Int2 cell = _grid.CellAt(wall.transform.position);
+            Int2 beside = WalkableAt(cell, 1);
 
-            RegionVision.RangeMultiplier = 0.1f;
-            yield return TestWait.Until(() => !_vision.CanSee(Side.Yours, cell), "the Spire is out of sight");
-            tower.Damageable.Kill();
-            yield return TestWait.Until(() => FogUnits.Current.Ghosts.Count == 1, "a ghost of the Spire is left behind");
+            _jack.transform.position = _grid.CentreOf(beside);
+            yield return TestWait.Until(() => _vision.CanSee(Side.Yours, cell), "Jack sees the wall piece's ground");
 
-            RegionVision.RangeMultiplier = 1f;
+            _jack.transform.position = _grid.CentreOf(WalkableAt(cell, 40));
+            yield return TestWait.Until(() => _vision.StateOf(Side.Yours, cell) == FogState.Explored, "the ground is remembered, out of sight");
+            wall.Damageable.Kill();
+            yield return TestWait.Until(() => FogUnits.Current.Ghosts.Count == 1, "a ghost of the wall piece is left behind");
+
+            _jack.transform.position = _grid.CentreOf(beside);
             yield return TestWait.Until(() => FogUnits.Current.Ghosts.Count == 0, "seeing the ground again clears the ghost");
         }
     }

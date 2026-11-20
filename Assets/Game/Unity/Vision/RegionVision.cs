@@ -10,7 +10,10 @@ namespace Isekai
     /// demons 8, mortals 7, wildlife 6) is a viewer on its side's <see cref="VisionMap"/>; a unit that stays in its
     /// cell costs a cell compare, and one that changes cell updates only the cells that entered or left its sight.
     /// Sight is cut by blocked ground: the "SightBlock" layer (rocks and cliffs a generator marks) and any cell the
-    /// flow field blocks (rocks, walls and Buildings in the hand-built Region).
+    /// flow field blocks (rocks, walls and Buildings in the hand-built Region). A side's own Buildings are the one
+    /// exception: they never hide ground from their own side (the mortals' still hide it from you, and yours from
+    /// them). Your Buildings also look out a little way themselves (<see cref="VisionRanges.ForBuilding"/>), once
+    /// when they appear.
     /// <para>The result lives on grid layers, "Visible.&lt;Side&gt;" and "Explored.&lt;Side&gt;" (1 = yes), so overlays redraw
     /// only changed cells, and other systems ask <see cref="CanSee(Side, Int2)"/>. The Character's range and the
     /// others' scale with <see cref="RangeMultiplier"/> (night halves it).</para>
@@ -28,6 +31,7 @@ namespace Isekai
             public VisionViewer Viewer;
             public Side Side;
             public int Index;
+            public int BaseRange;   // a Building's daylight range
         }
 
         private static float s_multiplier = 1f;
@@ -35,6 +39,7 @@ namespace Isekai
         private static bool s_on = true;
 
         private readonly VisionMap[] _maps = new VisionMap[5];
+        private readonly System.Func<Int2, bool>[] _blockers = new System.Func<Int2, bool>[5];
         private readonly Dictionary<RegionEntity, Eyes> _eyes = new();
         private readonly List<Eyes> _list = new();
         private RegionGrid _grid;
@@ -119,6 +124,7 @@ namespace Isekai
             {
                 RegionEntity unit = living[i];
                 if (unit.Kind == UnitKind.Character || unit.Kind == UnitKind.Demon) Track(unit);
+                else if (unit.Kind == UnitKind.Building && unit.Side == Side.Yours) LookFromBuilding(unit);
             }
             // Everyone else (mortals, wildlife) in turns: a bounded number of looks and of units changing cell per
             // frame, so a few hundred of them cost a flat amount and each refreshes within a few frames.
@@ -144,13 +150,24 @@ namespace Isekai
             return true;
         }
 
-        private bool Blocks(Int2 cell) => _sightBlock.Get(cell) != 0 || !_grid.IsWalkable(cell);
+        // Rocks and cliffs block everyone; so does any other blocked ground, except the footprint of a Building of the
+        // very side that looks (your Anchor must not hide the ground behind it from you).
+        private bool Blocks(Side side, Int2 cell)
+        {
+            if (_sightBlock.Get(cell) != 0) return true;
+            if (_grid.IsWalkable(cell)) return false;
+            Building building = RegionBuildings.Current != null ? RegionBuildings.Current.At(cell) : null;
+            return building == null || TeamIds.SideOf(building.Team) != side;
+        }
+
+        /// <summary>Whether <paramref name="cell"/> cuts <paramref name="side"/>'s sight (false before the Region is ready).</summary>
+        public static bool BlocksFor(Side side, Int2 cell) => Current != null && Current._grid != null && Current.Blocks(side, cell);
 
         private VisionMap MapFor(Side side)
         {
             VisionMap map = _maps[(int)side];
             if (map != null) return map;
-            map = _maps[(int)side] = new VisionMap(_grid.Width, _grid.Height, Blocks);
+            map = _maps[(int)side] = new VisionMap(_grid.Width, _grid.Height, _blockers[(int)side] ??= cell => Blocks(side, cell));
             CellLayer visible = _grid.Layer(VisibleLayer(side)), explored = _grid.Layer(ExploredLayer(side));
             map.VisibleChanged += (cell, on) => visible.Set(cell, on ? (byte)1 : (byte)0);
             map.Explored += cell => explored.Set(cell, 1);
@@ -183,6 +200,27 @@ namespace Isekai
             if (v.Cell.x == cell.x && v.Cell.y == cell.y && v.Range == range) return 0;
             _maps[(int)side].Move(v, cell, range);
             return 1;
+        }
+
+        // A Building of your side looks out when it first appears and never moves; only a change of the day-and-night
+        // range multiplier makes it look again. Sweep takes its sight away when it falls, and RefreshSome looks again
+        // when the ground around it changes.
+        private void LookFromBuilding(RegionEntity unit)
+        {
+            float multiplier = s_multiplier * s_dayNightMultiplier;
+            if (_eyes.TryGetValue(unit, out Eyes known))
+            {
+                int now = VisionRanges.Scaled(known.BaseRange, multiplier);
+                if (known.Viewer.Range != now) _maps[(int)known.Side].Move(known.Viewer, known.Viewer.Cell, now);
+                return;
+            }
+            var building = unit.GameObject.GetComponent<Building>();
+            if (building == null) return;
+            bool anchor = building.IsMainBase || unit.GameObject.GetComponent<Anchor>() != null;
+            int baseRange = VisionRanges.ForBuilding(anchor);
+            var eyes = new Eyes { Unit = unit, Side = unit.Side, Index = _list.Count, BaseRange = baseRange, Viewer = MapFor(unit.Side).Add(unit.Cell, VisionRanges.Scaled(baseRange, multiplier)) };
+            _eyes[unit] = eyes;
+            _list.Add(eyes);
         }
 
         // Units that left the registry (died, despawned) take their sight with them.
