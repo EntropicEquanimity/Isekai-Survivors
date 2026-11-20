@@ -28,14 +28,22 @@ namespace Isekai.Tests
             yield return null;
         }
 
+        // Leaves nothing behind for the next fixture: the Region is unloaded while the game runs normally (an end screen
+        // pauses it, and objects destroyed under a pause were still registered when the next Region woke), then every
+        // piece of Run state a test may have set is forgotten.
         [UnityTearDown]
         public IEnumerator Restore()
         {
             RunDrafts.ClearQueue();
             Time.timeScale = 1f;
+            SceneManager.LoadScene(RunSession.PlanetScene);
+            yield return null;
+            yield return null;
             RunSession.Clear();
-            RunBoons.Clear();   // the Region buffs a capture hands out must not reach the next test fixture
+            RunSave.Delete();
+            RunBoons.Clear();   // the Region buffs a capture hands out
             if (RunManager.HasActiveRun) RunManager.EndRun(RunOutcome.Abandoned);
+            Time.timeScale = 1f;
             yield return null;
         }
 
