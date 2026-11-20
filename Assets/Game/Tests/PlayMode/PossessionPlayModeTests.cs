@@ -6,6 +6,7 @@ using Blondie.Stats;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
+using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 
 namespace Isekai.Tests
@@ -232,6 +233,34 @@ namespace Isekai.Tests
             Teleport(king.transform, RegionGrid.Current.CentreOf(_far));
             Time.timeScale = 4f;
             yield return TestWait.Until(() => _corruption.Level(_far) > 0, "this Demon King spreads corruption too", 15f);
+        }
+
+        [UnityTest]
+        public IEnumerator The_Anchor_panels_Summon_Demon_King_button_summons_with_enough_Souls_and_refuses_with_too_few()
+        {
+            RegionWorkers panel = Object.FindAnyObjectByType<RegionWorkers>();
+            yield return TestWait.Until(() => panel.SummonKingButton != null, "the Anchor panel is built");
+            Button button = panel.SummonKingButton;
+            StringAssert.Contains($"{SoulRules.SummonKingCost(1)} Souls", button.text);
+            Assert.IsTrue(TooltipText.Has(TooltipKey.HudSummonKing), "the button has a tooltip");
+
+            int kings = Object.FindObjectsByType<DemonKing>(FindObjectsInactive.Exclude).Length;
+            _pile.TrySpend(ResourceType.Souls, _pile.Get(ResourceType.Souls));
+            Click(button);
+            Assert.AreEqual(kings, Object.FindObjectsByType<DemonKing>(FindObjectsInactive.Exclude).Length, "too few Souls: refused");
+            StringAssert.Contains("Souls", _possession.Refusal);
+
+            _pile.Add(ResourceType.Souls, 500);
+            Click(button);
+            Assert.AreEqual(kings + 1, Object.FindObjectsByType<DemonKing>(FindObjectsInactive.Exclude).Length, "enough Souls: a Demon King");
+            Assert.AreEqual(500 - SoulRules.SummonKingCost(1), _pile.Get(ResourceType.Souls));
+        }
+
+        private static void Click(Button button)
+        {
+            using NavigationSubmitEvent click = NavigationSubmitEvent.GetPooled();
+            click.target = button;
+            button.SendEvent(click);
         }
 
         [UnityTest]

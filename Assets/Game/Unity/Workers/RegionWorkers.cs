@@ -21,10 +21,14 @@ namespace Isekai
 
         private Label _status;
         private Button _summon;
+        private Button _summonKing;
         private float _nextRefresh;
         private GameObject _workerPrefab;
 
         public static RegionWorkers Current { get; private set; }
+
+        /// <summary>The panel's "Summon Demon King" button (null until the panel is built).</summary>
+        public Button SummonKingButton => _summonKing;
 
         private void Awake() => Current = this;
 
@@ -68,6 +72,10 @@ namespace Isekai
             _summon.style.marginTop = 6;
             _summon.AddTooltip(TooltipText.Get(TooltipKey.HudWorkers));
             box.Add(_summon);
+            _summonKing = new Button(() => RegionPossession.Current?.TrySummonDemonKing()) { text = SummonKingText() };
+            _summonKing.style.marginTop = 4;
+            _summonKing.AddTooltip(TooltipText.Get(TooltipKey.HudSummonKing));
+            box.Add(_summonKing);
             root.Add(box);
             UIPanels.Created(panel);
             Refresh();
@@ -117,6 +125,11 @@ namespace Isekai
             bool canSummon = anchor != null && prefab != null && stockpile != null && stockpile.CanAfford(s_workerCost);
             _summon.text = SummonText();
             _summon.SetEnabled(canSummon);
+            if (_summonKing != null)
+            {
+                _summonKing.text = SummonKingText();
+                _summonKing.SetEnabled(anchor != null);   // too few Souls: the click is refused and says so
+            }
 
             if (prefab == null)
             {
@@ -137,6 +150,13 @@ namespace Isekai
             }
 
             _status.text = $"Workers: {WorkerBrain.All.Count}";
+        }
+
+        private static string SummonKingText()
+        {
+            RegionSouls souls = RegionSouls.Current;
+            int cost = SoulRules.SummonKingCost(souls != null ? souls.Ledger.Level : SoulTuning.StartingLevel);
+            return $"Summon Demon King ({cost} Souls)";
         }
 
         private static string SummonText() => $"Summon worker ({s_workerCost[0].Amount} {s_workerCost[0].Type})";
