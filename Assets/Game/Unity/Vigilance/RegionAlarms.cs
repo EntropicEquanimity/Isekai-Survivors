@@ -150,7 +150,7 @@ namespace Isekai
                 if (_cursor >= brains.Count) _cursor = 0;
                 MortalBrain brain = brains[_cursor++];
                 if (!CanWitness(brain, now) || !AlarmRules.Raises(PilesSeenBy(brain))) continue;
-                _pending.Add(new Witness { Brain = brain, SendAt = now + AlarmTuning.WitnessDelaySeconds });
+                _pending.Add(new Witness { Brain = brain, SendAt = now + AlarmTuning.WitnessDelaySeconds * UnitTraits.AlarmDelayShare(brain) });   // a Vigilant witness is quicker
             }
         }
 

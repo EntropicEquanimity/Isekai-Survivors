@@ -143,7 +143,8 @@ namespace Isekai
             Vector3 pos = transform.position;
             float cell = world.CellSize;
 
-            bool seen = world.Senses.TryNearest(pos, world.SightCells * cell, out HordeTarget threat, out float distance);
+            float sight = world.SightCells * cell * UnitTraits.SightOf(this);
+            bool seen = world.Senses.TryNearest(pos, sight, out HordeTarget threat, out float distance);
             if (seen)
             {
                 _fear = 1f;
@@ -157,7 +158,7 @@ namespace Isekai
 
             _context.Health = _damageable.Unit.Normalized;
             _context.ThreatSeen = seen;
-            _context.ThreatCloseness = seen ? Mathf.Clamp01(1f - distance / Mathf.Max(0.01f, world.SightCells * cell)) : 0f;
+            _context.ThreatCloseness = seen ? Mathf.Clamp01(1f - distance / Mathf.Max(0.01f, sight)) : 0f;
             _context.Fear = _fear;
             _context.DistanceHome = Distance(pos, _home) / cell;
             _context.Leash = Profile.LeashCells;
@@ -272,7 +273,7 @@ namespace Isekai
         private void Go(Move move, float cellsPerSecond)
         {
             _move = move;
-            _speed = cellsPerSecond * Member.SpeedMultiplier;
+            _speed = cellsPerSecond * Member.SpeedMultiplier * UnitTraits.SpeedOf(this);
         }
 
         // ---- Walking: every frame, only for what is steering itself ----

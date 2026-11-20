@@ -203,6 +203,7 @@ namespace Isekai
             float dist = Mathf.Sqrt((p.x - from.x) * (p.x - from.x) + (p.y - from.y) * (p.y - from.y));
             if (dist - radius > range || dist >= best) return;
             if (vision != null && vision.IsReady && !vision.CanSee(side, p)) return;
+            if (vision != null && Concealment.IsHidden(d.gameObject)) return;   // a Sneaky unit is unseen until it attacks (one that hurt it is "known", not searched for)
             best = dist;
             target = new WildlifeTarget(d, radius, p, dist);
         }

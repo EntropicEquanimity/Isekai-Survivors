@@ -14,6 +14,10 @@ namespace Isekai
         /// <summary>Seconds between a demon's thoughts (each is staggered by a random start).</summary>
         public const float ThinkSeconds = 0.3f;
 
+        /// <summary>A fleeing demon looks for hostile units this far round it and runs this many cells away from the nearest each time it thinks.</summary>
+        public const float FleeSight = 8f;
+        public const float FleeStep = 6f;
+
         /// <summary>A Destroy policy removes the piles within this many cells of a demon.</summary>
         public const float DestroyRadius = 3f;
 

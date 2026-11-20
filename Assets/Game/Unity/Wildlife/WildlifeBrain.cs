@@ -29,6 +29,7 @@ namespace Isekai
         private Damageable _damageable;
         private SpriteRenderer _sprite;
         private WildlifeProfile _profile;
+        private BehaviourProfile _behaviour;
         private BehaviourContext _context;
         private RegionWildlife _world;
         private Vector3 _home;
@@ -51,6 +52,12 @@ namespace Isekai
         public WildlifeType Type => _type;
         public WildlifeProfile Profile => _profile ??= WildlifeProfiles.For(_type);
         public HordeMember Member => _member != null ? _member : _member = GetComponent<HordeMember>();
+
+        /// <summary>The weights it decides with now (the type's, or a trait's copy).</summary>
+        public BehaviourProfile Behaviour => _behaviour ?? Profile.Behaviour;
+
+        /// <summary>Changes how it decides: a trait's copy of the type's profile (null goes back to the type's own).</summary>
+        public void SetBehaviour(BehaviourProfile profile) => _behaviour = profile;
 
         /// <summary>The side it is on now (Neutral or Hostile, from its team).</summary>
         public Side Side => TeamIds.SideOf(Member.Unit.Team);
@@ -88,6 +95,7 @@ namespace Isekai
             _damageable = GetComponent<Damageable>();
             _sprite = GetComponent<SpriteRenderer>();
             _context = BehaviourContext.Calm;
+            _behaviour = null;
             Action = BehaviourAction.Idle;
             _move = Move.None;
             _fear = 0f;
@@ -152,7 +160,7 @@ namespace Isekai
             _context.DistanceHome = Distance(pos, _home) / cell;
             _context.Leash = Profile.LeashCells;
 
-            BehaviourAction next = BehaviourScoring.Choose(Profile.Behaviour, _context, Action);
+            BehaviourAction next = BehaviourScoring.Choose(Behaviour, _context, Action);
             if (next != Action) Begin(next);
             Carry(dt, pos, world);
         }
@@ -196,7 +204,7 @@ namespace Isekai
         private void Go(Move move, float cellsPerSecond)
         {
             _move = move;
-            _speed = cellsPerSecond * Member.SpeedMultiplier;
+            _speed = cellsPerSecond * Member.SpeedMultiplier * UnitTraits.SpeedOf(this);
         }
 
         // ---- Moving and hitting: every frame, only for what is on the move ----

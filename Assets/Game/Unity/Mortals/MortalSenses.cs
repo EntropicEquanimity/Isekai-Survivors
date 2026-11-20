@@ -29,7 +29,7 @@ namespace Isekai
             _hash.Clear();
             foreach (HordeTarget t in HordeTarget.All)
             {
-                if (!t.IsAlive || Teams.Relation(_team, t.Team) != TeamRelation.Hostile) continue;
+                if (!t.IsAlive || Teams.Relation(_team, t.Team) != TeamRelation.Hostile || Concealment.IsHidden(t.gameObject)) continue;   // a Sneaky demon is unseen
                 Vector3 p = t.transform.position;
                 _hash.Insert(t, p.x, p.y);
             }

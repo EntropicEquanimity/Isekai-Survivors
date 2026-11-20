@@ -163,7 +163,7 @@ namespace Isekai
             int baseRange = VisionRanges.For(unit.Kind);
             if (baseRange == 0) return 0;
             Side side = unit.Side;
-            int range = VisionRanges.Scaled(baseRange, s_multiplier * s_dayNightMultiplier);
+            int range = VisionRanges.Scaled(baseRange, s_multiplier * s_dayNightMultiplier * Concealment.SightFactor(unit.GameObject));
             Int2 cell = unit.Cell;
             if (!_eyes.TryGetValue(unit, out Eyes eyes))
             {

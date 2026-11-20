@@ -99,7 +99,7 @@ namespace Isekai
                 RegionEntity unit = living[_cursor];
                 UnitKind kind = unit.Kind;
                 if (kind == UnitKind.Building || kind == UnitKind.Character) continue;
-                bool shouldHide = unit.Side != Side.Yours && !vision.CanSee(Side.Yours, unit.Cell);
+                bool shouldHide = unit.Side != Side.Yours && (Concealment.IsHidden(unit) || !vision.CanSee(Side.Yours, unit.Cell));
                 bool isHidden = _hidden.TryGetValue(unit, out Hidden h);
                 if (shouldHide && !isHidden) Hide(unit);
                 else if (!shouldHide && isHidden) Show(h);

@@ -42,6 +42,7 @@ namespace Isekai
         private bool _goalSet;
         private int _slot;
         private float _nextThink;
+        private float _nextWander;
 
         public DemonType Type => _type;
         public UnitProducer Portal => _portal;
@@ -63,14 +64,13 @@ namespace Isekai
         /// </summary>
         public bool IgnoresOrders { get; set; }
 
-        /// <summary>A trait's weights: the brain decides with this copy from now on.</summary>
+        /// <summary>A trait's weights: the brain decides with this copy from now on (null goes back to the type's own).</summary>
         public void SetBehaviour(BehaviourProfile profile) => _behaviour = profile;
 
         internal void Assign(UnitProducer portal, int slot)
         {
             _portal = portal;
             _slot = slot;
-            _behaviour = null;
             Action = BehaviourAction.Idle;
             _goalSet = false;
             Resolve();
@@ -86,6 +86,9 @@ namespace Isekai
 
         private void OnEnable()
         {
+            _behaviour = null;          // a pooled demon starts a new life with its type's weights; its Traits (if any) are put on after
+            IgnoresOrders = false;
+            _nextWander = 0f;
             _ownPost = transform.position;
             _nextThink = Time.time + Random.value * _thinkInterval;   // staggered, so a Portal's demons do not all think in one frame
         }
@@ -128,10 +131,57 @@ namespace Isekai
                 case BehaviourAction.Work when _raiser != null && _raiser.Work(_portal, _postAt, _post.Leash, out Vector3 pile):
                     GoTo(pile);
                     break;
+                case BehaviourAction.Flee:
+                    Flee(position);
+                    break;
                 default:
                     Halt();
                     break;
             }
+            if (IgnoresOrders && hostile == null && Action != BehaviourAction.Flee) WanderTowardTrouble(position);
+        }
+
+        // Away from the nearest hostile unit, and back to its post (the Portal's rally point, or where it stands) once none is near.
+        private void Flee(Vector3 position)
+        {
+            CombatUnit threat = Nearest(position, DemonTuning.FleeSight, out _);
+            if (threat == null)
+            {
+                if (Vector2.Distance(position, _postAt) > 0.5f) GoTo(_postAt);
+                else Halt();
+                return;
+            }
+            Vector2 away = new Vector2(position.x - threat.Position.x, position.y - threat.Position.y);
+            if (away.sqrMagnitude < 0.01f) away = Vector2.right;
+            GoTo(position + (Vector3)(away.normalized * DemonTuning.FleeStep));
+        }
+
+        // An Unruly demon (it ignores orders) moves its own post, every so often, a few cells toward the nearest living thing hostile to it.
+        private void WanderTowardTrouble(Vector3 position)
+        {
+            if (Time.time < _nextWander) return;
+            _nextWander = Time.time + TraitTuning.UnrulyStepSeconds;
+            CombatUnit self = _damageable != null ? _damageable.Unit : null;
+            if (self == null) return;
+            IReadOnlyList<RegionEntity> living = RegionEntities.Living;
+            float best = TraitTuning.UnrulyLookCells * TraitTuning.UnrulyLookCells;
+            Vector3 trouble = default;
+            bool found = false;
+            for (int i = 0; i < living.Count; i++)
+            {
+                RegionEntity other = living[i];
+                if (other.Kind == UnitKind.Building || !Blondie.Combat.Teams.AreHostile(self, other.Damageable.Unit)) continue;
+                Vector3 p = other.GameObject.transform.position;
+                float d = ((Vector2)(p - position)).sqrMagnitude;
+                if (d >= best) continue;
+                best = d;
+                trouble = p;
+                found = true;
+            }
+            if (!found) return;
+            Vector2 toward = (Vector2)(trouble - position);
+            float step = Mathf.Min(TraitTuning.UnrulyStepCells, toward.magnitude);
+            _ownPost = position + (Vector3)(toward.normalized * step);
         }
 
         // Where it stands now: its Portal's order resolved (a Raid mark and Jack both move), in its own slot.
