@@ -101,5 +101,41 @@ namespace Isekai.Tests
             run.Tick(10f);
             Assert.AreEqual(0f, run.RunSeconds, "not on the map");
         }
+
+        [Test]
+        public void Escaped_rulers_retreat_one_ring_inward_or_the_Capital()
+        {
+            Planet planet = Planet.Generate(9, new[] { 3, 2 }, new[] { "a" });
+            var run = new PlanetRun(planet);
+            RegionInfo from = planet.Edge.First();
+            RegionInfo to = run.PickRetreatTarget(from);
+            Assert.AreEqual(from.Depth + 1, to.Depth, "one ring inward while one is uncaptured");
+
+            Planet tiny = Planet.Generate(5, new[] { 1, 1 }, null);
+            var tight = new PlanetRun(tiny);
+            RegionInfo edge = tiny.Edge.Single();
+            RegionInfo middle = tiny.Regions.First(r => r.Depth == 1 && !r.IsCapital);
+            Assert.IsTrue(tight.Enter(edge));
+            tight.CaptureCurrent();
+            Assert.IsTrue(tight.Enter(middle));
+            tight.CaptureCurrent();
+            Assert.AreEqual(tiny.Capital, tight.PickRetreatTarget(edge), "when the inward Region is captured, retreat to the Capital");
+        }
+
+        [Test]
+        public void A_Run_keeps_the_escaped_rulers_record()
+        {
+            Planet planet = Planet.Generate(2, new[] { 3, 2 }, null);
+            var run = new PlanetRun(planet);
+            RegionInfo from = planet.Edge.First();
+            RegionInfo to = run.PickRetreatTarget(from);
+            Assert.IsTrue(run.RecordEscapedRuler(from, to, "Aldric the Stern", new[] { TraitId.Brave, TraitId.Vigilant }));
+            Assert.AreEqual(1, run.EscapedRulers.Count);
+            EscapedRuler escaped = run.EscapedRulers.Single();
+            Assert.AreEqual(from.Id, escaped.FromRegionId);
+            Assert.AreEqual(to.Id, escaped.ToRegionId);
+            CollectionAssert.AreEqual(new[] { TraitId.Brave, TraitId.Vigilant }, escaped.Traits);
+            CollectionAssert.AreEqual(new[] { escaped }, run.EscapedRulersAt(to));
+        }
     }
 }

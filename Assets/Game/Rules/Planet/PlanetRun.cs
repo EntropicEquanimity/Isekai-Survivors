@@ -28,6 +28,7 @@ namespace Isekai
     {
         private readonly HashSet<string> _captured = new();
         private readonly List<string> _order = new();
+        private readonly List<EscapedRuler> _escapedRulers = new();
 
         public PlanetRun(Planet planet) => Planet = planet ?? throw new ArgumentNullException(nameof(planet));
 
@@ -39,6 +40,7 @@ namespace Isekai
         public float RunSeconds { get; private set; }
 
         public IReadOnlyList<string> CapturedInOrder => _order;
+        public IReadOnlyList<EscapedRuler> EscapedRulers => _escapedRulers;
         public bool IsCaptured(RegionInfo region) => region != null && _captured.Contains(region.Id);
         public bool IsOver => State is PlanetRunState.Won or PlanetRunState.Lost;
 
@@ -82,6 +84,56 @@ namespace Isekai
         public void Lose()
         {
             if (!IsOver) State = PlanetRunState.Lost;
+        }
+
+        /// <summary>
+        /// Where an escaped ruler from <paramref name="from"/> retreats: an uncaptured Region one ring deeper when one
+        /// is left, else the Capital.
+        /// </summary>
+        public RegionInfo PickRetreatTarget(RegionInfo from)
+        {
+            if (Planet == null) return null;
+            if (from == null) return Planet.Capital;
+            int wantedDepth = from.Depth + 1;
+            RegionInfo best = null;
+            float bestAngle = float.MaxValue;
+            foreach (RegionInfo region in Planet.Regions)
+            {
+                if (region == null || region.IsCapital || _captured.Contains(region.Id) || region.Depth != wantedDepth) continue;
+                float angle = AngleBetween(region.Angle, from.Angle);
+                if (best == null || angle < bestAngle || (Math.Abs(angle - bestAngle) < 0.0001f && string.CompareOrdinal(region.Id, best.Id) < 0))
+                {
+                    best = region;
+                    bestAngle = angle;
+                }
+            }
+
+            if (best != null) return best;
+            return Planet.Capital;
+        }
+
+        /// <summary>Records a ruler escape on this Run; false when the source or destination Region does not belong to this Planet.</summary>
+        public bool RecordEscapedRuler(RegionInfo from, RegionInfo to, string name, IReadOnlyList<TraitId> traits)
+        {
+            if (from == null || to == null || Planet[from.Id] == null || Planet[to.Id] == null) return false;
+            TraitId[] copied = traits != null && traits.Count > 0 ? traits.ToArray() : Array.Empty<TraitId>();
+            for (int i = _escapedRulers.Count - 1; i >= 0; i--)
+                if (_escapedRulers[i].FromRegionId == from.Id) _escapedRulers.RemoveAt(i);
+            _escapedRulers.Add(new EscapedRuler(from.Id, to.Id, name, copied));
+            return true;
+        }
+
+        /// <summary>The escaped rulers that fled to <paramref name="destination"/> (empty when none).</summary>
+        public IEnumerable<EscapedRuler> EscapedRulersAt(RegionInfo destination)
+        {
+            if (destination == null) return Enumerable.Empty<EscapedRuler>();
+            return _escapedRulers.Where(r => r.ToRegionId == destination.Id);
+        }
+
+        private static float AngleBetween(float a, float b)
+        {
+            float d = Math.Abs(a - b) % (float)(Math.PI * 2);
+            return d > Math.PI ? (float)(Math.PI * 2) - d : d;
         }
     }
 }

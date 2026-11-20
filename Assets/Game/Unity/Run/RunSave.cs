@@ -25,6 +25,7 @@ namespace Isekai
             public int seed;
             public int[] rings = Array.Empty<int>();
             public string[] captured = Array.Empty<string>();
+            public EscapedRuler[] escapedRulers = Array.Empty<EscapedRuler>();
             public float runSeconds;
             /// <summary>The Anchor's <see cref="AnchorKind"/>, or -1 when none was picked.</summary>
             public int anchor = -1;
@@ -46,6 +47,13 @@ namespace Isekai
             GridInventorySaveData inventory = RunSession.PeekInventory();
             var captured = new string[run.CapturedInOrder.Count];
             for (int i = 0; i < captured.Length; i++) captured[i] = run.CapturedInOrder[i];
+            var escaped = new EscapedRuler[run.EscapedRulers.Count];
+            for (int i = 0; i < escaped.Length; i++)
+            {
+                EscapedRuler ruler = run.EscapedRulers[i];
+                TraitId[] traits = ruler.Traits != null && ruler.Traits.Length > 0 ? (TraitId[])ruler.Traits.Clone() : Array.Empty<TraitId>();
+                escaped[i] = new EscapedRuler(ruler.FromRegionId, ruler.ToRegionId, ruler.Name, traits);
+            }
             var rings = new int[RunSession.RingSizes.Count];
             for (int i = 0; i < rings.Length; i++) rings[i] = RunSession.RingSizes[i];
             return new Data
@@ -53,6 +61,7 @@ namespace Isekai
                 seed = RunSession.Seed,
                 rings = rings,
                 captured = captured,
+                escapedRulers = escaped,
                 runSeconds = run.RunSeconds,
                 anchor = RunSession.Anchor is { } kind ? (int)kind : -1,
                 soulLevel = souls.Level,
@@ -77,7 +86,7 @@ namespace Isekai
             Data data = SaveSystem.GetValue<Data>(Key);
             if (data == null || data.version != Version || data.captured == null || data.rings == null || data.rings.Length == 0) return false;
             AnchorKind? anchor = Enum.IsDefined(typeof(AnchorKind), data.anchor) ? (AnchorKind)data.anchor : null;
-            RunSession.Restore(data.seed, data.rings, data.captured, data.runSeconds, anchor, data.hasInventory ? data.inventory : null);
+            RunSession.Restore(data.seed, data.rings, data.captured, data.runSeconds, anchor, data.hasInventory ? data.inventory : null, data.escapedRulers);
             SoulRun.Restore(data.soulLevel, data.soulDeaths);
             return true;
         }

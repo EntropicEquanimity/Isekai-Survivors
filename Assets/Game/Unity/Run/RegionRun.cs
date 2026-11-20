@@ -64,6 +64,7 @@ namespace Isekai
         {
             CharacterInventory inventory = CharacterInventory.Current;
             if (inventory != null) inventory.OnRegionCaptured();
+            ShowRulerSummary();
             Boon buff = RegionBuffs.Get(_region.BuffId);
             if (buff != null) RunBoons.Add(buff);
 
@@ -78,6 +79,16 @@ namespace Isekai
             RunSession.Run.CaptureCurrent();
             Say(buff != null ? $"Captured! {buff.Name}: {buff.Description}" : "Captured!", Color.yellow);
             _returnAt = Time.unscaledTime + _returnDelay;
+        }
+
+        private static void ShowRulerSummary()
+        {
+            RegionRuler ruler = RegionRuler.Current;
+            RulerCaptureSummaryPanel panel = RulerCaptureSummaryPanel.Current;
+            if (panel == null) return;
+            if (ruler != null && ruler.HasEscaped && ruler.EscapedTo != null)
+                panel.ShowEscaped(ruler.RulerName, ruler.EscapedTo.Name, ruler.RulerTraits);
+            else panel.ShowSlain(ruler != null ? ruler.RulerName : null);
         }
 
         private void OnDefeated()

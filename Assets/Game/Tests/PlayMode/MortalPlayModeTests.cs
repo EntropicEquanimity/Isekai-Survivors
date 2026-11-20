@@ -82,7 +82,8 @@ namespace Isekai.Tests
             Assert.Greater(peasants + guards + priests, 0, "the Region has markers");
 
             Assert.AreEqual(peasants, _mortals.Brains.Count(b => b.Profile.Role == MortalRole.Civilian), "a peasant at each peasant marker");
-            Assert.AreEqual(guards, _mortals.Brains.Count(b => b.Profile.Role == MortalRole.Guard), "a guard at each guard marker");
+            int ruler = RegionRuler.Current != null && RegionRuler.Current.Ruler != null ? 1 : 0;
+            Assert.AreEqual(guards + ruler, _mortals.Brains.Count(b => b.Profile.Role == MortalRole.Guard), "a guard at each guard marker, plus the Seat's ruler");
             Assert.AreEqual(priests, _mortals.Brains.Count(b => b.Type == MortalType.Priest), "a priest at each priest marker");
             foreach (MortalBrain b in _mortals.Brains)
             {

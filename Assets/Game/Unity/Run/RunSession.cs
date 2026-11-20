@@ -57,7 +57,8 @@ namespace Isekai
         /// Rebuilds a saved Run on the Planet map: the same Planet (seed and rings), the same Regions captured in the same
         /// order, the Run clock, the buffs those captures gave, the Anchor and the Items carried between Regions.
         /// </summary>
-        public static PlanetRun Restore(int seed, int[] rings, IReadOnlyList<string> captured, float runSeconds, AnchorKind? anchor, GridInventorySaveData inventory)
+        public static PlanetRun Restore(int seed, int[] rings, IReadOnlyList<string> captured, float runSeconds, AnchorKind? anchor, GridInventorySaveData inventory,
+            IReadOnlyList<EscapedRuler> escapedRulers = null)
         {
             PlanetRun run = StartNew(seed, rings);
             for (int i = 0; i < captured.Count; i++)
@@ -71,6 +72,16 @@ namespace Isekai
             {
                 Boon buff = RegionBuffs.Get(id);
                 if (buff != null) RunBoons.Add(buff);
+            }
+            if (escapedRulers != null)
+            {
+                foreach (EscapedRuler escaped in escapedRulers)
+                {
+                    RegionInfo from = run.Planet[escaped.FromRegionId];
+                    RegionInfo to = run.Planet[escaped.ToRegionId];
+                    if (from == null || to == null) continue;
+                    run.RecordEscapedRuler(from, to, escaped.Name, escaped.Traits);
+                }
             }
             Anchor = anchor;
             s_inventory = inventory;

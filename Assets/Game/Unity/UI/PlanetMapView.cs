@@ -43,7 +43,7 @@ namespace Isekai
             foreach (RegionInfo region in run.Planet.Regions)
             {
                 RegionInfo r = region;
-                var node = new Button(() => Pick(r)) { text = r.IsCapital ? "Capital" : r.Name, name = "region-" + r.Id };
+                var node = new Button(() => Pick(r)) { text = NodeText(r), name = "region-" + r.Id };
                 float w = r.IsCapital ? 72f : 96f;
                 Vector2 at = PointOf(r);
                 node.style.position = Position.Absolute;
@@ -90,6 +90,7 @@ namespace Isekai
                 node.style.borderRightWidth = bw;
                 // Never disabled: a disabled button is drawn see-through. Clicking a locked Region simply does nothing.
                 node.style.opacity = 1f;
+                node.text = NodeText(r);
             }
             MarkDirtyRepaint();
         }
@@ -103,7 +104,21 @@ namespace Isekai
         {
             string state = _run.IsCaptured(r) ? "captured" : _run.Available().Contains(r) ? "open" : "out of reach";
             string buff = string.IsNullOrEmpty(r.BuffId) ? "" : "  -  " + RegionBuffs.Describe(r.BuffId);
-            _info.text = r.IsCapital ? "The Capital: capture it to win the Run" : $"{r.Name}  -  depth {r.Depth}  -  {state}{buff}";
+            string escaped = EscapeText(r);
+            _info.text = r.IsCapital ? "The Capital: capture it to win the Run" + escaped : $"{r.Name}  -  depth {r.Depth}  -  {state}{buff}{escaped}";
+        }
+
+        private string NodeText(RegionInfo region) => (region.IsCapital ? "Capital" : region.Name) + (_run.EscapedRulersAt(region).Any() ? " *" : string.Empty);
+
+        private string EscapeText(RegionInfo region)
+        {
+            EscapedRuler latest = _run.EscapedRulersAt(region).LastOrDefault();
+            if (latest == null) return string.Empty;
+            string who = string.IsNullOrEmpty(latest.Name) ? "A ruler" : latest.Name;
+            string traits = latest.Traits == null || latest.Traits.Length == 0
+                ? "traits unknown"
+                : string.Join(", ", latest.Traits.Select(t => TraitTable.Get(t).Name));
+            return $"  -  Escaped ruler: {who} ({traits})";
         }
 
         private Vector2 PointOf(RegionInfo r)
