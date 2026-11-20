@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>Blondie.GridInventory</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(PackageCache)/com.blondie.gridinventory@*/Runtime/**/*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Blondie.Core.csproj" />
+    <ProjectReference Include="Blondie.Inventory.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>Blondie.Core</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(PackageCache)/com.blondie.core@*/Runtime/**/*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+</Project>

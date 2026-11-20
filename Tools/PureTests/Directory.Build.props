@@ -1,0 +1,22 @@
+<Project>
+  <!--
+    Builds the engine-free assemblies (Isekai.Rules and the Blondie packages it uses) and the Pure tests with plain .NET,
+    so they run in seconds without starting Unity. Sources are compiled straight from the Unity project: Assets/ for the
+    game and Library/PackageCache/ for the packages (open the project in Unity once so the cache exists).
+  -->
+  <PropertyGroup>
+    <ProjectRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)../..'))</ProjectRoot>
+    <PackageCache>$(ProjectRoot)/Library/PackageCache</PackageCache>
+    <!-- Match Unity 6: .NET Standard 2.1 libraries, C# 9. -->
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <NoWarn>$(NoWarn);CS0414;CS0649;CS0169;CS0067</NoWarn>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj/$(MSBuildProjectName)/</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/$(MSBuildProjectName)/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+</Project>

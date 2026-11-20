@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>Isekai.Rules</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(ProjectRoot)/Assets/Game/Rules/**/*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Blondie.Core.csproj" />
+    <ProjectReference Include="Blondie.Stats.csproj" />
+    <ProjectReference Include="Blondie.Inventory.csproj" />
+    <ProjectReference Include="Blondie.GridInventory.csproj" />
+    <ProjectReference Include="Blondie.SkillTrees.csproj" />
+  </ItemGroup>
+</Project>
