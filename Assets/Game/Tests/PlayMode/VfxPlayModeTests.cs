@@ -339,6 +339,8 @@ namespace Isekai.Tests
         {
             FogEdgeOverlay edge = FogEdgeOverlay.Current;
             Assert.IsNotNull(edge, "the fog edge overlay is a Region system");
+            RegionVision.RangeMultiplier = 0.25f;   // sight reaches past the screen at full range: pull the edge into view
+            yield return TestWait.Frames(30);
             yield return TestWait.Until(() => { edge.ScanNow(); return edge.PuffCount > 0; }, "puffs appear along the edge", 5f);
             yield return TestWait.Frames(12);
             Assert.LessOrEqual(edge.PuffCount, FogEdgeOverlay.PoolSize);
@@ -369,7 +371,7 @@ namespace Isekai.Tests
             {
                 yield return TestWait.Until(() => Enumerable.Range(0, FogEdgeOverlay.PoolSize).All(i => edge.PuffAt(i) == null), "the puffs fade with fog off", 4f);
             }
-            finally { RegionVision.IsOn = true; }
+            finally { RegionVision.IsOn = true; RegionVision.RangeMultiplier = 1f; }
         }
     }
 }
