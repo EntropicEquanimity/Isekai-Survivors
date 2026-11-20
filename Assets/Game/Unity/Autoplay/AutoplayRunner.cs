@@ -37,6 +37,7 @@ namespace Isekai
         private float _runStart;
         private float _smoothDelta;
         private bool _anchorPicked;
+        private float _askedAt;
 
         private RunReport _report;
         private RegionInfo _entering;
@@ -181,6 +182,7 @@ namespace Isekai
         {
             bool booted = SceneManager.GetActiveScene().name != "Boot";
             if (!booted && now - _phaseSince < 30f) return;
+            if (!AutoplayFlow.MayAskForScene(GameScenes.IsLoading)) return;   // the boot's own transition to the menu is still running
             BeginRun();
         }
 
@@ -209,6 +211,7 @@ namespace Isekai
             _report.RegionsTotal = RunSession.Run.Planet.Regions.Count;
             _runStart = Time.realtimeSinceStartup;
             RunSession.GoToPlanet();
+            _askedAt = Time.realtimeSinceStartup;
             SetPhase(Phase.WaitPlanet);
         }
 
@@ -222,7 +225,12 @@ namespace Isekai
         private void UpdateWaitPlanet(float now)
         {
             if (now - _phaseSince > PhaseTimeout) { EndRun(RunResult.Stalled, "the Planet screen never came up"); return; }
-            if (SceneManager.GetActiveScene().name != RunSession.PlanetScene) return;
+            if (!AutoplayFlow.MayAskForScene(GameScenes.IsLoading)) return;   // Game Setup drops a scene asked for during a transition
+            if (SceneManager.GetActiveScene().name != RunSession.PlanetScene)
+            {
+                if (now - _askedAt > AutoplayFlow.AskAgainSeconds) { _askedAt = now; RunSession.GoToPlanet(); }
+                return;
+            }
             PlanetScreen screen = FindAnyObjectByType<PlanetScreen>();
             if (screen == null || screen.Map == null) return;
             PlanetRun run = RunSession.Run;
@@ -241,7 +249,7 @@ namespace Isekai
 
         private void UpdateWaitRegion(float now)
         {
-            if (now - _phaseSince > PhaseTimeout) { EndRun(RunResult.Stalled, $"{_entering.Name} never finished loading"); return; }
+            if (now - _phaseSince > PhaseTimeout) { EndRun(RunResult.Stalled, $"{_entering.Name} never finished loading ({WhatIsMissing()})"); return; }
             if (SceneManager.GetActiveScene().name != RunSession.RegionScene) return;
             RegionRun regionRun = FindAnyObjectByType<RegionRun>();
             RegionBootstrap bootstrap = RegionBootstrap.Current;
@@ -250,6 +258,28 @@ namespace Isekai
             if (inventory == null || inventory.Rules == null || RegionEconomy.Current == null || RunEndScreen.Current == null) return;
             if (Player.Character == null || VigilanceDirector.Current == null || BotInput.Current == null) return;
             StartRegion(inventory);
+        }
+
+        // What a Region that does not come up is still waiting for, for the Stalled message.
+        private string WhatIsMissing()
+        {
+            RegionRun regionRun = FindAnyObjectByType<RegionRun>();
+            RegionBootstrap bootstrap = RegionBootstrap.Current;
+            CharacterInventory inventory = CharacterInventory.Current;
+            var missing = new List<string>();
+            string scene = SceneManager.GetActiveScene().name;
+            if (scene != RunSession.RegionScene) missing.Add($"scene is {scene}");
+            if (regionRun == null) missing.Add("RegionRun");
+            else if (regionRun.Region != _entering) missing.Add("RegionRun.Region");
+            if (bootstrap == null) missing.Add("RegionBootstrap");
+            else if (!bootstrap.IsPopulated) missing.Add("populated");
+            if (inventory == null || inventory.Rules == null) missing.Add("inventory");
+            if (RegionEconomy.Current == null) missing.Add("RegionEconomy");
+            if (RunEndScreen.Current == null) missing.Add("RunEndScreen");
+            if (Player.Character == null) missing.Add("Player.Character");
+            if (VigilanceDirector.Current == null) missing.Add("VigilanceDirector");
+            if (BotInput.Current == null) missing.Add("BotInput");
+            return missing.Count == 0 ? "nothing missing" : "waiting for " + string.Join(", ", missing);
         }
 
         private void StartRegion(CharacterInventory inventory)
@@ -414,6 +444,7 @@ namespace Isekai
         {
             bool left = SceneManager.GetActiveScene().name != RunSession.RegionScene;
             if (!left && now - _phaseSince < PhaseTimeout) return;
+            if (!AutoplayFlow.MayAskForScene(GameScenes.IsLoading) && now - _phaseSince < PhaseTimeout) return;
             if (now - _phaseSince < 0.5f) return;   // let the scene settle
             _runIndex++;
             if (_runIndex < _options.Runs) BeginRun();

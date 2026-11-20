@@ -194,4 +194,18 @@ namespace Isekai
         /// <summary>The physics step for a time scale: the usual one up to double speed, a coarser one above, never so coarse a body steps through a wall.</summary>
         public static float FixedStep(float scale) => Math.Max(NormalFixedStep, Math.Min(FastFixedStep, NormalFixedStep * scale / 4f));
     }
+
+    /// <summary>
+    /// When the autoplay runner may ask the game for another scene. In a build the game loads scenes behind a screen
+    /// transition and drops a request made while one is running; in the Editor, which starts on the Planet scene, there is
+    /// none. Found by playing a build (docs/playtest-build.md): the Region was asked for as the Planet screen was still
+    /// uncovering, so it never came.
+    /// </summary>
+    public static class AutoplayFlow
+    {
+        /// <summary>Real seconds before the runner asks again for a scene that did not come.</summary>
+        public const float AskAgainSeconds = 8f;
+
+        public static bool MayAskForScene(bool transitionRunning) => !transitionRunning;
+    }
 }

@@ -39,6 +39,17 @@ namespace Isekai.Tests
         }
     }
 
+    public class AutoplayFlowTests
+    {
+        [Test]
+        public void A_scene_is_not_asked_for_while_a_screen_transition_is_running_because_the_game_drops_it()
+        {
+            Assert.IsFalse(AutoplayFlow.MayAskForScene(transitionRunning: true));
+            Assert.IsTrue(AutoplayFlow.MayAskForScene(transitionRunning: false));
+            Assert.Greater(AutoplayFlow.AskAgainSeconds, 0f);
+        }
+    }
+
     public class BotRulesTests
     {
         private static BotSnapshot Base() => new()
