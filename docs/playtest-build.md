@@ -81,8 +81,36 @@ transition and ignores a scene asked for while one is running; the Editor starts
 for the Region while the Planet screen was still uncovering, so the Region never came (`Highspire never finished loading`).
 `AutoplayFlow.MayAskForScene` now makes it wait (a Pure test), and the runner asks again for a scene that does not come.
 
-The tutorial and the credits are menu screens the bot does not drive. They are covered by the PlayMode tests (`TutorialPlayModeTests`,
-`MenuFlowTests`, `CreditsPlayModeTests`) in the Editor; they were not played by hand in the build.
+The tutorial and the credits are menu screens the bot does not drive; the smoke tour below plays them in the build. They are
+also covered by the PlayMode tests (`TutorialPlayModeTests`, `MenuFlowTests`, `CreditsPlayModeTests`, `SmokeTourPlayModeTests`).
+
+## The smoke tour (`-smoke`)
+
+`-autoplay` skips the menus, so a second command line walks the real front end. `SmokeTour` (`Assets/Game/Unity/Autoplay/SmokeTour.cs`)
+waits for the main menu, presses Tutorial, lets the tutorial Region run, opens the pause menu and leaves by its Main Menu button
+(answering the question), presses Credits, closes them with Back, and quits. Saves go to memory, so your own Run is untouched.
+
+```
+Builds\Windows\IsekaiConquerors.exe -batchmode -nographics -logFile tour.log -smoke seconds=30 speed=4
+```
+
+`seconds` is the real time the tutorial Region runs (default 20) and `speed` the game speed while it does (default 4, at most 16).
+`[Smoke] Step: ...` lines in the log name each step reached. Exit code: 0 for a clean tour, 2 when errors were logged, 3 when a
+step never came (the log says which, after 60 s). The tour does not play the tutorial's steps; it lets the Region run.
+`SmokeTourPlayModeTests` covers the same path in the Editor.
+
+### What was checked with the smoke tour
+
+Built with `-executeMethod Isekai.Dev.Editor.BuildPlayer.Windows` (`BuildPlayer: Succeeded, 0 errors, 9 warnings, 135 MB, 92 s`) and
+run with `-batchmode -nographics -smoke seconds=30 speed=4` (no window was needed; the UI runs without rendering): 55 s in all,
+all seven steps (main menu, tutorial Region, ran 30 s, pause menu, back at the main menu, credits, credits closed), exit 0,
+`[Smoke] Tour done: 7 steps, 0 errors logged, no stall, exit 0.`, and no line with `error`, `exception` or `assert` in the log
+other than that summary line.
+
+The same build then played one full Run (`-batchmode -nographics -autoplay runs=1 seeds=2 anchor=WarThrone strategy=balanced speed=8`):
+**Won**, four Regions captured and the Capital taken (4 of 14 Regions on this seed's Planet), 521 s (about 9 minutes) real time, exit 0,
+`errorsLogged` 0, inventory stable, and 0 lines with `error`, `exception` or `assert` in the log. Together the tour and the Run
+cover the main menu, the tutorial, a full Run to the Capital, the end screen back to the menu, and the credits.
 
 ## What a clean batch looks like
 

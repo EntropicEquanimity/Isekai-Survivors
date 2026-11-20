@@ -39,6 +39,52 @@ namespace Isekai.Tests
         }
     }
 
+    public class SmokeOptionsTests
+    {
+        [Test]
+        public void Without_the_flag_there_are_no_options()
+        {
+            Assert.IsTrue(SmokeOptions.TryParse(new[] { "-batchmode", "-autoplay" }, out SmokeOptions options, out _));
+            Assert.IsNull(options);
+        }
+
+        [Test]
+        public void The_flag_alone_gives_the_defaults_and_quits_when_done()
+        {
+            Assert.IsTrue(SmokeOptions.TryParse(new[] { "game.exe", "-smoke", "-batchmode" }, out SmokeOptions options, out _));
+            Assert.AreEqual(SmokeOptions.DefaultSeconds, options.Seconds);
+            Assert.AreEqual(SmokeOptions.DefaultSpeed, options.Speed);
+            Assert.IsTrue(options.QuitWhenDone);
+        }
+
+        [Test]
+        public void Seconds_and_speed_are_read_and_speed_is_capped()
+        {
+            Assert.IsTrue(SmokeOptions.TryParse(new[] { "-smoke", "seconds=7.5", "speed=99" }, out SmokeOptions options, out _));
+            Assert.AreEqual(7.5f, options.Seconds);
+            Assert.AreEqual(SmokeOptions.MaxSpeed, options.Speed);
+        }
+
+        [TestCase("seconds")]
+        [TestCase("seconds=0")]
+        [TestCase("seconds=abc")]
+        [TestCase("colour=red")]
+        public void A_wrong_word_is_refused_with_a_message(string word)
+        {
+            Assert.IsFalse(SmokeOptions.TryParse(new[] { "-smoke", word }, out SmokeOptions options, out string error));
+            Assert.IsNull(options);
+            StringAssert.StartsWith("smoke:", error);
+        }
+
+        [Test]
+        public void A_stall_outranks_logged_errors_and_a_clean_tour_exits_zero()
+        {
+            Assert.AreEqual(0, SmokeExit.Code(stalled: false, errorsLogged: 0));
+            Assert.AreEqual(2, SmokeExit.Code(stalled: false, errorsLogged: 3));
+            Assert.AreEqual(3, SmokeExit.Code(stalled: true, errorsLogged: 3));
+        }
+    }
+
     public class AutoplayFlowTests
     {
         [Test]
