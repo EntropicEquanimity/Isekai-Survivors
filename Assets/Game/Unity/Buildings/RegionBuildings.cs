@@ -20,6 +20,9 @@ namespace Isekai
 
         public static RegionBuildings Current { get; private set; }
 
+        /// <summary>A Building was paid for and placed (its construction has begun).</summary>
+        public event System.Action<Building> Placed;
+
         /// <summary>The placement conditions, checked in order. Add or replace rules to change where Buildings may go.</summary>
         public IList<IPlacementRule> Rules => _rules;
 
@@ -74,6 +77,7 @@ namespace Isekai
             var building = go.GetComponent<Building>();
             building.BeginConstruction(asset);
             Occupy(building, origin, asset.Size);
+            Placed?.Invoke(building);
             return building;
         }
 

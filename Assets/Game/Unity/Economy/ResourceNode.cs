@@ -18,6 +18,9 @@ namespace Isekai
         /// <summary>A node was mined out, just before it switches itself off (its rock stops cutting sight, its ground opens).</summary>
         public static event Action<ResourceNode> Depleted;
 
+        /// <summary>Units were taken from a node (the Character's or a worker's mining), after the node's amount fell.</summary>
+        public static event Action<ResourceNode, int> Taken;
+
         public ResourceType Type => _type;
         public int Remaining { get; private set; }
         public bool IsEmpty => Remaining <= 0;
@@ -33,6 +36,7 @@ namespace Isekai
         {
             int taken = Mathf.Clamp(units, 0, Remaining);
             Remaining -= taken;
+            if (taken > 0) Taken?.Invoke(this, taken);
             if (IsEmpty)
             {
                 _reservedBy = null;

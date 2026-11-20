@@ -44,6 +44,7 @@ namespace Isekai
             _entered = true;
             Damageable.Died += OnDied;
             Damageable.Revived += OnRevived;
+            Damageable.Damaged += OnDamaged;
             if (!Damageable.IsDead) RegionEntities.Add(this);
         }
 
@@ -56,6 +57,7 @@ namespace Isekai
             {
                 Damageable.Died -= OnDied;
                 Damageable.Revived -= OnRevived;
+                Damageable.Damaged -= OnDamaged;
             }
             RegionEntities.Remove(this);
         }
@@ -68,6 +70,8 @@ namespace Isekai
             RegionEntities.Remove(this);
             RegionEntities.Raise(death);
         }
+
+        private void OnDamaged(DamageResult result) => RegionEntities.RaiseDamaged(this, result);
 
         private void OnRevived()
         {
@@ -111,6 +115,8 @@ namespace Isekai
         public static event Action<UnitDeath> Died;
         /// <summary>A unit was listed in <see cref="Living"/> (new spawn, revive, or pooled respawn).</summary>
         public static event Action<RegionEntity> Entered;
+        /// <summary>A listed unit took a hit (every hit, so handlers must be cheap). Cleared at each Region start.</summary>
+        public static event Action<RegionEntity, DamageResult> Damaged;
 
         /// <summary>How many living units a side has.</summary>
         public static int Count(Side side)
@@ -128,7 +134,10 @@ namespace Isekai
             s_living.Clear();
             Died = null;
             Entered = null;
+            Damaged = null;
         }
+
+        internal static void RaiseDamaged(RegionEntity unit, DamageResult result) => Damaged?.Invoke(unit, result);
 
         internal static void Add(RegionEntity unit)
         {
