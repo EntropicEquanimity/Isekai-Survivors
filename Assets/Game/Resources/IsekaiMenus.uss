@@ -1,0 +1,28 @@
+/* The game's look on Blondie's menus: dark reds, black, ember. Added to the UI Root by GameMenus. */
+.blondie-root {
+    --blondie-panel: rgb(18, 7, 9);
+    --blondie-surface: rgb(42, 13, 15);
+    --blondie-text: rgb(238, 224, 214);
+    --blondie-text-muted: rgb(176, 138, 128);
+    --blondie-accent: rgb(255, 122, 38);
+    --blondie-accent-hover: rgb(255, 164, 78);
+    --blondie-on-accent: rgb(24, 6, 6);
+    --blondie-button: rgb(78, 18, 20);
+    --blondie-button-hover: rgb(122, 28, 26);
+    --blondie-bar-back: rgba(0, 0, 0, 0.65);
+    --blondie-bar-fill: rgb(214, 62, 28);
+    --blondie-border: rgb(138, 32, 28);
+}
+
+.blondie-gs-title,
+.blondie-gs-game-title {
+    color: var(--blondie-accent);
+}
+
+.blondie-gs-background {
+    background-color: rgb(8, 3, 4);
+}
+
+.blondie-gs-dim {
+    background-color: rgba(8, 2, 3, 0.72);
+}

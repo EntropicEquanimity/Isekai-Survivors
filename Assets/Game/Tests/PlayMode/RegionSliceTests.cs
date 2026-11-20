@@ -1,0 +1,116 @@
+using System;
+using System.Collections;
+using System.Linq;
+using Blondie.Combat;
+using Blondie.Core;
+using Blondie.FlowFields;
+using Blondie.PixelPerfect;
+using Blondie.Pooling;
+using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.TestTools;
+using Object = UnityEngine.Object;
+
+namespace Isekai.Tests
+{
+    /// <summary>The phase 2 slice in the real Region scene: the Character fights by itself, mines, and the camera zooms.</summary>
+    public class RegionSliceTests
+    {
+        [UnitySetUp]
+        public IEnumerator LoadRegion()
+        {
+            yield return RegionTestScene.Load();
+        }
+
+        [UnityTest]
+        public IEnumerator Idle_Character_walks_to_and_kills_a_nearby_mortal()
+        {
+            // A small fight of our own: no horde, two enemies inside the leash.
+            var spawner = Object.FindAnyObjectByType<HordeSpawner>();
+            RegionTestScene.ClearHorde();
+            Object.FindAnyObjectByType<FlowFieldCrowd>().Speed = 0f;   // they stand still, so the Character must walk
+            var control = Object.FindAnyObjectByType<CharacterControl>();
+            // The start area is clear ground in every corner: a few cells in from the Character, toward the map.
+            Int2 inward = RegionTerrain.Current.Layout.Interior;
+            Vector3 from = control.transform.position;
+            Damageable[] enemies =
+            {
+                Pools.Spawn(spawner.Prefab, from + new Vector3(4.5f * inward.x, 1.5f * inward.y, 0f), Quaternion.identity).GetComponent<Damageable>(),
+                Pools.Spawn(spawner.Prefab, from + new Vector3(5f * inward.x, 2f * inward.y, 0f), Quaternion.identity).GetComponent<Damageable>(),
+            };
+            Vector3 start = control.transform.position;
+
+            yield return TestWait.Until(() => control.IsAutoFighting, "the Character takes over after the idle delay", 5f);
+            yield return TestWait.Until(() => enemies.Any(e => e == null || !e.isActiveAndEnabled || e.Unit.IsDead), "an enemy dies", 20f);
+            Assert.Greater(Vector3.Distance(start, control.transform.position), 0.5f, "it walked to reach the enemy");
+        }
+
+        [UnityTest]
+        public IEnumerator Weapons_fire_while_the_player_is_in_control()
+        {
+            var spawner = Object.FindAnyObjectByType<HordeSpawner>();
+            RegionTestScene.ClearHorde();
+            Object.FindAnyObjectByType<FlowFieldCrowd>().Speed = 0f;
+            var control = Object.FindAnyObjectByType<CharacterControl>();
+            var enemy = Pools.Spawn(spawner.Prefab, control.transform.position + new Vector3(2f, 0f, 0f), Quaternion.identity).GetComponent<Damageable>();
+            bool hit = false;
+            enemy.Damaged += _ => hit = true;
+
+            // Well before the idle delay: the player still has the Character, and its weapons already fire.
+            yield return TestWait.Until(() => hit, "the enemy in range is shot", 1f);
+            Assert.IsFalse(control.IsAutoFighting);
+            Assert.AreEqual(AutoFightOrder.PlayerControl, control.Order);
+        }
+
+        [UnityTest]
+        public IEnumerator Mining_a_node_fills_the_stockpile()
+        {
+            var miner = Object.FindAnyObjectByType<Miner>();
+            miner.enabled = false;   // its Update would stop mining every frame: Interact isn't held in a test
+            yield return TestWait.Frames(5);
+            miner.Mine(null, 0f);    // drop progress its Update may have made if the start corner touches a node
+            ResourceNode node = ResourceNode.All.First();
+            int before = node.Remaining;
+            Stockpile pile = RegionEconomy.Current.Stockpile;
+            int start = pile.Get(node.Type);
+
+            // The Run outlives a test and late setup (Items, capture buffs, traits) can still change MiningSpeed in the first
+            // frames (hence the wait above): expect what a MiningProgress at the Character's rate of each tick gives over 3 s,
+            // not a fixed number and not one read of the rate.
+            var expectedProgress = new MiningProgress();
+            int expected = 0;
+            int mined = 0;
+            for (int i = 0; i < 12; i++)
+            {
+                float rate = miner.Rate;
+                expected += expectedProgress.Tick(0.25f, rate, before - expected);
+                mined += miner.Mine(node, 0.25f);   // 3 s
+                yield return null;
+            }
+            Assume.That(expected, Is.GreaterThan(0), "the Character can mine");
+
+            Assert.AreEqual(expected, mined, $"3 s at mining speed {miner.Rate}");
+            Assert.AreEqual(start + mined, pile.Get(node.Type));
+            Assert.AreEqual(before - mined, node.Remaining);
+        }
+
+        [UnityTest]
+        public IEnumerator Zoom_changes_the_pixel_cameras_view_in_whole_steps()
+        {
+            var zoom = Object.FindAnyObjectByType<ScrollZoom>();
+            PixelCamera cam = zoom.GetComponent<PixelCamera>();
+            int startScale = zoom.Levels.EffectiveScale(cam.OutputSize);
+
+            zoom.Zoom(+1);
+            yield return null;
+            Assert.AreEqual(zoom.Levels.ViewFor(cam.OutputSize), cam.ReferenceResolution);
+            Assert.GreaterOrEqual(zoom.Levels.EffectiveScale(cam.OutputSize), startScale, "zooming in never shows more");
+
+            zoom.Zoom(-2);
+            yield return null;
+            Assert.AreEqual(zoom.Levels.ViewFor(cam.OutputSize), cam.ReferenceResolution);
+        }
+
+    }
+}

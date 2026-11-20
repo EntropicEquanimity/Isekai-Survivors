@@ -1,0 +1,340 @@
+fileFormatVersion: 2
+guid: 182c70e13f5ea4754be3e5d584173257
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -6143172876031292672
+    second: Lancer_Walk_0
+  - first:
+      213: 4168268541541744048
+    second: Lancer_Walk_1
+  - first:
+      213: -1071785761564628851
+    second: Lancer_Walk_2
+  - first:
+      213: 5994874306563289353
+    second: Lancer_Walk_3
+  - first:
+      213: -1344944921940185251
+    second: Lancer_Walk_4
+  - first:
+      213: 2826281028927805480
+    second: Lancer_Walk_5
+  - first:
+      213: 8099330989053686969
+    second: Lancer_Walk_6
+  - first:
+      213: 4107678941378893815
+    second: Lancer_Walk_7
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Lancer_Walk_0
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 42
+        width: 59
+        height: 40
+      alignment: 9
+      pivot: {x: 0.30508474, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c004719e73ba3420800000000000000
+      internalID: -6143172876031292672
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lancer_Walk_1
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 42
+        width: 59
+        height: 40
+      alignment: 9
+      pivot: {x: 0.30508474, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1bd07412da12fd110800000000000000
+      internalID: 4168268541541744048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lancer_Walk_2
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 42
+        width: 59
+        height: 40
+      alignment: 9
+      pivot: {x: 0.30508474, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 558e0d25b06b05f00800000000000000
+      internalID: -1071785761564628851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lancer_Walk_3
+      rect:
+        serializedVersion: 2
+        x: 332
+        y: 42
+        width: 59
+        height: 40
+      alignment: 9
+      pivot: {x: 0.30508474, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35020fb4fd282e3a0800000000000000
+      internalID: 5994874306563289353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lancer_Walk_4
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 42
+        width: 59
+        height: 40
+      alignment: 9
+      pivot: {x: 0.30508474, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd470b11da6b25490800000000000000
+      internalID: -1344944921940185251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lancer_Walk_5
+      rect:
+        serializedVersion: 2
+        x: 532
+        y: 42
+        width: 59
+        height: 40
+      alignment: 9
+      pivot: {x: 0.30508474, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7132149db332bed30800000000000000
+      internalID: 2826281028927805480
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lancer_Walk_6
+      rect:
+        serializedVersion: 2
+        x: 632
+        y: 42
+        width: 59
+        height: 40
+      alignment: 9
+      pivot: {x: 0.30508474, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8c1ccb0a49cf8ea0800000000000000
+      internalID: 8099330989053686969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lancer_Walk_7
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 42
+        width: 59
+        height: 40
+      alignment: 9
+      pivot: {x: 0.30508474, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a2efa4f825c59c40800000000000000
+      internalID: 4107678941378893815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Lancer_Walk_0: -6143172876031292672
+      Lancer_Walk_1: 4168268541541744048
+      Lancer_Walk_2: -1071785761564628851
+      Lancer_Walk_3: 5994874306563289353
+      Lancer_Walk_4: -1344944921940185251
+      Lancer_Walk_5: 2826281028927805480
+      Lancer_Walk_6: 8099330989053686969
+      Lancer_Walk_7: 4107678941378893815
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

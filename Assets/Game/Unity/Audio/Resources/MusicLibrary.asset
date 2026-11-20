@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2002:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45039599af9647dd9621dad2d867a259, type: 3}
+  m_Name: MusicLibrary
+  m_EditorClassIdentifier: Isekai.Game::Isekai.MusicLibrary
+  Menu: {fileID: 8300000, guid: d959107734dd426b95fbae57a0df0730, type: 3}
+  Planet: {fileID: 8300000, guid: 0c9a945c84b34269b09274db2849951d, type: 3}
+  RegionCalm: {fileID: 8300000, guid: 3d1173a23dad463e81f9ec0c7fd4f6c4, type: 3}
+  RegionTense: {fileID: 8300000, guid: 37aa3d44f5664da19aa6c04632421f3e, type: 3}
+  Capture: {fileID: 8300000, guid: 95484b057ad94ebdb4aed45a3f1a5c6d, type: 3}
+  Defeat: {fileID: 8300000, guid: 9c461aea93494850b71d9efc62d27cd0, type: 3}

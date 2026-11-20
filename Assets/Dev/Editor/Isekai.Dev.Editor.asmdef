@@ -3,7 +3,15 @@
     "rootNamespace": "Isekai.Dev.Editor",
     "references": [
         "UnityEditor.TestRunner",
-        "UnityEngine.TestRunner"
+        "UnityEngine.TestRunner",
+        "Isekai.Game",
+        "Isekai.Rules",
+        "Blondie.Core",
+        "Blondie.Core.Unity",
+        "Blondie.Combat",
+        "Blondie.Combat.Unity",
+        "Blondie.PixelPerfect",
+        "Blondie.PixelPerfect.Unity"
     ],
     "includePlatforms": [
         "Editor"

@@ -1,0 +1,366 @@
+fileFormatVersion: 2
+guid: 1fd4c04cab49c882a4543dca80d23661
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7509110692342485755
+    second: Priest_Attack01_0
+  - first:
+      213: 1850141391310021163
+    second: Priest_Attack01_1
+  - first:
+      213: 3886865108225025876
+    second: Priest_Attack01_2
+  - first:
+      213: -6665864929733210146
+    second: Priest_Attack01_3
+  - first:
+      213: 524609311048663257
+    second: Priest_Attack01_4
+  - first:
+      213: -2649429647055297302
+    second: Priest_Attack01_5
+  - first:
+      213: 6027849349982538120
+    second: Priest_Attack01_6
+  - first:
+      213: 7367766695958189664
+    second: Priest_Attack01_7
+  - first:
+      213: 6079662697756042823
+    second: Priest_Attack01_8
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Priest_Attack01_0
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 40
+        width: 29
+        height: 29
+      alignment: 9
+      pivot: {x: 0.27586207, y: 0.34482759}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4839a4aa8f68d8150800000000000000
+      internalID: -7509110692342485755
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Priest_Attack01_1
+      rect:
+        serializedVersion: 2
+        x: 142
+        y: 40
+        width: 29
+        height: 29
+      alignment: 9
+      pivot: {x: 0.27586207, y: 0.34482759}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d673f2f3142ea9c0800000000000000
+      internalID: 1850141391310021163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Priest_Attack01_2
+      rect:
+        serializedVersion: 2
+        x: 242
+        y: 40
+        width: 29
+        height: 29
+      alignment: 9
+      pivot: {x: 0.27586207, y: 0.34482759}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4aab681d938c6db0800000000000000
+      internalID: 3886865108225025876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Priest_Attack01_3
+      rect:
+        serializedVersion: 2
+        x: 342
+        y: 40
+        width: 29
+        height: 29
+      alignment: 9
+      pivot: {x: 0.27586207, y: 0.34482759}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c1e9589ae2c17f40800000000000000
+      internalID: -6665864929733210146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Priest_Attack01_4
+      rect:
+        serializedVersion: 2
+        x: 442
+        y: 40
+        width: 29
+        height: 29
+      alignment: 9
+      pivot: {x: 0.27586207, y: 0.34482759}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92e99f4d4ab6263a0800000000000000
+      internalID: 524609311048663257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Priest_Attack01_5
+      rect:
+        serializedVersion: 2
+        x: 542
+        y: 40
+        width: 29
+        height: 29
+      alignment: 9
+      pivot: {x: 0.27586207, y: 0.34482759}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83e88d5aaf488bb60800000000000000
+      internalID: -2649429647055297302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Priest_Attack01_6
+      rect:
+        serializedVersion: 2
+        x: 642
+        y: 40
+        width: 29
+        height: 29
+      alignment: 9
+      pivot: {x: 0.27586207, y: 0.34482759}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04d74c360056be520800000000000000
+      internalID: 6027849349982538120
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Priest_Attack01_7
+      rect:
+        serializedVersion: 2
+        x: 742
+        y: 40
+        width: 29
+        height: 29
+      alignment: 9
+      pivot: {x: 0.27586207, y: 0.34482759}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b09727279aadb500800000000000000
+      internalID: 7367766695958189664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Priest_Attack01_8
+      rect:
+        serializedVersion: 2
+        x: 842
+        y: 40
+        width: 29
+        height: 29
+      alignment: 9
+      pivot: {x: 0.27586207, y: 0.34482759}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf133dadbb8a17710800000000000000
+      internalID: 6079662697756042823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Priest_Attack01_0: -7509110692342485755
+      Priest_Attack01_1: 1850141391310021163
+      Priest_Attack01_2: 3886865108225025876
+      Priest_Attack01_3: -6665864929733210146
+      Priest_Attack01_4: 524609311048663257
+      Priest_Attack01_5: -2649429647055297302
+      Priest_Attack01_6: 6027849349982538120
+      Priest_Attack01_7: 7367766695958189664
+      Priest_Attack01_8: 6079662697756042823
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

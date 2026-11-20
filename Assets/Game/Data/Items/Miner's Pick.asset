@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f812eed06cced54a9b0f62e2e8579b6, type: 3}
+  m_Name: Miner's Pick
+  m_EditorClassIdentifier: Blondie.Inventory.Unity::Blondie.Inventory.ItemAsset
+  _id: miners_pick
+  _displayName: Miner's Pick
+  _description: Mine twice as fast.
+  _icon: {fileID: -1477097236, guid: 7e90440ae8cd0fe4cbe8510a0bb99f5c, type: 3}
+  _iconKey: 
+  _maxStack: 1
+  _shape:
+    _width: 2
+    _height: 2
+    _cells: 01010100y
+  _canRotate: 1
+  _weight: 0
+  _priority: 0
+  _itemStats: []
+  _equipType: 
+  _modifiers:
+  - _statId: MiningSpeed
+    _kind: 200
+    _value: 1
+    _keepsVital: 0
+  _set: {fileID: 0}
+  _usable: 0
+  _consumeOnUse: 1
+  _effects:
+  - rid: 8327159422257201359
+  _tags: []
+  _value: 0
+  _pickupPrefab: {fileID: 0}
+  _pickupKey: 
+  references:
+    version: 2
+    RefIds:
+    - rid: 8327159422257201359
+      type: {class: ItemRules, ns: Isekai, asm: Isekai.Rules}
+      data:
+        Lifetime: 0
+        Removal: 1
+        SwapCooldown: 20

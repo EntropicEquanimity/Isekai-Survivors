@@ -1,0 +1,367 @@
+fileFormatVersion: 2
+guid: e7833bde19f833d409eadb4e761ccf7d
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2585315461487608873
+    second: Armored_Axeman_Attack01_0
+  - first:
+      213: 1975071404074403841
+    second: Armored_Axeman_Attack01_1
+  - first:
+      213: -2973570777063691560
+    second: Armored_Axeman_Attack01_2
+  - first:
+      213: 2085733407662997270
+    second: Armored_Axeman_Attack01_3
+  - first:
+      213: 4350262216120206699
+    second: Armored_Axeman_Attack01_4
+  - first:
+      213: 4712898118485683
+    second: Armored_Axeman_Attack01_5
+  - first:
+      213: 471767739231063855
+    second: Armored_Axeman_Attack01_6
+  - first:
+      213: -4824136204771151183
+    second: Armored_Axeman_Attack01_7
+  - first:
+      213: 8956380829511468566
+    second: Armored_Axeman_Attack01_8
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Armored_Axeman_Attack01_0
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 38
+        width: 45
+        height: 33
+      alignment: 9
+      pivot: {x: 0.37777779, y: 0.36363637}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9244b42f6b2e0e320800000000000000
+      internalID: 2585315461487608873
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Armored_Axeman_Attack01_1
+      rect:
+        serializedVersion: 2
+        x: 133
+        y: 38
+        width: 45
+        height: 33
+      alignment: 9
+      pivot: {x: 0.37777779, y: 0.36363637}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10803e54afcd86b10800000000000000
+      internalID: 1975071404074403841
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Armored_Axeman_Attack01_2
+      rect:
+        serializedVersion: 2
+        x: 233
+        y: 38
+        width: 45
+        height: 33
+      alignment: 9
+      pivot: {x: 0.37777779, y: 0.36363637}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8dae2a60221cbb6d0800000000000000
+      internalID: -2973570777063691560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Armored_Axeman_Attack01_3
+      rect:
+        serializedVersion: 2
+        x: 333
+        y: 38
+        width: 45
+        height: 33
+      alignment: 9
+      pivot: {x: 0.37777779, y: 0.36363637}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61ffaebcb7302fc10800000000000000
+      internalID: 2085733407662997270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Armored_Axeman_Attack01_4
+      rect:
+        serializedVersion: 2
+        x: 433
+        y: 38
+        width: 45
+        height: 33
+      alignment: 9
+      pivot: {x: 0.37777779, y: 0.36363637}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6506a7df6c3f5c30800000000000000
+      internalID: 4350262216120206699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Armored_Axeman_Attack01_5
+      rect:
+        serializedVersion: 2
+        x: 533
+        y: 38
+        width: 45
+        height: 33
+      alignment: 9
+      pivot: {x: 0.37777779, y: 0.36363637}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b6073a1b5eb01000800000000000000
+      internalID: 4712898118485683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Armored_Axeman_Attack01_6
+      rect:
+        serializedVersion: 2
+        x: 633
+        y: 38
+        width: 45
+        height: 33
+      alignment: 9
+      pivot: {x: 0.37777779, y: 0.36363637}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2f4b51624e0c8600800000000000000
+      internalID: 471767739231063855
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Armored_Axeman_Attack01_7
+      rect:
+        serializedVersion: 2
+        x: 733
+        y: 38
+        width: 45
+        height: 33
+      alignment: 9
+      pivot: {x: 0.37777779, y: 0.36363637}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b2b38e5ea93d0db0800000000000000
+      internalID: -4824136204771151183
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Armored_Axeman_Attack01_8
+      rect:
+        serializedVersion: 2
+        x: 833
+        y: 38
+        width: 45
+        height: 33
+      alignment: 9
+      pivot: {x: 0.37777779, y: 0.36363637}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 616462859e47b4c70800000000000000
+      internalID: 8956380829511468566
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Armored_Axeman_Attack01_0: 2585315461487608873
+      Armored_Axeman_Attack01_1: 1975071404074403841
+      Armored_Axeman_Attack01_2: -2973570777063691560
+      Armored_Axeman_Attack01_3: 2085733407662997270
+      Armored_Axeman_Attack01_4: 4350262216120206699
+      Armored_Axeman_Attack01_5: 4712898118485683
+      Armored_Axeman_Attack01_6: 471767739231063855
+      Armored_Axeman_Attack01_7: -4824136204771151183
+      Armored_Axeman_Attack01_8: 8956380829511468566
+      Icon19_0: 1708141900530535132
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

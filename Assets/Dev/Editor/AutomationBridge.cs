@@ -143,12 +143,15 @@ namespace Isekai.Dev.Editor
             }
         }
 
+        // "test <mode> [name]": the optional name (a regex) narrows the run to matching tests, e.g. "InventoryPlayMode".
         private static void RunTests(string which)
         {
-            switch (which)
+            string[] parts = which.Split(new[] { ' ' }, 2, System.StringSplitOptions.RemoveEmptyEntries);
+            string only = parts.Length > 1 ? parts[1].Trim() : null;
+            switch (parts.Length > 0 ? parts[0] : "")
             {
-                case "editmode": Execute(TestMode.EditMode); break;
-                case "playmode": Execute(TestMode.PlayMode); break;
+                case "editmode": Execute(TestMode.EditMode, only); break;
+                case "playmode": Execute(TestMode.PlayMode, only); break;
                 case "all":
                     SessionState.SetString(PendingKey, "playmode");
                     Execute(TestMode.EditMode);
@@ -157,12 +160,13 @@ namespace Isekai.Dev.Editor
             }
         }
 
-        private static void Execute(TestMode mode)
+        private static void Execute(TestMode mode, string only = null)
         {
             if (mode == TestMode.PlayMode) DiscardUntitledScenes();
-            Status($"running {mode} tests");
+            Status($"running {mode} tests" + (only != null ? $" matching {only}" : ""));
             var api = ScriptableObject.CreateInstance<TestRunnerApi>();
-            api.Execute(new ExecutionSettings(new Filter { testMode = mode, assemblyNames = ProjectTestAssemblies(), groupNames = new[] { "^Isekai\\." } }));
+            string group = only != null ? $"(?i)^Isekai\\..*{only}" : "^Isekai\\.";   // requests arrive lowercased
+            api.Execute(new ExecutionSettings(new Filter { testMode = mode, assemblyNames = ProjectTestAssemblies(), groupNames = new[] { group } }));
         }
 
         // Play Mode tests ask to save modified scenes, a dialog that stalls an unattended run. Edit Mode tests leave the

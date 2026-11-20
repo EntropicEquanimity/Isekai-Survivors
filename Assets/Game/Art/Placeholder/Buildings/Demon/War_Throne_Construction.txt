@@ -1,0 +1,2 @@
+Single sprite, 54x63 px. Footprint 3x3 cells. War Throne (construction, big Anchor), placeholder: the Citadel scaled 1.5x and tinted warm, snapped to the Isekai master palette. To be redrawn through the Art Forge.
+Pivot: the centre of the footprint.

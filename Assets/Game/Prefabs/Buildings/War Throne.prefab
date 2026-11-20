@@ -1,0 +1,108 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8609885815435105080
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 184761518073094489, guid: a3e1a74ceb987e04f9e8320532c3dd76, type: 3}
+      propertyPath: m_Name
+      value: War Throne
+      objectReference: {fileID: 0}
+    - target: {fileID: 1854208965905577690, guid: a3e1a74ceb987e04f9e8320532c3dd76, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 19422d3e7cad4fb791901acaf547f3ad, type: 3}
+    - target: {fileID: 3978913869512482257, guid: a3e1a74ceb987e04f9e8320532c3dd76, type: 3}
+      propertyPath: _radius
+      value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4362714028494091754, guid: a3e1a74ceb987e04f9e8320532c3dd76, type: 3}
+      propertyPath: m_Size.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4362714028494091754, guid: a3e1a74ceb987e04f9e8320532c3dd76, type: 3}
+      propertyPath: m_Size.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5359755989109655738, guid: a3e1a74ceb987e04f9e8320532c3dd76, type: 3}
+      propertyPath: _maxHealth
+      value: 3000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6672220058156424703, guid: a3e1a74ceb987e04f9e8320532c3dd76, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6672220058156424703, guid: a3e1a74ceb987e04f9e8320532c3dd76, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6672220058156424703, guid: a3e1a74ceb987e04f9e8320532c3dd76, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6672220058156424703, guid: a3e1a74ceb987e04f9e8320532c3dd76, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6672220058156424703, guid: a3e1a74ceb987e04f9e8320532c3dd76, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6672220058156424703, guid: a3e1a74ceb987e04f9e8320532c3dd76, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6672220058156424703, guid: a3e1a74ceb987e04f9e8320532c3dd76, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6672220058156424703, guid: a3e1a74ceb987e04f9e8320532c3dd76, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6672220058156424703, guid: a3e1a74ceb987e04f9e8320532c3dd76, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6672220058156424703, guid: a3e1a74ceb987e04f9e8320532c3dd76, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8048850546332619431, guid: a3e1a74ceb987e04f9e8320532c3dd76, type: 3}
+      propertyPath: _asset
+      value: 
+      objectReference: {fileID: 11400000, guid: 71d6f3531db0ea842ad437c2065a4c25, type: 2}
+    - target: {fileID: 8048850546332619431, guid: a3e1a74ceb987e04f9e8320532c3dd76, type: 3}
+      propertyPath: _constructionSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: e60f3fa75a064481b6b5305826597e71, type: 3}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 184761518073094489, guid: a3e1a74ceb987e04f9e8320532c3dd76, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7308888865909208712}
+  m_SourcePrefab: {fileID: 100100000, guid: a3e1a74ceb987e04f9e8320532c3dd76, type: 3}
+--- !u!1 &8497186487426069089 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 184761518073094489, guid: a3e1a74ceb987e04f9e8320532c3dd76, type: 3}
+  m_PrefabInstance: {fileID: 8609885815435105080}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7308888865909208712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8497186487426069089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 333cea5d3050e3e4b9e020e59db43662, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Isekai.Game::Isekai.Anchor
+  _kind: 1

@@ -1,0 +1,4 @@
+Crumbled bone variants, 80x48 px: 4 columns x 4 rows of 20x12 cells, cell index = row*4 + col, pivot centre.
+Rows: 0 Human, 1 Beast, 2 Demon, 3 Small. Columns: 0 intact (same as the matching Bones_Sheet variant A), 1 cracked, 2 crumbling, 3 mostly crumbled.
+Use them as extra random variants, or step through columns 0-3 over time as the remains decay. Same size limits and muted colours as Bones_Sheet.
+Generated with Cursor CLI GenerateImage (agent model grok-4.7-medium), pixel-finished at 1x with the Isekai master palette (palette/isekai_master.hex in D:/GameDev/Isekai-Art-Forge). Transparent PNG, binary alpha, no filtering: import with Point filter, no compression, 16 pixels per unit.

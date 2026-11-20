@@ -1,0 +1,54 @@
+Sound effects. Every file is the OGG copy from D:/GameDev/Assets/Sound Effects/downsized versions/, copied here unchanged
+(the Shapeforms files have spaces in their names changed to underscores).
+
+== 400 Sounds Pack  (Sfx/400 Sounds Pack/)
+Author: not stated in the pack.
+Licence: the pack folder has no licence or readme file, so its terms are UNKNOWN. Ticket #34 must check where it came from
+and what it allows before release.
+Files used:
+  brass_level_complete.ogg
+  brass_negative_quick.ogg
+  click_double_on.ogg
+  crunch_splat.ogg
+  gem_collect.ogg
+  ghost.ogg
+  grow_big.ogg
+  horror_sting.ogg
+  item_equip.ogg
+  music_box_chime_quick.ogg
+  pop_3.ogg
+  pop_4.ogg
+  power_up.ogg
+  power_up_2.ogg
+  punch.ogg
+  punch_2.ogg
+  punch_3.ogg
+  select_1.ogg
+  select_2.ogg
+  shovel_dig.ogg
+  slap.ogg
+  splat_double_quick.ogg
+  splat_quick.ogg
+  squelching_2.ogg
+  squelching_4.ogg
+  stone_push_short.ogg
+  synth_bass_negative_long.ogg
+  synth_warning.ogg
+  weapon_upgrade.ogg
+  whistle.ogg
+  whoosh_2.ogg
+  wobble.ogg
+  wood_small_drop.ogg
+  wood_small_hollow.ogg
+
+== Shapeforms Audio Free Sound Effects  (Sfx/Shapeforms/)
+Author: Shapeforms Audio (shapeforms.com), free preview samplers of its libraries.
+Licence: the pack has no licence file. The only terms in it are in 'Future UI info.txt' (a different sampler of the same pack,
+not used here): its sounds may be used in non-commercial and commercial projects, under a licence agreement that is not in the folder.
+The PDFs in the other samplers (Arcane Activations, Dystopia) are thanks and catalogue pages that could not be read as text.
+So the licence of the files below is assumed to be the same free-use terms but is UNCONFIRMED; ticket #34 must check it.
+Files used:
+  Arcane Activations Preview: Arcane_Wind_Chime_Gust.ogg, Glyph_Activation_Warm_Aura.ogg, Arcane_Symbol_Activate_01.ogg
+  Dystopia - Ambience and Drone Preview: ONE_SHOT_SPACE_TEAR.ogg, SUB_DROP_DEEP.ogg, ONE_SHOT_CINEMATIC_EFFECT_10.ogg
+
+Which sound plays for which cue is in Unity/Audio/Resources/SfxLibrary.asset (see SfxCues.cs for volume, pitch and cooldown).

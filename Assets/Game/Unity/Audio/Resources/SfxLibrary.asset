@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2002:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66082d051a2d4ca6a4003cf9cefa6d9b, type: 3}
+  m_Name: SfxLibrary
+  m_EditorClassIdentifier: Isekai.Game::Isekai.SfxLibrary
+  Entries:
+  - Cue: 0
+    Clips:
+    - {fileID: 8300000, guid: fa7124ffd0d04f2d8a4ed7aebca85614, type: 3}
+    - {fileID: 8300000, guid: bea6b29a7ad64ebdb0217496d38fbf1f, type: 3}
+    - {fileID: 8300000, guid: ecef15e042694eeb9bfb0dac2691b4b9, type: 3}
+    - {fileID: 8300000, guid: f583c5c0db0e4016aac3b0e7f401112d, type: 3}
+  - Cue: 1
+    Clips:
+    - {fileID: 8300000, guid: da080bb9db2a42548cd88edb13df4b91, type: 3}
+    - {fileID: 8300000, guid: 07a8b07376d840f39dbabbf4d05f3ad7, type: 3}
+    - {fileID: 8300000, guid: 73b21fa39f2145d29a88ecfc6c5da51e, type: 3}
+    - {fileID: 8300000, guid: 62a9403aebfe46c993b5618e34b5ca31, type: 3}
+  - Cue: 2
+    Clips:
+    - {fileID: 8300000, guid: 465e717e4bf04351903f3e37769bc2ec, type: 3}
+    - {fileID: 8300000, guid: 01904be6029e4f43984c931e484307b9, type: 3}
+  - Cue: 3
+    Clips:
+    - {fileID: 8300000, guid: b45671233c6c4021ac32efd919565697, type: 3}
+    - {fileID: 8300000, guid: 2b562167e95a4aa9bf5c06cffacf0854, type: 3}
+  - Cue: 4
+    Clips:
+    - {fileID: 8300000, guid: 576e0fe7b82b4b2dbbc6c4e900a0f8f1, type: 3}
+    - {fileID: 8300000, guid: 57ec210d0a40450b8735fbd1923ce803, type: 3}
+  - Cue: 5
+    Clips:
+    - {fileID: 8300000, guid: 44282eabe0a24c8d8fd0163893b8c1fb, type: 3}
+    - {fileID: 8300000, guid: 7a439a1e2d8943299949a92373a85d3b, type: 3}
+  - Cue: 6
+    Clips:
+    - {fileID: 8300000, guid: ef1f97f55bf3412e9b6f9784aa0a324f, type: 3}
+    - {fileID: 8300000, guid: 2f97486a9acb4c48a26f40f49f074dd6, type: 3}
+  - Cue: 7
+    Clips:
+    - {fileID: 8300000, guid: 50873b3b5939433ea08de77f18f67372, type: 3}
+    - {fileID: 8300000, guid: bf83bc19fa694e648c2edd5b1ed27a6a, type: 3}
+  - Cue: 8
+    Clips:
+    - {fileID: 8300000, guid: d929a65184e744f5904f498ff93d2164, type: 3}
+    - {fileID: 8300000, guid: 925823b6b5274acab55a596af36ecdeb, type: 3}
+  - Cue: 9
+    Clips:
+    - {fileID: 8300000, guid: af2394f9f66d4a4f9c895db18a253e51, type: 3}
+    - {fileID: 8300000, guid: c51f0a6516ed4b4fac60adc2dca83157, type: 3}
+  - Cue: 10
+    Clips:
+    - {fileID: 8300000, guid: 5637b022715346bdb45b4bac4345e3f0, type: 3}
+    - {fileID: 8300000, guid: 2489c440c86245208197eaf214de053e, type: 3}
+  - Cue: 11
+    Clips:
+    - {fileID: 8300000, guid: 6ee2d4fea4d54442b7fbf89179add31b, type: 3}
+    - {fileID: 8300000, guid: 00a883ad13d44ab48a9686dc2814b588, type: 3}
+  - Cue: 12
+    Clips:
+    - {fileID: 8300000, guid: cc76835e475746ac891492afca9b8583, type: 3}
+    - {fileID: 8300000, guid: 921ba30f9aa747e0a5b65ecf3e199d98, type: 3}
+  - Cue: 13
+    Clips:
+    - {fileID: 8300000, guid: fa65a579645c4d9bb2c31b8217c198ab, type: 3}
+    - {fileID: 8300000, guid: a269dd0df45848d3ae469c94e2e3ec44, type: 3}
+  - Cue: 14
+    Clips:
+    - {fileID: 8300000, guid: 53cb4801b8df49ee92ff1a00283af088, type: 3}
+    - {fileID: 8300000, guid: cc272d6061a849ada7c7617fbf39155e, type: 3}
+  - Cue: 15
+    Clips:
+    - {fileID: 8300000, guid: 80a0b85a809c42518f2646b1cf2b7b7a, type: 3}
+  - Cue: 16
+    Clips:
+    - {fileID: 8300000, guid: 9c886ba1c894423ab492cf5cbbd530d9, type: 3}
+    - {fileID: 8300000, guid: f56bdb1b2ee344e0b788f42151e1a34e, type: 3}
+    - {fileID: 8300000, guid: a9a0820fd703441d8ddece63e51b2ae6, type: 3}
+  - Cue: 17
+    Clips:
+    - {fileID: 8300000, guid: e5a3ff7fdcbf482aae071586c575f185, type: 3}
+    - {fileID: 8300000, guid: eb499835143346f9b0095314320bfd0d, type: 3}
