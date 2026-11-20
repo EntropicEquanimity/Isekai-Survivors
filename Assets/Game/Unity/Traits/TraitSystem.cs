@@ -87,6 +87,7 @@ namespace Isekai
         {
             RegionEntity entity = EntityOf(unit);
             if (entity == null || !HasBrain(unit)) return false;
+            _pending.RemoveAll(e => e.GameObject == unit);   // an entry still waiting for its roll must not overwrite what was placed
             Apply(entity, traits, TraitRank.Ordinary);
             return true;
         }

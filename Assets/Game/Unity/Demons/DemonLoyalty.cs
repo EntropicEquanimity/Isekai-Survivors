@@ -53,6 +53,9 @@ namespace Isekai
             return up;
         }
 
+        /// <summary>Raises the level to <paramref name="level"/> by giving the experience it takes (debug, tests); never lowers it.</summary>
+        public void RaiseToLevel(int level) => AddXp(LoyaltyRules.XpToReach(level) - _state.Xp);
+
         /// <summary>Sets Loyalty (debug, tests). Zero does not revolt by itself; the next tick does.</summary>
         public void SetLoyalty(float loyalty) => _state.SetLoyalty(loyalty);
 
@@ -121,12 +124,12 @@ namespace Isekai
         }
 
         /// <summary>"Level 2  Loyalty 54/100" (and "rogue", and its Traits), for the selection read-outs.</summary>
-        public string Describe()
+        public string Describe(bool withTraits = true)
         {
             var text = new StringBuilder();
             text.Append("Level ").Append(Level).Append("  Loyalty ").Append(Mathf.CeilToInt(Loyalty)).Append('/').Append((int)LoyaltyTuning.MaxLoyalty);
             if (IsRogue) text.Append("  ROGUE");
-            UnitTraits traits = UnitTraits.Of(gameObject);
+            UnitTraits traits = withTraits ? UnitTraits.Of(gameObject) : null;
             if (traits != null) text.Append("  ").Append(string.Join(", ", traits.Defs().Select(d => d.Name)));
             return text.ToString();
         }

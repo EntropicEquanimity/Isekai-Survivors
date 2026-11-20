@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -41,6 +42,10 @@ namespace Isekai.Tests
                          "Unit type next",
                          "Spawn side prev",
                          "Spawn side next",
+                         "Spawn trait prev",
+                         "Spawn trait next",
+                         "Spawn level -",
+                         "Spawn level +",
                          "Spawn unit at mouse",
                          "Select hovered unit",
                          "Kill selection",
@@ -71,6 +76,10 @@ namespace Isekai.Tests
                          "Unit type next",
                          "Spawn side prev",
                          "Spawn side next",
+                         "Spawn trait prev",
+                         "Spawn trait next",
+                         "Spawn level -",
+                         "Spawn level +",
                          "Spawn unit at mouse",
                          "Select hovered unit",
                          "Clear unit selection",
@@ -86,6 +95,59 @@ namespace Isekai.Tests
             TestDebug.Toggle("Perf overlay", true);
             TestDebug.Toggle("Perf overlay", false);
             yield return null;
+        }
+
+        private static RegionEntity EntityOf(GameObject go) => RegionEntities.Living.First(e => e.GameObject == go);
+
+        [UnityTest]
+        public IEnumerator Spawning_a_demon_with_a_chosen_trait_and_level_shows_them_and_its_behaviour_in_the_inspector()
+        {
+            UnitsDebugSection units = UnitsDebugSection.Current;
+            Assert.IsNotNull(units);
+            Vector3 at = Player.Character.transform.position + Vector3.right * 3f;
+            Assert.IsTrue(units.Pick("Imp", Side.Yours, nameof(TraitId.Berserk), 3));
+            GameObject imp = units.SpawnPicked(at);
+            Assert.IsNotNull(imp, "an Imp spawns");
+            yield return null;
+
+            Assert.AreEqual(Side.Yours, EntityOf(imp).Side);
+            Assert.IsTrue(UnitTraits.Of(imp).Has(TraitId.Berserk), "the chosen trait is on it");
+            Assert.AreEqual(1, UnitTraits.Of(imp).Traits.Count, "and only that one");
+            Assert.AreEqual(3, DemonLoyalty.Of(imp).Level, "the chosen level");
+
+            string text = DebugUnitInspector.Describe(EntityOf(imp));
+            StringAssert.Contains("Side: Yours", text);
+            StringAssert.Contains("Traits: Berserk", text);
+            StringAssert.Contains("Level 3", text);
+            StringAssert.Contains("Loyalty", text);
+            StringAssert.Contains("Action: " + imp.GetComponent<DemonBrain>().Action, text);
+            StringAssert.Contains("Scores:", text);
+            StringAssert.DoesNotContain("Scores: n/a", text);
+        }
+
+        [UnityTest]
+        public IEnumerator Spawning_a_mortal_for_another_side_with_no_traits_and_the_inspector_lists_traits_for_every_unit()
+        {
+            UnitsDebugSection units = UnitsDebugSection.Current;
+            Vector3 at = Player.Character.transform.position + Vector3.left * 3f;
+            Assert.IsTrue(units.Pick("Soldier", Side.Hostile, "none", 5));
+            GameObject soldier = units.SpawnPicked(at);
+            Assert.IsNotNull(soldier);
+            yield return null;
+            Assert.AreEqual(Side.Hostile, EntityOf(soldier).Side);
+            Assert.IsNull(UnitTraits.Of(soldier), "none means none, whatever the roll");
+            StringAssert.Contains("Traits: none", DebugUnitInspector.Describe(EntityOf(soldier)));
+
+            Assert.IsTrue(units.Pick("Soldier", Side.Mortals, nameof(TraitId.Cowardly), 1));
+            GameObject coward = units.SpawnPicked(at + Vector3.up * 2f);
+            yield return null;
+            StringAssert.Contains("Traits: Cowardly", DebugUnitInspector.Describe(EntityOf(coward)));
+            yield return null;
+            Assert.IsTrue(UnitTraits.Of(coward).Has(TraitId.Cowardly), "a pending roll does not replace it");
+
+            string jack = DebugUnitInspector.Describe(EntityOf(Player.Character.gameObject));
+            StringAssert.Contains("Traits:", jack);
+            StringAssert.DoesNotContain("Action: n/a", jack);
         }
 
         [UnityTest]

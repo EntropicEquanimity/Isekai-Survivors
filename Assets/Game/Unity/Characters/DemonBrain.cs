@@ -52,6 +52,9 @@ namespace Isekai
         public Vector3 PostAt => _postAt;
         public PortalOrder Order => _post.Order;
 
+        /// <summary>The factors it last decided with (for the debug inspector).</summary>
+        public BehaviourContext DebugContext => _context;
+
         /// <summary>What it is doing now.</summary>
         public BehaviourAction Action { get; private set; }
 

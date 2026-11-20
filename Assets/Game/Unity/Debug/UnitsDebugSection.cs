@@ -15,15 +15,30 @@ namespace Isekai
         private static readonly SpawnChoice[] Choices = BuildChoices();
         private static readonly FieldInfo s_unitPrefabField = typeof(UnitProducer).GetField("_unitPrefab", BindingFlags.Instance | BindingFlags.NonPublic);
 
+        private const int MaxSpawnLevel = 10;
+
+        // Trait choices for a spawn: leave the roll to chance, none at all, or one chosen Trait.
+        private static readonly string[] TraitLabels = BuildTraitLabels();
+
         private int _choiceIndex;
         private int _sideIndex;
+        private int _traitIndex;   // 0 random, 1 none, 2.. = TraitId
+        private int _level = LoyaltyTuning.StartingLevel;
+
+        /// <summary>The section in this Region (tests drive spawns through it).</summary>
+        public static UnitsDebugSection Current { get; private set; }
 
         private void OnEnable()
         {
+            Current = this;
             DebugActions.Button(this, "Units", "Unit type prev", () => StepChoice(-1), "pick");
             DebugActions.Button(this, "Units", "Unit type next", () => StepChoice(+1), "pick");
             DebugActions.Button(this, "Units", "Spawn side prev", () => StepSide(-1), "side");
             DebugActions.Button(this, "Units", "Spawn side next", () => StepSide(+1), "side");
+            DebugActions.Button(this, "Units", "Spawn trait prev", () => StepTrait(-1), "trait");
+            DebugActions.Button(this, "Units", "Spawn trait next", () => StepTrait(+1), "trait");
+            DebugActions.Button(this, "Units", "Spawn level -", () => _level = Mathf.Max(LoyaltyTuning.StartingLevel, _level - 1), "level");
+            DebugActions.Button(this, "Units", "Spawn level +", () => _level = Mathf.Min(MaxSpawnLevel, _level + 1), "level");
             DebugActions.Button(this, "Units", "Spawn unit at mouse", SpawnAtMouse);
             DebugActions.Button(this, "Units", "Select hovered unit", DebugUnitSelection.SelectHovered);
             DebugActions.Button(this, "Units", "Clear unit selection", DebugUnitSelection.ClearSelection);
@@ -33,7 +48,37 @@ namespace Isekai
             DebugActions.Info(this, "Units", Readout);
         }
 
-        private void OnDisable() => DebugActions.Remove(this);
+        private void OnDisable()
+        {
+            if (Current == this) Current = null;
+            DebugActions.Remove(this);
+        }
+
+        private static string[] BuildTraitLabels()
+        {
+            var labels = new List<string> { "random traits", "no traits" };
+            foreach (TraitId id in Enum.GetValues(typeof(TraitId))) labels.Add(id.ToString());
+            return labels.ToArray();
+        }
+
+        private void StepTrait(int delta)
+        {
+            _traitIndex = (_traitIndex + delta) % TraitLabels.Length;
+            if (_traitIndex < 0) _traitIndex += TraitLabels.Length;
+        }
+
+        /// <summary>Picks what the next spawn is: a unit type by label (e.g. "Imp", "Soldier"), a side, a Trait (null: random, "none": none) and a level.</summary>
+        public bool Pick(string unitLabel, Side side, string trait, int level)
+        {
+            int unit = Array.FindIndex(Choices, c => c.Label == unitLabel);
+            int traitIndex = trait == null ? 0 : Array.IndexOf(TraitLabels, trait == "none" ? "no traits" : trait);
+            if (unit < 0 || traitIndex < 0) return false;
+            _choiceIndex = unit;
+            _sideIndex = Array.IndexOf(SideRelations.All, side);
+            _traitIndex = traitIndex;
+            _level = Mathf.Clamp(level, LoyaltyTuning.StartingLevel, MaxSpawnLevel);
+            return true;
+        }
 
         private void StepChoice(int delta)
         {
@@ -60,10 +105,21 @@ namespace Isekai
             RegionGrid grid = RegionGrid.Current;
             if (grid != null && grid.Contains(grid.CellAt(at))) at = grid.CentreOf(grid.CellAt(at));
 
+            GameObject go = SpawnPicked(at);
+            if (go != null) DebugUnitSelection.SelectAt(go.transform.position, 2f);
+        }
+
+        /// <summary>Spawns the picked unit type for the picked side with the picked Traits and level (the level only where the unit has levels: demons of Portals).</summary>
+        public GameObject SpawnPicked(Vector3 at)
+        {
+            if (Choices.Length == 0) return null;
             GameObject go = Spawn(PickedChoice, at);
-            if (go == null) return;
+            if (go == null) return null;
             ApplySide(go, PickedSide);
-            DebugUnitSelection.SelectAt(go.transform.position, 2f);
+            if (_traitIndex == 1) TraitSystem.Current?.Give(go);
+            else if (_traitIndex >= 2) TraitSystem.Current?.Give(go, (TraitId)(_traitIndex - 2));
+            if (_level > LoyaltyTuning.StartingLevel) DemonLoyalty.Of(go)?.RaiseToLevel(_level);
+            return go;
         }
 
         private static void KillSelection()
@@ -90,7 +146,7 @@ namespace Isekai
             string selected = DebugUnitSelection.TrySelected(out RegionEntity unit)
                 ? $"{unit.GameObject.name} ({unit.Side}, {unit.Kind})"
                 : "none";
-            return $"Spawn {PickedChoice.Label} as {PickedSide} · selected {selected}";
+            return $"Spawn {PickedChoice.Label} as {PickedSide}, {TraitLabels[_traitIndex]}, level {_level} · selected {selected}";
         }
 
         private static SpawnChoice[] BuildChoices()

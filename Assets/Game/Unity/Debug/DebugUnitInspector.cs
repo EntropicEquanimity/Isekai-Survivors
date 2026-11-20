@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text;
 using Blondie.Combat;
 using UnityEngine;
@@ -57,7 +58,16 @@ namespace Isekai
             string action = "none";
             if (entity.GameObject.TryGetComponent(out MortalBrain mortal)) action = mortal.Action.ToString();
             else if (entity.GameObject.TryGetComponent(out WildlifeBrain wildlife)) action = wildlife.Action.ToString();
+            else if (entity.GameObject.TryGetComponent(out DemonBrain demon) && demon.enabled) action = demon.Action.ToString();
             return $"Inspector: {entity.GameObject.name} · side {entity.Side} · action {action}";
+        }
+
+        /// <summary>The inspector's text for <paramref name="entity"/> (side, state, behaviour and weights, traits, level, Loyalty).</summary>
+        public static string Describe(RegionEntity entity)
+        {
+            var text = new StringBuilder();
+            BuildDetails(entity, text);
+            return text.ToString();
         }
 
         private static void BuildDetails(RegionEntity entity, StringBuilder text)
@@ -67,7 +77,9 @@ namespace Isekai
             text.Append("Side: ").Append(entity.Side).Append("    Kind: ").Append(entity.Kind).Append('\n');
             text.Append("Health: ").Append(d.Health.ToString("0.#")).Append('/').Append(d.MaxHealth.ToString("0.#")).Append('\n');
             DemonLoyalty loyalty = DemonLoyalty.Of(entity.GameObject);
-            text.Append(loyalty != null ? loyalty.Describe() : "Level and Loyalty: demons of Portals only").Append('\n');
+            text.Append(loyalty != null ? loyalty.Describe(withTraits: false) : "Level and Loyalty: demons of Portals only").Append('\n');
+            UnitTraits traits = UnitTraits.Of(entity.GameObject);
+            text.Append("Traits: ").Append(traits != null ? string.Join(", ", traits.Defs().Select(t => t.Name)) : "none").Append('\n');
             text.Append("Vigilance contribution: ").Append(VigilanceContribution(entity)).Append('\n');
             AppendBrain(text, entity);
         }
@@ -93,7 +105,14 @@ namespace Isekai
                 return;
             }
 
-            text.Append("Action: n/a\nScores: n/a");
+            if (entity.GameObject.TryGetComponent(out DemonBrain demon))
+            {
+                text.Append("Action: ").Append(demon.enabled ? demon.Action.ToString() : "Jack is in this body").Append('\n');
+                AppendScores(text, demon.Behaviour, demon.DebugContext, demon.Action);
+                return;
+            }
+
+            text.Append(entity.Kind == UnitKind.Character ? "Action: steered by Jack\nScores: n/a" : "Action: n/a\nScores: n/a");
         }
 
         private static void AppendScores(StringBuilder text, BehaviourProfile profile, in BehaviourContext context, BehaviourAction current)
