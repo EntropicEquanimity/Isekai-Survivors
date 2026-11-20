@@ -1,0 +1,28 @@
+Visual effects (Assets/Game/Art/Vfx/Resources)
+
+Super Pixel Effects Gigapack (Free Version) - Will Tice / unTied Games
+https://untiedgames.itch.io/super-pixel-effects-gigapack
+Licence: unTied Games licence, http://untiedgames.com/files/license.txt (commercial and non-commercial use in a game is
+fine; attribution in the credits is asked for; the assets may not be redistributed on their own or bundled with a tool or
+engine; no use as AI training material). Attribution line: "Super Pixel Effects Gigapack - Will Tice / unTied Games".
+
+Sheets used (small size, one colour variant each, copied unchanged from the pack's spritesheet folder):
+  Vfx_Death_Splat.png        Splatters/burst_splatter_001 small red
+  Vfx_Wisp_Burst.png         Smoke Bursts/stylized_skull_smoke_burst_001 small white
+  Vfx_Summon.png             Lightning/lightning_burst_003 small violet
+  Vfx_Possess.png            Fantasy Spells/spell_absorb_001 small violet
+  Vfx_Wisp_Trail.png         Magic Bursts/round_sparkle_burst_001 small blue
+  Vfx_Revive.png             Magic Bursts/round_light_burst_001 small yellow
+  Vfx_Corruption_Pulse.png   Lightning/lightning_burst_001 small violet
+  Vfx_Purify.png             Fantasy Spells/status_sparkling_001 small yellow
+  Vfx_Alert.png              Symbols/symbol_alert_001 small red
+  Vfx_Wave.png               Sci-fi/scifi_warp_002 small red
+  Vfx_Spawn_Circle.png       Sci-fi/scifi_warp_003 small blue
+  Vfx_Rider_Arrives.png      Explosions/symmetrical_explosion_002 small orange
+  Vfx_Firework_Gold.png      Magic Bursts/round_firework_burst_002 small yellow
+  Vfx_Firework_Green.png     Magic Bursts/round_firework_burst_001 small green
+  Vfx_Crown.png              Symbols/symbol_crown_001 small yellow
+
+Fog cloud texture
+  Vfx_Fog_Cloud.png          D:\GameDev\Assets\VFXogcloud.png (96x96, copied unchanged). Author and licence not recorded
+                             with the file: confirm before release.
