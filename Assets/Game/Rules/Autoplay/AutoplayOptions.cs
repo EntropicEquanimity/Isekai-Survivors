@@ -25,6 +25,20 @@ namespace Isekai
         public AnchorKind Anchor { get; set; } = AnchorKind.Shrine;
         public AutoplayStrategy Strategy { get; set; } = AutoplayStrategies.Balanced;
 
+        /// <summary>
+        /// Several Anchors and strategies in one batch (<c>anchor=Shrine,WarThrone strategy=stealth,rush</c>): every pairing is
+        /// played, each on every seed. Empty: just <see cref="Anchor"/> and <see cref="Strategy"/>.
+        /// </summary>
+        public List<AnchorKind> Anchors { get; } = new();
+        public List<AutoplayStrategy> Strategies { get; } = new();
+
+        private int AnchorCount => Math.Max(1, Anchors.Count);
+        private int StrategyCount => Math.Max(1, Strategies.Count);
+
+        /// <summary>The Anchor and strategy Run <c>i</c> plays: the pairings in turn, strategy changing fastest.</summary>
+        public AnchorKind AnchorOf(int run) => Anchors.Count == 0 ? Anchor : Anchors[run / StrategyCount % AnchorCount];
+        public AutoplayStrategy StrategyOf(int run) => Strategies.Count == 0 ? Strategy : Strategies[run % StrategyCount];
+
         /// <summary>The game speed asked for (the runner caps it, see <see cref="AutoplaySpeed"/>).</summary>
         public float Speed { get; set; } = 8f;
 
@@ -48,8 +62,9 @@ namespace Isekai
 
         public int SeedOf(int run)
         {
-            if (Seeds.Count == 0) return DefaultFirstSeed + run;
-            return Seeds[run % Seeds.Count];
+            int round = run / (AnchorCount * StrategyCount);
+            if (Seeds.Count == 0) return DefaultFirstSeed + round;
+            return Seeds[round % Seeds.Count];
         }
 
         /// <summary>The options after <c>-autoplay</c> in <paramref name="args"/>; null when the flag is not there.</summary>
@@ -92,13 +107,21 @@ namespace Isekai
                         }
                         break;
                     case "anchor":
-                        if (!TryAnchor(value, out AnchorKind anchor)) { error = $"autoplay: anchor must be Shrine or WarThrone, not '{value}'"; return false; }
-                        result.Anchor = anchor;
+                        foreach (string part in value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            if (!TryAnchor(part, out AnchorKind anchor)) { error = $"autoplay: anchor must be Shrine or WarThrone, not '{part}'"; return false; }
+                            result.Anchors.Add(anchor);
+                        }
+                        if (result.Anchors.Count > 0) result.Anchor = result.Anchors[0];
                         break;
                     case "strategy":
-                        AutoplayStrategy strategy = AutoplayStrategies.Find(value);
-                        if (strategy == null) { error = $"autoplay: strategy must be {string.Join("|", AutoplayStrategies.All.Select(s => s.Name))}, not '{value}'"; return false; }
-                        result.Strategy = strategy;
+                        foreach (string part in value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            AutoplayStrategy strategy = AutoplayStrategies.Find(part);
+                            if (strategy == null) { error = $"autoplay: strategy must be {string.Join("|", AutoplayStrategies.All.Select(s => s.Name))}, not '{part}'"; return false; }
+                            result.Strategies.Add(strategy);
+                        }
+                        if (result.Strategies.Count > 0) result.Strategy = result.Strategies[0];
                         break;
                     case "speed":
                         if (!float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out float speed) || speed <= 0f) { error = $"autoplay: speed must be above 0, not '{value}'"; return false; }
@@ -128,7 +151,8 @@ namespace Isekai
                         return false;
                 }
             }
-            if (!runsGiven && result.Seeds.Count > 0) result.Runs = result.Seeds.Count;
+            if (!runsGiven && result.Seeds.Count > 0) result.Runs = result.Seeds.Count * result.AnchorCount * result.StrategyCount;
+            else if (!runsGiven && (result.Anchors.Count > 1 || result.Strategies.Count > 1)) result.Runs = result.AnchorCount * result.StrategyCount;
             options = result;
             return true;
         }

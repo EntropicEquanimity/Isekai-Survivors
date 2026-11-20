@@ -36,6 +36,7 @@ namespace Isekai
         private const float JackReach = 1.1f;
         private const float AttackStandOff = 3f;
         private const float SeatZone = 20f;
+        private const float HomeRadius = 7f;
         private const float WitnessRadius = 12f;
         private const float CompanyRadius = 8f;
         private const int PreyCandidates = 24;
@@ -50,6 +51,8 @@ namespace Isekai
         private readonly List<RegionEntity> _preyShortlist = new();
         private readonly Dictionary<Object, float> _badTargets = new();
         private readonly HashSet<UnitProducer> _ordered = new();
+        private readonly List<UnitProducer> _producers = new();
+        private readonly List<CombatUnit> _probe = new();
 
         private BuildingAsset _portalAsset;
         private float _clock;
@@ -67,6 +70,9 @@ namespace Isekai
         private bool _raiding;
         private bool _ordersDirty = true;
         private int _lastSouls;
+        private float _nextStatus;
+        private bool _watching;
+        private int _demonsLostAtSeat, _mortalsLostAtSeat, _buildingsLostAtSeat;
         private float _lastGain;
 
         public AutoplayBot(AutoplayStrategy strategy, BotInput input)
@@ -99,6 +105,7 @@ namespace Isekai
         /// <summary>The bot lets go of the stick.</summary>
         public void Release()
         {
+            if (_watching) { RegionEntities.Died -= OnDied; _watching = false; }
             _input.Move = Vector2.zero;
             _walker.Clear();
         }
@@ -146,6 +153,56 @@ namespace Isekai
                 Log($"{_clock:0}s {Move} -> {move}: health {snapshot.HealthFraction:0.00}, Souls {snapshot.Souls}, Stone {snapshot.Stone}, Portals {snapshot.Portals}, demons {snapshot.Units}, {snapshot.Stage}, at {jack.transform.position.x:0},{jack.transform.position.y:0}");
             Move = move;
             Walk(jack, souls, snapshot);
+            if (Log != null && _clock >= _nextStatus) SayStatus(jack, snapshot);
+        }
+
+        // A line every half minute of what the Region looks like (verbose only): the numbers a balance pass reads.
+        private void OnDied(UnitDeath death)
+        {
+            Building keep = SeatKeep();
+            if (keep == null || death.Unit.GameObject == null || Vector2.Distance(death.Unit.GameObject.transform.position, keep.transform.position) >= SeatZone) return;
+            if (death.Side == Side.Yours && death.Kind == UnitKind.Demon) _demonsLostAtSeat++;
+            else if (death.Side == Side.Mortals && death.Kind == UnitKind.Mortal) _mortalsLostAtSeat++;
+            else if (death.Side == Side.Mortals && death.Kind == UnitKind.Building) _buildingsLostAtSeat++;
+        }
+
+        private void SayStatus(CharacterControl jack, in BotSnapshot snapshot)
+        {
+            if (!_watching) { RegionEntities.Died += OnDied; _watching = true; }
+            _nextStatus = _clock + 30f;
+            Building keep = SeatKeep();
+            int demons = 0, mortals = 0, atSeat = 0, beasts = 0, demonsAtSeat = 0;
+            var actions = new System.Text.StringBuilder();
+            int probed = 0;
+            foreach (RegionEntity e in RegionEntities.Living)
+            {
+                if (e.Side == Side.Yours && e.Kind == UnitKind.Demon)
+                {
+                    demons++;
+                    if (keep != null && Vector2.Distance(e.GameObject.transform.position, keep.transform.position) < SeatZone)
+                    {
+                        demonsAtSeat++;
+                        if (e.GameObject.TryGetComponent(out DemonBrain brain)) {
+                            actions.Append(brain.Action.ToString()[0]).Append((int)Vector2.Distance(e.GameObject.transform.position, keep.transform.position));
+                            if (probed++ < 4)
+                            {
+                                Vector3 at = e.GameObject.transform.position;
+                                CombatUnit target = Targeting.NearestHostile(e.Damageable.Unit, at, 4f, at, _probe, out float d);
+                                actions.Append("->").Append(target != null ? (target.Owner is Component c ? c.name : target.Name) : "none").Append('@').Append(d.ToString("0.0"));
+                            }
+                            actions.Append(' ');
+                        }
+                    }
+                }
+                else if (e.Side == Side.Mortals && e.Kind == UnitKind.Mortal)
+                {
+                    mortals++;
+                    if (keep != null && Vector2.Distance(e.GameObject.transform.position, keep.transform.position) < SeatZone) atSeat++;
+                }
+                else if (e.Kind == UnitKind.Wildlife) beasts++;
+            }
+            string keepText = keep != null && keep.Damageable != null ? $"keep {keep.Damageable.Unit.Health:0}/{keep.Damageable.MaxHealth:0} [{actions}] seat losses: {_demonsLostAtSeat} demons, {_mortalsLostAtSeat} mortals, {_buildingsLostAtSeat} buildings" : "keep gone";
+            Log($"{_clock:0}s status: {snapshot.Stage}, health {snapshot.HealthFraction:0.00}, Souls {snapshot.Souls}, Portals {snapshot.Portals}, demons {demons} ({demonsAtSeat} at the Seat), mortals {mortals} ({atSeat} at the Seat), beasts {beasts}, {keepText}, {Move}{(_raiding ? ", raiding" : string.Empty)}");
         }
 
         // ---------------------------------------------------------------- what the bot sees
@@ -162,6 +219,19 @@ namespace Isekai
                 if (b.TryGetComponent(out UnitProducer producer)) units += producer.Units.Count;
             }
             Building keep = SeatKeep();
+            int demonsAtSeat = 0, seatDefenders = 0;
+            if (keep != null)
+            {
+                Vector3 seat = keep.transform.position;
+                foreach (RegionEntity e in RegionEntities.Living)
+                {
+                    if (e.Kind != UnitKind.Demon && e.Kind != UnitKind.Mortal) continue;
+                    if (e.Side != Side.Yours && e.Side != Side.Mortals) continue;
+                    if (Vector2.Distance(e.GameObject.transform.position, seat) >= SeatZone) continue;
+                    if (e.Side == Side.Yours) demonsAtSeat++;
+                    else seatDefenders++;
+                }
+            }
             var snapshot = new BotSnapshot
             {
                 RegionSeconds = _clock,
@@ -185,6 +255,11 @@ namespace Isekai
                 PreyLeft = _prey.Count > 0,
                 PortalSpot = _portalSpot,
                 SeatKnown = keep != null,
+                Raiding = _raiding,
+                DemonsAtSeat = demonsAtSeat,
+                SeatDefenders = seatDefenders,
+                SeatDistance = keep != null && jack != null ? Vector2.Distance(jack.transform.position, keep.transform.position) : 0f,
+                DeathDrainPerSecond = SoulRules.DrainPerSecond(souls.Ledger.Level, souls.Ledger.Deaths + 1, doubled: true),
             };
             return snapshot;
         }
@@ -298,11 +373,18 @@ namespace Isekai
             _ordersDirty = false;
             Building keep = SeatKeep();
             Building anchor = RegionSouls.Current != null ? RegionSouls.Current.Anchor : null;
+            _producers.Clear();
             foreach (UnitProducer producer in Object.FindObjectsByType<UnitProducer>(FindObjectsInactive.Exclude))
+                if (producer.TryGetComponent(out Building b) && b.IsPlayers) _producers.Add(producer);
+            _producers.Sort((a, b) => a.transform.position.x != b.transform.position.x
+                ? a.transform.position.x.CompareTo(b.transform.position.x)
+                : a.transform.position.y.CompareTo(b.transform.position.y));
+            int raiders = _raiding && keep != null ? BotRules.RaidingPortals(_strategy, _producers.Count) : 0;
+            for (int i = 0; i < _producers.Count; i++)
             {
-                if (!producer.TryGetComponent(out Building b) || !b.IsPlayers) continue;
+                UnitProducer producer = _producers[i];
                 if (producer.Policy != _strategy.Bones) producer.Policy = _strategy.Bones;
-                if (_raiding && keep != null)
+                if (i < raiders)
                 {
                     bool marked = producer.HasRaidTarget && Vector2.Distance(producer.RaidTarget, keep.transform.position) < 1f;
                     if (producer.Order != PortalOrder.Raid || !marked) producer.MarkRaid(keep.transform.position);
@@ -354,9 +436,18 @@ namespace Isekai
                     Follow(keep, keep.transform.position, AttackStandOff + 1.5f);
                     break;
                 default:
-                    Stand();
+                    HoldAtHome(souls);
                     break;
             }
+        }
+
+        // "Hold" is at home: the demons guard the Anchor, so that is where Jack waits, not wherever the last hunt left him.
+        private void HoldAtHome(RegionSouls souls)
+        {
+            Building anchor = souls.Anchor;
+            CharacterControl jack = Player.Character;
+            if (anchor == null || jack == null || Vector2.Distance(jack.transform.position, anchor.transform.position) <= HomeRadius) { Stand(); return; }
+            Follow(anchor, anchor.transform.position, HomeRadius - 2f);
         }
 
         private void Stand()
@@ -457,11 +548,14 @@ namespace Isekai
                 ReviveCost = souls.Ledger.ReviveCost,
                 PossessCost = SoulRules.PossessCost(souls.Ledger.Level, bodyAlive: false),
                 AnchorStands = souls.Anchor != null,
+                DrainPerSecond = souls.DrainPerSecond,
             };
             Vector3 at = wisp.transform.position;
             GameObject demon = RegionPossession.Current != null ? RegionPossession.Current.Nearest(at, 1000f) : null;
             Vector3 target = at;
-            switch (BotRules.WhenBodiless(s, demon != null))
+            float toAnchor = souls.Anchor != null ? Vector2.Distance(at, souls.Anchor.transform.position) : -1f;
+            float toDemon = demon != null ? Vector2.Distance(at, demon.transform.position) : -1f;
+            switch (BotRules.WhenBodiless(s, toAnchor, toDemon))
             {
                 case BodilessPlan.ToDemon when demon != null: target = demon.transform.position; break;
                 default:

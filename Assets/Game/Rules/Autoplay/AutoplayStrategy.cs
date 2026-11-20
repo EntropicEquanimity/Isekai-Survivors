@@ -26,8 +26,17 @@ namespace Isekai
         /// <summary>Portals built (placed) before the demons raid.</summary>
         public int PortalsBeforeRaid { get; set; } = 2;
 
+        /// <summary>Portals built in all, raid or not (the more, the bigger the force; each costs Stone to mine). At least one more than <see cref="PortalsBeforeRaid"/>.</summary>
+        public int PortalsTotal { get; set; }
+
         /// <summary>Demons alive before a raid is worth sending.</summary>
         public int UnitsToRaid { get; set; } = 4;
+
+        /// <summary>Portals that stay on Guard at the Anchor while the rest raid, so a Wave that comes while the force is away finds something at home.</summary>
+        public int HomeGuardPortals { get; set; }
+
+        /// <summary>Demons at the Seat before Jack goes with the raid himself (see <see cref="BotRules.JackJoinsRaid"/>); the waiting being over also sends him.</summary>
+        public int JackJoinsAtDemons { get; set; } = 6;
 
         /// <summary>Game seconds into the Region before the demons are sent, however many there are ("raid late").</summary>
         public float RaidNotBeforeSeconds { get; set; }
@@ -65,9 +74,12 @@ namespace Isekai
             AvoidWitnesses = true,
             VigilanceCeiling = VigilanceStage.Uneasy,
             PortalsBeforeRaid = 3,
+            PortalsTotal = 4,
             UnitsToRaid = 8,
             RaidNotBeforeSeconds = 420f,
             AssaultAfterSeconds = 900f,
+            HomeGuardPortals = 1,
+            JackJoinsAtDemons = 8,
             Bones = BonesPolicy.Destroy,
             MaxPreyThreat = 1,
             WorkersWanted = 2,
@@ -81,9 +93,11 @@ namespace Isekai
             AvoidWitnesses = false,
             VigilanceCeiling = VigilanceStage.Crusade,
             PortalsBeforeRaid = 2,
+            PortalsTotal = 4,
             UnitsToRaid = 3,
             RaidNotBeforeSeconds = 90f,
-            AssaultAfterSeconds = 300f,
+            AssaultAfterSeconds = 480f,
+            JackJoinsAtDemons = 4,
             Bones = BonesPolicy.Ignore,
             MaxPreyThreat = 4,
             WorkersWanted = 0,
@@ -97,10 +111,12 @@ namespace Isekai
             AvoidWitnesses = false,
             VigilanceCeiling = VigilanceStage.Alarmed,
             PortalsBeforeRaid = 3,
+            PortalsTotal = 5,
             UnitsToRaid = 5,
-            RaidNotBeforeSeconds = 240f,
-            AssaultAfterSeconds = 600f,
-            Bones = BonesPolicy.Harvest,
+            RaidNotBeforeSeconds = 360f,
+            AssaultAfterSeconds = 900f,
+            HomeGuardPortals = 1,
+            Bones = BonesPolicy.Destroy,
             WorkersWanted = 1,
             SoulLevelTarget = 2,
             RetreatHealth = 0.45f,

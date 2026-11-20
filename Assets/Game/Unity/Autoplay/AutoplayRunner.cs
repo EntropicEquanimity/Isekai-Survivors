@@ -71,7 +71,7 @@ namespace Isekai
         public string Directory => _directory;
 
         /// <summary>What the batch is doing now, for the debug menu.</summary>
-        public string Status => IsFinished ? $"Autoplay done: {_summary.Runs.Count} Runs" : $"Autoplay {_options.Strategy.Name}: Run {_runIndex + 1}/{_options.Runs}, {_phase}"
+        public string Status => IsFinished ? $"Autoplay done: {_summary.Runs.Count} Runs" : $"Autoplay {_options.StrategyOf(Math.Min(_runIndex, _options.Runs - 1)).Name}: Run {_runIndex + 1}/{_options.Runs}, {_phase}"
                                                                                            + (_region != null ? $", {_region.Name} {(_bot != null ? _bot.RegionSeconds : 0f):0}s" : string.Empty);
 
         /// <summary>A Run finished and its report was written.</summary>
@@ -109,8 +109,8 @@ namespace Isekai
             _options = options;
             _batchId = AutoplayReportFiles.NewBatchId();
             _directory = string.IsNullOrEmpty(options.OutputDirectory) ? AutoplayReportFiles.DefaultDirectory : options.OutputDirectory;
-            _summary.Strategy = options.Strategy.Name;
-            _summary.Anchor = options.Anchor.ToString();
+            _summary.Strategy = options.Strategies.Count > 1 ? string.Join(",", options.Strategies) : options.Strategy.Name;
+            _summary.Anchor = options.Anchors.Count > 1 ? string.Join(",", options.Anchors) : options.Anchor.ToString();
             _summary.Speed = options.Speed;
             _savedStorage = SaveSystem.Storage;
             SaveSystem.Storage = new MemorySaveStorage();
@@ -125,7 +125,7 @@ namespace Isekai
             Application.logMessageReceived += OnLog;
             BotInput.Install();
             _phaseSince = Time.realtimeSinceStartup;
-            BLog.Info("Autoplay", $"Batch {_batchId}: {options.Runs} Runs, {options.Strategy.Name}, {options.Anchor}, speed {options.Speed}, reports in {_directory}.");
+            BLog.Info("Autoplay", $"Batch {_batchId}: {options.Runs} Runs, {_summary.Strategy}, {_summary.Anchor}, speed {options.Speed}, reports in {_directory}.");
         }
 
         private void OnDestroy()
@@ -191,8 +191,8 @@ namespace Isekai
             {
                 Index = _runIndex,
                 Seed = seed,
-                Anchor = _options.Anchor.ToString(),
-                Strategy = _options.Strategy.Name,
+                Anchor = _options.AnchorOf(_runIndex).ToString(),
+                Strategy = _options.StrategyOf(_runIndex).Name,
                 Speed = _options.Speed,
                 Version = Application.version,
                 StartedAt = DateTime.UtcNow.ToString("o"),
@@ -230,7 +230,7 @@ namespace Isekai
             if (run.IsOver) { EndRun(run.State == PlanetRunState.Won ? RunResult.Won : RunResult.Lost, null); return; }
             if (!_anchorPicked)
             {
-                screen.ChooseAnchor(_options.Anchor);
+                screen.ChooseAnchor(_options.AnchorOf(_runIndex));
                 _anchorPicked = true;
             }
             RegionInfo next = BotRules.NextRegion(run.Available());
@@ -256,7 +256,7 @@ namespace Isekai
         {
             PlanetRun run = RunSession.Run;
             _region = new RegionReport { Id = _entering.Id, Name = _entering.Name, Depth = _entering.Depth, IsCapital = _entering.IsCapital };
-            _bot = new AutoplayBot(_options.Strategy, BotInput.Current) { Log = _options.Verbose ? Say : null };
+            _bot = new AutoplayBot(_options.StrategyOf(_runIndex), BotInput.Current) { Log = _options.Verbose ? Say : null };
             if (_options.Verbose) RegionEntities.Died += OnDied;
             _pile = RegionEconomy.Current.Stockpile;
             _lastSouls = _pile.Get(ResourceType.Souls);

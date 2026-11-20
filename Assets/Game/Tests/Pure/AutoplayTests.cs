@@ -94,16 +94,82 @@ namespace Isekai.Tests
         }
 
         [Test]
-        public void Jack_stays_home_while_only_the_demons_raid()
+        public void Jack_stays_home_while_only_the_demons_raid_and_goes_once_they_hold_the_Seat_and_his_Souls_see_him_back()
         {
             BotSnapshot s = Base();
             s.RegionSeconds = 100f;
             s.Portals = 2;
-            s.Units = 3;
-            Assert.IsTrue(BotRules.ShouldRaid(AutoplayStrategies.Rush, s));
-            Assert.IsFalse(BotRules.JackJoinsRaid(AutoplayStrategies.Rush, s), "three demons are enough for the raid; Jack is not needed");
             s.Units = 6;
+            s.ReviveCost = 22;
+            s.DeathDrainPerSecond = 4f;
+            s.SeatDistance = 120f;
+            s.Souls = 500;
+            Assert.IsTrue(BotRules.ShouldRaid(AutoplayStrategies.Rush, s));
+            Assert.IsFalse(BotRules.JackJoinsRaid(AutoplayStrategies.Rush, s), "no demon has reached the Seat yet");
+            s.DemonsAtSeat = AutoplayStrategies.Rush.JackJoinsAtDemons;
+            s.SeatDefenders = s.DemonsAtSeat * 2;
             Assert.IsTrue(BotRules.JackJoinsRaid(AutoplayStrategies.Rush, s));
+            s.SeatDefenders = s.DemonsAtSeat * 2 + 1;
+            Assert.IsFalse(BotRules.JackJoinsRaid(AutoplayStrategies.Rush, s), "the demons are outnumbered more than two to one");
+        }
+
+        [Test]
+        public void Jack_stays_home_when_a_death_at_the_Seat_would_lose_the_Run()
+        {
+            BotSnapshot s = Base();
+            s.RegionSeconds = 100f;
+            s.Portals = 2;
+            s.Units = 6;
+            s.DemonsAtSeat = 8;
+            s.ReviveCost = 22;
+            s.DeathDrainPerSecond = 4f;
+            s.SeatDistance = 120f;   // 20 seconds of wisp flight, 80 Souls drained
+            s.Souls = 102;
+            Assert.IsTrue(BotRules.CanSurviveDeathAtSeat(s));
+            Assert.IsTrue(BotRules.JackJoinsRaid(AutoplayStrategies.Rush, s));
+            s.Souls = 101;
+            Assert.IsFalse(BotRules.CanSurviveDeathAtSeat(s));
+            Assert.IsFalse(BotRules.JackJoinsRaid(AutoplayStrategies.Rush, s));
+        }
+
+        [Test]
+        public void A_hurt_Jack_still_goes_to_the_Seat_when_his_Souls_would_see_him_back_but_not_otherwise()
+        {
+            BotSnapshot s = Base();
+            s.RegionSeconds = 100f;
+            s.Portals = 2;
+            s.Units = 6;
+            s.DemonsAtSeat = 8;
+            s.SeatDefenders = 4;
+            s.HealthFraction = 0.1f;
+            s.ReviveCost = 22;
+            s.DeathDrainPerSecond = 4f;
+            s.SeatDistance = 120f;
+            s.Souls = 102;
+            Assert.AreEqual(BotMove.Assault, BotRules.NextMove(AutoplayStrategies.Rush, s), "a death only costs Souls");
+            s.Souls = 50;
+            Assert.AreEqual(BotMove.Retreat, BotRules.NextMove(AutoplayStrategies.Rush, s), "a death at the Seat would lose the Run");
+        }
+
+        [Test]
+        public void A_raid_that_has_begun_goes_on_while_there_are_demons_even_with_a_Portal_lost()
+        {
+            BotSnapshot s = Base();
+            s.RegionSeconds = 200f;
+            s.Portals = 1;
+            s.Units = 5;
+            Assert.IsFalse(BotRules.ShouldRaid(AutoplayStrategies.Rush, s), "one Portal is too few to start");
+            s.Raiding = true;
+            Assert.IsTrue(BotRules.ShouldRaid(AutoplayStrategies.Rush, s));
+            s.Units = 0;
+            Assert.IsFalse(BotRules.ShouldRaid(AutoplayStrategies.Rush, s), "nothing left to send");
+        }
+
+        [Test]
+        public void Balanced_and_stealth_want_more_demons_at_the_Seat_than_rush_before_Jack_goes()
+        {
+            Assert.Greater(AutoplayStrategies.Balanced.JackJoinsAtDemons, AutoplayStrategies.Rush.JackJoinsAtDemons);
+            Assert.GreaterOrEqual(AutoplayStrategies.Stealth.JackJoinsAtDemons, AutoplayStrategies.Balanced.JackJoinsAtDemons);
         }
 
         [Test]
@@ -261,6 +327,32 @@ namespace Isekai.Tests
             s.ReviveCost = 500;
             s.Souls = 150;
             Assert.AreEqual(BodilessPlan.ToDemon, BotRules.WhenBodiless(s, demonsAlive: true));
+        }
+
+        [Test]
+        public void A_wisp_too_far_from_the_Anchor_to_reach_it_alive_takes_a_demon_beside_it()
+        {
+            BotSnapshot s = Base();
+            s.Souls = 60;
+            s.ReviveCost = 22;
+            s.PossessCost = 55;
+            s.DrainPerSecond = 3f;
+            Assert.AreEqual(BodilessPlan.ToAnchor, BotRules.WhenBodiless(s, anchorDistance: 30f, demonDistance: 5f), "30 cells cost 15 Souls: 45 are left to revive");
+            Assert.AreEqual(BodilessPlan.ToDemon, BotRules.WhenBodiless(s, anchorDistance: 150f, demonDistance: 5f), "150 cells would drain 75: it never arrives");
+            Assert.AreEqual(BodilessPlan.ToAnchor, BotRules.WhenBodiless(s, anchorDistance: 150f, demonDistance: -1f), "no demon: the Anchor is all there is");
+            Assert.AreEqual(BodilessPlan.ToDemon, BotRules.WhenBodiless(s, anchorDistance: -1f, demonDistance: 5f), "no Anchor: a demon is all there is");
+        }
+
+        [Test]
+        public void When_neither_can_be_reached_alive_it_heads_for_the_nearer()
+        {
+            BotSnapshot s = Base();
+            s.Souls = 10;
+            s.ReviveCost = 22;
+            s.PossessCost = 55;
+            s.DrainPerSecond = 3f;
+            Assert.AreEqual(BodilessPlan.ToDemon, BotRules.WhenBodiless(s, anchorDistance: 100f, demonDistance: 20f));
+            Assert.AreEqual(BodilessPlan.ToAnchor, BotRules.WhenBodiless(s, anchorDistance: 20f, demonDistance: 100f));
         }
 
         private static PreyCandidate Prey(float distance, int witnesses = 0, int danger = 0, int company = 0, float fromAnchor = 10f) =>
@@ -496,6 +588,26 @@ namespace Isekai.Tests
         {
             AutoplayOptions o = Parse("-autoplay", "runs=4", "seeds=10,20");
             CollectionAssert.AreEqual(new[] { 10, 20, 10, 20 }, Enumerable.Range(0, 4).Select(o.SeedOf));
+        }
+
+        [Test]
+        public void Several_anchors_and_strategies_play_every_pairing_on_every_seed()
+        {
+            AutoplayOptions o = Parse("-autoplay", "seeds=7,8", "anchor=Shrine,WarThrone", "strategy=stealth,rush,balanced");
+            Assert.AreEqual(12, o.Runs, "2 seeds x 2 Anchors x 3 strategies");
+            var pairs = Enumerable.Range(0, o.Runs).Select(i => (o.SeedOf(i), o.AnchorOf(i), o.StrategyOf(i).Name)).ToList();
+            Assert.AreEqual(12, pairs.Distinct().Count());
+            Assert.AreEqual((7, AnchorKind.Shrine, "stealth"), pairs[0]);
+            Assert.AreEqual((7, AnchorKind.WarThrone, "balanced"), pairs[5]);
+            Assert.AreEqual((8, AnchorKind.Shrine, "stealth"), pairs[6]);
+        }
+
+        [Test]
+        public void One_anchor_and_strategy_keep_the_old_meaning()
+        {
+            AutoplayOptions o = Parse("-autoplay", "runs=2", "anchor=WarThrone", "strategy=rush");
+            Assert.AreEqual(AnchorKind.WarThrone, o.AnchorOf(1));
+            Assert.AreEqual("rush", o.StrategyOf(1).Name);
         }
 
         [Test]

@@ -18,6 +18,9 @@ namespace Isekai
         public bool Bodiless;
         public bool AnchorStands;
 
+        /// <summary>Souls the wisp loses a second while bodiless.</summary>
+        public float DrainPerSecond;
+
         /// <summary>Workers summoned so far.</summary>
         public int Workers;
 
@@ -35,6 +38,17 @@ namespace Isekai
         public bool PreyLeft;
         public bool PortalSpot;
         public bool SeatKnown;
+
+        /// <summary>The raid is on (once sent, it stays on while there are demons to send).</summary>
+        public bool Raiding;
+
+        /// <summary>Your demons and the mortals within the Seat's zone, and how far the Seat is from Jack.</summary>
+        public int DemonsAtSeat;
+        public int SeatDefenders;
+        public float SeatDistance;
+
+        /// <summary>What a wisp would drain a second were Jack to die now.</summary>
+        public float DeathDrainPerSecond;
     }
 
     /// <summary>What the bot buys next with what it holds.</summary>
@@ -96,25 +110,41 @@ namespace Isekai
     {
         /// <summary>
         /// Whether the demons are sent at the Seat. The strategy wants Portals up, enough demons and its time; or time has
-        /// run out on waiting (then it raids with whatever it has).
+        /// run out on waiting (then it raids with whatever it has). Once sent, a raid goes on while there are demons to send.
         /// </summary>
         public static bool ShouldRaid(AutoplayStrategy strategy, in BotSnapshot s)
         {
             if (!s.SeatKnown) return false;
+            if (s.Raiding && s.Units > 0) return true;
             if (s.RegionSeconds >= strategy.AssaultAfterSeconds) return true;
             return s.Portals >= strategy.PortalsBeforeRaid && s.Units >= strategy.UnitsToRaid && s.RegionSeconds >= strategy.RaidNotBeforeSeconds;
         }
 
-        /// <summary>Whether Jack goes with the raid: when it is on and the force is twice what it needs (he is not needed), or the waiting is over (he is).</summary>
-        public static bool JackJoinsRaid(AutoplayStrategy strategy, in BotSnapshot s) =>
-            ShouldRaid(strategy, s) && (s.Units >= strategy.UnitsToRaid * 2 || s.RegionSeconds >= strategy.AssaultAfterSeconds);
+        /// <summary>
+        /// Whether Jack goes with the raid. A body lost at the Seat is far from the Anchor, so he goes once the demons are there in
+        /// number and holding their own, and only when the Souls would see him back from a death there; the waiting being over sends him whatever.
+        /// </summary>
+        public static bool JackJoinsRaid(AutoplayStrategy strategy, in BotSnapshot s)
+        {
+            if (!ShouldRaid(strategy, s)) return false;
+            if (s.RegionSeconds >= strategy.AssaultAfterSeconds) return true;
+            return s.DemonsAtSeat >= strategy.JackJoinsAtDemons && s.DemonsAtSeat * 2 >= s.SeatDefenders && CanSurviveDeathAtSeat(s);
+        }
+
+        /// <summary>Whether the Souls in hand would pay for the wisp's flight home and the revive after a death at the Seat.</summary>
+        public static bool CanSurviveDeathAtSeat(in BotSnapshot s) =>
+            s.Souls >= s.ReviveCost + s.DeathDrainPerSecond * s.SeatDistance / WispSpeed;
+
+        /// <summary>How many of <paramref name="portals"/> Portals raid while the rest stay on Guard (at least one raids once the raid is on, however many are asked to stay).</summary>
+        public static int RaidingPortals(AutoplayStrategy strategy, int portals) =>
+            portals <= 0 ? 0 : System.Math.Max(1, portals - System.Math.Max(0, strategy.HomeGuardPortals));
 
         /// <summary>Whether Jack falls back to the Anchor: hurt, with an Anchor to fall back to.</summary>
         public static bool ShouldRetreat(AutoplayStrategy strategy, in BotSnapshot s) =>
             s.AnchorStands && !s.Bodiless && s.HealthFraction < strategy.RetreatHealth;
 
-        /// <summary>Portals the strategy builds in all: those before the raid, and one more to keep the force growing.</summary>
-        public static int PortalsWanted(AutoplayStrategy strategy) => strategy.PortalsBeforeRaid + 1;
+        /// <summary>Portals the strategy builds in all: those before the raid and one more at least, to keep the force growing.</summary>
+        public static int PortalsWanted(AutoplayStrategy strategy) => System.Math.Max(strategy.PortalsBeforeRaid + 1, strategy.PortalsTotal);
 
         /// <summary>What to buy now (one thing; the bot asks again next time it thinks).</summary>
         public static BotBuy NextBuy(AutoplayStrategy strategy, in BotSnapshot s)
@@ -131,8 +161,10 @@ namespace Isekai
         /// <summary>Where to walk Jack now.</summary>
         public static BotMove NextMove(AutoplayStrategy strategy, in BotSnapshot s)
         {
-            if (ShouldRetreat(strategy, s)) return BotMove.Retreat;
-            if (JackJoinsRaid(strategy, s)) return BotMove.Assault;
+            bool joins = JackJoinsRaid(strategy, s);
+            // Hurt or not, Jack goes when the Souls would see him back from a death at the Seat: the revive makes him whole again.
+            if (ShouldRetreat(strategy, s) && !(joins && CanSurviveDeathAtSeat(s))) return BotMove.Retreat;
+            if (joins) return BotMove.Assault;
             bool overCeiling = s.Stage > strategy.VigilanceCeiling;
             if (s.Portals < PortalsWanted(strategy) && s.PortalSpot && s.Stone < s.PortalStone && s.StoneLeft) return BotMove.Mine;
             if (overCeiling) return s.AnchorStands ? BotMove.Retreat : BotMove.Hold;
@@ -155,11 +187,25 @@ namespace Isekai
         }
 
         /// <summary>What a bodiless Jack heads for: the Anchor when he can pay to revive, a demon when he can pay to possess it.</summary>
-        public static BodilessPlan WhenBodiless(in BotSnapshot s, bool demonsAlive)
+        public static BodilessPlan WhenBodiless(in BotSnapshot s, bool demonsAlive) =>
+            WhenBodiless(s, s.AnchorStands ? 0f : -1f, demonsAlive ? 0f : -1f);
+
+        /// <summary>The wisp's speed in cells a second.</summary>
+        public const float WispSpeed = 6f;
+
+        /// <summary>
+        /// What a bodiless Jack heads for, given how far the Anchor and the nearest demon are (negative: there is none). The
+        /// wisp drains on the way, so a revive that costs more than is left on arrival is no use, and a demon near at hand is
+        /// the better way back when the Anchor is too far to reach alive.
+        /// </summary>
+        public static BodilessPlan WhenBodiless(in BotSnapshot s, float anchorDistance, float demonDistance)
         {
-            if (s.AnchorStands && s.Souls >= s.ReviveCost) return BodilessPlan.ToAnchor;
-            if (demonsAlive && s.Souls >= s.PossessCost) return BodilessPlan.ToDemon;
-            return s.AnchorStands || !demonsAlive ? BodilessPlan.ToAnchor : BodilessPlan.ToDemon;
+            bool anchor = s.AnchorStands && anchorDistance >= 0f;
+            bool demon = demonDistance >= 0f;
+            if (anchor && s.Souls - s.DrainPerSecond * anchorDistance / WispSpeed >= s.ReviveCost) return BodilessPlan.ToAnchor;
+            if (demon && s.Souls - s.DrainPerSecond * demonDistance / WispSpeed >= s.PossessCost) return BodilessPlan.ToDemon;
+            if (anchor && demon) return anchorDistance <= demonDistance ? BodilessPlan.ToAnchor : BodilessPlan.ToDemon;
+            return anchor || !demon ? BodilessPlan.ToAnchor : BodilessPlan.ToDemon;
         }
 
         /// <summary>How far from the Anchor the bot goes hunting, and how much further for each stage of desperation.</summary>
