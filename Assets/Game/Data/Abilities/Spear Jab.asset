@@ -19,7 +19,7 @@ MonoBehaviour:
   _iconKey: 
   _targetType: 1
   _affects: 4
-  _range: 1.2
+  _range: 2.3
   _requiresLineOfSight: 0
   _costs: []
   _customCosts: []

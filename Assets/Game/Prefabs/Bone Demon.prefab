@@ -412,7 +412,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Isekai.Game::Isekai.DemonBrain
   _type: 1
-  _attackRange: 1.2
+  _attackRange: 2.2
   _thinkInterval: 0.3
 --- !u!114 &1522794100149971968
 MonoBehaviour:

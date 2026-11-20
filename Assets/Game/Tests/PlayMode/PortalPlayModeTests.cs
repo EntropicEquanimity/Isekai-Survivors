@@ -130,6 +130,23 @@ namespace Isekai.Tests
             Assert.IsTrue(portal.Units.All(u => u.Order == PortalOrder.Raid));
         }
 
+        // Found by the autoplay batches (ticket #35): a melee demon stops at the edge of a 3x3 keep, nearer its middle than
+        // its spear could reach, and the Seat could not be taken by demons at all.
+        [UnityTest]
+        public IEnumerator Melee_demons_can_hurt_the_Seat_s_keep_which_is_too_wide_for_a_short_spear_to_reach_the_middle_of()
+        {
+            UnitProducer portal = MakePortal();
+            yield return TestWait.Until(() => portal.Units.Count >= 2, "the Portal brings two Imps", 30f);
+            Building keep = RegionSettlements.Current.Seat.Keep;
+            Assert.IsNotNull(keep, "the Seat has a keep");
+            Vector3 at = keep.transform.position;
+            portal.MarkRaid(at);
+            float before = keep.Damageable.Unit.Health;
+            for (int i = 0; i < portal.Units.Count; i++)
+                portal.Units[i].transform.position = at + new Vector3(2f, i * 0.4f, 0f);   // beside the keep's wall of stone, as near as a demon gets
+            yield return TestWait.Until(() => keep.Damageable.Unit.Health < before, "the demons hurt the keep", 20f);
+        }
+
         [UnityTest]
         public IEnumerator Guard_keeps_the_demons_near_their_rally_point_and_brings_back_those_that_stray()
         {
