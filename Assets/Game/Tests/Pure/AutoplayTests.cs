@@ -80,6 +80,8 @@ namespace Isekai.Tests
             BotSnapshot s = Base();
             s.RegionSeconds = AutoplayStrategies.Balanced.AssaultAfterSeconds + 1f;
             Assert.IsTrue(BotRules.ShouldRaid(AutoplayStrategies.Balanced, s));
+            Assert.IsFalse(BotRules.JackJoinsRaid(AutoplayStrategies.Balanced, s), "Jack is not sent to a death far from home yet");
+            s.RegionSeconds = AutoplayStrategies.Balanced.AssaultAfterSeconds * 2f + 1f;
             Assert.IsTrue(BotRules.JackJoinsRaid(AutoplayStrategies.Balanced, s));
             Assert.AreEqual(BotMove.Assault, BotRules.NextMove(AutoplayStrategies.Balanced, s));
         }
@@ -149,6 +151,27 @@ namespace Isekai.Tests
             Assert.AreEqual(BotMove.Assault, BotRules.NextMove(AutoplayStrategies.Rush, s), "a death only costs Souls");
             s.Souls = 50;
             Assert.AreEqual(BotMove.Retreat, BotRules.NextMove(AutoplayStrategies.Rush, s), "a death at the Seat would lose the Run");
+        }
+
+        [Test]
+        public void Jack_also_goes_when_a_possession_beside_the_demons_at_the_Seat_would_see_him_through()
+        {
+            BotSnapshot s = Base();
+            s.RegionSeconds = 100f;
+            s.Portals = 2;
+            s.Units = 6;
+            s.DemonsAtSeat = 8;
+            s.ReviveCost = 22;
+            s.PossessCost = 110;
+            s.DeathDrainPerSecond = 4f;
+            s.SeatDistance = 180f;   // the flight home costs 120 and the revive 22
+            s.Souls = 128;
+            Assert.IsTrue(BotRules.CanSurviveDeathAtSeat(s), "110 to possess and 16 drained on the way");
+            s.Souls = 125;
+            Assert.IsFalse(BotRules.CanSurviveDeathAtSeat(s));
+            s.Souls = 128;
+            s.DemonsAtSeat = 0;
+            Assert.IsFalse(BotRules.CanSurviveDeathAtSeat(s), "no demon there to possess");
         }
 
         [Test]

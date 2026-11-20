@@ -122,18 +122,26 @@ namespace Isekai
 
         /// <summary>
         /// Whether Jack goes with the raid. A body lost at the Seat is far from the Anchor, so he goes once the demons are there in
-        /// number and holding their own, and only when the Souls would see him back from a death there; the waiting being over sends him whatever.
+        /// number and holding their own, and only when the Souls would see him through a death there; only waiting twice as long as
+        /// the strategy meant to (<see cref="AutoplayStrategy.AssaultAfterSeconds"/>) sends him whatever.
         /// </summary>
         public static bool JackJoinsRaid(AutoplayStrategy strategy, in BotSnapshot s)
         {
             if (!ShouldRaid(strategy, s)) return false;
-            if (s.RegionSeconds >= strategy.AssaultAfterSeconds) return true;
+            if (s.RegionSeconds >= strategy.AssaultAfterSeconds * 2f) return true;
             return s.DemonsAtSeat >= strategy.JackJoinsAtDemons && s.DemonsAtSeat * 2 >= s.SeatDefenders && CanSurviveDeathAtSeat(s);
         }
 
-        /// <summary>Whether the Souls in hand would pay for the wisp's flight home and the revive after a death at the Seat.</summary>
+        /// <summary>
+        /// Whether the Souls in hand would see Jack through a death at the Seat: they pay for the wisp's flight home and the revive,
+        /// or, with demons about, for possessing one of them a few seconds from where the body fell.
+        /// </summary>
         public static bool CanSurviveDeathAtSeat(in BotSnapshot s) =>
-            s.Souls >= s.ReviveCost + s.DeathDrainPerSecond * s.SeatDistance / WispSpeed;
+            s.Souls >= s.ReviveCost + s.DeathDrainPerSecond * s.SeatDistance / WispSpeed
+            || (s.DemonsAtSeat > 0 && s.Souls >= s.PossessCost + s.DeathDrainPerSecond * PossessFlightSeconds);
+
+        /// <summary>The seconds a wisp is allowed to fly to a demon at the Seat when working out whether a death there can be survived.</summary>
+        public const float PossessFlightSeconds = 4f;
 
         /// <summary>How many of <paramref name="portals"/> Portals raid while the rest stay on Guard (at least one raids once the raid is on, however many are asked to stay).</summary>
         public static int RaidingPortals(AutoplayStrategy strategy, int portals) =>

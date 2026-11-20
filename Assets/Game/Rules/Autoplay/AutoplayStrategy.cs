@@ -113,7 +113,7 @@ namespace Isekai
             PortalsBeforeRaid = 3,
             PortalsTotal = 5,
             UnitsToRaid = 5,
-            RaidNotBeforeSeconds = 360f,
+            RaidNotBeforeSeconds = 390f,
             AssaultAfterSeconds = 900f,
             HomeGuardPortals = 1,
             Bones = BonesPolicy.Destroy,
