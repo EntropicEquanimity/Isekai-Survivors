@@ -1,6 +1,7 @@
 using System;
 using Blondie.Core;
 using Blondie.GameSetup;
+using Blondie.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -32,6 +33,10 @@ namespace Isekai
         private PanelSettings _ownSettings;
         private VisualElement _legend;
         private float _redrawAt;
+
+        private static readonly string[] SpawnCircleIcon = { "..###..", ".#...#.", "#..#..#", ".#...#.", "..###.." };
+        private static readonly string[] RaidIcon = { "#...#", ".#.#.", "..#..", ".#.#.", "#...#" };
+        private static readonly string[] RallyIcon = { ".#.", "###", ".#." };
 
         public bool IsOpen { get; private set; }
         public Tab Current { get; private set; }
@@ -156,21 +161,34 @@ namespace Isekai
 
         private static VisualElement Legend()
         {
-            var legend = new VisualElement { style = { marginLeft = 12, width = 160 } };
-            Row(legend, Swatch(RegionMapView.You, 6, true), "You");
-            Row(legend, Swatch(RegionMapView.Demon, 4, false), "Demons");
-            Row(legend, Swatch(RegionMapView.Attacker, 4, false), "Enemy, attacking");
-            Row(legend, Swatch(RegionMapView.Roamer, 4, false), "Enemy, roaming");
-            Row(legend, Swatch(RegionMapView.Attacker, 8, true), "Elite enemy");
-            Row(legend, IconImage("Main Base", RegionMapView.Home), "Main Base");
+            var legend = new VisualElement { style = { marginLeft = 12, width = 220 } };
+            Row(legend, Swatch(RegionMapView.You, 6, true), "You", TooltipKey.LegendYou);
+            Row(legend, Swatch(RegionMapView.Demon, 4, false), "Demons", TooltipKey.LegendDemons);
+            Row(legend, Swatch(RegionMapView.Attacker, 4, false), "Mortals, attacking", TooltipKey.LegendMortalsAttacking);
+            Row(legend, Swatch(RegionMapView.Roamer, 4, false), "Mortals, roaming", TooltipKey.LegendMortalsRoaming);
+            Row(legend, Swatch(RegionMapView.Attacker, 8, true), "Elite Mortals", TooltipKey.LegendEliteMortals);
+            Row(legend, IconImage("Main Base", RegionMapView.Home), "Main Base", TooltipKey.LegendMainBase);
             foreach (string building in new[] { "Portal", "Spire", "Outpost" })
-                Row(legend, IconImage(building, RegionMapView.Ally), building);
-            Row(legend, Swatch(new Color32(196, 196, 186, 255), 4, false), "Stone");
-            Row(legend, Swatch(new Color32(235, 235, 240, 255), 8, false, hollow: true), "Camera view");
+                Row(legend, IconImage(building, RegionMapView.Ally), building, building switch
+                {
+                    "Portal" => TooltipKey.LegendPortal,
+                    "Spire" => TooltipKey.LegendSpire,
+                    _ => TooltipKey.LegendOutpost,
+                });
+            Row(legend, IconImage("Building", RegionMapView.Hostile), "Mortal building", TooltipKey.LegendMortalBuilding);
+            Row(legend, IconImage(SpawnCircleIcon, new Color32(214, 96, 255, 255)), "Spawn circle", TooltipKey.LegendSpawnCircle);
+            Row(legend, IconImage(RaidIcon, new Color32(255, 120, 60, 255)), "Raid mark", TooltipKey.LegendRaidMark);
+            Row(legend, IconImage(RallyIcon, new Color32(120, 200, 255, 255)), "Rally mark", TooltipKey.LegendRallyMark);
+            Row(legend, Swatch(new Color32(196, 196, 186, 255), 4, false), "Stone", TooltipKey.LegendStone);
+            Row(legend, Swatch(new Color32(40, 70, 46, 255), 8, false), "Building footprint", TooltipKey.LegendBuildingFootprint);
+            Row(legend, Swatch(new Color32(56, 82, 38, 255), 8, false), "Ground", TooltipKey.LegendGround);
+            Row(legend, Swatch(new Color32(118, 116, 110, 255), 8, false), "Rock", TooltipKey.LegendRock);
+            Row(legend, Swatch(new Color32(8, 9, 12, 255), 8, false), "Unseen fog", TooltipKey.LegendUnseen);
+            Row(legend, Swatch(new Color32(235, 235, 240, 255), 8, false, hollow: true), "Camera view", TooltipKey.LegendCamera);
             return legend;
         }
 
-        private static void Row(VisualElement parent, VisualElement mark, string text)
+        private static void Row(VisualElement parent, VisualElement mark, string text, TooltipKey tooltip)
         {
             var row = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, height = 22 } };
             var slot = new VisualElement { style = { width = 22, alignItems = Align.Center, justifyContent = Justify.Center } };
@@ -179,6 +197,9 @@ namespace Isekai
             Label label = GameStyle.Label(text);
             label.style.marginLeft = 6;
             row.Add(label);
+            string tip = TooltipText.Get(tooltip);
+            label.AddTooltip(tip, text);
+            mark.AddTooltip(tip, text);
             parent.Add(row);
         }
 
@@ -202,6 +223,12 @@ namespace Isekai
         private static VisualElement IconImage(string icon, Color32 colour)
         {
             Texture2D tex = RegionMapView.IconTexture(RegionMapView.Icons[icon], colour);
+            return new VisualElement { style = { width = tex.width, height = tex.height, backgroundImage = Background.FromTexture2D(tex) } };
+        }
+
+        private static VisualElement IconImage(string[] icon, Color32 colour)
+        {
+            Texture2D tex = RegionMapView.IconTexture(icon, colour);
             return new VisualElement { style = { width = tex.width, height = tex.height, backgroundImage = Background.FromTexture2D(tex) } };
         }
 

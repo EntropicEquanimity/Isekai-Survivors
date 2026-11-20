@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using System.Text;
 using Blondie.Core;
+using Blondie.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -16,7 +19,9 @@ namespace Isekai
         [SerializeField] private PanelSettings _panelSettings;
 
         private BuildMode _mode;
-        private Label _list;
+        private readonly List<Button> _buttons = new();
+        private readonly List<TooltipManipulator> _buttonTooltips = new();
+        private Label _help;
         private VisualElement _selection;
         private Label _selectionText;
         private PortalPanel _portalPanel;
@@ -27,9 +32,7 @@ namespace Isekai
         private void Start()
         {
             VisualElement root = GamePanels.Mount(this, PanelName, _panelSettings, out PanelRenderer panel);
-
-            _list = new Label { pickingMode = PickingMode.Ignore, style = { position = Position.Absolute, left = 6, bottom = 4, color = Color.white } };
-            root.Add(_list);
+            BuildList(root);
 
             _selection = new VisualElement
             {
@@ -48,6 +51,41 @@ namespace Isekai
 
             _mode.Changed += Redraw;
             Redraw();
+        }
+
+        private void BuildList(VisualElement root)
+        {
+            var box = new VisualElement
+            {
+                style =
+                {
+                    position = Position.Absolute,
+                    left = 6,
+                    bottom = 4,
+                    minWidth = 280,
+                    backgroundColor = new Color(0f, 0f, 0f, 0.6f),
+                    paddingBottom = 4,
+                    paddingTop = 4,
+                    paddingLeft = 6,
+                    paddingRight = 6,
+                },
+            };
+            for (int i = 0; i < _mode.Catalogue.Count; i++)
+            {
+                BuildingAsset asset = _mode.Catalogue[i];
+                var button = new Button(() => _mode.Pick(asset)) { name = $"build-{asset.DisplayName}", text = asset.DisplayName };
+                button.style.unityTextAlign = TextAnchor.MiddleLeft;
+                button.style.marginTop = 1;
+                _buttons.Add(button);
+                _buttonTooltips.Add(button.AddTooltip(string.Empty, asset.DisplayName));
+                box.Add(button);
+            }
+
+            _help = GameStyle.Label(string.Empty, TextRole.Muted);
+            _help.style.marginTop = 4;
+            _help.AddTooltip(TooltipText.Get(TooltipKey.HudBuildHelp));
+            box.Add(_help);
+            root.Add(box);
         }
 
         private void OnDestroy()
@@ -70,28 +108,29 @@ namespace Isekai
 
         private void Redraw()
         {
-            if (_list == null) return;
+            if (_buttons.Count == 0 || _help == null) return;
             Stockpile pile = RegionEconomy.Current != null ? RegionEconomy.Current.Stockpile : null;
-            var text = new System.Text.StringBuilder();
             for (int i = 0; i < _mode.Catalogue.Count; i++)
             {
                 BuildingAsset a = _mode.Catalogue[i];
                 bool picked = a == _mode.Picked;
                 bool affordable = pile != null && pile.CanAfford(a.Costs);
-                text.Append(picked ? "> " : "  ").Append(i + 1).Append(' ').Append(a.DisplayName).Append("  ").Append(a.PriceText);
-                if (!affordable) text.Append("  (can't afford)");
-                text.Append('\n');
+                Button button = _buttons[i];
+                button.text = $"{(picked ? "> " : "  ")}{i + 1} {a.DisplayName}  {a.PriceText}" + (affordable ? string.Empty : "  (can't afford)");
+                string reason = picked && !_mode.Placement.IsOk ? _mode.Placement.Reason : null;
+                TooltipManipulator tip = _buttonTooltips[i];
+                tip.Header = a.DisplayName;
+                tip.Content = TooltipProvider.BuildButtonBody(a, affordable, reason);
             }
-            if (_mode.Picked != null)
-                text.Append(_mode.Placement.IsOk ? "Click to place, Shift to keep placing, right click to cancel" : _mode.Placement.Reason);
-            else text.Append("Number keys: build. Click a Building to select it. Walk into Stone or rocks to mine them. M: map.");
-            _list.text = text.ToString();
+            _help.text = _mode.Picked != null
+                ? (_mode.Placement.IsOk ? "Click to place, Shift to keep placing, right click to cancel" : _mode.Placement.Reason)
+                : "Number keys: build. Click a Building to select it. Walk into Stone or rocks to mine them. M: map.";
 
             Building selected = _mode.Selected;
             _selection.style.display = selected != null ? DisplayStyle.Flex : DisplayStyle.None;
             if (selected == null) return;
             string name = selected.Asset != null ? selected.Asset.DisplayName : selected.name;
-            var info = new System.Text.StringBuilder(name);
+            var info = new StringBuilder(name);
             info.Append("  ").Append(Mathf.CeilToInt(selected.Damageable.Unit.Health)).Append(" hp");
             if (!selected.IsBuilt) info.Append("  building ").Append(Mathf.FloorToInt(selected.Progress * 100f)).Append('%');
             _selectionText.text = info.ToString();

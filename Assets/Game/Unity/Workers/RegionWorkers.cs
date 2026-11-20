@@ -1,4 +1,5 @@
 using Blondie.Core;
+using Blondie.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -61,9 +62,11 @@ namespace Isekai
             box.Add(GameStyle.Label("Anchor", TextRole.Title));
             _status = GameStyle.Label(string.Empty, TextRole.Muted);
             _status.style.marginTop = 2;
+            _status.AddTooltip(TooltipText.Get(TooltipKey.HudWorkers));
             box.Add(_status);
             _summon = new Button(() => TrySummonWorker()) { text = SummonText() };
             _summon.style.marginTop = 6;
+            _summon.AddTooltip(TooltipText.Get(TooltipKey.HudWorkers));
             box.Add(_summon);
             root.Add(box);
             UIPanels.Created(panel);

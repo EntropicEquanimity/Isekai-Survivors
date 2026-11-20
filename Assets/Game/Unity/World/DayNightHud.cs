@@ -1,4 +1,5 @@
 using Blondie.Core;
+using Blondie.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -22,7 +23,6 @@ namespace Isekai
             VisualElement root = GamePanels.Mount(this, PanelName, null, out PanelRenderer panel);
             var box = new VisualElement
             {
-                pickingMode = PickingMode.Ignore,
                 style =
                 {
                     position = Position.Absolute,
@@ -39,12 +39,11 @@ namespace Isekai
             SetBorder(box.style);
 
             _phase = GameStyle.Label("Day", TextRole.Accent);
-            _phase.pickingMode = PickingMode.Ignore;
             box.Add(_phase);
 
             _countdown = GameStyle.Label("Until night: 00:00", TextRole.Muted);
-            _countdown.pickingMode = PickingMode.Ignore;
             box.Add(_countdown);
+            box.AddTooltip(TooltipText.Get(TooltipKey.HudDayNight));
 
             root.Add(box);
             UIPanels.Created(panel);

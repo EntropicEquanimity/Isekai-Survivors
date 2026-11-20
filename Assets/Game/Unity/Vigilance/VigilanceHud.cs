@@ -1,4 +1,5 @@
 using Blondie.Core;
+using Blondie.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -33,7 +34,6 @@ namespace Isekai
             VisualElement root = GamePanels.Mount(this, PanelName, null, out PanelRenderer panel);
             var box = new VisualElement
             {
-                pickingMode = PickingMode.Ignore,
                 style =
                 {
                     position = Position.Absolute,
@@ -49,24 +49,23 @@ namespace Isekai
             };
             SetBorder(box.style);
 
-            var row = new VisualElement { pickingMode = PickingMode.Ignore, style = { flexDirection = FlexDirection.Row, alignItems = Align.Center } };
-            var icon = new VisualElement { pickingMode = PickingMode.Ignore, style = { width = 18, height = 18, marginRight = 5 } };
+            var row = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center } };
+            var icon = new VisualElement { style = { width = 18, height = 18, marginRight = 5 } };
             Texture2D texture = Resources.Load<Texture2D>(IconName);
             if (texture != null) icon.style.backgroundImage = Background.FromTexture2D(texture);
             row.Add(icon);
             _stage = GameStyle.Label("-", TextRole.Warning);
-            _stage.pickingMode = PickingMode.Ignore;
             row.Add(_stage);
             box.Add(row);
 
-            var bar = new VisualElement { pickingMode = PickingMode.Ignore, style = { height = 5, marginTop = 3, backgroundColor = new Color(0.12f, 0.12f, 0.14f, 1f) } };
-            _fill = new VisualElement { pickingMode = PickingMode.Ignore, style = { height = 5, width = Length.Percent(0), backgroundColor = GameStyle.Warning } };
+            var bar = new VisualElement { style = { height = 5, marginTop = 3, backgroundColor = new Color(0.12f, 0.12f, 0.14f, 1f) } };
+            _fill = new VisualElement { style = { height = 5, width = Length.Percent(0), backgroundColor = GameStyle.Warning } };
             bar.Add(_fill);
             box.Add(bar);
 
             _next = GameStyle.Label(string.Empty, TextRole.Muted);
-            _next.pickingMode = PickingMode.Ignore;
             box.Add(_next);
+            box.AddTooltip(TooltipText.Get(TooltipKey.HudVigilance));
 
             root.Add(box);
             UIPanels.Created(panel);

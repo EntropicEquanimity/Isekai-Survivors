@@ -1,6 +1,5 @@
-using System;
-using System.Text;
 using Blondie.Core;
+using Blondie.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -16,7 +15,9 @@ namespace Isekai
 
         [SerializeField] private PanelSettings _panelSettings;
 
-        private Label _label;
+        private Label _wood;
+        private Label _stone;
+        private Label _souls;
         private Label _prompt;
         private Stockpile _stockpile;
         private Miner _miner;
@@ -24,8 +25,14 @@ namespace Isekai
         private void Start()
         {
             VisualElement root = GamePanels.Mount(this, PanelName, _panelSettings, out PanelRenderer panel);
-            _label = new Label { style = { position = Position.Absolute, left = 6, top = 4, color = Color.white } };
-            root.Add(_label);
+            var row = new VisualElement
+            {
+                style = { position = Position.Absolute, left = 6, top = 4, flexDirection = FlexDirection.Row, alignItems = Align.Center },
+            };
+            _wood = AddResource(row, ResourceType.Wood);
+            _stone = AddResource(row, ResourceType.Stone);
+            _souls = AddResource(row, ResourceType.Souls);
+            root.Add(row);
             _prompt = new Label
             {
                 pickingMode = PickingMode.Ignore,
@@ -38,6 +45,14 @@ namespace Isekai
         /// <summary>The mining prompt shown now (empty when there's nothing to mine).</summary>
         public string Prompt => _prompt != null ? _prompt.text : string.Empty;
 
+        private static Label AddResource(VisualElement row, ResourceType type)
+        {
+            var label = new Label { style = { color = Color.white, marginRight = 12 } };
+            label.AddTooltip(TooltipText.Get(TooltipProvider.KeyForResource(type)), type.ToString());
+            row.Add(label);
+            return label;
+        }
+
         private void Update()
         {
             using (PerfMarkers.Hud.Auto()) Tick();
@@ -47,7 +62,7 @@ namespace Isekai
         {
             UpdatePrompt();
             Stockpile current = RegionEconomy.Current != null ? RegionEconomy.Current.Stockpile : null;
-            if (current == _stockpile && _label != null && _label.text.Length > 0) return;
+            if (current == _stockpile && _wood != null && _wood.text.Length > 0) return;
             if (_stockpile != null) _stockpile.Changed -= OnChanged;
             _stockpile = current;
             if (_stockpile != null) _stockpile.Changed += OnChanged;
@@ -72,12 +87,18 @@ namespace Isekai
 
         private void Redraw()
         {
-            if (_label == null) return;
-            if (_stockpile == null) { _label.text = " "; return; }
-            var text = new StringBuilder();
-            foreach (ResourceType type in Enum.GetValues(typeof(ResourceType)))
-                text.Append(type).Append(' ').Append(_stockpile.Get(type)).Append("   ");
-            _label.text = text.ToString();
+            if (_wood == null || _stone == null || _souls == null) return;
+            if (_stockpile == null)
+            {
+                _wood.text = "Wood 0";
+                _stone.text = "Stone 0";
+                _souls.text = "Souls 0";
+                return;
+            }
+
+            _wood.text = $"Wood {_stockpile.Get(ResourceType.Wood)}";
+            _stone.text = $"Stone {_stockpile.Get(ResourceType.Stone)}";
+            _souls.text = $"Souls {_stockpile.Get(ResourceType.Souls)}";
         }
     }
 }

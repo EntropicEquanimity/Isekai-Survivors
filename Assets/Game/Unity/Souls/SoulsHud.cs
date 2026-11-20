@@ -1,4 +1,5 @@
 using Blondie.Core;
+using Blondie.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -34,7 +35,6 @@ namespace Isekai
             VisualElement root = GamePanels.Mount(this, PanelName, null, out PanelRenderer panel);
             var column = new VisualElement
             {
-                pickingMode = PickingMode.Ignore,
                 style = { position = Position.Absolute, left = 0, right = 0, top = 4, alignItems = Align.Center },
             };
             root.Add(column);
@@ -42,13 +42,17 @@ namespace Isekai
             _status = Line(column, new Color(1f, 0.8f, 0.5f));
             _level = Line(column, Color.white);
             _raise = new Button(RaiseLevel);
+            _drain.AddTooltip(TooltipText.Get(TooltipKey.HudSoulDrain));
+            _status.AddTooltip(TooltipText.Get(TooltipKey.HudSouls));
+            _level.AddTooltip(TooltipText.Get(TooltipKey.HudSoulLevel));
+            _raise.AddTooltip(TooltipText.Get(TooltipKey.HudSoulRaise));
             column.Add(_raise);
             UIPanels.Created(panel);
         }
 
         private static Label Line(VisualElement parent, Color color)
         {
-            var label = new Label { pickingMode = PickingMode.Ignore, style = { color = color, unityFontStyleAndWeight = FontStyle.Bold } };
+            var label = new Label { style = { color = color, unityFontStyleAndWeight = FontStyle.Bold } };
             label.style.display = DisplayStyle.None;
             parent.Add(label);
             return label;

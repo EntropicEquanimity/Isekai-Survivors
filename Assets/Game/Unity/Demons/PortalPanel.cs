@@ -1,4 +1,5 @@
 using System;
+using Blondie.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -32,6 +33,8 @@ namespace Isekai
             var marks = new VisualElement { style = { flexDirection = FlexDirection.Row, flexWrap = Wrap.Wrap, marginTop = 2 } };
             _markRaid = new Button(() => PortalMarking.Arm(PortalMark.Raid)) { text = "Mark raid target", name = "mark-raid" };
             _markRally = new Button(() => PortalMarking.Arm(PortalMark.Rally)) { text = "Set rally point", name = "mark-rally" };
+            _markRaid.AddTooltip(TooltipText.Get(TooltipKey.PortalMarkRaid));
+            _markRally.AddTooltip(TooltipText.Get(TooltipKey.PortalMarkRally));
             marks.Add(_markRaid);
             marks.Add(_markRally);
             Add(marks);
@@ -77,9 +80,44 @@ namespace Isekai
                 object v = value;
                 string text = v is DemonType.BoneDemon ? "Bone demon" : v.ToString();
                 buttons[i] = new Button(() => pick(v)) { text = text, name = prefix + v };
+                if (TryTooltip(prefix, v, out TooltipKey key)) buttons[i].AddTooltip(TooltipText.Get(key), text);
                 row.Add(buttons[i++]);
             }
             Add(row);
+        }
+
+        private static bool TryTooltip(string prefix, object value, out TooltipKey key)
+        {
+            key = default;
+            if (prefix == "order-" && value is PortalOrder order)
+            {
+                key = order switch
+                {
+                    PortalOrder.Guard => TooltipKey.PortalOrderGuard,
+                    PortalOrder.Raid => TooltipKey.PortalOrderRaid,
+                    _ => TooltipKey.PortalOrderFollow,
+                };
+                return true;
+            }
+
+            if (prefix == "bones-" && value is BonesPolicy policy)
+            {
+                key = policy switch
+                {
+                    BonesPolicy.Harvest => TooltipKey.PortalBonesHarvest,
+                    BonesPolicy.Destroy => TooltipKey.PortalBonesDestroy,
+                    _ => TooltipKey.PortalBonesIgnore,
+                };
+                return true;
+            }
+
+            if (prefix == "roster-" && value is DemonType type)
+            {
+                key = type == DemonType.BoneDemon ? TooltipKey.PortalSummonBoneDemon : TooltipKey.PortalSummonImp;
+                return true;
+            }
+
+            return false;
         }
     }
 }

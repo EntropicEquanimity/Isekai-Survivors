@@ -1,4 +1,5 @@
 using Blondie.Core;
+using Blondie.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -40,9 +41,11 @@ namespace Isekai
             _box.Add(GameStyle.Label("No Anchor", TextRole.Title));
             _status = GameStyle.Label(string.Empty, TextRole.Muted);
             _status.style.marginTop = 2;
+            _status.AddTooltip(TooltipText.Get(TooltipKey.HudAnchorRaise));
             _box.Add(_status);
             _raise = new Button(Raise) { text = "Raise a new Anchor" };
             _raise.style.marginTop = 6;
+            _raise.AddTooltip(TooltipText.Get(TooltipKey.HudAnchorRaise));
             _box.Add(_raise);
             root.Add(_box);
             UIPanels.Created(panel);
