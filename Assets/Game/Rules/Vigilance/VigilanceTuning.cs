@@ -6,7 +6,7 @@ namespace Isekai
     public static class VigilanceTuning
     {
         /// <summary>Points at which Unaware, Uneasy, Alarmed, Mobilized and Crusade begin.</summary>
-        public static readonly float[] StageThresholds = { 0f, 10f, 25f, 45f, 70f };
+        public static readonly float[] StageThresholds = { 0f, 12f, 30f, 55f, 90f };
 
         /// <summary>Mortals in a Wave sent at each stage.</summary>
         public static readonly int[] WaveSizes = { 5, 7, 9, 12, 14 };
@@ -14,9 +14,9 @@ namespace Isekai
         /// <summary>How much tougher newly arriving mortals are at each stage.</summary>
         public static readonly float[] HealthMultipliers = { 1f, 1.08f, 1.18f, 1.32f, 1.5f };
 
-        public const float KillPoints = 4f;
-        public const float WitnessedKillPoints = 7f;
-        public const float SpottedPoints = 12f;
+        public const float KillPoints = 2.5f;
+        public const float WitnessedKillPoints = 4f;
+        public const float SpottedPoints = 8f;
 
         /// <summary>Seconds without anything seen before Vigilance starts to decay.</summary>
         public const float DecayGraceSeconds = 20f;

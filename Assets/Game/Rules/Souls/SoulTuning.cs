@@ -27,6 +27,10 @@ namespace Isekai
         // Raising soul level costs this x the current level.
         public const int LevelUpCostPerLevel = 50;
 
+        // Souls Jack's side starts a Region with when it is entered from the Planet map. Enough for a few Portals (5 each) and
+        // one revive (22 at soul level 1) so that the first mistakes are not the end of the Run; found by autoplay batches (docs/balance.md).
+        public const int RegionStartingSouls = 40;
+
         // Souls a kill gives.
         public const int SoulsPerMortal = 2;
         public const int SoulsPerWildlife = 1;

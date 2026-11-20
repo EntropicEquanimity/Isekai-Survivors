@@ -7,7 +7,7 @@ namespace Isekai
 {
     /// <summary>
     /// Ties a Region scene to the Run (<see cref="RunSession"/>). On start it adds
-    /// the Stone earlier captures give, points the Run's buffs at this Region's Character and brings back its
+    /// the Stone earlier captures give and the Souls a Region entered from the map starts with, points the Run's buffs at this Region's Character and brings back its
     /// inventory. While playing it advances the Run clock. On capture it unlocks Items, grants the Region's buff, keeps
     /// the inventory and returns to the Planet map, or ends the Run as won at the Capital. When Jack's Souls run out
     /// while he is bodiless the Run is lost.
@@ -28,6 +28,8 @@ namespace Isekai
             PlanetRun run = region.Run;
             int stone = run.BonusStone;
             if (RegionEconomy.Current != null && stone > 0) RegionEconomy.Current.Stockpile.Add(ResourceType.Stone, stone);
+            int souls = RunSession.TakeStartingSouls();
+            if (RegionEconomy.Current != null && souls > 0) RegionEconomy.Current.Stockpile.Add(ResourceType.Souls, souls);
             Player.Changed += TargetStats;
             TargetStats(Player.Character);
             Say($"{_region.Name}" + (_region.IsCapital ? " - take the Capital!" : $" (depth {_region.Depth})"), Color.white);

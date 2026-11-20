@@ -96,10 +96,10 @@ namespace Isekai.Tests
             AutoplayRunner runner = AutoplayRunner.Begin(Options(AutoplayStrategies.Balanced, 300f, 41));
             yield return TestWait.Until(() => runner.Status.Contains("Playing") && RegionEconomy.Current != null && Player.Character != null, "the bot plays the Region", Timeout);
 
-            // A Region starts with Stone and no Souls: take the Stone away and hand over the Souls, so that the bot has to mine for its Portal.
+            // A Region starts with Stone and Souls: take the Stone away, so that the bot has to mine for its Portal.
             Stockpile pile = RegionEconomy.Current.Stockpile;
             Assert.IsTrue(pile.TrySpend(ResourceType.Stone, pile.Get(ResourceType.Stone)));
-            pile.Add(ResourceType.Souls, 30);
+            Assert.GreaterOrEqual(pile.Get(ResourceType.Souls), 5, "Souls for a Portal");
             Assert.IsFalse(IsPortalStanding(), "no Portal yet");
 
             yield return TestWait.Until(IsPortalStanding, "the bot mined 20 Stone and placed a Portal", 90f);
@@ -138,7 +138,9 @@ namespace Isekai.Tests
         {
             AutoplayRunner runner = AutoplayRunner.Begin(Options(AutoplayStrategies.Balanced, 40f, 61, 62));
             yield return TestWait.Until(() => runner.Status.Contains("Playing") && RegionEconomy.Current != null && Player.Character != null, "the bot plays the first Region", Timeout);
-            Assert.AreEqual(0, RegionEconomy.Current.Stockpile.Get(ResourceType.Souls), "no Souls, so a dead Jack is a lost Run");
+            Stockpile pile = RegionEconomy.Current.Stockpile;
+            Assert.AreEqual(SoulTuning.RegionStartingSouls, pile.Get(ResourceType.Souls), "a Region entered from the map starts with Souls");
+            pile.TrySpend(ResourceType.Souls, pile.Get(ResourceType.Souls));   // no Souls, so a dead Jack is a lost Run
             Player.Character.GetComponent<Damageable>().Kill();
             yield return TestWait.Until(() => runner.Summary.Runs.Count == 1, "the first Run is reported", Timeout);
 

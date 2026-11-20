@@ -13,6 +13,16 @@ namespace Isekai.Tests
         }
 
         [Test]
+        public void A_Region_starts_with_Souls_for_two_Portals_and_a_revive()
+        {
+            const int PortalSouls = 5;
+            Assert.GreaterOrEqual(SoulTuning.RegionStartingSouls, 2 * PortalSouls + SoulRules.ReviveCost(SoulTuning.StartingLevel),
+                "the first mistakes are not the end of the Run");
+            Assert.Less(SoulTuning.RegionStartingSouls, SoulRules.LevelUpCost(SoulTuning.StartingLevel) + SoulRules.ReviveCost(SoulTuning.StartingLevel),
+                "but it is not a free soul level");
+        }
+
+        [Test]
         public void Revive_costs_twenty_plus_two_per_soul_level()
         {
             Assert.AreEqual(22, SoulRules.ReviveCost(1));

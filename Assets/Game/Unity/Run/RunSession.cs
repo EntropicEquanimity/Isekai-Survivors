@@ -21,6 +21,7 @@ namespace Isekai
         private static readonly int[] Rings = { 6, 4, 3 };
 
         private static GridInventorySaveData s_inventory;
+        private static int s_startingSouls;
         private static int[] s_rings = Rings;
 
         // Enter Play Mode Options keep statics between plays: forget the Run each time.
@@ -110,6 +111,7 @@ namespace Isekai
         public static bool GoToRegion(RegionInfo region)
         {
             if (!HasRun || !Run.Enter(region)) return false;
+            s_startingSouls = SoulTuning.RegionStartingSouls;
             Load(RegionScene);
             return true;
         }
@@ -118,6 +120,14 @@ namespace Isekai
 
         /// <summary>Keeps the Character's inventory for the next Region.</summary>
         public static void StoreInventory(GridInventorySaveData data) => s_inventory = data;
+
+        /// <summary>The Souls a Region entered from the Planet map starts with, once (0 for a Region opened another way).</summary>
+        public static int TakeStartingSouls()
+        {
+            int souls = s_startingSouls;
+            s_startingSouls = 0;
+            return souls;
+        }
 
         /// <summary>The stored inventory, once (null when there is none).</summary>
         public static GridInventorySaveData TakeInventory()
@@ -143,6 +153,7 @@ namespace Isekai
             Run = null;
             Anchor = null;
             s_inventory = null;
+            s_startingSouls = 0;
         }
 
         private static void Load(string scene)

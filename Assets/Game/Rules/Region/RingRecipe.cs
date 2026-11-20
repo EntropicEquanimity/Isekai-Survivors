@@ -9,7 +9,7 @@ namespace Isekai
     /// What a Region's ring changes about it, in one place: the middle and inner rings and the Capital reuse the
     /// outer-ring generator with bigger numbers. Map size, how many settlements, the Seat's size and strength (a small
     /// fort, a fort, a large fort, the palace), the Wave cap, the mortals' troops and Supply, and the ruler's stats.
-    /// The outer ring's numbers are what every Region had before rings existed. Balance is tuned in #35.
+    /// The outer ring's map, Wave cap, troops and Supply are what every Region had before rings existed; the Seat's keep, its elite guard and the ruler were made tougher by the balance pass (docs/balance.md).
     /// </summary>
     public sealed class RingRecipe
     {
@@ -80,30 +80,30 @@ namespace Isekai
         {
             Ring = RegionRing.Outer, SeatName = "small fort",
             Width = RegionRecipe.DefaultWidth, Height = RegionRecipe.DefaultHeight, MinSettlements = 6, MaxSettlements = SettlementPlan.MaxCount,
-            SeatSize = 11, SeatGuards = 6, SeatTowers = 2, KeepHealth = 1f, EliteGuardStrength = 1f,
+            SeatSize = 11, SeatGuards = 6, SeatTowers = 2, KeepHealth = 2.5f, EliteGuardStrength = 1.5f,
             WaveCap = VigilanceTuning.OuterRingWaveCap, StartStage = VigilanceStage.Unaware,
             TroopStrength = 1f, TroopLimitScale = 1f, TroopSpeed = 1f, StartingSupply = SupplyTuning.StartingSupply, SupplyRate = 1f,
-            RulerHealth = 1f, RulerDamage = 1f,
+            RulerHealth = 2f, RulerDamage = 1.3f,
         };
 
         private static readonly RingRecipe s_middle = new()
         {
             Ring = RegionRing.Middle, SeatName = "fort",
             Width = 184, Height = 126, MinSettlements = 8, MaxSettlements = 13,
-            SeatSize = 13, SeatGuards = 9, SeatTowers = 4, KeepHealth = 1.5f, EliteGuardStrength = 1.15f,
+            SeatSize = 13, SeatGuards = 9, SeatTowers = 4, KeepHealth = 3.5f, EliteGuardStrength = 1.7f,
             WaveCap = 3, StartStage = VigilanceStage.Unaware,
             TroopStrength = 1.2f, TroopLimitScale = 1.5f, TroopSpeed = 1.25f, StartingSupply = 15f, SupplyRate = 1.25f,
-            RulerHealth = 1.3f, RulerDamage = 1.15f,
+            RulerHealth = 2.6f, RulerDamage = 1.5f,
         };
 
         private static readonly RingRecipe s_inner = new()
         {
             Ring = RegionRing.Inner, SeatName = "large fort",
             Width = 208, Height = 142, MinSettlements = 10, MaxSettlements = 16,
-            SeatSize = 15, SeatGuards = 12, SeatTowers = 6, KeepHealth = 2f, EliteGuardStrength = 1.3f,
+            SeatSize = 15, SeatGuards = 12, SeatTowers = 6, KeepHealth = 4.5f, EliteGuardStrength = 1.9f,
             WaveCap = 5, StartStage = VigilanceStage.Unaware,
             TroopStrength = 1.45f, TroopLimitScale = 2f, TroopSpeed = 1.5f, StartingSupply = 20f, SupplyRate = 1.5f,
-            RulerHealth = 1.6f, RulerDamage = 1.3f,
+            RulerHealth = 3.2f, RulerDamage = 1.7f,
         };
 
         /// <summary>The Capital's numbers with the fewest Waves: <see cref="For"/> raises the cap to one Wave per Region left.</summary>
@@ -113,10 +113,10 @@ namespace Isekai
         {
             Ring = RegionRing.Capital, SeatName = "palace",
             Width = 240, Height = 164, MinSettlements = 14, MaxSettlements = 22,
-            SeatSize = 19, SeatGuards = 18, SeatTowers = 8, KeepHealth = 2.5f, EliteGuardStrength = 2f,
+            SeatSize = 19, SeatGuards = 18, SeatTowers = 8, KeepHealth = 6f, EliteGuardStrength = 2.4f,
             WaveCap = Math.Max(CapitalMinimumWaves, waveCap), StartStage = VigilanceStage.Alarmed,
             TroopStrength = 1.8f, TroopLimitScale = 3f, TroopSpeed = 2f, StartingSupply = 30f, SupplyRate = 2f,
-            RulerHealth = 2.2f, RulerDamage = 1.5f,
+            RulerHealth = 4.4f, RulerDamage = 2f,
         };
 
         /// <summary>The recipe of a ring. The Capital's Wave cap is <paramref name="capitalWaves"/> (at least <see cref="CapitalMinimumWaves"/>).</summary>

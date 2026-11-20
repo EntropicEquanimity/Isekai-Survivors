@@ -91,6 +91,17 @@ namespace Isekai.Tests
         }
 
         [UnityTest]
+        public IEnumerator A_Region_entered_from_the_map_starts_with_the_Run_s_starting_Souls_once()
+        {
+            RunSession.StartNew(14, new[] { 1 });
+            PlanetRun run = RunSession.Run;
+            RunSession.GoToRegion(run.Available().Single());
+            yield return InRegion(run.Current);
+            Assert.AreEqual(SoulTuning.RegionStartingSouls, RegionEconomy.Current.Stockpile.Get(ResourceType.Souls));
+            Assert.AreEqual(0, RunSession.TakeStartingSouls(), "the Souls were handed over to that Region only");
+        }
+
+        [UnityTest]
         public IEnumerator Losing_with_no_Souls_while_bodiless_shows_the_defeat_screen_and_deletes_the_save()
         {
             RunSession.StartNew(12, new[] { 1 });
@@ -100,7 +111,9 @@ namespace Isekai.Tests
             RunSession.GoToRegion(run.Available().Single());
             yield return InRegion(run.Current);
             RegionTestScene.ClearHorde();
-            Assert.AreEqual(0, RegionEconomy.Current.Stockpile.Get(ResourceType.Souls));
+            Stockpile pile = RegionEconomy.Current.Stockpile;
+            pile.TrySpend(ResourceType.Souls, pile.Get(ResourceType.Souls));   // none left to keep a wisp going
+            Assert.AreEqual(0, pile.Get(ResourceType.Souls));
             Assert.IsFalse(RunEndScreen.Current.IsVisible);
 
             Player.Character.GetComponent<Damageable>().Kill();
