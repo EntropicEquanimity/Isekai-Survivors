@@ -22,9 +22,14 @@ namespace Isekai.Tests
             yield return RegionTestScene.Load();
             yield return TestWait.Until(() => RegionBootstrap.Current.IsPopulated, "the Region is ready");
             RegionTestScene.ClearHorde();
+            RegionTestScene.ClearOtherSides();   // wildlife and the settlements' mortals would meet the mortals the tests place
             TestDebug.Toggle("God mode", true);
             _grid = RegionGrid.Current;
             _jack = Player.Character;
+            // Jack walks to and shoots the nearest mortal after a short idle: the tests place mortals within his reach and
+            // look at them, and under load a frame is long enough for him to have killed or woken one by the next check.
+            _jack.enabled = false;
+            _jack.GetComponent<Blondie.Abilities.AutoCaster>().enabled = false;
             yield return TestWait.Until(() => RegionVision.Current != null && RegionVision.Current.IsReady, "vision starts");
             _vision = RegionVision.Current;
             yield return TestWait.Frames(3);
@@ -51,6 +56,27 @@ namespace Isekai.Tests
                 if (_grid.Contains(cell) && _grid.IsWalkable(cell)) return cell;
             }
             Assert.Fail($"no walkable cell {distance} cells from {from}");
+            return default;
+        }
+
+        // A walkable cell 9 to 12 cells from Jack that none of your targets (Jack, the Anchor, buildings) is close enough to wake a
+        // roaming mortal on (the horde wakes roamers within 7 of a target plus its radius, every quarter second): under load a
+        // frame lasts long enough for that check to run before the test looks, and a woken mortal is drawn as an attacker.
+        private Int2 QuietWalkableFromJack()
+        {
+            for (int distance = 9; distance <= 12; distance++)
+            for (int turn = 0; turn < 32; turn++)
+            {
+                float a = turn * Mathf.PI / 16f;
+                var cell = new Int2(JackCell.x + Mathf.RoundToInt(Mathf.Cos(a) * distance), JackCell.y + Mathf.RoundToInt(Mathf.Sin(a) * distance));
+                if (!_grid.Contains(cell) || !_grid.IsWalkable(cell)) continue;
+                Vector3 at = _grid.CentreOf(cell);
+                bool quiet = true;
+                foreach (HordeTarget t in HordeTarget.All)
+                    if (t.IsAlive && Vector3.Distance(t.transform.position, at) < 7f + t.Radius + 2f) { quiet = false; break; }
+                if (quiet) return cell;
+            }
+            Assert.Fail("no walkable cell 9 to 12 cells from Jack that is out of every target's aggro range");
             return default;
         }
 
@@ -143,7 +169,7 @@ namespace Isekai.Tests
         [UnityTest]
         public IEnumerator The_map_screen_blacks_out_unseen_ground_and_hides_units_out_of_sight()
         {
-            Int2 near = WalkableAt(JackCell, 9);
+            Int2 near = QuietWalkableFromJack();
             yield return TestWait.Until(() => _vision.CanSee(Side.Yours, near), "Jack sees ground 9 cells away");
             HordeMember mortal = SpawnMortalAt(_grid.CentreOf(near));
             yield return TestWait.Frames(2);
@@ -152,7 +178,7 @@ namespace Isekai.Tests
 
             RegionVision.IsOn = false;
             view.Redraw();
-            Assert.AreEqual(RegionMapView.Roamer, view.PixelAt(at), "with the fog off the map shows the roaming mortal");
+            Assert.AreEqual(RegionMapView.Roamer, view.PixelAt(at), $"with the fog off the map shows the roaming mortal (alive {mortal.IsAlive}, roaming {mortal.IsRoaming}, active {mortal.isActiveAndEnabled}, moved {Vector3.Distance(mortal.transform.position, at):F2}, painters {MapPainters.All.Count})");
 
             RegionVision.IsOn = true;
             view.Redraw();

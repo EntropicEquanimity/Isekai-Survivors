@@ -28,6 +28,7 @@ namespace Isekai.Tests
         {
             yield return RegionTestScene.Load();
             RegionTestScene.ClearHorde();
+            RegionTestScene.ClearOtherSides();   // wildlife and wandering bands would walk up to the Portal's demons and its piles
             yield return null;
             _buildings = RegionBuildings.Current;
             _grid = RegionGrid.Current;
@@ -83,6 +84,22 @@ namespace Isekai.Tests
                 if (clear) return spot;
             }
             Assert.Fail("no clear ground near " + from);
+            return from;
+        }
+
+        // A spot about `distance` from a point that is open ground with a clear straight walk to it.
+        private Vector3 WalkableSpotBeside(Vector3 from, float distance)
+        {
+            for (int i = 0; i < 360; i += 30)
+            {
+                float angle = i * Mathf.Deg2Rad;
+                Vector3 spot = from + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * distance;
+                if (!_grid.Contains(_grid.CellAt(spot)) || !IsOpen(spot)) continue;
+                bool clear = true;
+                for (float t = 0.2f; t <= 1.001f && clear; t += 0.2f) clear = _grid.IsWalkable(Vector3.Lerp(from, spot, t));
+                if (clear) return spot;
+            }
+            Assert.Fail("no open ground beside " + from);
             return from;
         }
 
@@ -186,13 +203,14 @@ namespace Isekai.Tests
         {
             UnitProducer portal = MakePortal(DemonType.BoneDemon);
             yield return TestWait.Until(() => portal.Units.Count >= 1, "the Portal brings a bone demon", 30f);
+            portal.enabled = false;   // one bone demon: a second one the Portal makes meanwhile could be the one to spend the pile
             DemonBrain demon = portal.Units[0];
             Assert.AreEqual(DemonType.BoneDemon, demon.Type);
             var raiser = demon.GetComponent<BoneRaiser>();
             raiser.SkeletonSeconds = 3f;
             yield return TestWait.Until(() => AllNear(portal, portal.Rally, Arrived), "it settles at the Portal", 30f);
 
-            BonePile pile = _bones.Drop(demon.transform.position + new Vector3(2.5f, 0f, 0f), BoneKind.Human);
+            BonePile pile = _bones.Drop(WalkableSpotBeside(demon.transform.position, 2.5f), BoneKind.Human);   // on ground it can walk to: a pile in a wall or under the Portal could never be reached
             portal.Policy = BonesPolicy.Ignore;
             yield return new WaitForSeconds(1.5f);
             Assert.IsTrue(pile.IsAvailable, "it leaves the pile when the policy is Ignore");

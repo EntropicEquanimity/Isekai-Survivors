@@ -28,6 +28,7 @@ namespace Isekai.Tests
             RunSession.StartNew();
             yield return RegionTestScene.Load();
             RegionTestScene.ClearHorde();
+            RegionTestScene.ClearOtherSides();   // wildlife and wandering bands would fight the demons and pull Jack off
             yield return TestWait.Until(() => RegionLoyalty.Current != null && RegionPossession.Current != null, "the Region systems");
             _buildings = RegionBuildings.Current;
             _mainBase = Building.All.First(b => b.IsMainBase);

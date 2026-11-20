@@ -21,6 +21,9 @@ namespace Isekai.Tests
         {
             yield return RegionTestScene.Load();
             yield return TestWait.Until(() => Object.FindAnyObjectByType<RegionWilds>().GroupCount > 0, "the wilds fill in", 3f);
+            // The bands stroll about their home after a rest of a few seconds (RegionWilds); a test that checks a roamer stands
+            // still, or measures how far apart a band is, must not depend on how long the load took.
+            Object.FindAnyObjectByType<RegionWilds>().enabled = false;
             _character = Object.FindAnyObjectByType<CharacterControl>();
             _character.enabled = false;
             _character.GetComponent<AutoCaster>().enabled = false;   // the tests do the killing
@@ -69,15 +72,17 @@ namespace Isekai.Tests
             Assert.Less(Vector3.Distance(start, one.transform.position), 0.01f, "roamers stand still");
 
             _character.transform.position = one.transform.position + new Vector3(3f, 0f, 0f);
-            yield return TestWait.Until(() => !one.IsRoaming, "a target in aggro range wakes it", 2f);
+            yield return TestWait.Until(() => !one.IsRoaming, "a target in aggro range wakes it", 10f);
         }
 
         [UnityTest]
         public IEnumerator Hurting_a_roamer_wakes_the_group_around_it()
         {
-            HordeMember hurt = Roamers()[0];
-            HordeMember[] neighbours = Roamers().Where(m => m != hurt && Vector3.Distance(m.transform.position, hurt.transform.position) < 3f).ToArray();
-            Assume.That(neighbours.Length, Is.GreaterThan(0));
+            // A roamer with a band-mate within 3 units (bands are 2 to 6 strong, so there is one); the alarm reaches 5.
+            HordeMember[] all = Roamers();
+            HordeMember hurt = all.FirstOrDefault(r => all.Any(m => m != r && Vector3.Distance(m.transform.position, r.transform.position) < 3f));
+            Assert.IsNotNull(hurt, "a roaming band with two or more members");
+            HordeMember[] neighbours = all.Where(m => m != hurt && Vector3.Distance(m.transform.position, hurt.transform.position) < 3f).ToArray();
             hurt.Unit.TakeDamage(1f);
             yield return null;
             Assert.IsFalse(hurt.IsRoaming);

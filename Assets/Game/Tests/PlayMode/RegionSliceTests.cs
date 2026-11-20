@@ -68,23 +68,27 @@ namespace Isekai.Tests
         {
             var miner = Object.FindAnyObjectByType<Miner>();
             miner.enabled = false;   // its Update would stop mining every frame: Interact isn't held in a test
+            yield return TestWait.Frames(5);
             miner.Mine(null, 0f);    // drop progress its Update may have made if the start corner touches a node
             ResourceNode node = ResourceNode.All.First();
             int before = node.Remaining;
             Stockpile pile = RegionEconomy.Current.Stockpile;
             int start = pile.Get(node.Type);
 
-            // The Run outlives a test, so Items or capture buffs from earlier tests may have raised MiningSpeed:
-            // expect what the Character's own rate gives over 3 s, not a fixed number.
-            int expected = Mathf.Min(before, Mathf.FloorToInt(miner.Rate * 3f + 0.001f));
-            Assume.That(expected, Is.GreaterThan(0), "the Character can mine");
-
+            // The Run outlives a test and late setup (Items, capture buffs, traits) can still change MiningSpeed in the first
+            // frames (hence the wait above): expect what a MiningProgress at the Character's rate of each tick gives over 3 s,
+            // not a fixed number and not one read of the rate.
+            var expectedProgress = new MiningProgress();
+            int expected = 0;
             int mined = 0;
             for (int i = 0; i < 12; i++)
             {
+                float rate = miner.Rate;
+                expected += expectedProgress.Tick(0.25f, rate, before - expected);
                 mined += miner.Mine(node, 0.25f);   // 3 s
                 yield return null;
             }
+            Assume.That(expected, Is.GreaterThan(0), "the Character can mine");
 
             Assert.AreEqual(expected, mined, $"3 s at mining speed {miner.Rate}");
             Assert.AreEqual(start + mined, pile.Get(node.Type));

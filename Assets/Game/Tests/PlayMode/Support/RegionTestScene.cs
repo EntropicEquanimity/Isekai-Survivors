@@ -46,5 +46,20 @@ namespace Isekai.Tests
             if (spawner != null) spawner.enabled = false;
             foreach (HordeMember m in Object.FindObjectsByType<HordeMember>(FindObjectsInactive.Exclude)) Pools.Despawn(m.gameObject);
         }
+
+        /// <summary>
+        /// Takes every unit that is not Yours out of the Region without a death (no bones, no Souls, no Vigilance): the
+        /// settlement mortals, the wanderers, the wildlife, anything else of another side. Nothing refills them while a test
+        /// runs, so a fight or a walk the test stages is not joined by units that wander in from the generated Region.
+        /// Buildings stay.
+        /// </summary>
+        public static void ClearOtherSides()
+        {
+            foreach (RegionEntity e in new System.Collections.Generic.List<RegionEntity>(RegionEntities.Living))
+            {
+                if (e.Kind == UnitKind.Building || e.Side == Side.Yours || e.GameObject == null) continue;
+                Pools.Despawn(e.GameObject);
+            }
+        }
     }
 }
