@@ -200,7 +200,6 @@ namespace Isekai
         /// <summary>Empty cells kept between one settlement's ring and the next, the Seat's, the start's and the map's edge.</summary>
         public const int Spacing = 3;
 
-        private const int FullSize = 160 * 110;
         private const int Attempts = 80;
 
         private readonly List<PlacedSettlement> _settlements = new();
@@ -210,12 +209,14 @@ namespace Isekai
         private readonly HashSet<Int2> _roadCells = new();
         private readonly int _width, _height;
         private readonly CellRect _start;
+        private readonly RingRecipe _ring;
 
-        private SettlementPlan(int width, int height, CellRect start)
+        private SettlementPlan(int width, int height, CellRect start, RingRecipe ring)
         {
             _width = width;
             _height = height;
             _start = start;
+            _ring = ring;
         }
 
         /// <summary>Every settlement: the Seat first.</summary>
@@ -271,7 +272,7 @@ namespace Isekai
         /// </summary>
         public static SettlementPlan Generate(RegionRecipe recipe, Int2 seat, CellRect start)
         {
-            var plan = new SettlementPlan(recipe.Width, recipe.Height, start);
+            var plan = new SettlementPlan(recipe.Width, recipe.Height, start, recipe.Ring);
             Random rnd = new(StableHash.Seed(recipe.Seed, "layout/settlements"));
             plan.PlaceSeat(seat);
             plan.PlaceOthers(rnd);
@@ -283,18 +284,19 @@ namespace Isekai
         // The fort is mirrored so its gate faces the middle of the map; it goes round the spot, which is the courtyard's middle.
         private void PlaceSeat(Int2 seat)
         {
-            SettlementPiece fort = SettlementPieces.SeatFort;
+            SettlementPiece fort = SettlementPieces.SeatFor(_ring);
             bool flipY = seat.y < _height / 2;
-            var settlement = new PlacedSettlement(0, fort, new Int2(seat.x - SettlementPieces.SeatAnchor.x, seat.y - SettlementPieces.SeatAnchor.y), false, flipY);
+            var settlement = new PlacedSettlement(0, fort, new Int2(seat.x - fort.Anchor.x, seat.y - fort.Anchor.y), false, flipY);
             _settlements.Add(settlement);
             _steps.Add(LayoutStep.Seat);
         }
 
         private void PlaceOthers(Random rnd)
         {
-            double scale = (double)(_width * _height) / FullSize;
-            int low = Math.Clamp((int)Math.Round(6 * scale), MinCount, 6);
-            int high = Math.Clamp((int)Math.Round(MaxCount * scale), MinCount, MaxCount);
+            // A map smaller than its ring's full size holds proportionally fewer places.
+            double scale = (double)(_width * _height) / _ring.MapCells;
+            int low = Math.Clamp((int)Math.Round(_ring.MinSettlements * scale), MinCount, _ring.MinSettlements);
+            int high = Math.Clamp((int)Math.Round(_ring.MaxSettlements * scale), MinCount, _ring.MaxSettlements);
             int total = rnd.Next(low, Math.Max(low, high) + 1);
             int villages = Math.Max(1, (int)Math.Round(total * 0.4));
             int camps = Math.Max(1, (int)Math.Round(total * 0.25));

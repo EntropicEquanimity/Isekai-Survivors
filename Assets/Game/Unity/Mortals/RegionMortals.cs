@@ -32,6 +32,7 @@ namespace Isekai
         private RegionSettlements _settlements;
         private int _cursor;
         private float _nextRelease;
+        private RingRecipe _ring = RingRecipe.Of(RegionRing.Outer);
 
         public static RegionMortals Current { get; private set; }
 
@@ -42,6 +43,10 @@ namespace Isekai
 
         /// <summary>What a new guard's health is multiplied by: how strong the patrols are (Vigilance sets this).</summary>
         public float PatrolStrength { get; set; } = 1f;
+
+        /// <summary>What a new guard's health is multiplied by in this Region's ring, on top of <see cref="PatrolStrength"/>; the Seat's guards, the elite, also get the ring's elite share.</summary>
+        public float GuardStrength(RegionSettlements.Settlement settlement) =>
+            _ring.TroopStrength * (settlement != null && settlement.IsSeat ? _ring.EliteGuardStrength : 1f);
 
         /// <summary>Seconds between one priest's purifications (a test shortens it).</summary>
         public float PurifySeconds { get; set; } = CorruptionTuning.PurifySeconds;
@@ -107,6 +112,7 @@ namespace Isekai
             _grid = RegionGrid.Current;
             _settlements = RegionSettlements.Current;
             _random = region.Random("mortals");
+            _ring = region.Ring;
             _roster = Resources.Load<MortalRoster>(MortalRoster.ResourceName);
             if (_grid == null) return;
             IReadOnlyList<RegionSettlements.Settlement> all = _settlements != null ? _settlements.Settlements : Array.Empty<RegionSettlements.Settlement>();
@@ -124,7 +130,11 @@ namespace Isekai
             if (prefab == null || _grid == null) return null;
             GameObject go = Pools.Spawn(prefab, at, Quaternion.identity);
             if (!go.TryGetComponent(out MortalBrain brain)) { Pools.Despawn(go); return null; }
-            if (brain.Profile.Role == MortalRole.Guard && !Mathf.Approximately(PatrolStrength, 1f)) brain.Member.ScaleHealth(PatrolStrength);
+            if (brain.Profile.Role == MortalRole.Guard)
+            {
+                float strength = PatrolStrength * GuardStrength(settlement);
+                if (!Mathf.Approximately(strength, 1f)) brain.Member.ScaleHealth(strength);
+            }
             brain.Assign(this, settlement, at);
             return brain;
         }

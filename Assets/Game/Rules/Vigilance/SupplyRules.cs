@@ -61,6 +61,9 @@ namespace Isekai
             _ => 0,
         };
 
+        /// <summary>Most troops a settlement raises in a ring whose limits are <paramref name="scale"/> times the outer ring's.</summary>
+        public static int TroopLimit(SettlementKind kind, float scale) => (int)Math.Round(TroopLimit(kind) * Math.Max(0f, scale), MidpointRounding.AwayFromZero);
+
         /// <summary>
         /// Seconds between troops at <paramref name="stage"/>, or null when none are raised: an undetected Region
         /// (Unaware and no alarmed area) raises none. An area alerted by alarms raises as fast as Uneasy at least.
@@ -104,9 +107,15 @@ namespace Isekai
     public sealed class TroopRaiser
     {
         private readonly SettlementKind _kind;
+        private readonly int _limit;
         private float _timer;
 
-        public TroopRaiser(SettlementKind kind) => _kind = kind;
+        /// <param name="limitScale">What the ring multiplies the most troops by (1 in the outer ring).</param>
+        public TroopRaiser(SettlementKind kind, float limitScale = 1f)
+        {
+            _kind = kind;
+            _limit = SupplyRules.TroopLimit(kind, limitScale);
+        }
 
         public int Raised { get; private set; }
 
@@ -114,7 +123,7 @@ namespace Isekai
         public bool Tick(float dt, VigilanceStage stage, bool areaAlerted, SupplyPool supply)
         {
             float? interval = SupplyRules.TroopInterval(stage, areaAlerted);
-            if (interval == null || !SupplyRules.RaisesTroops(_kind) || Raised >= SupplyRules.TroopLimit(_kind))
+            if (interval == null || !SupplyRules.RaisesTroops(_kind) || Raised >= _limit)
             {
                 _timer = 0f;
                 return false;

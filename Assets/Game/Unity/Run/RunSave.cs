@@ -27,6 +27,7 @@ namespace Isekai
             public string[] captured = Array.Empty<string>();
             public EscapedRuler[] escapedRulers = Array.Empty<EscapedRuler>();
             public float runSeconds;
+            public int rulersSlain;
             /// <summary>The Anchor's <see cref="AnchorKind"/>, or -1 when none was picked.</summary>
             public int anchor = -1;
             public int soulLevel;
@@ -63,6 +64,7 @@ namespace Isekai
                 captured = captured,
                 escapedRulers = escaped,
                 runSeconds = run.RunSeconds,
+                rulersSlain = run.RulersSlain,
                 anchor = RunSession.Anchor is { } kind ? (int)kind : -1,
                 soulLevel = souls.Level,
                 soulDeaths = souls.Deaths,
@@ -86,7 +88,7 @@ namespace Isekai
             Data data = SaveSystem.GetValue<Data>(Key);
             if (data == null || data.version != Version || data.captured == null || data.rings == null || data.rings.Length == 0) return false;
             AnchorKind? anchor = Enum.IsDefined(typeof(AnchorKind), data.anchor) ? (AnchorKind)data.anchor : null;
-            RunSession.Restore(data.seed, data.rings, data.captured, data.runSeconds, anchor, data.hasInventory ? data.inventory : null, data.escapedRulers);
+            RunSession.Restore(data.seed, data.rings, data.captured, data.runSeconds, anchor, data.hasInventory ? data.inventory : null, data.escapedRulers, data.rulersSlain);
             SoulRun.Restore(data.soulLevel, data.soulDeaths);
             return true;
         }

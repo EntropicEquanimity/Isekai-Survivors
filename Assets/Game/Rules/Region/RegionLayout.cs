@@ -40,9 +40,6 @@ namespace Isekai
         /// <summary>The start area reaches this far (in cells, each way) from the Anchor; it stays empty.</summary>
         public const int StartClearRadius = 10;
 
-        /// <summary>The Seat's area reaches this far from the Seat spot; it stays empty for the Seat and its walls.</summary>
-        public const int SeatClearRadius = 8;
-
         /// <summary>The smallest map a layout can be made for.</summary>
         public const int MinSize = 32;
 
@@ -82,7 +79,12 @@ namespace Isekai
             Interior = new Int2(east ? -1 : 1, north ? -1 : 1);
             Anchor = new Int2(east ? Width - CornerInset - AnchorSize : CornerInset, north ? Height - CornerInset - AnchorSize : CornerInset);
             Character = new Int2(Anchor.x + (east ? -2 : AnchorSize + 1), Anchor.y + (north ? -2 : AnchorSize + 1));
-            Seat = new Int2(Width - 1 - Anchor.x, Height - 1 - Anchor.y);
+            // The far corner, mirrored through the map's centre from the Anchor; a bigger Seat sits further in so its walls stay on the map.
+            int inset = Math.Max(CornerInset, recipe.Ring.SeatSize / 2 + 1);
+            int mirroredX = Width - 1 - Anchor.x, mirroredY = Height - 1 - Anchor.y;
+            Seat = new Int2(east ? Math.Max(mirroredX, inset) : Math.Min(mirroredX, Width - 1 - inset),
+                north ? Math.Max(mirroredY, inset) : Math.Min(mirroredY, Height - 1 - inset));
+            SeatClearRadius = recipe.Ring.SeatSize / 2 + 3;
             // The Seat, villages, farms and camps, roads and walls come first; the rocks, nodes and wildlife that follow keep clear of them.
             _plan = plan ?? SettlementPlan.Generate(recipe, Seat, new CellRect(
                 Anchor.x - StartClearRadius, Anchor.y - StartClearRadius, Anchor.x + AnchorSize - 1 + StartClearRadius, Anchor.y + AnchorSize - 1 + StartClearRadius));
@@ -90,6 +92,10 @@ namespace Isekai
         }
 
         public RegionRecipe Recipe { get; }
+
+        /// <summary>How far the empty ground reserved around the Seat spot reaches (a bigger Seat reserves more).</summary>
+        public int SeatClearRadius { get; }
+
         public int Width { get; }
         public int Height { get; }
 

@@ -15,7 +15,8 @@ namespace Isekai
         {
             Region = region;
             Run = run;
-            Recipe = recipe ?? new RegionRecipe(StableHash.Seed(runSeed, "region/" + (region?.Id ?? "none")));
+            Recipe = recipe ?? RegionRecipe.For(StableHash.Seed(runSeed, "region/" + (region?.Id ?? "none")),
+                RingRecipe.For(region, run?.Planet, run?.CapturedInOrder.Count ?? 0));
             Seed = Recipe.Seed;
         }
 
@@ -24,9 +25,12 @@ namespace Isekai
 
         /// <summary>
         /// The seed and map size this Region is made from: the recipe a test set before loading, else one derived from
-        /// the Run (its seed, and the hand-built Region's size).
+        /// the Run (its seed, and its ring's map size).
         /// </summary>
         public RegionRecipe Recipe { get; }
+
+        /// <summary>What this Region's ring changes about it: map size, Seat, Wave cap, troops, Supply, ruler (<see cref="RegionRecipe.Ring"/>).</summary>
+        public RingRecipe Ring => Recipe.Ring;
 
         /// <summary>This Region's seed in this Run: the same Run lays the same Region out the same way (<see cref="RegionRecipe.Seed"/>).</summary>
         public int Seed { get; }

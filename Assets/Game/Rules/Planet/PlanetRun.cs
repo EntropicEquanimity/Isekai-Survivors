@@ -41,6 +41,9 @@ namespace Isekai
 
         public IReadOnlyList<string> CapturedInOrder => _order;
         public IReadOnlyList<EscapedRuler> EscapedRulers => _escapedRulers;
+
+        /// <summary>Rulers killed with their Seats over the Run (an escaped ruler is in <see cref="EscapedRulers"/> instead).</summary>
+        public int RulersSlain { get; private set; }
         public bool IsCaptured(RegionInfo region) => region != null && _captured.Contains(region.Id);
         public bool IsOver => State is PlanetRunState.Won or PlanetRunState.Lost;
 
@@ -79,6 +82,12 @@ namespace Isekai
             if (State != PlanetRunState.InRegion || Current == null) return;
             if (_captured.Add(Current.Id)) _order.Add(Current.Id);
             State = Current.IsCapital ? PlanetRunState.Won : PlanetRunState.Choosing;
+        }
+
+        /// <summary>A ruler fell with their Seat (also puts a saved count back: <paramref name="count"/>).</summary>
+        public void RecordRulersSlain(int count = 1)
+        {
+            if (count > 0) RulersSlain += count;
         }
 
         public void Lose()

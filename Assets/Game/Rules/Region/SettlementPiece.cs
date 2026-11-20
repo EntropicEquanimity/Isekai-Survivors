@@ -125,7 +125,7 @@ namespace Isekai
 
         /// <param name="tileRows">The ground patch drawn top row first, one char per cell: 'p' a path tile, anything else leaves the grass.</param>
         public SettlementPiece(string name, SettlementKind kind, int width, int height, WallStyle wall, string[] tileRows,
-            BuildingSpot[] spots, SpawnMarker[] markers, RoadEnd[] roadEnds)
+            BuildingSpot[] spots, SpawnMarker[] markers, RoadEnd[] roadEnds, Int2? anchor = null)
         {
             Name = name;
             Kind = kind;
@@ -136,7 +136,11 @@ namespace Isekai
             Spots = spots ?? Array.Empty<BuildingSpot>();
             Markers = markers ?? Array.Empty<SpawnMarker>();
             RoadEnds = roadEnds ?? Array.Empty<RoadEnd>();
+            Anchor = anchor ?? new Int2(width / 2, height / 2);
         }
+
+        /// <summary>The cell that sits on the Seat's reserved spot when this piece is a Seat: the courtyard's middle.</summary>
+        public Int2 Anchor { get; }
 
         public string Name { get; }
         public SettlementKind Kind { get; }
@@ -294,10 +298,68 @@ namespace Isekai
             },
             new[] { new RoadEnd(4, 0, 0, -1, new Int2(4, -1)) });
 
-        /// <summary>Every piece, for checking that the set is well-formed.</summary>
-        public static IReadOnlyList<SettlementPiece> All { get; } = new[] { SeatFort, Village, Farm, Camp };
+        /// <summary>The Seat of the middle ring: a fort, bigger than the small one and better held.</summary>
+        public static SettlementPiece MiddleFort { get; } = BuildSeat("Fort", 13, 9, 4);
 
-        /// <summary>The piece a settlement of <paramref name="kind"/> is made from.</summary>
+        /// <summary>The Seat of the inner ring.</summary>
+        public static SettlementPiece LargeFort { get; } = BuildSeat("Large fort", 15, 12, 6);
+
+        /// <summary>The Capital's Seat: the palace, with the most walls and towers and a guard of its own.</summary>
+        public static SettlementPiece Palace { get; } = BuildSeat("Palace", 19, 18, 8);
+
+        /// <summary>Every piece, for checking that the set is well-formed.</summary>
+        public static IReadOnlyList<SettlementPiece> All { get; } = new[] { SeatFort, MiddleFort, LargeFort, Palace, Village, Farm, Camp };
+
+        /// <summary>The Seat a ring is made with: the piece of the size, guards and towers its recipe asks for.</summary>
+        public static SettlementPiece SeatFor(RingRecipe ring) => ring.Ring switch
+        {
+            RegionRing.Middle => MiddleFort,
+            RegionRing.Inner => LargeFort,
+            RegionRing.Capital => Palace,
+            _ => SeatFort,
+        };
+
+        // A bigger fort of the same plan as the small one: the gate on the south wall, the keep at the far end, watchtowers
+        // along the walls (the south corners first), guards in the courtyard nearest the keep, a priest by the middle.
+        private static SettlementPiece BuildSeat(string name, int size, int guards, int towers)
+        {
+            int c = size / 2;
+            var rows = new string[size];
+            for (int i = 0; i < size; i++) rows[i] = new string('p', size);
+
+            var spots = new List<BuildingSpot> { new(MortalBuilding.Keep, c - 1, size - 4), new(MortalBuilding.CastleGate, c, -1) };
+            var towerCells = new[]
+            {
+                new Int2(1, 1), new Int2(size - 2, 1), new Int2(1, size - 2), new Int2(size - 2, size - 2),
+                new Int2(1, c), new Int2(size - 2, c), new Int2(c - 3, 1), new Int2(c + 4, 1),
+            };
+            for (int i = 0; i < towers && i < towerCells.Length; i++) spots.Add(new BuildingSpot(MortalBuilding.Watchtower, towerCells[i].x, towerCells[i].y));
+
+            // Guard posts: the even cells of the courtyard clear of the keep, the middle and the priest, nearest the keep first.
+            var posts = new List<Int2>();
+            for (int x = 2; x <= size - 3; x += 2)
+            for (int y = 2; y <= size - 3; y += 2)
+            {
+                bool nearKeep = x >= c - 2 && x <= c + 2 && y >= size - 5;
+                bool middle = x == c && (y == c || y == c + 1);
+                if (!nearKeep && !middle) posts.Add(new Int2(x, y));
+            }
+            int keepX = c, keepY = size - 3;
+            posts.Sort((a, b) =>
+            {
+                int da = (a.x - keepX) * (a.x - keepX) + (a.y - keepY) * (a.y - keepY);
+                int db = (b.x - keepX) * (b.x - keepX) + (b.y - keepY) * (b.y - keepY);
+                return da != db ? da.CompareTo(db) : a.x != b.x ? a.x.CompareTo(b.x) : a.y.CompareTo(b.y);
+            });
+            var markers = new List<SpawnMarker>();
+            for (int i = 0; i < guards && i < posts.Count; i++) markers.Add(new SpawnMarker(MarkerKind.Guard, posts[i].x, posts[i].y));
+            markers.Add(new SpawnMarker(MarkerKind.Priest, c, c + 1));
+
+            return new SettlementPiece(name, SettlementKind.Seat, size, size, WallStyle.Castle, rows, spots.ToArray(), markers.ToArray(),
+                new[] { new RoadEnd(c, 0, 0, -1, new Int2(c, -1), new Int2(c + 1, -1)) });
+        }
+
+        /// <summary>The piece a settlement of <paramref name="kind"/> is made from (the Seat's is the outer ring's; see <see cref="SeatFor"/>).</summary>
         public static SettlementPiece For(SettlementKind kind) => kind switch
         {
             SettlementKind.Seat => SeatFort,

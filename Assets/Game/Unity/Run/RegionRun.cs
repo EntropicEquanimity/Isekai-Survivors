@@ -1,4 +1,3 @@
-using Blondie.GameSetup;
 using Blondie.Roguelike.Boons;
 using Blondie.Stats;
 using Blondie.UI;
@@ -72,7 +71,7 @@ namespace Isekai
             {
                 RunSession.End(won: true);
                 Say("The Planet is yours!", Color.yellow);
-                if (GameSetup.IsRunning) ConfirmPresenter.Ask("Planet conquered", "You took the Capital. Back to the menu?", GameSetup.GoToMainMenu, GameSetup.GoToMainMenu);
+                ShowEndScreen();
                 return;
             }
             if (inventory != null) RunSession.StoreInventory(inventory.Unit.Capture());
@@ -81,22 +80,33 @@ namespace Isekai
             _returnAt = Time.unscaledTime + _returnDelay;
         }
 
+        // The Seat's ruler is counted when they fell with it; one who escaped is counted by the Run already.
         private static void ShowRulerSummary()
         {
             RegionRuler ruler = RegionRuler.Current;
             RulerCaptureSummaryPanel panel = RulerCaptureSummaryPanel.Current;
+            bool escaped = ruler != null && ruler.HasEscaped && ruler.EscapedTo != null;
+            if (ruler != null && !escaped && (ruler.IsSlain || ruler.Ruler != null)) RunSession.Run?.RecordRulersSlain();
             if (panel == null) return;
-            if (ruler != null && ruler.HasEscaped && ruler.EscapedTo != null)
-                panel.ShowEscaped(ruler.RulerName, ruler.EscapedTo.Name, ruler.RulerTraits);
+            if (escaped) panel.ShowEscaped(ruler.RulerName, ruler.EscapedTo.Name, ruler.RulerTraits);
             else panel.ShowSlain(ruler != null ? ruler.RulerName : null);
         }
 
         private void OnDefeated()
         {
             RunSession.End(won: false);
-            if (GameSetup.IsRunning)
-                ConfirmPresenter.Ask("Jack's soul has faded", "The Run is lost. Start a new Run?",
-                    () => { RunSession.StartNew(); RunSession.GoToPlanet(); }, GameSetup.GoToMainMenu);
+            ShowEndScreen();
+        }
+
+        // Victory or defeat: the Run summary, with a new Run or the main menu to follow.
+        private static void ShowEndScreen()
+        {
+            RunEndScreen screen = RunEndScreen.Current;
+            PlanetRun run = RunSession.Run;
+            if (screen == null || run == null) return;
+            int souls = RegionEconomy.Current != null ? RegionEconomy.Current.Stockpile.Get(ResourceType.Souls) : 0;
+            SoulLedger ledger = SoulRun.Ledger;
+            screen.Show(RunSummary.Of(run, ledger.Deaths, souls, ledger.Level));
         }
 
         private static void Say(string text, Color color)

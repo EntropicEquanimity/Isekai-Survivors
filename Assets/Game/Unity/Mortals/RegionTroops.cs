@@ -52,13 +52,14 @@ namespace Isekai
                 mortals.PatrolStrength = VigilanceTuning.HealthMultiplier(stage);
             }
 
-            float dt = Time.deltaTime * supply.Speed;
+            RingRecipe ring = RegionBootstrap.Current != null && RegionBootstrap.Current.Context != null ? RegionBootstrap.Current.Context.Ring : null;
+            float dt = Time.deltaTime * supply.Speed * (ring != null ? ring.TroopSpeed : 1f);
             foreach (RegionSettlements.Settlement s in settlements.Settlements)
             {
                 if (s.IsRazed) continue;
                 if (HoldsPatrols(s)) AddPatrolsTo(mortals, s, stage);
                 if (!SupplyRules.RaisesTroops(s.Kind)) continue;
-                if (!_raisers.TryGetValue(s, out TroopRaiser raiser)) _raisers[s] = raiser = new TroopRaiser(s.Kind);
+                if (!_raisers.TryGetValue(s, out TroopRaiser raiser)) _raisers[s] = raiser = new TroopRaiser(s.Kind, ring != null ? ring.TroopLimitScale : 1f);
                 if (raiser.Tick(dt, stage, AreaAlerted(mortals, s), supply.Pool))
                     TroopsRaised += mortals.AddPatrols(s, 1);
             }

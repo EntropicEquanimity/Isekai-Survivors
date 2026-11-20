@@ -38,9 +38,8 @@ namespace Isekai
             RegionEntities.Reset();
             MapPainters.Reset();
             RegionSides.Apply();
-            RegionRecipe recipe = RegionRecipes.Take();
-            if (recipe != null && RegionGrid.Current != null) RegionGrid.Current.Resize(recipe.Width, recipe.Height);
-            Context = new RegionContext(RunSession.EnsureInRegion(), RunSession.Run, RunSession.Seed, recipe);
+            Context = new RegionContext(RunSession.EnsureInRegion(), RunSession.Run, RunSession.Seed, RegionRecipes.Take());
+            if (RegionGrid.Current != null) RegionGrid.Current.Resize(Context.Recipe.Width, Context.Recipe.Height);   // the ring's map size
             AddSystems();
         }
 

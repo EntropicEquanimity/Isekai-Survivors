@@ -26,14 +26,16 @@ namespace Isekai
 
         private const float MemberScatterCells = 3f;
         private const float PruneInterval = 0.5f;
+        private const int PrewarmWaves = 3;
 
         private readonly VigilanceMachine _machine = new();
-        private readonly VigilanceWavePlanner _planner = new(VigilanceTuning.OuterRingWaveCap, VigilanceTuning.CrusadeRepeatSeconds);
+        private VigilanceWavePlanner _planner = new(VigilanceTuning.OuterRingWaveCap, VigilanceTuning.CrusadeRepeatSeconds);
         private readonly List<Wave> _alive = new();
         private readonly Dictionary<GameObject, Wave> _waveOf = new();
         private readonly List<VigilanceSpawnCircle> _circles = new();
 
         private Random _random;
+        private RingRecipe _ring = RingRecipe.Of(RegionRing.Outer);
         private GameObject _prefab;
         private float _retryAt;
         private float _nextPrune;
@@ -48,6 +50,9 @@ namespace Isekai
         public int WavesSent { get; private set; }
         public int WavesFromEdge { get; private set; }
         public int WavesFromCircle { get; private set; }
+
+        /// <summary>The most Waves that may be alive at once in this Region's ring.</summary>
+        public int WaveCap => _planner.Cap;
 
         public int AliveWaves => _planner.Alive;
         public int PendingWaves => _planner.Pending;
@@ -87,10 +92,12 @@ namespace Isekai
         void IRegionSetup.Setup(RegionContext region)
         {
             region.Threat = this;
+            _ring = region.Ring;
+            _planner = new VigilanceWavePlanner(_ring.WaveCap, VigilanceTuning.CrusadeRepeatSeconds);   // the ring sets how many Waves may be alive
             _random = region.Random("vigilance");
             HordeSpawner spawner = FindAnyObjectByType<HordeSpawner>();
             _prefab = spawner != null ? spawner.Prefab : null;
-            if (_prefab != null) Pools.Prewarm(_prefab, VigilanceTuning.WaveSize(VigilanceStage.Crusade) * VigilanceTuning.OuterRingWaveCap);
+            if (_prefab != null) Pools.Prewarm(_prefab, VigilanceTuning.WaveSize(VigilanceStage.Crusade) * Mathf.Min(_ring.WaveCap, PrewarmWaves));
         }
 
         void IRegionPopulate.Populate(RegionContext region)
@@ -106,6 +113,7 @@ namespace Isekai
                     out Vector3 spot, attempts: 60);
                 if (placed) _circles.Add(VigilanceSpawnCircle.Create(spot, transform));
             }
+            if (_ring.StartStage > VigilanceStage.Unaware) StartAt(_ring.StartStage);   // the Capital starts on alert
         }
 
         private void Update()
@@ -223,7 +231,7 @@ namespace Isekai
         {
             RegionGrid grid = RegionGrid.Current;
             Int2 centre = grid.CellAt(wave.Origin);
-            float multiplier = HealthMultiplier;
+            float multiplier = HealthMultiplier * _ring.TroopStrength;
             for (int i = 0; i < count; i++)
             {
                 if (!grid.TryPickSpot(_random, SpawnPlacement.Near(centre, Mathf.CeilToInt(MemberScatterCells)),

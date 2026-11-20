@@ -89,6 +89,7 @@ namespace Isekai
         private readonly Dictionary<Building, (int settlement, int building)> _owner = new();
         private SettlementLedger _ledger;
         private Transform _root;
+        private RingRecipe _ring;
 
         public static RegionSettlements Current { get; private set; }
 
@@ -118,6 +119,7 @@ namespace Isekai
             RegionLayout layout = RegionTerrain.Current != null ? RegionTerrain.Current.Layout : null;
             if (grid == null || layout == null || RegionBuildings.Current == null) return;
 
+            _ring = region.Ring;
             SettlementPlan plan = layout.Settlements;
             _ledger = new SettlementLedger(plan.Settlements);
             _root = new GameObject("Settlements").transform;
@@ -180,11 +182,20 @@ namespace Isekai
                 var size = new Vector2Int(spot.Size.x, spot.Size.y);
                 GameObject go = Instantiate(asset.Prefab, grid.CentreOf(spot.Origin, size), Quaternion.identity, _root);
                 var building = go.GetComponent<Building>();
+                if (placed.IsSeat && spot.Kind == MortalBuilding.Keep) StrengthenKeep(building);
                 RegionBuildings.Current.ClaimNow(building);
                 settlement.Set(i, building);
                 _owner[building] = (placed.Index, i);
                 building.Destroyed += OnDestroyed;
             }
+        }
+
+        // The deeper the ring, the harder the keep is to bring down (the palace's most).
+        private void StrengthenKeep(Building keep)
+        {
+            if (_ring == null || Mathf.Approximately(_ring.KeepHealth, 1f) || keep == null || keep.Damageable == null) return;
+            keep.Damageable.MaxHealth *= _ring.KeepHealth;
+            keep.Damageable.Heal(keep.Damageable.MaxHealth);
         }
 
         // Roads and the ground patches inside settlements are laid as path tiles over the grass.

@@ -10,7 +10,9 @@ namespace Isekai
 {
     /// <summary>
     /// The Seat's ruler for this Region: one named mortal hero at the Seat, rolled as a Hero (2-3 Traits), tougher than
-    /// ordinary guards, and willing to retreat when the Seat is crumbling or they are badly hurt.
+    /// ordinary guards, and willing to retreat when the Seat is crumbling or they are badly hurt. The ring sets how
+    /// tough they are, and the Capital's ruler makes a last stand. A ruler that escaped an earlier Region (#24) stands at
+    /// the Seat they fled to as an extra hero, with the Traits the player learned and nothing else remembered.
     /// </summary>
     [RegionSystem]
     public sealed class RegionRuler : MonoBehaviour, IRegionPopulate, IRegionEndListener
@@ -41,6 +43,8 @@ namespace Isekai
         private RegionMortals _mortals;
         private PlanetRun _run;
         private RegionInfo _region;
+        private RingRecipe _ring = RingRecipe.Of(RegionRing.Outer);
+        private readonly List<MortalBrain> _returned = new();
         private MortalBrain _ruler;
         private Damageable _rulerDamageable;
         private SpriteRenderer _sprite;
@@ -59,6 +63,9 @@ namespace Isekai
         int IRegionPopulate.PopulateOrder => RegionOrder.Patrols + 10;
 
         public MortalBrain Ruler => _ruler;
+
+        /// <summary>The rulers who escaped an earlier Region and stand at this Seat as extra heroes (they do not flee again).</summary>
+        public IReadOnlyList<MortalBrain> ReturnedHeroes => _returned;
         public string RulerName => _rulerName;
         public IReadOnlyList<TraitId> RulerTraits => _traits;
         public bool IsEscaping => _escaping;
@@ -88,6 +95,7 @@ namespace Isekai
             _mortals = RegionMortals.Current;
             _run = region.Run;
             _region = region.Region;
+            _ring = region.Ring;
             if (_grid == null || _settlements == null || _mortals == null) return;
             RegionSettlements.Settlement seat = _settlements.Seat;
             if (seat == null || seat.Keep == null) return;
@@ -101,6 +109,36 @@ namespace Isekai
             MakeStronger(_ruler);
             HookRuler(_ruler);
             StartCoroutine(RollHeroTraits());
+            SpawnReturnedHeroes(seat);
+        }
+
+        // Each ruler that fled to this Region is back at the Seat: the same name and Traits, a hero's usual strength for the ring.
+        private void SpawnReturnedHeroes(RegionSettlements.Settlement seat)
+        {
+            if (_run == null || _region == null) return;
+            int n = 0;
+            foreach (EscapedRuler escaped in _run.EscapedRulersAt(_region))
+            {
+                Vector3 at = PickSpawn(seat) + new Vector3(0.7f * (++n), 0f, 0f);
+                if (!_grid.IsWalkable(at)) at = PickSpawn(seat);
+                MortalBrain hero = _mortals.Spawn(_primaryType, seat, at) ?? _mortals.Spawn(_fallbackType, seat, at);
+                if (hero == null) continue;
+                hero.gameObject.name = "Ruler " + escaped.Name + " (returned)";
+                MakeStronger(hero);
+                _returned.Add(hero);
+                StartCoroutine(GiveTraits(hero, escaped.Traits));
+            }
+        }
+
+        private IEnumerator GiveTraits(MortalBrain hero, TraitId[] traits)
+        {
+            yield return null;
+            for (int i = 0; i < 30 && hero != null; i++)
+            {
+                TraitSystem system = TraitSystem.Current;
+                if (system != null && system.Give(hero.gameObject, traits)) yield break;
+                yield return null;
+            }
         }
 
         private void Update()
@@ -123,6 +161,7 @@ namespace Isekai
         private bool ShouldEscape()
         {
             if (_ruler == null || _rulerDamageable == null || !_ruler.Member.IsAlive) return false;
+            if (_region != null && _region.IsCapital) return false;   // nowhere further in to flee to: a last stand
             Building keep = _settlements.Seat?.Keep;
             bool keepAboutToFall = keep != null && keep.IsAlive && keep.Damageable.Normalized <= _keepEscapeHealth;
             bool badlyHurt = _rulerDamageable.Normalized <= _selfEscapeHealth;
@@ -203,9 +242,9 @@ namespace Isekai
         private void MakeStronger(MortalBrain ruler)
         {
             HordeMember member = ruler.Member;
-            member.ScaleHealth(_healthMultiplier);
+            member.ScaleHealth(_healthMultiplier * _ring.RulerHealth);
             ContactAttack attack = member.Attack;
-            attack.Damage *= _damageMultiplier;
+            attack.Damage *= _damageMultiplier * _ring.RulerDamage;
             attack.Interval = Mathf.Max(0.2f, attack.Interval * _attackIntervalShare);
             member.Attack = attack;
         }

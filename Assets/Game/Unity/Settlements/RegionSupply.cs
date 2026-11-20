@@ -7,8 +7,10 @@ namespace Isekai
     /// (<see cref="SupplyRules"/>), and <see cref="RegionTroops"/> spends it on troops.
     /// </summary>
     [RegionSystem]
-    public sealed class RegionSupply : MonoBehaviour
+    public sealed class RegionSupply : MonoBehaviour, IRegionSetup
     {
+        private float _rate = 1f;
+
         public static RegionSupply Current { get; private set; }
 
         public SupplyPool Pool { get; private set; } = new SupplyPool();
@@ -25,7 +27,7 @@ namespace Isekai
                 if (settlements == null) return 0f;
                 float total = 0f;
                 foreach (RegionSettlements.Settlement s in settlements.Settlements) total += SupplyRules.PerMinute(s.Kind, s.IsRazed);
-                return total;
+                return total * _rate;
             }
         }
 
@@ -33,6 +35,13 @@ namespace Isekai
         {
             Current = this;
             Pool = new SupplyPool();
+        }
+
+        // The ring decides how much Supply the mortals start with and how fast their farms and villages make it.
+        void IRegionSetup.Setup(RegionContext region)
+        {
+            _rate = region.Ring.SupplyRate;
+            Pool = new SupplyPool(region.Ring.StartingSupply);
         }
 
         private void OnDisable()
