@@ -39,11 +39,19 @@ namespace Isekai
             {
                 int index = i;
                 MenuButtonModel model = _menu.Buttons[i];
-                if (i == LeaveIndex) _buttons.Add(new MenuButton(GameMenus.AbandonText, GameMenus.AskAbandonRun));
+                if (i == LeaveIndex)
+                {
+                    _buttons.Add(new MenuButton(GameMenus.AbandonText, GameMenus.AskAbandonRun));
+                    if (TutorialRun.CanSkip) _buttons.Add(new MenuButton("Skip tutorial", () => TutorialRun.Skip()));
+                }
                 string text = i == LeaveIndex ? GameMenus.QuitToMenuText : model.Text;
                 _buttons.Add(new MenuButton(text, () => _menu.Press(index), model.IsPrimary));
             }
-            if (_menu.Buttons.Count <= LeaveIndex) _buttons.Add(new MenuButton(GameMenus.AbandonText, GameMenus.AskAbandonRun));
+            if (_menu.Buttons.Count <= LeaveIndex)
+            {
+                _buttons.Add(new MenuButton(GameMenus.AbandonText, GameMenus.AskAbandonRun));
+                if (TutorialRun.CanSkip) _buttons.Add(new MenuButton("Skip tutorial", () => TutorialRun.Skip()));
+            }
         }
     }
 }

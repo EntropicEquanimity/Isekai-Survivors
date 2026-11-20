@@ -30,6 +30,7 @@ namespace Isekai.Tests
             KeyValueStorage.Current = new MemoryKeyValueStore();
             _previousApplier = GameSettings.Applier;
             GameSettings.Applier = null;
+            TutorialRun.ResetForTests();
             GameSetupSettings real = GameSetupSettings.Current;
             PackageSettings<GameSetupSettings>.Set(new GameSetupSettings
             {
@@ -64,6 +65,7 @@ namespace Isekai.Tests
             PackageSettings<GameSetupUnitySettings>.Set(null);
             KeyValueStorage.Current = _previousStore;
             GameSettings.Applier = _previousApplier;
+            TutorialRun.ResetForTests();
             GameSetup.SetState(GameSetupState.Gameplay);
         }
 

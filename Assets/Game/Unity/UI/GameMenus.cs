@@ -30,7 +30,7 @@ namespace Isekai
         private static void Install()
         {
             SaveSystem.MaxSlots = 1;   // one Run at a time
-            MainMenuButtons.Add(NewRunText, GameSetup.Play, MainMenuItem.Continue);
+            MainMenuButtons.Add(NewRunText, TutorialRun.StartNewRunFromMenu, MainMenuItem.Continue);
             MainMenuButtons.Add(TutorialText, () => MenuHooks.StartTutorial?.Invoke(), MainMenuItem.Continue);
             MainMenuButtons.Add(CreditsText, () => MenuHooks.OpenCredits?.Invoke(), MainMenuItem.Settings);
             MenuViews.Register<PauseMenuPresenter>(menu => new GamePauseScreen(menu));

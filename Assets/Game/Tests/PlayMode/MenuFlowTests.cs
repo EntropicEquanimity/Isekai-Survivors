@@ -62,6 +62,9 @@ namespace Isekai.Tests
             SaveSystem.NewGame();
             RunSave.Delete();
             RunSession.Clear();
+            TutorialRun.ResetForTests();
+            TutorialProgressStore.ResetForTests();
+            TutorialProgressStore.MarkSkipped();
             SideOutlineSettingsStore.ResetForTests();
             yield return null;
         }
@@ -81,6 +84,8 @@ namespace Isekai.Tests
             KeyValueStorage.Current = _previousStore;
             GameSettings.Applier = _previousApplier;
             MenuHooks.StartTutorial = _previousTutorial;
+            TutorialRun.ResetForTests();
+            TutorialProgressStore.ResetForTests();
             RunSave.Delete();
             RunSession.Clear();
             SideOutlineSettingsStore.SetPreset(OutlinePreset.Default);
