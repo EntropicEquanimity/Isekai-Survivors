@@ -17,7 +17,7 @@ namespace Isekai
     {
         [SerializeField] private FlowFieldGridComponent _grid;
         [Tooltip("The horde's team: it walks to and hits only targets hostile to this team (Blondie Combat's Teams).")]
-        [SerializeField] private string _team = TeamIds.Enemy;
+        [SerializeField] private string _team = TeamIds.Mortals;
         [SerializeField] private FlowFieldCrowd _crowd;
         [SerializeField, Min(0.25f)] private float _hashCellSize = 1f;
         [Tooltip("An enemy's body radius, for ability hits.")]

@@ -10,7 +10,7 @@ namespace Isekai
         public const string Player = "Players";
 
         /// <summary>The mortals (today's horde; the mortal factions after the redesign).</summary>
-        public const string Enemy = "Enemies";
+        public const string Mortals = "Enemies";
 
         /// <summary>Creatures that attack no one by default.</summary>
         public const string Neutral = "Neutrals";
@@ -25,7 +25,7 @@ namespace Isekai
         public static string Of(Side side) => side switch
         {
             Side.Yours => Player,
-            Side.Mortals => Enemy,
+            Side.Mortals => Mortals,
             Side.Hostile => Hostile,
             Side.Rogue => Rogue,
             _ => Neutral,
@@ -35,7 +35,7 @@ namespace Isekai
         public static Side SideOf(string team) => team switch
         {
             Player => Side.Yours,
-            Enemy => Side.Mortals,
+            Mortals => Side.Mortals,
             Hostile => Side.Hostile,
             Rogue => Side.Rogue,
             _ => Side.Neutral,

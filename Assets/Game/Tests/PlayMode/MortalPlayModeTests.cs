@@ -182,7 +182,7 @@ namespace Isekai.Tests
             yield return TestWait.Until(() => archer.Action == BehaviourAction.Fight, "the archer fights", 5f);
             yield return TestWait.Until(() => !archer.IsFighting, "the archer stops walking once in range", 8f);
             // Whatever it holds still at (Jack, or a building of his beside him) is a hostile target in reach but not next to it.
-            float distance = HordeTarget.All.Where(t => t.IsAlive && Teams.Relation(TeamIds.Enemy, t.Team) == TeamRelation.Hostile)
+            float distance = HordeTarget.All.Where(t => t.IsAlive && Teams.Relation(TeamIds.Mortals, t.Team) == TeamRelation.Hostile)
                 .Min(t => (archer.transform.position - t.transform.position).magnitude);
             Assert.Greater(distance, 1.5f, "it shoots from a distance");
             Assert.Less(distance, archer.Member.Reach + 1.5f, "but within reach");

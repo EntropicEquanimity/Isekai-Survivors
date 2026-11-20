@@ -117,7 +117,7 @@ namespace Isekai
             [TooltipKey.LegendMortalsAttacking] = "Mortals attacking now.",
             [TooltipKey.LegendMortalsRoaming] = "Mortals roaming or patrolling.",
             [TooltipKey.LegendEliteMortals] = "Elite Mortals are larger outlined squares.",
-            [TooltipKey.LegendMainBase] = "Your Anchor (Main Base in code).",
+            [TooltipKey.LegendMainBase] = "Your Anchor.",
             [TooltipKey.LegendPortal] = "Portal Building.",
             [TooltipKey.LegendSpire] = "Spire Building.",
             [TooltipKey.LegendOutpost] = "Outpost Building.",

@@ -37,7 +37,7 @@ namespace Isekai
         /// Whether no living target hostile to <paramref name="team"/> is within <paramref name="distance"/> of
         /// <paramref name="point"/>: where that team's enemies may appear without landing on top of their foes.
         /// </summary>
-        public static bool NoneHostileWithin(Vector3 point, float distance, string team = TeamIds.Enemy)
+        public static bool NoneHostileWithin(Vector3 point, float distance, string team = TeamIds.Mortals)
         {
             float d2 = distance * distance;
             foreach (HordeTarget t in s_all)

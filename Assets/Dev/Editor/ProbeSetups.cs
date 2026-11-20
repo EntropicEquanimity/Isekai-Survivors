@@ -32,10 +32,10 @@ namespace Isekai.Dev.Editor
             Object.FindAnyObjectByType<ScrollZoom>().Zoom(2);
             EconomyDebug.AddResources(500);
             var mode = Object.FindAnyObjectByType<BuildMode>();
-            BuildingAsset barracks = mode.Catalogue.First(a => a.DisplayName == "Portal");
+            BuildingAsset portal = mode.Catalogue.First(a => a.DisplayName == "Portal");
             Int2 origin = MainBase().Origin;
-            foreach (int dx in new[] { 3, 5 }) RegionBuildings.Current.Place(barracks, new Int2(origin.x + dx, origin.y));
-            mode.Pick(barracks);
+            foreach (int dx in new[] { 3, 5 }) RegionBuildings.Current.Place(portal, new Int2(origin.x + dx, origin.y));
+            mode.Pick(portal);
 
             CharacterControl character = Player.Character;
             GameObject prefab = Object.FindAnyObjectByType<HordeSpawner>().Prefab;

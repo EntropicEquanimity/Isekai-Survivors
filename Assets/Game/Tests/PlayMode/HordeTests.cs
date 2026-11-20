@@ -40,7 +40,7 @@ namespace Isekai.Tests
         }
 
         [UnityTest]
-        public IEnumerator Enemies_that_reach_a_target_hurt_it()
+        public IEnumerator Mortals_that_reach_a_target_hurt_it()
         {
             var spawner = Object.FindAnyObjectByType<HordeSpawner>();
             spawner.enabled = false;

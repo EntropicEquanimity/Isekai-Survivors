@@ -112,7 +112,7 @@ namespace Isekai.Tests
             var health = character.GetComponent<Damageable>();
             GameObject prefab = Object.FindAnyObjectByType<HordeSpawner>().Prefab;
 
-            Teams.SetRelation(TeamIds.Enemy, TeamIds.Player, TeamRelation.Neutral);
+            Teams.SetRelation(TeamIds.Mortals, TeamIds.Player, TeamRelation.Neutral);
             Pools.Spawn(prefab, character.transform.position + new Vector3(0.3f, 0f, 0f), Quaternion.identity);
             yield return new WaitForSeconds(1.5f);
             Assert.AreEqual(health.MaxHealth, health.Health, 1e-3f, "a neutral horde leaves the Character alone");
@@ -158,7 +158,7 @@ namespace Isekai.Tests
                 TeamRelation expected = RegionSides.ToTeam(SideRelations.Between(a, b));
                 Assert.AreEqual(expected, Teams.Relation(TeamIds.Of(a), TeamIds.Of(b)), $"{a} / {b}");
             }
-            Assert.AreEqual(TeamRelation.Hostile, Teams.Relation(TeamIds.Player, TeamIds.Enemy), "the existing prefabs teams are still mortals");
+            Assert.AreEqual(TeamRelation.Hostile, Teams.Relation(TeamIds.Player, TeamIds.Mortals), "the existing prefabs teams are still mortals");
         }
 
         [UnityTest]

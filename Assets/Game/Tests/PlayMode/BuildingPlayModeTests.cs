@@ -76,16 +76,16 @@ namespace Isekai.Tests
         {
             RegionEconomy.Current.Stockpile.Add(ResourceType.Stone, 100);
             RegionEconomy.Current.Stockpile.Add(ResourceType.Souls, 20);
-            BuildingAsset barracks = Catalogue("Portal");
-            Building left = _buildings.Place(barracks, BesideMainBase(4));
-            Building right = _buildings.Place(barracks, BesideMainBase(6));
+            BuildingAsset portal = Catalogue("Portal");
+            Building left = _buildings.Place(portal, BesideMainBase(4));
+            Building right = _buildings.Place(portal, BesideMainBase(6));
             Assert.IsNotNull(left);
             Assert.IsNotNull(right, "the very next cells over");
             float cell = _buildings.CellSize;
             Bounds art = left.GetComponentsInChildren<SpriteRenderer>().First(r => r.name == "Art").bounds;
             Assert.AreEqual(2f * cell, art.size.x, 1e-3f, "the art is as wide as the footprint");
 
-            _mode.Pick(barracks);
+            _mode.Pick(portal);
             var ghost = Object.FindObjectsByType<SpriteRenderer>(FindObjectsInactive.Exclude).First(r => r.name == "Ghost");
             Assert.AreEqual(2f * cell, ghost.bounds.size.x, 1e-3f, "the ghost too");
             _mode.Cancel();

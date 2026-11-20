@@ -68,7 +68,7 @@ namespace Isekai.Tests
         {
             RegionSettlements.Settlement village = Village();
             Building hall = village.Buildings[village.Plan.Buildings.Select((b, i) => (b, i)).First(t => t.b.Kind == MortalBuilding.TownHall).i];
-            Assert.AreEqual(TeamIds.Enemy, hall.Team, "on the mortals' team");
+            Assert.AreEqual(TeamIds.Mortals, hall.Team, "on the mortals' team");
             Assert.IsFalse(hall.IsPlayers);
             RegionEntity entity = RegionEntities.Living.First(e => e.GameObject == hall.gameObject);
             Assert.AreEqual(Side.Mortals, entity.Side);

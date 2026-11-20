@@ -42,11 +42,11 @@ namespace Isekai.Tests
         public void Footprints_need_ground_and_free_cells()
         {
             BuildingGrid<string> grid = Grid(new Int2(5, 5));
-            Assert.IsTrue(grid.Place("barracks", new Int2(0, 0), new Int2(2, 2)));
-            Assert.IsFalse(grid.CanPlace(new Int2(1, 1), new Int2(2, 2)), "overlaps the barracks");
+            Assert.IsTrue(grid.Place("portal", new Int2(0, 0), new Int2(2, 2)));
+            Assert.IsFalse(grid.CanPlace(new Int2(1, 1), new Int2(2, 2)), "overlaps the portal");
             Assert.IsFalse(grid.CanPlace(new Int2(4, 4), new Int2(2, 2)), "covers a wall");
             Assert.IsFalse(grid.CanPlace(new Int2(9, 9), new Int2(2, 2)), "runs off the map");
-            Assert.AreEqual("barracks", grid.At(new Int2(1, 1)));
+            Assert.AreEqual("portal", grid.At(new Int2(1, 1)));
         }
 
         [Test]

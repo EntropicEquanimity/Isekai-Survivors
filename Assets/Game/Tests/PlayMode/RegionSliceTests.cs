@@ -24,7 +24,7 @@ namespace Isekai.Tests
         }
 
         [UnityTest]
-        public IEnumerator Idle_Character_walks_to_and_kills_a_nearby_enemy()
+        public IEnumerator Idle_Character_walks_to_and_kills_a_nearby_mortal()
         {
             // A small fight of our own: no horde, two enemies inside the leash.
             var spawner = Object.FindAnyObjectByType<HordeSpawner>();

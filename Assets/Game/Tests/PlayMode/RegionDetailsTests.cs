@@ -29,7 +29,7 @@ namespace Isekai.Tests
         }
 
         [UnityTest]
-        public IEnumerator A_hurt_enemy_shows_its_health_bar_and_an_unhurt_one_doesnt()
+        public IEnumerator A_hurt_mortal_shows_its_health_bar_and_an_unhurt_one_doesnt()
         {
             var spawner = Object.FindAnyObjectByType<HordeSpawner>();
             var control = Object.FindAnyObjectByType<CharacterControl>();

@@ -167,7 +167,7 @@ namespace Isekai
             Row(legend, Swatch(RegionMapView.Attacker, 4, false), "Mortals, attacking", TooltipKey.LegendMortalsAttacking);
             Row(legend, Swatch(RegionMapView.Roamer, 4, false), "Mortals, roaming", TooltipKey.LegendMortalsRoaming);
             Row(legend, Swatch(RegionMapView.Attacker, 8, true), "Elite Mortals", TooltipKey.LegendEliteMortals);
-            Row(legend, IconImage("Main Base", RegionMapView.Home), "Main Base", TooltipKey.LegendMainBase);
+            Row(legend, IconImage("Main Base", RegionMapView.Home), "Anchor", TooltipKey.LegendMainBase);
             foreach (string building in new[] { "Portal", "Spire", "Outpost" })
                 Row(legend, IconImage(building, RegionMapView.Ally), building, building switch
                 {

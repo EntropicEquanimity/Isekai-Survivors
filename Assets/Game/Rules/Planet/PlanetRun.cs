@@ -15,14 +15,14 @@ namespace Isekai
         /// <summary>The Capital was captured.</summary>
         Won,
 
-        /// <summary>The Main Base fell.</summary>
+        /// <summary>Jack ran out of Souls while bodiless.</summary>
         Lost,
     }
 
     /// <summary>
     /// One Run across a Planet: which Regions are captured, which may be entered next (the Planet's edge at first, then
     /// any Region touching a captured one), the Run clock (a display only), and the buffs and Stone captures have
-    /// earned. Capturing the Capital wins; losing a Main Base loses.
+    /// earned. Capturing the Capital wins; running out of Souls while bodiless loses (losing the Anchor does not).
     /// </summary>
     public sealed class PlanetRun
     {
