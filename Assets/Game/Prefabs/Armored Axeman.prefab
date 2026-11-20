@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6175790172328542282}
   - component: {fileID: 1800963402649581921}
   - component: {fileID: 2070477745206422842}
+  - component: {fileID: 650000000000000001}
   m_Layer: 0
   m_Name: Armored Axeman
   m_TagString: Untagged
@@ -164,3 +165,16 @@ MonoBehaviour:
   _back: {r: 0.08, g: 0.08, b: 0.1, a: 0.9}
   _alwaysShow: 0
   _gap: 2
+--- !u!114 &650000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 840203452423583980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edf00347610eae44bb4dda1c74258b33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Isekai.Game::Isekai.WalkAnimation
+  _key: 11

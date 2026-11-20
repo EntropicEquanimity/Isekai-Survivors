@@ -129,6 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edf00347610eae44bb4dda1c74258b33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Isekai.Game::Isekai.WalkAnimation
+  _key: 5
   _motor: {fileID: 6535980198154872234}
   _idle:
   - {fileID: -4827002243620881085, guid: ea187088727507708cefeec8f8427093, type: 3}
