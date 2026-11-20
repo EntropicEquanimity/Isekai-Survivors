@@ -13,15 +13,19 @@ namespace Isekai
     public sealed class PortalPanel : VisualElement
     {
         private readonly Label _summary = GameStyle.Label(string.Empty, TextRole.Muted);
+        private readonly Label _demons = GameStyle.Label(string.Empty, TextRole.Muted);
         private readonly Button[] _orders = new Button[3];
         private readonly Button[] _policies = new Button[3];
         private readonly Button[] _roster = new Button[2];
         private readonly Button _markRaid, _markRally;
+        private const int MaxDemonLines = 8;
         private UnitProducer _portal;
 
         public PortalPanel()
         {
             Add(_summary);
+            _demons.name = "portal-demons";
+            Add(_demons);
             AddRow("Order", _orders, Enum.GetValues(typeof(PortalOrder)), o => { if (_portal != null) _portal.Order = (PortalOrder)o; Refresh(); }, "order-");
             AddRow("Bones", _policies, Enum.GetValues(typeof(BonesPolicy)), o => { if (_portal != null) _portal.Policy = (BonesPolicy)o; Refresh(); }, "bones-");
             AddRow("Summons", _roster, new object[] { DemonType.Imp, DemonType.BoneDemon }, o => { if (_portal != null) _portal.Roster = (DemonType)o; Refresh(); }, "roster-");
@@ -53,6 +57,14 @@ namespace Isekai
             _markRally.text = PortalMarking.Armed == PortalMark.Rally ? "Click the rally point" : "Set rally point";
             string raid = _portal.HasRaidTarget ? $"raid {_portal.RaidTarget.x:0},{_portal.RaidTarget.y:0}" : "no raid target";
             _summary.text = $"Demons {_portal.Units.Count}  {raid}";
+            var lines = new System.Text.StringBuilder();
+            for (int i = 0; i < _portal.Units.Count && i < MaxDemonLines; i++)
+            {
+                DemonLoyalty d = DemonLoyalty.Of(_portal.Units[i].gameObject);
+                if (d != null) lines.Append(i > 0 ? "\n" : string.Empty).Append(_portal.Units[i].Type == DemonType.BoneDemon ? "Bone demon" : "Imp").Append("  ").Append(d.Describe());
+            }
+            _demons.text = lines.ToString();
+            _demons.style.display = lines.Length > 0 ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
         private void AddRow(string title, Button[] buttons, Array values, Action<object> pick, string prefix)

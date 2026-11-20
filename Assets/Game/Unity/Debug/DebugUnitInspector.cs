@@ -66,7 +66,8 @@ namespace Isekai
             text.Append("Name: ").Append(entity.GameObject.name).Append('\n');
             text.Append("Side: ").Append(entity.Side).Append("    Kind: ").Append(entity.Kind).Append('\n');
             text.Append("Health: ").Append(d.Health.ToString("0.#")).Append('/').Append(d.MaxHealth.ToString("0.#")).Append('\n');
-            text.Append("Traits: n/a    Level: n/a    Loyalty: n/a").Append('\n');
+            DemonLoyalty loyalty = DemonLoyalty.Of(entity.GameObject);
+            text.Append(loyalty != null ? loyalty.Describe() : "Level and Loyalty: demons of Portals only").Append('\n');
             text.Append("Vigilance contribution: ").Append(VigilanceContribution(entity)).Append('\n');
             AppendBrain(text, entity);
         }

@@ -79,7 +79,8 @@ namespace Isekai
             CharacterControl mine = Player.Character;
             foreach (RegionEntity u in RegionEntities.Living)
             {
-                if (u.Side != Side.Yours || (u.Kind != UnitKind.Demon && u.Kind != UnitKind.Character)) continue;
+                bool rogue = u.Side == Side.Rogue && u.Kind == UnitKind.Demon && DemonLoyalty.Of(u.GameObject) != null;   // a rogue demon can be won back by possessing it
+                if ((u.Side != Side.Yours && !rogue) || (u.Kind != UnitKind.Demon && u.Kind != UnitKind.Character)) continue;
                 GameObject go = u.GameObject;
                 if (mine != null && go == mine.gameObject) continue;
                 float sqr = ((Vector2)(go.transform.position - from)).sqrMagnitude;
@@ -116,6 +117,7 @@ namespace Isekai
             CharacterControl body = Enter(demon);
             if (from != null && from != body) Leave(from, wasAdded, wasRestore, penalised);
             souls.Adopt(body);
+            DemonLoyalty.Of(demon)?.Reclaim();   // possessing a rogue demon wins it back
             Refusal = null;
             BLog.Info("Souls", $"Jack possesses {demon.name} for {cost} Souls{(DemonKing.IsKing(body) ? " (a Demon King)" : ", weaker in an ordinary demon")}.");
             return true;

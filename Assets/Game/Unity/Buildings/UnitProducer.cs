@@ -97,6 +97,21 @@ namespace Isekai
         /// <summary>Puts a demon of this Portal's (a raised skeleton) in a slot, without counting it against the cap.</summary>
         internal void Adopt(DemonBrain unit) => unit.Assign(this, _units.Count + 1 + _extras++ % 8);
 
+        /// <summary>A demon leaves (it turned rogue): it stops following this Portal's order and its place under the cap is free.</summary>
+        internal void Release(DemonBrain unit) => _units.Remove(unit);
+
+        /// <summary>Whether the Portal works and has room under its cap for another demon.</summary>
+        public bool HasRoom => isActiveAndEnabled && _production != null && _units.Count < _production.Cap;
+
+        /// <summary>Takes a demon back under this Portal's order (one Jack won back), when there is room. False when there is none.</summary>
+        internal bool TryTake(DemonBrain unit)
+        {
+            if (!HasRoom || _units.Contains(unit)) return false;
+            unit.Assign(this, _units.Count);
+            _units.Add(unit);
+            return true;
+        }
+
         private void Awake() => _production = new Production(_interval, _cap);
 
         private void Update()

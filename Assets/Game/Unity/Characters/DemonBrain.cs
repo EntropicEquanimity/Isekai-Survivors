@@ -64,11 +64,35 @@ namespace Isekai
         /// </summary>
         public bool IgnoresOrders { get; set; }
 
+        /// <summary>
+        /// A rogue demon (see <see cref="DemonLoyalty"/>): it left its Portal, fights what is hostile to it (which is everyone)
+        /// and wanders toward the nearest trouble like an Unruly demon does.
+        /// </summary>
+        public bool IsRogue { get; private set; }
+
         /// <summary>A trait's weights: the brain decides with this copy from now on (null goes back to the type's own).</summary>
         public void SetBehaviour(BehaviourProfile profile) => _behaviour = profile;
 
+        /// <summary>The demon leaves its Portal (it turned rogue): the slot is freed and it guards where it stands.</summary>
+        internal void Detach(bool rogue)
+        {
+            if (_portal != null) _portal.Release(this);
+            _portal = null;
+            IsRogue = rogue;
+            _ownPost = transform.position;
+            _goalSet = false;
+        }
+
+        /// <summary>Guard near a point under no Portal (a demon Jack won back when no Portal has room).</summary>
+        internal void GuardAt(Vector3 at)
+        {
+            Detach(false);
+            _ownPost = at;
+        }
+
         internal void Assign(UnitProducer portal, int slot)
         {
+            IsRogue = false;
             _portal = portal;
             _slot = slot;
             Action = BehaviourAction.Idle;
@@ -88,6 +112,7 @@ namespace Isekai
         {
             _behaviour = null;          // a pooled demon starts a new life with its type's weights; its Traits (if any) are put on after
             IgnoresOrders = false;
+            IsRogue = false;
             _nextWander = 0f;
             _ownPost = transform.position;
             _nextThink = Time.time + Random.value * _thinkInterval;   // staggered, so a Portal's demons do not all think in one frame
@@ -138,7 +163,7 @@ namespace Isekai
                     Halt();
                     break;
             }
-            if (IgnoresOrders && hostile == null && Action != BehaviourAction.Flee) WanderTowardTrouble(position);
+            if ((IgnoresOrders || IsRogue) && hostile == null && Action != BehaviourAction.Flee) WanderTowardTrouble(position);
         }
 
         // Away from the nearest hostile unit, and back to its post (the Portal's rally point, or where it stands) once none is near.
