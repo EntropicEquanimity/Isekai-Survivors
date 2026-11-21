@@ -26,3 +26,104 @@
 .blondie-gs-dim {
     background-color: rgba(8, 2, 3, 0.72);
 }
+
+/* ── Layout fixes for Blondie Game Setup's windows ──
+   The footer (Reset, Back) and the tabs never shrink: a tall settings page used to squash them while the scroll view
+   took the room. The settings window fills most of the screen instead of a fixed box. */
+.blondie-gs-footer,
+.blondie-gs-footer .blondie-gs-button,
+.blondie-gs-tabs { flex-shrink: 0; }
+.blondie-gs-body { min-height: 0; }
+
+.blondie-pixel .blondie-root .blondie-gs-window--wide {
+    width: 92%;
+    height: 90%;
+    max-width: none;
+    max-height: none;
+    padding: 24px 32px;
+}
+
+/* ── Text size on the pixel grid (1920x1080 UI pixels: one UI pixel per screen pixel at 1080p) ──
+   Medium reads at 24 px, Large at 36 px; Small (when offered) is the old 12 px. Pixel font multiples only. */
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-text,
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-small,
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-button,
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-link,
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-tab,
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-tab-hint,
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-row-label,
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-header,
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-value,
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-slider-value,
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-arrow,
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-binding,
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-prompt,
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-version,
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-dropdown,
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-dropdown-option { font-size: 24px; }
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-title { font-size: 48px; }
+
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-text,
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-small,
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-button,
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-link,
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-tab,
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-tab-hint,
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-row-label,
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-header,
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-value,
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-slider-value,
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-arrow,
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-binding,
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-prompt,
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-version,
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-dropdown,
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-dropdown-option,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-text,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-small,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-button,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-link,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-tab,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-tab-hint,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-row-label,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-header,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-value,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-slider-value,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-arrow,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-binding,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-prompt,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-version,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-dropdown,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-dropdown-option { font-size: 36px; }
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-title,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-title { font-size: 48px; }
+
+/* Room for the bigger text: taller rows, wider controls. */
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-row { min-height: 48px; padding: 4px 12px; }
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-row-control { width: 560px; }
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-value { min-width: 260px; }
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-slider-value { width: 80px; }
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-arrow { width: 44px; padding: 6px 0; }
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-binding { width: 220px; }
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-button { padding: 8px 22px; }
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-menu-buttons { min-width: 420px; }
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-toggle .unity-toggle__checkmark { width: 28px; height: 28px; }
+
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-row,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-row { min-height: 64px; padding: 6px 14px; }
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-row-control,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-row-control { width: 720px; }
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-value,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-value { min-width: 340px; }
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-slider-value,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-slider-value { width: 110px; }
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-arrow,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-arrow { width: 56px; padding: 8px 0; }
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-binding,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-binding { width: 300px; }
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-button,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-button { padding: 10px 28px; }
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-menu-buttons,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-menu-buttons { min-width: 560px; }
+.blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-toggle .unity-toggle__checkmark,
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-toggle .unity-toggle__checkmark { width: 36px; height: 36px; }

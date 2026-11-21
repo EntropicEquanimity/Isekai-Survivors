@@ -37,6 +37,29 @@ namespace Isekai.Tests
         }
 
         [UnityTest]
+        public IEnumerator A_New_Run_opens_on_the_loadout_and_the_map_shows_once_two_Soul_paths_are_picked()
+        {
+            RunSession.StartNew(5);
+            RunSession.LoadoutPending = true;
+            SceneManager.LoadScene(RunSession.PlanetScene);
+            yield return TestWait.Until(() => Object.FindAnyObjectByType<PlanetScreen>()?.Map != null, "the Planet screen shows", Timeout);
+            var screen = Object.FindAnyObjectByType<PlanetScreen>();
+            Assert.IsTrue(screen.ShowingLoadout, "the loadout comes first");
+            foreach (SoulPath path in SoulPaths.Starting) Assert.IsNotNull(GameIcons.Of(path), $"{path} has its icon");
+            Assert.IsNotNull(GameIcons.Of(ResourceType.Souls), "resource icons are set");
+
+            Assert.IsTrue(screen.ChooseAnchor(AnchorKind.WarThrone));
+            screen.TogglePath(SoulPath.Reaper);
+            Assert.IsFalse(screen.ConfirmLoadout(), "one Soul path is not enough");
+            screen.TogglePath(SoulPath.Bonelord);
+            Assert.IsTrue(screen.ConfirmLoadout());
+
+            Assert.IsFalse(screen.ShowingLoadout, "now the Planet map");
+            Assert.AreEqual(AnchorKind.WarThrone, RunSession.Anchor);
+            CollectionAssert.AreEqual(new[] { SoulPath.Reaper, SoulPath.Bonelord }, RunSession.Paths.ToArray());
+        }
+
+        [UnityTest]
         public IEnumerator Land_capture_and_return_to_the_Planet_with_the_Runs_rewards()
         {
             SceneManager.LoadScene(RunSession.PlanetScene);
@@ -86,7 +109,7 @@ namespace Isekai.Tests
         }
 
         [UnityTest]
-        public IEnumerator Zooming_out_past_the_widest_view_opens_the_map_screen_on_the_Region()
+        public IEnumerator Zooming_out_never_opens_the_map_screen_and_showing_it_blocks_the_wheel()
         {
             RunSession.StartNew(3);
             SceneManager.LoadScene(RunSession.RegionScene);
@@ -95,7 +118,9 @@ namespace Isekai.Tests
             yield return null;
             var map = Object.FindAnyObjectByType<MapScreen>();
             var zoom = Object.FindAnyObjectByType<ScrollZoom>();
-            for (int i = 0; i < 10 && !map.IsOpen; i++) zoom.Zoom(-1);
+            for (int i = 0; i < 10; i++) zoom.Zoom(-1);
+            Assert.IsFalse(map.IsOpen, "the wheel only zooms; M opens the map");
+            map.OpenRegion();
             Assert.IsTrue(map.IsOpen);
             Assert.AreEqual(MapScreen.Tab.Region, map.Current);
             Assert.IsTrue(zoom.Blocked, "the wheel no longer zooms the Region");

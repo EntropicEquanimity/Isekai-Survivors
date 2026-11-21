@@ -34,6 +34,18 @@ namespace Isekai.Tests
         }
 
         [Test]
+        public void A_Building_is_seen_whole_but_still_hides_what_is_behind_it()
+        {
+            // A 3-wide Building in cells x 3..5 of row 1 (group 7), a rock at x 8; the viewer stands at x 0.
+            bool Blocks(Int2 c) => c.y == 1 && ((c.x >= 3 && c.x <= 5) || c.x == 8);
+            int GroupOf(Int2 c) => c.y == 1 && c.x >= 3 && c.x <= 5 ? 7 : 0;
+            Assert.IsTrue(LineOfSight.Clear(At(0, 1), At(5, 1), Blocks, GroupOf), "its far side is seen through its near side");
+            Assert.IsFalse(LineOfSight.Clear(At(0, 1), At(6, 1), Blocks, GroupOf), "the ground behind it stays hidden");
+            Assert.IsFalse(LineOfSight.Clear(At(0, 1), At(8, 1), Blocks, GroupOf), "another blocker behind it stays hidden");
+            Assert.IsFalse(LineOfSight.Clear(At(0, 1), At(5, 1), Blocks), "without groups only its front face shows");
+        }
+
+        [Test]
         public void Sight_is_the_same_both_ways_along_a_straight_line()
         {
             bool Blocks(Int2 c) => c.x == 3 && c.y == 1;

@@ -17,11 +17,15 @@ namespace Isekai
         private readonly bool[] _explored;
         private readonly int[] _stamp;
         private readonly Func<Int2, bool> _blocks;
+        private readonly Func<Int2, int> _groupOf;
         private List<int> _scratch = new();
         private int _generation = 1;
 
-        public VisionMap(int width, int height, Func<Int2, bool> blocks)
+        /// <param name="groupOf">Optional: which blocking object a cell belongs to (0 for none). A viewer who sees any cell of
+        /// one sees it whole (a 3x3 keep, not only its front row); see <see cref="LineOfSight.Clear(Int2, Int2, Func{Int2, bool}, Func{Int2, int})"/>.</param>
+        public VisionMap(int width, int height, Func<Int2, bool> blocks, Func<Int2, int> groupOf = null)
         {
+            _groupOf = groupOf;
             if (width < 1) throw new ArgumentOutOfRangeException(nameof(width));
             if (height < 1) throw new ArgumentOutOfRangeException(nameof(height));
             Width = width;
@@ -120,7 +124,7 @@ namespace Isekai
                 {
                     int dx = x - origin.x;
                     bool near = dx >= -1 && dx <= 1 && dy >= -1 && dy <= 1;
-                    if (near || LineOfSight.Clear(origin, new Int2(x, y), _blocks)) into.Add(x + y * Width);
+                    if (near || LineOfSight.Clear(origin, new Int2(x, y), _blocks, _groupOf)) into.Add(x + y * Width);
                 }
             }
         }

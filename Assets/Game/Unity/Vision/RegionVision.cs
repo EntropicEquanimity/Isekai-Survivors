@@ -12,7 +12,8 @@ namespace Isekai
     /// Sight is cut by blocked ground: the "SightBlock" layer (rocks and cliffs a generator marks) and any cell the
     /// flow field blocks (rocks, walls and Buildings in the hand-built Region). A side's own Buildings are the one
     /// exception: they never hide ground from their own side (the mortals' still hide it from you, and yours from
-    /// them). Your Buildings also look out a little way themselves (<see cref="VisionRanges.ForBuilding"/>), once
+    /// them). A Building hides what lies behind it but is itself seen whole once any of its cells is in sight (a line
+    /// to one of its cells may cross its other cells). Your Buildings also look out a little way themselves (<see cref="VisionRanges.ForBuilding"/>), once
     /// when they appear.
     /// <para>The result lives on grid layers, "Visible.&lt;Side&gt;" and "Explored.&lt;Side&gt;" (1 = yes), so overlays redraw
     /// only changed cells, and other systems ask <see cref="CanSee(Side, Int2)"/>. The Character's range and the
@@ -40,6 +41,7 @@ namespace Isekai
 
         private readonly VisionMap[] _maps = new VisionMap[5];
         private readonly System.Func<Int2, bool>[] _blockers = new System.Func<Int2, bool>[5];
+        private System.Func<Int2, int> _groupOf;
         private readonly Dictionary<RegionEntity, Eyes> _eyes = new();
         private readonly List<Eyes> _list = new();
         private RegionGrid _grid;
@@ -160,6 +162,13 @@ namespace Isekai
             return building == null || TeamIds.SideOf(building.Team) != side;
         }
 
+        // One id per Building (0 for ground with none), so a line to a Building's cell may cross its other cells.
+        private int GroupOf(Int2 cell)
+        {
+            Building building = RegionBuildings.Current != null ? RegionBuildings.Current.At(cell) : null;
+            return building != null ? 1 + building.Origin.x + building.Origin.y * _grid.Width : 0;   // footprints never overlap, so the corner cell names it
+        }
+
         /// <summary>Whether <paramref name="cell"/> cuts <paramref name="side"/>'s sight (false before the Region is ready).</summary>
         public static bool BlocksFor(Side side, Int2 cell) => Current != null && Current._grid != null && Current.Blocks(side, cell);
 
@@ -167,7 +176,7 @@ namespace Isekai
         {
             VisionMap map = _maps[(int)side];
             if (map != null) return map;
-            map = _maps[(int)side] = new VisionMap(_grid.Width, _grid.Height, _blockers[(int)side] ??= cell => Blocks(side, cell));
+            map = _maps[(int)side] = new VisionMap(_grid.Width, _grid.Height, _blockers[(int)side] ??= cell => Blocks(side, cell), _groupOf ??= GroupOf);
             CellLayer visible = _grid.Layer(VisibleLayer(side)), explored = _grid.Layer(ExploredLayer(side));
             map.VisibleChanged += (cell, on) => visible.Set(cell, on ? (byte)1 : (byte)0);
             map.Explored += cell => explored.Set(cell, 1);

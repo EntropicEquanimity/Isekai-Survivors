@@ -9,7 +9,9 @@ namespace Isekai
     /// <summary>
     /// The game's look (dark reds, black, ember) in one place for code-built UI: the pixel font's sizes (multiples of its native 12 px, anything
     /// else blurs) and the palette. Screens ask for a role ("title", "muted") instead of writing sizes and colours, so
-    /// a restyle (the demon theme) changes this file, not every screen.
+    /// a restyle (the demon theme) changes this file, not every screen. A role is a USS class
+    /// (<c>isekai-role-body</c>...) whose size comes from <see cref="HudSheet"/>, so the player's Text size reaches it.
+    /// Rules for what a control shows: docs/ui-rules.md (icons first, then numbers, text last).
     /// </summary>
     public static class GameStyle
     {
@@ -30,6 +32,24 @@ namespace Isekai
 
         public static int SizeOf(TextRole role) => role == TextRole.Title ? TitleSize : FontSize;
 
+        /// <summary>The class a role's text carries (its size comes from the stylesheet).</summary>
+        public static string ClassOf(TextRole role) => "isekai-role-" + role.ToString().ToLowerInvariant();
+
+        /// <summary>The stylesheet of the game's own panels: text roles, buttons, icon buttons (Resources/IsekaiHud).</summary>
+        public static StyleSheet HudSheet => s_hudSheet != null ? s_hudSheet : s_hudSheet = Resources.Load<StyleSheet>("IsekaiHud");
+
+        private static StyleSheet s_hudSheet;
+
+        /// <summary>An icon: a sprite drawn into a square (<c>isekai-icon</c>; add <c>--large</c> or <c>--huge</c> for 32 or 48 px).</summary>
+        public static VisualElement Icon(Sprite sprite, string size = null)
+        {
+            var icon = new VisualElement { pickingMode = PickingMode.Ignore };
+            icon.AddToClassList("isekai-icon");
+            if (size != null) icon.AddToClassList("isekai-icon--" + size);
+            if (sprite != null) icon.style.backgroundImage = new StyleBackground(sprite);
+            return icon;
+        }
+
         public static Color ColourOf(TextRole role) => role switch
         {
             TextRole.Muted => Muted,
@@ -49,9 +69,12 @@ namespace Isekai
         /// <summary>Gives an existing element the size and colour of <paramref name="role"/>.</summary>
         public static T Apply<T>(T element, TextRole role) where T : VisualElement
         {
-            element.style.fontSize = SizeOf(role);
+            foreach (TextRole r in s_roles) element.RemoveFromClassList(ClassOf(r));
+            element.AddToClassList(ClassOf(role));
             element.style.color = ColourOf(role);
             return element;
         }
+
+        private static readonly TextRole[] s_roles = { TextRole.Body, TextRole.Title, TextRole.Muted, TextRole.Accent, TextRole.Warning };
     }
 }

@@ -9,8 +9,8 @@ using UnityEngine.UIElements;
 namespace Isekai
 {
     /// <summary>
-    /// The map screen over the Region, like a strategy game's map view. Zooming out past the widest view or pressing M
-    /// opens it on the Region tab (<see cref="RegionMapView"/>, redrawn a few times a second); the Planet tab shows the
+    /// The map screen over the Region, like a strategy game's map view. M opens it on the Region tab (zooming out never
+    /// does: the wheel only zooms) (<see cref="RegionMapView"/>, redrawn a few times a second); the Planet tab shows the
     /// Run's Planet (read only). Scrolling in, M or Escape returns to the Region. The game keeps running underneath.
     /// </summary>
     public sealed class MapScreen : MonoBehaviour, IRegionEndListener
@@ -49,7 +49,6 @@ namespace Isekai
             _zoom = FindAnyObjectByType<ScrollZoom>();
             if (_zoom != null)
             {
-                _zoom.OutPastLimit += OpenRegion;
                 _zoom.InWhileBlocked += Close;
             }
             // Its own panel, sorted above the HUDs that share the game's panel settings.
@@ -91,7 +90,6 @@ namespace Isekai
             _regionMap?.Dispose();
             if (_ownSettings != null) Destroy(_ownSettings);
             if (_zoom == null) return;
-            _zoom.OutPastLimit -= OpenRegion;
             _zoom.InWhileBlocked -= Close;
         }
 

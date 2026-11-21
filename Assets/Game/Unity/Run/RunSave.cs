@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Blondie.GridInventory;
 using Blondie.Save;
 using UnityEngine;
@@ -30,6 +31,10 @@ namespace Isekai
             public int rulersSlain;
             /// <summary>The Anchor's <see cref="AnchorKind"/>, or -1 when none was picked.</summary>
             public int anchor = -1;
+            /// <summary>The Soul paths picked on the loadout screen, by name.</summary>
+            public string[] paths = Array.Empty<string>();
+            /// <summary>The Run was saved on the loadout screen: Continue opens it there again.</summary>
+            public bool loadoutPending;
             public int soulLevel;
             public int soulDeaths;
             public bool hasInventory;
@@ -66,6 +71,8 @@ namespace Isekai
                 runSeconds = run.RunSeconds,
                 rulersSlain = run.RulersSlain,
                 anchor = RunSession.Anchor is { } kind ? (int)kind : -1,
+                paths = RunSession.Paths.Select(p => p.ToString()).ToArray(),
+                loadoutPending = RunSession.LoadoutPending,
                 soulLevel = souls.Level,
                 soulDeaths = souls.Deaths,
                 hasInventory = inventory != null,
@@ -82,6 +89,24 @@ namespace Isekai
             return SaveSystem.Save(Slot, $"Run: {data.captured.Length} Regions captured");
         }
 
+        private static int s_pendingSlot = -1;
+
+        static RunSave() => Blondie.Core.StaticReset.Register(() => s_pendingSlot = -1);
+
+        /// <summary>
+        /// Continue was pressed: the save in <paramref name="slot"/> is loaded once the Planet screen opens
+        /// (<see cref="RestorePending"/>), behind the fade, instead of on the main menu where reading it froze the screen.
+        /// </summary>
+        public static void RestoreWhenPlanetOpens(int slot) => s_pendingSlot = slot;
+
+        /// <summary>Loads and restores the save Continue asked for, if any (the Planet screen calls it first). True when a Run came back.</summary>
+        public static bool RestorePending()
+        {
+            int slot = s_pendingSlot;
+            s_pendingSlot = -1;
+            return slot >= 0 && SaveSystem.Load(slot) && Restore();
+        }
+
         /// <summary>Reads the saved Run (the slot must be loaded, <see cref="SaveSystem.Load(int)"/>) and makes it the Run in progress.</summary>
         public static bool Restore()
         {
@@ -90,6 +115,8 @@ namespace Isekai
             AnchorKind? anchor = Enum.IsDefined(typeof(AnchorKind), data.anchor) ? (AnchorKind)data.anchor : null;
             RunSession.Restore(data.seed, data.rings, data.captured, data.runSeconds, anchor, data.hasInventory ? data.inventory : null, data.escapedRulers, data.rulersSlain);
             SoulRun.Restore(data.soulLevel, data.soulDeaths);
+            RunSession.SetPaths(SoulPaths.Parse(data.paths));
+            RunSession.LoadoutPending = data.loadoutPending;
             return true;
         }
 

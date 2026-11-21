@@ -9,6 +9,7 @@ Shader "Isekai/Sprite Lit Side Outline"
         _OutlineSourceColor("Outline Source Color", Color) = (0.1215686,0.1019608,0.1019608,1)
         _OutlineTolerance("Outline Source Tolerance", Range(0, 0.2)) = 0.04
         _DarkThreshold("Dark Pixel Threshold", Range(0, 0.4)) = 0.18
+        _Unlit("Ignore 2D Lights", Range(0, 1)) = 0
         [MaterialToggle] _ZWrite("ZWrite", Float) = 0
 
         // Legacy properties, kept for sprite compatibility.
@@ -70,6 +71,7 @@ Shader "Isekai/Sprite Lit Side Outline"
                 half4 _OutlineSourceColor;
                 half _OutlineTolerance;
                 half _DarkThreshold;
+                half _Unlit;
             CBUFFER_END
 
             float2 TexelOf(Texture2D tex)
@@ -135,7 +137,8 @@ Shader "Isekai/Sprite Lit Side Outline"
                 SETUP_DEBUG_TEXTURE_DATA_2D_NO_TS(inputData, input.positionWS, input.positionCS, _MainTex);
                 surfaceData.normalWS = input.normalWS;
 #endif
-                return CombinedShapeLightShared(surfaceData, inputData);
+                half4 lit = CombinedShapeLightShared(surfaceData, inputData);
+                return lerp(lit, main, _Unlit);   // your side stays at full brightness at night
             }
             ENDHLSL
         }
@@ -173,6 +176,7 @@ Shader "Isekai/Sprite Lit Side Outline"
                 half4 _OutlineSourceColor;
                 half _OutlineTolerance;
                 half _DarkThreshold;
+                half _Unlit;
             CBUFFER_END
 
             Varyings NormalsRenderingVertex(Attributes input)
@@ -227,6 +231,7 @@ Shader "Isekai/Sprite Lit Side Outline"
                 half4 _OutlineSourceColor;
                 half _OutlineTolerance;
                 half _DarkThreshold;
+                half _Unlit;
             CBUFFER_END
 
             float2 TexelOf(Texture2D tex)

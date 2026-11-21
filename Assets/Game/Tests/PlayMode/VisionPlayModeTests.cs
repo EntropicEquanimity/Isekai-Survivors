@@ -135,6 +135,34 @@ namespace Isekai.Tests
         }
 
         [UnityTest]
+        public IEnumerator Jack_beside_the_keep_sees_all_of_it_not_only_its_near_side()
+        {
+            Building keep = RegionSettlements.Current.Seat.Keep;
+            Assert.IsNotNull(keep);
+            Int2 o = keep.Origin;
+            Vector2Int size = keep.Asset.Size;
+            // Open ground touching the keep's footprint (inside the fort's walls).
+            Int2 beside = default;
+            bool found = false;
+            for (int x = o.x - 1; x <= o.x + size.x && !found; x++)
+            for (int y = o.y - 1; y <= o.y + size.y && !found; y++)
+            {
+                bool ring = x == o.x - 1 || x == o.x + size.x || y == o.y - 1 || y == o.y + size.y;
+                var cell = new Int2(x, y);
+                if (ring && _grid.Contains(cell) && _grid.IsWalkable(cell)) { beside = cell; found = true; }
+            }
+            Assert.IsTrue(found, "open ground beside the keep");
+            _jack.transform.position = _grid.CentreOf(beside);
+            yield return TestWait.Until(() =>
+            {
+                for (int x = o.x; x < o.x + size.x; x++)
+                for (int y = o.y; y < o.y + size.y; y++)
+                    if (!_vision.CanSee(Side.Yours, new Int2(x, y))) return false;
+                return true;
+            }, "every cell of the keep is in sight, its far side too");
+        }
+
+        [UnityTest]
         public IEnumerator Fog_hides_a_mortal_until_the_Character_sees_it()
         {
             Int2 far = WalkableAt(JackCell, 40);

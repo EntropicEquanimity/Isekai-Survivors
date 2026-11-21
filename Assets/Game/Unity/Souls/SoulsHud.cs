@@ -83,7 +83,10 @@ namespace Isekai
 
             bool bodiless = souls.IsBodiless;
             SetLine(_drain, bodiless ? $"BODILESS: -{drain:0.0} Souls/s ({have} left)" : null);
-            SetLine(_status, !bodiless ? null : blocker ?? $"Touch the Anchor to revive ({souls.Ledger.ReviveCost} Souls)");
+            // Possessing a demon is always a way back, so its hint stays even when the revive is blocked (no Anchor, too few Souls).
+            string possess = $"{BodyKey.Name} over a demon: possess it ({PossessCost()} Souls)";
+            SetLine(_status, !bodiless ? null
+                : blocker != null ? $"{blocker}. {possess}" : $"{BodyKey.Name} over the Anchor: revive ({souls.Ledger.ReviveCost} Souls). {possess}");
         }
 
         private static void SetLine(Label label, string text)
@@ -91,6 +94,8 @@ namespace Isekai
             label.text = text ?? string.Empty;
             label.style.display = string.IsNullOrEmpty(text) ? DisplayStyle.None : DisplayStyle.Flex;
         }
+
+        private static int PossessCost() => RegionPossession.Current != null ? RegionPossession.Current.Cost() : 0;
 
         private static void RaiseLevel() => RegionSouls.Current?.TryRaiseSoulLevel();
     }

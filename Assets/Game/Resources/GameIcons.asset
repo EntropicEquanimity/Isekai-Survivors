@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e728246392cb4023adf53a1e68309995, type: 3}
+  m_Name: GameIcons
+  m_EditorClassIdentifier: Isekai.Game::Isekai.GameIcons
+  _stone: {fileID: 21300000, guid: c57d4f54704583348995a2a3338950cf, type: 3}
+  _wood: {fileID: 21300000, guid: 4835ed71638d4c04fb64b8afafa2ccf1, type: 3}
+  _souls: {fileID: 21300000, guid: c85fe2ac5a674b94b931eca9424254a8, type: 3}
+  _worker: {fileID: 0}
+  _soulPaths:
+  - {fileID: 21300000, guid: 6a7d20e72ba5476ba6623c3c78ab612e, type: 3}
+  - {fileID: 21300000, guid: 73b5dc0378a14724865e3c30a304d742, type: 3}
+  - {fileID: 21300000, guid: 14b81ac113b84a348f1841863c886ffe, type: 3}
+  - {fileID: 21300000, guid: 99c09e730ab34044984311cc13e8aff7, type: 3}
+  - {fileID: 21300000, guid: ab2072d61803467d87223012a7e951e9, type: 3}
+  - {fileID: 21300000, guid: 3542a6b176b74b279b1fbcd1e7a3c804, type: 3}
+  - {fileID: 21300000, guid: 1bd7da52d2284b7fa2d1ed2c4b3522e7, type: 3}
+  - {fileID: 21300000, guid: 851664a8c60d49718743afbcb99957d3, type: 3}

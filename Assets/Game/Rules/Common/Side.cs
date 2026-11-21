@@ -20,8 +20,10 @@ namespace Isekai
 
     /// <summary>
     /// The relation table between sides (symmetric). Yours and mortals fight each other; rogues and hostile
-    /// creatures fight everyone, neutral creatures included; a neutral side starts no fight. A side is allied with
-    /// itself, so rogues don't brawl among themselves and hostile creatures leave each other alone.
+    /// creatures fight everyone, neutral creatures included. Your side may hunt neutral creatures too (your demons and
+    /// Spires go for slimes), but neutral creatures still start no fight: a neutral creature's brain fights only
+    /// whatever attacked it. Mortals leave neutral creatures alone. A side is allied with itself, so rogues don't brawl
+    /// among themselves and hostile creatures leave each other alone.
     /// </summary>
     public static class SideRelations
     {
@@ -32,6 +34,7 @@ namespace Isekai
         {
             if (a == b) return SideRelation.Allied;
             if (a == Side.Rogue || b == Side.Rogue || a == Side.Hostile || b == Side.Hostile) return SideRelation.Hostile;   // rogues and hostile creatures attack everyone, neutral creatures included
+            if ((a == Side.Neutral && b == Side.Yours) || (a == Side.Yours && b == Side.Neutral)) return SideRelation.Hostile;   // your side hunts them; their brains still only fight back
             if (a == Side.Neutral || b == Side.Neutral) return SideRelation.Neutral;
             return SideRelation.Hostile;   // yours / mortals: every pair of different sides
         }

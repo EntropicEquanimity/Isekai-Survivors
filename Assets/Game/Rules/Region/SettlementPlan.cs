@@ -482,10 +482,9 @@ namespace Isekai
                 if (open.Contains(cell)) continue;
                 bool left = x == ring.MinX, right = x == ring.MaxX, top = y == ring.MaxY, bottom = y == ring.MinY;
                 MortalBuilding kind;
-                if ((left || right) && (top || bottom))
+                if ((left || right) && (top || bottom))   // a palisade's corners are end pieces that stop on the side runs' stakes
                     kind = castle ? MortalBuilding.CastleTower
-                         : top ? (left ? MortalBuilding.PalisadeCornerLeft : MortalBuilding.PalisadeCornerRight)
-                         : MortalBuilding.PalisadeWall;
+                         : left ? MortalBuilding.PalisadeCornerLeft : MortalBuilding.PalisadeCornerRight;
                 else if (top || bottom) kind = castle ? MortalBuilding.CastleWall : MortalBuilding.PalisadeWall;
                 else kind = castle ? MortalBuilding.CastleWallVertical : MortalBuilding.PalisadeWallVertical;
                 s.AddWall(kind, cell);

@@ -154,19 +154,31 @@ namespace Isekai.Tests
         }
 
         [UnityTest]
-        public IEnumerator Neutral_wildlife_ignores_you_until_it_is_hit()
+        public IEnumerator Neutral_wildlife_starts_no_fight_until_it_is_hit()
         {
             ClearWildlife();
             Vector3 at = QuietSpot();
             WildlifeBrain slime = Spawn(WildlifeType.Slime, at);
-            _jack.Teleport(at + new Vector3(3f, 0f, 0f));   // well inside its sight
+            // A mortal well inside its sight: mortals and neutral creatures leave each other alone. (Jack would not do: your
+            // side hunts neutral creatures, so his weapons would start the fight.)
+            MortalBrain peasant = RegionMortals.Current.Spawn(MortalType.Peasant, RegionSettlements.Current.Settlements.First(), at + new Vector3(3f, 0f, 0f));
+            Assert.IsNotNull(peasant);
             yield return new WaitForSeconds(1.5f);
             Assert.AreEqual(Side.Neutral, slime.Side);
-            Assert.IsFalse(slime.HasTarget, "it has no quarrel with you");
+            Assert.IsFalse(slime.HasTarget, "it has no quarrel with anyone");
             Assert.AreNotEqual(BehaviourAction.Fight, slime.Action);
 
-            slime.Member.Unit.TakeDamage(1f, DamageRules.PhysicalType, _jackUnit);
+            slime.Member.Unit.TakeDamage(1f, DamageRules.PhysicalType, peasant.Member.Unit);
             yield return TestWait.Until(() => slime.Action == BehaviourAction.Fight && slime.HasTarget, "it fights back", 3f);
+        }
+
+        [UnityTest]
+        public IEnumerator Your_side_is_hostile_to_neutral_wildlife_so_your_demons_go_for_it()
+        {
+            ClearWildlife();
+            WildlifeBrain slime = Spawn(WildlifeType.Slime, QuietSpot());
+            yield return null;
+            Assert.IsTrue(Blondie.Combat.Teams.AreHostile(_jackUnit, slime.Member.Unit), "Jack and his demons may attack a slime");
         }
 
         [UnityTest]
