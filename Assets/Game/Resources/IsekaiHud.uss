@@ -54,6 +54,10 @@
 .blondie-text-3.isekai-menu .isekai-role-body, .blondie-text-3.isekai-menu .isekai-role-muted,
 .blondie-text-3.isekai-menu .isekai-role-accent, .blondie-text-3.isekai-menu .isekai-role-warning { font-size: 36px; }
 
+/* Titles stay 48 px there: the plain-text rule above is as specific as the title rule and comes later. */
+.blondie-text-2 .isekai-menu .isekai-role-title, .blondie-text-3 .isekai-menu .isekai-role-title,
+.blondie-text-2.isekai-menu .isekai-role-title, .blondie-text-3.isekai-menu .isekai-role-title { font-size: 48px; }
+
 /* Small (offered outside pixel UIs): back to the HUD's 12 px. */
 .blondie-text-0 .isekai-menu .unity-text-element,
 .blondie-text-0 .isekai-menu .isekai-role-body, .blondie-text-0 .isekai-menu .isekai-role-muted,

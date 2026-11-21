@@ -169,6 +169,7 @@ namespace Isekai.Tests
             KillBody();
             var hud = Object.FindAnyObjectByType<SoulsHud>();
             yield return TestWait.Until(() => hud.StatusText.Contains("No Anchor"), "the HUD says there is no Anchor");
+            StringAssert.Contains("possess", hud.StatusText, "and still says possessing a demon is a way back");
             yield return new WaitForSeconds(0.5f);
             Assert.IsTrue(_souls.IsBodiless, "no revive without an Anchor");
             Assert.IsTrue(_body.IsDead);

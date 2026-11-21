@@ -222,6 +222,11 @@ namespace Isekai.Tests
             yield return MakeImp(g => imp = g);
             _pile.Add(ResourceType.Souls, 300);
             GameObject king = _jack.gameObject;
+            var kingStats = king.GetComponent<StatBlock>();
+            float baseHealth = kingStats.GetValue(StatId.HealthMax.ToString());
+            Assert.IsTrue(_souls.TryRaiseSoulLevel(), "soul level 2");
+            yield return null;
+            Assert.Greater(kingStats.GetValue(StatId.HealthMax.ToString()), baseHealth, "the body Jack is in has his soul level's stats");
 
             BodyKey.Press();
             yield return TestWait.Until(() => _souls.IsBodiless, "R leaves the body", 3f);
@@ -229,6 +234,7 @@ namespace Isekai.Tests
             Assert.IsFalse(king.GetComponent<Damageable>().IsDead, "the body lives on");
             Assert.IsTrue(king.TryGetComponent(out DemonBrain brain) && brain.enabled, "and fights as an ordinary demon of his");
             Assert.AreEqual(0, SoulRun.Ledger.Deaths, "leaving is not a death");
+            Assert.AreEqual(baseHealth, kingStats.GetValue(StatId.HealthMax.ToString()), 0.001f, "the body he left keeps none of his soul level's stats");
 
             int before = _pile.Get(ResourceType.Souls);
             yield return TestWait.Until(() =>
@@ -241,7 +247,7 @@ namespace Isekai.Tests
                 return Player.Character != null && Player.Character.gameObject == imp;
             }, "R over the Imp possesses it", 5f);
             int spent = before - _pile.Get(ResourceType.Souls);
-            int cost = SoulRules.PossessCost(1, bodyAlive: true);
+            int cost = SoulRules.PossessCost(2, bodyAlive: true);
             Assert.GreaterOrEqual(spent, cost);
             Assert.LessOrEqual(spent, cost + 3, "the cheaper price: the body he left still lives");
         }

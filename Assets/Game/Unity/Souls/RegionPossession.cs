@@ -213,6 +213,7 @@ namespace Isekai
             bool dead = from.IsDead;
             from.Vacate();
             if (penalised != null) penalised.RemoveModifiersFromSource(Source);
+            RegionSouls.Current?.StripSoulStats(go);   // soul level's stats go with Jack, not with the body he left
             if (!dead && go.TryGetComponent(out Damageable d)) d.DespawnOnDeath = restoreDespawn;
             if (addedControl)
             {

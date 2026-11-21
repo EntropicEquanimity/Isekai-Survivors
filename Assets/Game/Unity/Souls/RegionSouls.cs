@@ -228,6 +228,17 @@ namespace Isekai
             return Souls < Ledger.ReviveCost ? $"Revive needs {Ledger.ReviveCost} Souls" : null;
         }
 
+        /// <summary>
+        /// Takes soul level's stats off a body Jack has left (R, or a possession), so the ordinary demon it becomes keeps
+        /// none of his health, damage or speed. The next body he takes gets them from <see cref="ApplyStats"/>.
+        /// </summary>
+        internal void StripSoulStats(GameObject body)
+        {
+            if (body == null) return;
+            if (body.TryGetComponent(out StatBlock stats)) stats.RemoveModifiersFromSource(StatSource);
+            if (_appliedBody != null && _appliedBody.gameObject == body) _appliedBody = null;
+        }
+
         // What soul level gives the body: a little of everything per level above the first.
         private void ApplyStats(CharacterControl body)
         {
