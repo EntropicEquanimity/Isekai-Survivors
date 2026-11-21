@@ -55,6 +55,15 @@ namespace Isekai.Tests
         }
 
         [UnityTest]
+        public IEnumerator Your_side_ignores_night_lighting_and_the_others_do_not()
+        {
+            yield return null;
+            Assert.AreEqual(1f, SideOutlineMaterials.MaterialFor(Side.Yours).GetFloat("_Unlit"), "your units stay bright at night");
+            Assert.AreEqual(0f, SideOutlineMaterials.MaterialFor(Side.Mortals).GetFloat("_Unlit"));
+            Assert.AreEqual(0f, SideOutlineMaterials.MaterialFor(Side.Neutral).GetFloat("_Unlit"));
+        }
+
+        [UnityTest]
         public IEnumerator Changing_preset_updates_shared_material_colours_immediately()
         {
             Material mortal = SideOutlineMaterials.MaterialFor(Side.Mortals);

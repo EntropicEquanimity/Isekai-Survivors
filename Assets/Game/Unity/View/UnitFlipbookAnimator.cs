@@ -26,6 +26,7 @@ namespace Isekai
         {
             Current = this;
             RegionEntities.Entered += OnEntered;
+            RegionEntities.Damaged += OnAnyDamaged;
             IReadOnlyList<RegionEntity> living = RegionEntities.Living;
             for (int i = 0; i < living.Count; i++) TryTrack(living[i]);
         }
@@ -33,6 +34,7 @@ namespace Isekai
         private void OnDisable()
         {
             RegionEntities.Entered -= OnEntered;
+            RegionEntities.Damaged -= OnAnyDamaged;
             for (int i = 0; i < _units.Count; i++) _units[i].Dispose();
             _units.Clear();
             _byDamageable.Clear();
@@ -41,6 +43,14 @@ namespace Isekai
         }
 
         private void OnEntered(RegionEntity entity) => TryTrack(entity);
+
+        // Any hit on anything listed (a unit, a Building, a wall) plays the attacker's swing, so hitting a Building that
+        // has no flipbook of its own still animates the one hitting it.
+        private void OnAnyDamaged(RegionEntity victim, DamageResult result)
+        {
+            CombatUnit source = result.Info != null ? result.Info.Source : null;
+            if (source != null && (victim == null || victim.Damageable == null || source != victim.Damageable.Unit)) NoteAttack(source, Time.time);
+        }
 
         private void Update()
         {
@@ -147,6 +157,9 @@ namespace Isekai
 
         private sealed class AnimatedUnit
         {
+            private const float FacingSpeed = 0.3f;      // sideways units a second before the sprite turns
+            private const float FacingResponse = 12f;    // how fast the smoothed sideways speed follows the real one
+
             private enum ClipKind : byte { None, Idle, Walk, Attack, Hurt, Death, Mine }
 
             private readonly UnitFlipbookAnimator _owner;
@@ -156,6 +169,7 @@ namespace Isekai
             private readonly UnitAnimationSet _set;
 
             private Vector3 _lastPosition;
+            private float _smoothedVx;
             private ClipKind _clip = ClipKind.None;
             private Sprite[] _frames = System.Array.Empty<Sprite>();
             private float _fps;
@@ -206,8 +220,11 @@ namespace Isekai
 
             public void Step(float dt, float now)
             {
-                bool moving = IsMoving(dt, out float dx);
-                if (Mathf.Abs(dx) > 0.05f) _renderer.flipX = dx < 0f;
+                bool moving = IsMoving(dt, out float vx);
+                // Face the way it walks. vx is a speed (units a second), smoothed so a crowd's jostling doesn't flicker
+                // the sprite; a per-frame distance would be too small to count at a high frame rate.
+                _smoothedVx = Mathf.Lerp(_smoothedVx, vx, 1f - Mathf.Exp(-dt * FacingResponse));
+                if (Mathf.Abs(_smoothedVx) > FacingSpeed) _renderer.flipX = _smoothedVx < 0f;
 
                 ClipKind wanted = PickClip(now, moving);
                 ResolveClip(wanted);
@@ -241,9 +258,6 @@ namespace Isekai
             {
                 float now = Time.time;
                 if (!_dead && _set.HurtDuration > 0f) _hurtUntil = Mathf.Max(_hurtUntil, now + _set.HurtDuration);
-
-                CombatUnit source = result.Info != null ? result.Info.Source : null;
-                if (source != null && source != CombatUnit) _owner.NoteAttack(source, now);
             }
 
             private void OnDied(DamageResult result)
@@ -266,8 +280,8 @@ namespace Isekai
             private ClipKind PickClip(float now, bool moving)
             {
                 if (_dead) return ClipKind.Death;
+                if (now < _attackUntil) return ClipKind.Attack;   // a swing outranks a flinch, or a fighter under fire would never show its attack
                 if (now < _hurtUntil) return ClipKind.Hurt;
-                if (now < _attackUntil) return ClipKind.Attack;
                 if (_binding.IsMining()) return ClipKind.Mine;
                 return moving ? ClipKind.Walk : ClipKind.Idle;
             }
@@ -327,21 +341,23 @@ namespace Isekai
                 }
             }
 
-            private bool IsMoving(float dt, out float dx)
+            // Whether it moves faster than the walk clip's threshold, and its sideways speed (units a second).
+            private bool IsMoving(float dt, out float vx)
             {
                 Vector3 now = _damageable.transform.position;
                 Vector3 delta = now - _lastPosition;
                 _lastPosition = now;
                 float minSpeed = Mathf.Max(0.01f, _binding.MovingSpeed);
+                float measuredVx = dt > 1e-5f ? delta.x / dt : 0f;
                 CharacterMotor motor = _binding.Motor;
                 if (motor != null)
                 {
                     Vector2 velocity = motor.Velocity;
-                    dx = Mathf.Abs(velocity.x) > Mathf.Abs(delta.x) ? velocity.x : delta.x;
+                    vx = Mathf.Abs(velocity.x) > Mathf.Abs(measuredVx) ? velocity.x : measuredVx;
                     return velocity.sqrMagnitude > minSpeed * minSpeed;
                 }
 
-                dx = delta.x;
+                vx = measuredVx;
                 if (dt <= 1e-5f) return false;
                 float speedSq = delta.sqrMagnitude / (dt * dt);
                 return speedSq > minSpeed * minSpeed;

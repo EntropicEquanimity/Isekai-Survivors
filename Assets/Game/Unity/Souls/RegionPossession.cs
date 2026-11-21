@@ -4,13 +4,14 @@ using Blondie.Core;
 using Blondie.Stats;
 using Blondie.UI;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Isekai
 {
     /// <summary>
-    /// Jack changing bodies. While bodiless, the wisp touching one of his demons possesses it for the possession cost;
-    /// while his body lives, P next to a demon does the same for 25% less. The demon becomes the Player's Character
+    /// Jack changing bodies, all on one key (<see cref="BodyKey"/>, R). In a body, R leaves it: Jack becomes a wisp and
+    /// the body stays an ordinary demon of his. As a wisp, R over one of his demons possesses it (25% less while the
+    /// body he left still lives), and R over the Anchor revives him there (his dead body, or a new Demon King when he
+    /// left a living one). Touching alone does nothing. The demon becomes the Player's Character
     /// (it gets a <see cref="CharacterControl"/> if it has none, its <see cref="DemonBrain"/> stops), the camera and
     /// HUD follow, and the body he left becomes an ordinary unit of his again. In a body that is not a
     /// <see cref="DemonKing"/> Jack is weaker (<see cref="SoulTuning.OrdinaryDemonPenalty"/>) and spreads no corruption
@@ -22,8 +23,7 @@ namespace Isekai
     {
         public const string KingPrefab = "Demon King";
 
-        private const float WispReach = 0.6f;
-        private const float AliveReach = 2.5f;
+        private const float WispReach = 1f;
         private const float SayEvery = 2f;
 
         private static readonly object Source = new();
@@ -52,24 +52,64 @@ namespace Isekai
 
         private void Update()
         {
-            RegionSouls souls = RegionSouls.Current;
-            if (souls == null || souls.IsLost) return;
-            if (souls.IsBodiless)
-            {
-                if (souls.Wisp == null) return;
-                GameObject touched = Nearest(souls.Wisp.transform.position, WispReach);
-                if (touched != null) TryPossess(touched);
-                return;
-            }
-            CharacterControl body = Player.Character;
-            if (body == null || body.IsDead || !PressedPossess()) return;
-            GameObject near = Nearest(body.transform.position, AliveReach);
-            if (near != null) TryPossess(near);
-            else Refuse("No demon of yours within reach");
+            if (BodyKey.Consume()) Act();
         }
 
-        private static bool PressedPossess() =>
-            !PlayerBrain.BlockInput && Keyboard.current != null && Keyboard.current.pKey.wasPressedThisFrame;
+        /// <summary>
+        /// What R does now: leave a living body, or as a wisp revive at the Anchor (else enter the demon) under it. False, with
+        /// <see cref="Refusal"/>, when nothing could be done.
+        /// </summary>
+        public bool Act()
+        {
+            RegionSouls souls = RegionSouls.Current;
+            if (souls == null || souls.IsLost) return false;
+            if (!souls.IsBodiless) return TryDetach();
+            if (souls.Wisp == null) return false;
+            // Over the Anchor the (cheaper) revive comes first, even with demons crowding round it.
+            bool atAnchor = souls.WispAtAnchor;
+            string blocker = atAnchor ? souls.ReviveBlocker() : null;
+            if (atAnchor && blocker == null) return souls.IsDetached ? TryReviveInNewKing(souls) : souls.TryRevive();
+            GameObject demon = Nearest(souls.Wisp.transform.position, WispReach);
+            if (demon != null) return TryPossess(demon);
+            return Refuse(blocker ?? $"Fly onto one of your demons or the Anchor, then press {BodyKey.Name}");
+        }
+
+        /// <summary>Jack leaves the living body he is in: it becomes an ordinary demon of his again and he is a wisp.</summary>
+        public bool TryDetach()
+        {
+            RegionSouls souls = RegionSouls.Current;
+            CharacterControl body = Player.Character;
+            if (souls == null || souls.IsLost || souls.IsBodiless) return false;
+            if (body == null || body.IsDead) return Refuse("No body to leave");
+            Vector3 at = body.transform.position;
+            float speed = body.TryGetComponent(out CharacterMotor motor) ? motor.MaxSpeed : 0f;
+            Leave(body, _addedControl, _restoreDespawn, _penalised);
+            _addedControl = false;
+            _restoreDespawn = false;
+            _penalised = null;
+            souls.Detach(at, speed);
+            Refusal = null;
+            BLog.Info("Souls", $"Jack leaves {body.name}; it fights on as an ordinary demon of his.");
+            return true;
+        }
+
+        // Back at the Anchor after leaving a living body: a new Demon King rises there for the revive cost.
+        private bool TryReviveInNewKing(RegionSouls souls)
+        {
+            Stockpile pile = Stockpile;
+            Building anchor = souls.Anchor;
+            var prefab = Resources.Load<GameObject>(KingPrefab);
+            if (pile == null || anchor == null || prefab == null) return Refuse("No Demon King to revive in");
+            int cost = souls.Ledger.ReviveCost;
+            if (!pile.TrySpend(ResourceType.Souls, cost)) return Refuse($"Revive needs {cost} Souls");
+            Bounds bounds = RegionSouls.BoundsOf(anchor);
+            GameObject king = Instantiate(prefab, new Vector3(bounds.center.x, bounds.min.y - 0.75f, 0f), Quaternion.identity);
+            CharacterControl body = Enter(king);
+            souls.Adopt(body);
+            Refusal = null;
+            BLog.Info("Souls", $"Jack revives at the Anchor in a new Demon King for {cost} Souls.");
+            return true;
+        }
 
         /// <summary>The nearest living demon of Jack's side (not the body he is in) within <paramref name="reach"/> of a point; null when none.</summary>
         public GameObject Nearest(Vector3 from, float reach)
@@ -91,12 +131,12 @@ namespace Isekai
             return best;
         }
 
-        /// <summary>What possessing costs now: full while bodiless, 25% less while his body lives.</summary>
+        /// <summary>What possessing costs now: full after a death, 25% less while the body he is in (or left) lives.</summary>
         public int Cost()
         {
             RegionSouls souls = RegionSouls.Current;
             CharacterControl body = Player.Character;
-            bool alive = souls != null && !souls.IsBodiless && body != null && !body.IsDead;
+            bool alive = souls != null && (souls.IsDetached || (!souls.IsBodiless && body != null && !body.IsDead));
             return SoulRules.PossessCost(souls != null ? souls.Ledger.Level : SoulTuning.StartingLevel, alive);
         }
 

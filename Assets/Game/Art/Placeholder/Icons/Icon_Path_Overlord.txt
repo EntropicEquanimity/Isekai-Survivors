@@ -1,0 +1,2 @@
+32x32 UI icon, 1px #1f1a1a outline. Soul path Overlord: a dark iron crown with demon horns and a red gem (all demons grow stronger). For the loadout screen; GameIcons._soulPaths, enum order.
+Generated with Cursor CLI GenerateImage (agent model grok-4.7-medium), pixel-finished at 1x with the Isekai master palette (palette/isekai_master.hex in D:/GameDev/Isekai-Art-Forge). Transparent PNG, binary alpha, no filtering: import with Point filter, no compression, 16 pixels per unit.

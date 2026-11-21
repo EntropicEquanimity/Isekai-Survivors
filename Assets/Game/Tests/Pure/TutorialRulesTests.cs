@@ -5,6 +5,21 @@ namespace Isekai.Tests
     public class TutorialRulesTests
     {
         [Test]
+        public void A_two_part_step_shows_which_part_is_still_missing()
+        {
+            var progress = new TutorialProgress();
+            progress.Note(TutorialFact.Moved);
+            progress.Note(TutorialFact.Fought);
+            Assert.AreEqual(TutorialStepId.MineStoneAndWood, progress.Current.Id);
+            Assert.AreEqual("[ ] Stone  [ ] Wood", progress.Checklist());
+            progress.Note(TutorialFact.MinedWood);
+            Assert.AreEqual("[ ] Stone  [x] Wood", progress.Checklist(), "Wood mined, Stone still to do");
+            progress.Note(TutorialFact.MinedStone);
+            Assert.AreEqual(TutorialStepId.BuildPortalOnCorruption, progress.Current.Id);
+            Assert.AreEqual(string.Empty, progress.Checklist(), "a one-part step has no checklist");
+        }
+
+        [Test]
         public void Steps_advance_only_when_their_own_conditions_are_met()
         {
             var progress = new TutorialProgress();

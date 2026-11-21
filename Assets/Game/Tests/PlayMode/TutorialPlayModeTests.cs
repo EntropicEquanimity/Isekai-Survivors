@@ -192,8 +192,15 @@ namespace Isekai.Tests
             jack.GetComponent<Damageable>().Unit.TakeDamage(99999f, DamageRules.TrueType);
             yield return TestWait.Until(() => souls.IsBodiless && souls.Wisp != null, "Jack becomes a wisp", 6f);
             Building liveAnchor = Building.All.First(b => b.IsMainBase && b.IsPlayers && b.IsAlive);
-            souls.Wisp.transform.position = liveAnchor.transform.position;
-            yield return TestWait.Until(() => !souls.IsBodiless, "the wisp returns to a body", 8f);
+            yield return TestWait.Until(() =>
+            {
+                if (souls.IsBodiless && souls.Wisp != null)
+                {
+                    souls.Wisp.transform.position = liveAnchor.transform.position;
+                    BodyKey.Press();
+                }
+                return !souls.IsBodiless;
+            }, "R over the Anchor returns the wisp to a body", 8f);
             yield return WaitForAtLeastStep(tutorial, TutorialStepId.DestroySeat, "wisp step");
 
             TestDebug.Press("Destroy the Seat");

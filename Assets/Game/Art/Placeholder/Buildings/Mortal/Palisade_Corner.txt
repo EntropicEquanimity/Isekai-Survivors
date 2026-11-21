@@ -1,3 +1,3 @@
-Single sprite, 16x24 px. Footprint 1x1 cells (16 px per cell). wooden palisade top-left corner; flip X for top-right.
+Single sprite, 16x24 px. Footprint 1x1 cells (16 px per cell). wooden palisade end piece for a fence corner: the straight run with its left three columns cleared, so the fence stops on the vertical run's stakes (x 3) instead of sticking out past them. Used as-is for the left corners (top and bottom) and with flip X for the right corners.
 Pivot: bottom-centre of the image sits on the bottom-centre of the footprint; art taller than the footprint rises above it.
-Generated with Cursor CLI GenerateImage (agent model grok-4.7-medium), pixel-finished at 1x with the Isekai master palette (palette/isekai_master.hex in D:/GameDev/Isekai-Art-Forge). Transparent PNG, binary alpha, no filtering: import with Point filter, no compression, 16 pixels per unit.
+Cut from Palisade_Straight.png (same pixels, same palette); the earlier generated corner art is retired.

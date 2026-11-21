@@ -31,8 +31,26 @@ namespace Isekai
         public static int Seed { get; private set; }
         public static bool HasRun => Run != null && !Run.IsOver;
 
-        /// <summary>The Anchor this Run picked on the Planet screen (null: none picked, the Region keeps its scene's Main Base).</summary>
+        /// <summary>The Anchor this Run picked on the loadout screen (null: none picked, the Region keeps its scene's Main Base).</summary>
         public static AnchorKind? Anchor { get; set; }
+
+        private static readonly List<SoulPath> s_paths = new();
+
+        /// <summary>The Soul paths this Run picked on the loadout screen (empty until then).</summary>
+        public static IReadOnlyList<SoulPath> Paths => s_paths;
+
+        /// <summary>Sets the Run's Soul paths (the loadout screen, a restored save).</summary>
+        public static void SetPaths(IEnumerable<SoulPath> paths)
+        {
+            s_paths.Clear();
+            if (paths != null) s_paths.AddRange(paths);
+        }
+
+        /// <summary>
+        /// A New Run from the menu waits on the loadout screen (Anchor, Soul paths) before the Planet map shows. Runs made
+        /// another way (tests, autoplay, the tutorial, a continued save) skip it.
+        /// </summary>
+        public static bool LoadoutPending { get; set; }
 
         /// <summary>Starts a new Run on a new Planet.</summary>
         public static PlanetRun StartNew(int? seed = null) => StartNew(seed, Rings);
@@ -45,6 +63,7 @@ namespace Isekai
             Run = new PlanetRun(Planet.Generate(Seed, rings, RegionBuffs.Ids));
             s_inventory = null;
             Anchor = null;
+            s_paths.Clear();
             RunBoons.Clear();
             if (RunManager.HasActiveRun) RunManager.EndRun(RunOutcome.Abandoned);
             RunManager.StartRun(seed: unchecked((ulong)(uint)Seed));   // Blondie's Run streams follow the Planet's seed
@@ -111,6 +130,7 @@ namespace Isekai
         public static bool GoToRegion(RegionInfo region)
         {
             if (!HasRun || !Run.Enter(region)) return false;
+            LoadoutPending = false;   // landing ends the loadout, however it was reached
             s_startingSouls = SoulTuning.RegionStartingSouls;
             Load(RegionScene);
             return true;
@@ -152,6 +172,8 @@ namespace Isekai
         {
             Run = null;
             Anchor = null;
+            s_paths.Clear();
+            LoadoutPending = false;
             s_inventory = null;
             s_startingSouls = 0;
         }

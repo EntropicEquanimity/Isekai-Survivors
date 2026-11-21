@@ -28,6 +28,10 @@ A Region's seat of power and biggest stronghold, holding its ruling Hero: a smal
 One attempt at a Planet, about 1.5 hours: start in any Region, then take any Region touching a captured one, travelling freely between captured Regions, until the Capital falls (or the Run is lost).
 _Avoid_: session, match, game
 
+**Loadout**:
+The screen a New Run opens on, before the Planet map: the player picks the Run's Anchor and its Soul paths.
+_Avoid_: lobby
+
 ### The player's side
 
 **Jack**:
@@ -35,11 +39,11 @@ The player: a soul in a demon body, who can move between Suits.
 _Avoid_: hero (heroes are mortal), avatar
 
 **Demon King** / **Suit**:
-A strong demon body Jack normally inhabits (Demon_D, Demon_E, both Demonesses, the three Black Knights, Flame Golem, Warlock). Kings spread corruption and are summoned only at the Anchor, for many Souls. Jack in an ordinary demon is weak and spreads none.
+A strong demon body Jack normally inhabits (Demon_D, Demon_E, both Demonesses, the three Black Knights, Flame Golem, Warlock). Kings spread corruption and are summoned only at the Anchor (about 20 + 2 × level Souls, like a revive). Jack in an ordinary demon is weak and spreads none.
 _Avoid_: skin, class
 
 **Possession**:
-Jack taking over a body. When his body dies he is a bodiless wisp the player steers (over walls, untouchable by ordinary units; priests and holy ground double the drain), draining Souls per second (1 + 0.2 × level + deaths this Run, numbers to tune) until he revives at the Anchor in a new body of his Demon King (cheap: about 20 + 2 × level) or touches one of his demons to possess it (expensive: about 100 + 10 × level). Possessing while still alive costs 25% less. Souls running out while bodiless loses the Run.
+Jack taking over a body. When his body dies he is a bodiless wisp the player steers (over walls, untouchable by ordinary units; priests and holy ground double the drain), draining Souls per second (1 + 0.2 × level + deaths this Run, numbers to tune) until he revives at the Anchor in a new body of his Demon King (cheap: about 20 + 2 × level) or possesses one of his demons (expensive: about 100 + 10 × level). One key does all of it (R): in a body it leaves the body (it fights on as an ordinary demon), and as a wisp it takes the Anchor or the demon he is over; touching alone does nothing. Possessing while the body he left still lives costs 25% less. Souls running out while bodiless loses the Run.
 
 **Soul level**:
 Jack's level, his soul size: raised any time by spending Souls (about 50 × level). Each level gives stats and a point in a Soul path, and raises revive, possession and drain costs.
@@ -88,7 +92,7 @@ Anyone living on the Planet who isn't a demon: humans in villages and castles, o
 _Avoid_: enemy (too broad), NPC
 
 **Neutral**:
-A creature that attacks no one by default; some fight back, some flee.
+A creature that attacks no one by default; some fight back, some flee. Jack's demons, Spires and Jack himself hunt them on sight; mortals leave them alone.
 
 **Hostile**:
 A creature that attacks everything on sight; some flee when hurt, some fight to the death.
@@ -122,7 +126,7 @@ _Avoid_: taint, creep
 Something that fills its ground cell like a wall (rocks, dead trees, Stone deposits) until mined out.
 
 **Fog of war**:
-Unseen ground. Explored ground keeps terrain, rocks, nodes and buildings as last seen; units only show while in sight. Walls, cliffs and rocks block sight; night halves vision (day: Jack 14 cells, demons 8, mortals 7, wildlife 6). Sneaky units are invisible until they attack.
+Unseen ground. Explored ground keeps terrain, rocks, nodes and buildings as last seen; units only show while in sight. Walls, cliffs, rocks, trees and Buildings block sight of what lies behind them, but a Building in sight is seen whole; night halves vision (day: Jack 14 cells, demons 8, mortals 7, wildlife 6). Sneaky units are invisible until they attack.
 
 **Bones**:
 A pile left by a mortal or wildlife death. Some demons use bones (raise skeletons that crumble after a while, heal, empower abilities), set per Portal. A mortal who sees 5+ piles alerts its area and sends a rider to the Seat; if the rider arrives, Vigilance jumps a stage. Killing any mortal raises Vigilance slightly (more if witnessed); wildlife never does.

@@ -1,0 +1,93 @@
+/* The game's own panels (HUD, Planet screen, loadout) and the text roles of GameStyle. Added to every panel GamePanels
+   mounts (class isekai-hud) and to the UI Root (class isekai-menu). Pixel font sizes only (12, 24, 36, 48).
+   The player's Text size puts blondie-text-0..3 on each root: the HUD stays small at Medium (so the world stays
+   visible), menus read at 24 px. See docs/ui-rules.md.
+   Order matters: at equal specificity the later rule wins, so plain controls come first, then roles, then menus. */
+
+/* ── Fallbacks: a role anywhere ── */
+.isekai-role-body, .isekai-role-muted, .isekai-role-accent, .isekai-role-warning { font-size: 12px; }
+.isekai-role-title { font-size: 24px; }
+
+/* ── HUD: plain labels and buttons (beat Unity's default theme: light text, dark red buttons) ── */
+.isekai-hud .unity-text-element { font-size: 12px; }
+.isekai-hud .unity-label { color: rgb(238, 224, 214); }
+.blondie-text-2.isekai-hud .unity-text-element { font-size: 24px; }
+.blondie-text-3.isekai-hud .unity-text-element { font-size: 36px; }
+
+.isekai-hud .unity-button {
+    background-color: rgb(78, 18, 20);
+    border-color: rgb(138, 32, 28);
+    border-width: 1px;
+    border-radius: 0;
+    color: rgb(238, 224, 214);
+    padding: 2px 6px;
+    margin: 1px 0;
+    -unity-text-align: middle-center;
+}
+.isekai-hud .unity-button:hover { background-color: rgb(122, 28, 26); }
+.isekai-hud .unity-button:active { background-color: rgb(160, 40, 30); }
+.isekai-hud .unity-button:disabled { opacity: 0.45; }
+
+/* ── HUD: text roles ── */
+.isekai-hud .isekai-role-body, .isekai-hud .isekai-role-muted, .isekai-hud .isekai-role-accent, .isekai-hud .isekai-role-warning { font-size: 12px; }
+.isekai-hud .isekai-role-title { font-size: 24px; }
+.blondie-text-2.isekai-hud .isekai-role-body, .blondie-text-2.isekai-hud .isekai-role-muted,
+.blondie-text-2.isekai-hud .isekai-role-accent, .blondie-text-2.isekai-hud .isekai-role-warning { font-size: 24px; }
+.blondie-text-2.isekai-hud .isekai-role-title { font-size: 48px; }
+.blondie-text-3.isekai-hud .isekai-role-body, .blondie-text-3.isekai-hud .isekai-role-muted,
+.blondie-text-3.isekai-hud .isekai-role-accent, .blondie-text-3.isekai-hud .isekai-role-warning { font-size: 36px; }
+.blondie-text-3.isekai-hud .isekai-role-title { font-size: 48px; }
+
+/* ── Menus: one step bigger (the loadout inside a HUD panel, and panels on the UI Root) ── */
+.isekai-menu .unity-text-element,
+.isekai-menu .isekai-role-body, .isekai-menu .isekai-role-muted, .isekai-menu .isekai-role-accent, .isekai-menu .isekai-role-warning { font-size: 24px; }
+.isekai-menu .isekai-role-title { font-size: 48px; }
+
+/* Large and Extra large, where Text size sits above the menu (the loadout) or on the same element (the UI Root). */
+.blondie-text-2 .isekai-menu .unity-text-element, .blondie-text-3 .isekai-menu .unity-text-element,
+.blondie-text-2 .isekai-menu .isekai-role-body, .blondie-text-2 .isekai-menu .isekai-role-muted,
+.blondie-text-2 .isekai-menu .isekai-role-accent, .blondie-text-2 .isekai-menu .isekai-role-warning,
+.blondie-text-3 .isekai-menu .isekai-role-body, .blondie-text-3 .isekai-menu .isekai-role-muted,
+.blondie-text-3 .isekai-menu .isekai-role-accent, .blondie-text-3 .isekai-menu .isekai-role-warning,
+.blondie-text-2.isekai-menu .isekai-role-body, .blondie-text-2.isekai-menu .isekai-role-muted,
+.blondie-text-2.isekai-menu .isekai-role-accent, .blondie-text-2.isekai-menu .isekai-role-warning,
+.blondie-text-3.isekai-menu .isekai-role-body, .blondie-text-3.isekai-menu .isekai-role-muted,
+.blondie-text-3.isekai-menu .isekai-role-accent, .blondie-text-3.isekai-menu .isekai-role-warning { font-size: 36px; }
+
+/* Small (offered outside pixel UIs): back to the HUD's 12 px. */
+.blondie-text-0 .isekai-menu .unity-text-element,
+.blondie-text-0 .isekai-menu .isekai-role-body, .blondie-text-0 .isekai-menu .isekai-role-muted,
+.blondie-text-0 .isekai-menu .isekai-role-accent, .blondie-text-0 .isekai-menu .isekai-role-warning,
+.blondie-text-0.isekai-menu .isekai-role-body, .blondie-text-0.isekai-menu .isekai-role-muted,
+.blondie-text-0.isekai-menu .isekai-role-accent, .blondie-text-0.isekai-menu .isekai-role-warning { font-size: 12px; }
+.blondie-text-0 .isekai-menu .isekai-role-title, .blondie-text-0.isekai-menu .isekai-role-title { font-size: 24px; }
+
+/* ── Icon buttons: a framed icon, numbers beside or under it; the name lives in the tooltip ── */
+.isekai-icon-button {
+    flex-direction: row;
+    align-items: center;
+    padding: 2px 4px;
+}
+.isekai-icon-button--column { flex-direction: column; padding: 4px; }
+.isekai-hud .isekai-icon-button--picked {
+    border-color: rgb(255, 122, 38);
+    border-width: 2px;
+    background-color: rgb(110, 30, 22);
+}
+.isekai-icon {
+    width: 16px;
+    height: 16px;
+    -unity-background-scale-mode: scale-to-fit;
+    flex-shrink: 0;
+}
+.isekai-icon--large { width: 32px; height: 32px; }
+.isekai-icon--huge { width: 48px; height: 48px; }
+.isekai-hud .isekai-key { color: rgb(255, 122, 38); margin-right: 3px; }
+.isekai-hud .isekai-number { margin-left: 2px; margin-right: 4px; }
+.isekai-hud .isekai-number--short { color: rgb(255, 110, 90); }
+.isekai-hud .isekai-panel {
+    background-color: rgba(10, 3, 4, 0.82);
+    border-color: rgb(138, 32, 28);
+    border-width: 1px;
+    padding: 3px 4px;
+}

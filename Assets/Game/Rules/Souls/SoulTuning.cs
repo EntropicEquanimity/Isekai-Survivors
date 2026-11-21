@@ -20,9 +20,10 @@ namespace Isekai
         // Jack in an ordinary demon (not a Demon King) deals and survives this much less (0.3 = 30%).
         public const float OrdinaryDemonPenalty = 0.3f;
 
-        // Summoning a Demon King at the Anchor: many Souls.
-        public const float SummonKingBase = 200f;
-        public const float SummonKingPerLevel = 20f;
+        // Summoning a Demon King at the Anchor: about what a revive costs, so getting back into a strong body is never out of reach
+        // (playtest 2026-11-21: 220 at soul level 1 was far too much).
+        public const float SummonKingBase = 20f;
+        public const float SummonKingPerLevel = 2f;
 
         // Raising soul level costs this x the current level.
         public const int LevelUpCostPerLevel = 50;

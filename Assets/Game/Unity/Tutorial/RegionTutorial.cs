@@ -18,8 +18,10 @@ namespace Isekai
         private const string MarkerObject = "Tutorial Marker";
 
         private readonly TutorialProgress _progress = new();
+        private VisualElement _box;
         private Label _step;
         private Label _prompt;
+        private Label _checks;
         private Button _skip;
         private GameObject _marker;
         private SpriteRenderer _markerRenderer;
@@ -114,6 +116,16 @@ namespace Isekai
             ObserveState();
             TickMarker();
             RefreshStep(force: false);
+            RefreshChecks();
+        }
+
+        private void RefreshChecks()
+        {
+            if (_checks == null) return;
+            string text = _progress.Checklist();
+            if (_checks.text == text) return;
+            _checks.text = text;
+            _checks.style.display = string.IsNullOrEmpty(text) ? DisplayStyle.None : DisplayStyle.Flex;
         }
 
         void IRegionEndListener.OnRegionEnded(RegionEnd end)
@@ -252,8 +264,8 @@ namespace Isekai
                 {
                     position = Position.Absolute,
                     left = 6,
-                    top = 34,
-                    width = 440,
+                    top = 22,
+                    width = 300,
                     backgroundColor = new Color(0f, 0f, 0f, 0.7f),
                     paddingLeft = 6,
                     paddingRight = 6,
@@ -275,12 +287,16 @@ namespace Isekai
             _step = GameStyle.Label(string.Empty, TextRole.Muted);
             _prompt = GameStyle.Label(string.Empty, TextRole.Body);
             _prompt.style.whiteSpace = WhiteSpace.Normal;
-            _prompt.style.marginBottom = 4;
+            _checks = GameStyle.Label(string.Empty, TextRole.Warning);
+            _checks.style.marginBottom = 4;
+            _checks.style.display = DisplayStyle.None;
             _skip = new Button(SkipTutorial) { text = "Skip tutorial" };
             box.Add(_step);
             box.Add(_prompt);
+            box.Add(_checks);
             box.Add(_skip);
             root.Add(box);
+            _box = box;
             UIPanels.Created(panel);
         }
 
@@ -512,6 +528,8 @@ namespace Isekai
 
         private void HideTutorial()
         {
+            if (_box != null) _box.style.display = DisplayStyle.None;   // the whole box, not an empty frame with its title
+            if (_checks != null) _checks.style.display = DisplayStyle.None;
             if (_step != null) _step.style.display = DisplayStyle.None;
             if (_prompt != null) _prompt.style.display = DisplayStyle.None;
             if (_skip != null) _skip.style.display = DisplayStyle.None;

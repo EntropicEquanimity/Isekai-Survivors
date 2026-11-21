@@ -35,11 +35,17 @@ namespace Isekai.Tests
         }
 
         [Test]
-        public void Neutral_creatures_start_no_fights()
+        public void Mortals_leave_neutral_creatures_alone()
         {
-            Assert.IsFalse(SideRelations.AreHostile(Side.Neutral, Side.Yours));
             Assert.IsFalse(SideRelations.AreHostile(Side.Neutral, Side.Mortals));
-            Assert.AreEqual(SideRelation.Neutral, SideRelations.Between(Side.Neutral, Side.Yours));
+            Assert.AreEqual(SideRelation.Neutral, SideRelations.Between(Side.Mortals, Side.Neutral));
+        }
+
+        [Test]
+        public void Your_side_can_hunt_neutral_creatures()
+        {
+            Assert.IsTrue(SideRelations.AreHostile(Side.Yours, Side.Neutral));
+            Assert.IsTrue(SideRelations.AreHostile(Side.Neutral, Side.Yours));
         }
 
         [Test]

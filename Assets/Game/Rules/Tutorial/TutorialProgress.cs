@@ -34,14 +34,14 @@ namespace Isekai
     {
         private static readonly TutorialStepDef[] s_order =
         {
-            new(TutorialStepId.MoveAndFight, "Move Jack and kill a Mortal."),
-            new(TutorialStepId.MineStoneAndWood, "Mine Stone and Wood."),
-            new(TutorialStepId.BuildPortalOnCorruption, "Build a Portal on corruption. Not enough corruption blocks it."),
-            new(TutorialStepId.SetPortalOrderAndRally, "Set that Portal's order and rally point."),
+            new(TutorialStepId.MoveAndFight, "Move Jack with WASD and kill a Mortal. Stand still and he fights whatever is near."),
+            new(TutorialStepId.MineStoneAndWood, "Walk Jack into a grey rock for Stone and into a dead tree for Wood. The arrow marks the nearest."),
+            new(TutorialStepId.BuildPortalOnCorruption, "Press 1, then click corrupted (dark purple) ground near the Anchor to build a Portal."),
+            new(TutorialStepId.SetPortalOrderAndRally, "Click your Portal. Pick an order other than Guard, then set its rally point."),
             new(TutorialStepId.WatchCorruptionSpread, "Hold ground until corruption spreads."),
             new(TutorialStepId.LearnVigilance, "Stay hidden. Kills and sightings raise Vigilance."),
             new(TutorialStepId.StopWitnessRider, "A witness can send a rider. Stop the rider before the Seat."),
-            new(TutorialStepId.RecoverFromDeath, "Let Jack die, then reach the Anchor as a wisp or possess a demon."),
+            new(TutorialStepId.RecoverFromDeath, "Press R to leave Jack's body (or let it die). As a wisp, fly over the Anchor or one of your demons and press R."),
             new(TutorialStepId.DestroySeat, "Destroy the Seat."),
         };
 
@@ -85,6 +85,26 @@ namespace Isekai
         public TutorialStepDef Current => IsComplete ? default : TutorialSteps.At(StepIndex);
 
         public bool Has(TutorialFact fact) => (_facts & BitOf(fact)) != 0UL;
+
+        /// <summary>
+        /// What the current step still waits for, when it needs more than one thing ("[x] Stone  [ ] Wood"); empty for a
+        /// one-thing step or once complete. Shown under the prompt, so a half-done step never looks stuck.
+        /// </summary>
+        public string Checklist()
+        {
+            if (IsComplete) return string.Empty;
+            return Current.Id switch
+            {
+                TutorialStepId.MoveAndFight => Check("Moved", TutorialFact.Moved) + "  " + Check("Killed a Mortal", TutorialFact.Fought),
+                TutorialStepId.MineStoneAndWood => Check("Stone", TutorialFact.MinedStone) + "  " + Check("Wood", TutorialFact.MinedWood),
+                TutorialStepId.SetPortalOrderAndRally => Check("Order", TutorialFact.PortalOrderSet) + "  " + Check("Rally point", TutorialFact.PortalRallySet),
+                TutorialStepId.StopWitnessRider => Check("Rider sent", TutorialFact.RiderSent) + "  " + Check("Rider stopped", TutorialFact.RiderStopped),
+                TutorialStepId.RecoverFromDeath => Check("Wisp", TutorialFact.BecameWisp) + "  " + Check("New body", TutorialFact.ReturnedFromWisp),
+                _ => string.Empty,
+            };
+        }
+
+        private string Check(string label, TutorialFact fact) => (Has(fact) ? "[x] " : "[ ] ") + label;
 
         /// <summary>Records a fact and advances while the next step is satisfied. Returns true when at least one step advanced.</summary>
         public bool Note(TutorialFact fact)

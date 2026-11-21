@@ -49,10 +49,11 @@ namespace Isekai.Tests
         }
 
         [Test]
-        public void Summoning_a_Demon_King_costs_more_than_possessing()
+        public void Summoning_a_Demon_King_costs_about_a_revive()
         {
-            Assert.AreEqual(220, SoulRules.SummonKingCost(1));
-            Assert.Greater(SoulRules.SummonKingCost(1), SoulRules.PossessCost(1, bodyAlive: false));
+            Assert.AreEqual(22, SoulRules.SummonKingCost(1));
+            Assert.AreEqual(SoulRules.ReviveCost(1), SoulRules.SummonKingCost(1));
+            Assert.Less(SoulRules.SummonKingCost(1), SoulRules.PossessCost(1, bodyAlive: false));
         }
 
         [Test]
@@ -141,6 +142,39 @@ namespace Isekai.Tests
             Assert.Greater(ledger.ReviveCost, revive);
             Assert.Greater(ledger.PossessCost(false), possess);
             Assert.Greater(ledger.DrainPerSecond(false), drain);
+        }
+    }
+
+    public class SoulPathTests
+    {
+        [Test]
+        public void A_Run_starts_with_two_of_eight_Soul_paths()
+        {
+            Assert.AreEqual(2, SoulPaths.StartingSlots);
+            Assert.AreEqual(8, SoulPaths.Starting.Length);
+            foreach (SoulPath path in SoulPaths.Starting) Assert.IsNotEmpty(SoulPaths.About(path), path.ToString());
+        }
+
+        [Test]
+        public void Picking_toggles_and_a_third_pick_drops_the_oldest()
+        {
+            var picks = new SoulPathPicks();
+            picks.Toggle(SoulPath.Brawler);
+            Assert.IsFalse(picks.IsFull);
+            picks.Toggle(SoulPath.Reaper);
+            Assert.IsTrue(picks.IsFull);
+            picks.Toggle(SoulPath.Reaper);
+            CollectionAssert.AreEqual(new[] { SoulPath.Brawler }, picks.Picked, "picking again unpicks");
+            picks.Toggle(SoulPath.Reaper);
+            picks.Toggle(SoulPath.Bonelord);
+            CollectionAssert.AreEqual(new[] { SoulPath.Reaper, SoulPath.Bonelord }, picks.Picked, "the oldest pick makes room");
+        }
+
+        [Test]
+        public void Saved_path_names_read_back_and_unknown_ones_are_dropped()
+        {
+            CollectionAssert.AreEqual(new[] { SoulPath.Warlord, SoulPath.Assassin }, SoulPaths.Parse(new[] { "Warlord", "Nonsense", "Assassin", "Reaper" }));
+            Assert.IsEmpty(SoulPaths.Parse(null));
         }
     }
 }

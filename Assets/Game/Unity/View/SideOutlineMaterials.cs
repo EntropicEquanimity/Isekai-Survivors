@@ -3,12 +3,16 @@ using UnityEngine;
 
 namespace Isekai
 {
-    /// <summary>Shared runtime materials for side outlines (one per side).</summary>
+    /// <summary>
+    /// Shared runtime materials for side outlines (one per side). Your side's ignores the 2D lights, so Jack, his demons
+    /// and his Buildings stay clearly visible when night darkens the Region.
+    /// </summary>
     public static class SideOutlineMaterials
     {
         private const string ShaderName = "Isekai/Sprite Lit Side Outline";
         private static readonly Dictionary<Side, Material> s_runtime = new();
         private static readonly int OutlineColorId = Shader.PropertyToID("_OutlineColor");
+        private static readonly int UnlitId = Shader.PropertyToID("_Unlit");
 
         public static Material MaterialFor(Side side)
         {
@@ -32,6 +36,7 @@ namespace Isekai
                 };
             }
 
+            material.SetFloat(UnlitId, side == Side.Yours ? 1f : 0f);
             s_runtime[side] = material;
             return material;
         }

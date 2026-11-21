@@ -164,7 +164,7 @@ namespace Isekai.Tests
         private static RegionEntity FindEntity(GameObject go) => RegionEntities.Living.FirstOrDefault(u => u.GameObject == go);
 
         [UnityTest]
-        public IEnumerator A_wisp_touching_a_demon_possesses_it_for_the_full_cost()
+        public IEnumerator A_wisp_pressing_R_over_a_demon_possesses_it_for_the_full_cost()
         {
             GameObject imp = null;
             yield return MakeImp(g => imp = g);
@@ -178,9 +178,13 @@ namespace Isekai.Tests
             // The wisp flies to the Imp (the Imp keeps walking about, so follow it).
             yield return TestWait.Until(() =>
             {
-                if (_souls.Wisp != null) _souls.Wisp.transform.position = imp.transform.position;
+                if (_souls.Wisp != null)
+                {
+                    _souls.Wisp.transform.position = imp.transform.position;
+                    BodyKey.Press();
+                }
                 return Player.Character != null && Player.Character.gameObject == imp;
-            }, "the wisp possesses the Imp it touches", 5f);
+            }, "the wisp possesses the Imp it is over", 5f);
 
             int spent = before - _pile.Get(ResourceType.Souls);
             int cost = SoulRules.PossessCost(1, bodyAlive: false);
@@ -190,6 +194,56 @@ namespace Isekai.Tests
             Assert.IsNull(Object.FindAnyObjectByType<Wisp>(), "the wisp is gone");
             Assert.AreEqual(imp.transform, _souls.CameraTarget);
             Assert.IsTrue(_jack.IsDead, "the dead Demon King stays where it fell");
+        }
+
+        [UnityTest]
+        public IEnumerator A_wisp_over_a_demon_does_not_possess_it_without_R()
+        {
+            GameObject imp = null;
+            yield return MakeImp(g => imp = g);
+            _pile.Add(ResourceType.Souls, 300);
+            Teleport(_jack, RegionGrid.Current.CentreOf(_far));
+            _jack.GetComponent<Damageable>().Kill();
+            yield return TestWait.Until(() => _souls.IsBodiless, "the wisp appears", 5f);
+            float until = Time.time + 0.6f;
+            while (Time.time < until)
+            {
+                if (_souls.Wisp != null) _souls.Wisp.transform.position = imp.transform.position;
+                yield return null;
+            }
+            Assert.IsTrue(_souls.IsBodiless, "touching a demon is not enough");
+            Assert.AreNotSame(imp, Player.Character != null ? Player.Character.gameObject : null);
+        }
+
+        [UnityTest]
+        public IEnumerator R_leaves_a_living_body_which_fights_on_and_R_over_a_demon_takes_it_for_less()
+        {
+            GameObject imp = null;
+            yield return MakeImp(g => imp = g);
+            _pile.Add(ResourceType.Souls, 300);
+            GameObject king = _jack.gameObject;
+
+            BodyKey.Press();
+            yield return TestWait.Until(() => _souls.IsBodiless, "R leaves the body", 3f);
+            Assert.IsTrue(_souls.IsDetached, "a wisp by choice");
+            Assert.IsFalse(king.GetComponent<Damageable>().IsDead, "the body lives on");
+            Assert.IsTrue(king.TryGetComponent(out DemonBrain brain) && brain.enabled, "and fights as an ordinary demon of his");
+            Assert.AreEqual(0, SoulRun.Ledger.Deaths, "leaving is not a death");
+
+            int before = _pile.Get(ResourceType.Souls);
+            yield return TestWait.Until(() =>
+            {
+                if (_souls.IsBodiless && _souls.Wisp != null)
+                {
+                    _souls.Wisp.transform.position = imp.transform.position;
+                    BodyKey.Press();
+                }
+                return Player.Character != null && Player.Character.gameObject == imp;
+            }, "R over the Imp possesses it", 5f);
+            int spent = before - _pile.Get(ResourceType.Souls);
+            int cost = SoulRules.PossessCost(1, bodyAlive: true);
+            Assert.GreaterOrEqual(spent, cost);
+            Assert.LessOrEqual(spent, cost + 3, "the cheaper price: the body he left still lives");
         }
 
         [UnityTest]
@@ -241,7 +295,7 @@ namespace Isekai.Tests
             RegionWorkers panel = Object.FindAnyObjectByType<RegionWorkers>();
             yield return TestWait.Until(() => panel.SummonKingButton != null, "the Anchor panel is built");
             Button button = panel.SummonKingButton;
-            StringAssert.Contains($"{SoulRules.SummonKingCost(1)} Souls", button.text);
+            StringAssert.Contains($"{SoulRules.SummonKingCost(1)} Souls", ((IconButton)button).CostText, "the cost shows as a number with the Souls icon");
             Assert.IsTrue(TooltipText.Has(TooltipKey.HudSummonKing), "the button has a tooltip");
 
             int kings = Object.FindObjectsByType<DemonKing>(FindObjectsInactive.Exclude).Length;

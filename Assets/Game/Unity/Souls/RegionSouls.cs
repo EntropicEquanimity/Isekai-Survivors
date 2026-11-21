@@ -8,8 +8,9 @@ namespace Isekai
 {
     /// <summary>
     /// The soul economy in a Region. Killing mortals and wildlife gives Souls. When Jack's body dies he becomes a
-    /// <see cref="Wisp"/> and Souls drain every second; touching the Anchor (the player's living Main Base) revives the
-    /// body there for the revive cost; Souls reaching zero while bodiless loses the Run (<see cref="IsLost"/>, read by
+    /// <see cref="Wisp"/> and Souls drain every second (he can also leave a living body on purpose, <see cref="Detach"/>);
+    /// pressing R over the Anchor (the player's living Main Base) revives him there for the revive cost
+    /// (<see cref="RegionPossession.Act"/>); Souls reaching zero while bodiless loses the Run (<see cref="IsLost"/>, read by
     /// <see cref="RegionDefeat"/>). Losing the Anchor ends nothing: there is just no revive until another stands.
     /// Soul level (kept for the Run in <see cref="SoulRun"/>) is raised by spending Souls and raises the body's stats.
     /// </summary>
@@ -23,6 +24,7 @@ namespace Isekai
         private CharacterControl _appliedBody;
         private int _appliedLevel;
         private Wisp _wisp;
+        private bool _detached;
         private FollowCamera2D _camera;
         private bool _hooked;
 
@@ -32,6 +34,19 @@ namespace Isekai
         public bool IsBodiless => _wisp != null;
 
         public Wisp Wisp => _wisp;
+
+        /// <summary>Jack is a wisp because he left a living body (R), not because it died.</summary>
+        public bool IsDetached => _wisp != null && _detached;
+
+        /// <summary>The wisp is over the Anchor, where R revives him.</summary>
+        public bool WispAtAnchor
+        {
+            get
+            {
+                Building anchor = Anchor;
+                return _wisp != null && anchor != null && Touches(anchor, _wisp.transform.position);
+            }
+        }
 
         /// <summary>What the camera follows now: the wisp, else the body.</summary>
         public Transform CameraTarget => _camera != null ? _camera.Target : null;
@@ -99,14 +114,30 @@ namespace Isekai
 
         private void Update()
         {
+            if (IsLost) return;
             CharacterControl body = Player.Character;
-            if (body == null || IsLost) return;
+            if (body == null)
+            {
+                if (_wisp != null) DrainSouls();   // left a living body: no body of his until R takes one
+                return;
+            }
             ApplyStats(body);
             if (body.IsDead && _wisp == null) BecomeWisp(body);
             else if (!body.IsDead && _wisp != null) EndWisp(body);   // revived some other way (the debug menu)
             if (_wisp == null) return;
             DrainSouls();
-            if (!IsLost) TryRevive(body);
+        }
+
+        /// <summary>Jack left his living body (<see cref="RegionPossession.TryDetach"/>): he is a wisp where it stood.</summary>
+        internal void Detach(Vector3 at, float speed)
+        {
+            if (_wisp != null) return;
+            _drain.Reset();
+            _wisp = Wisp.Spawn(at, speed);
+            _detached = true;
+            Follow(_wisp.transform);
+            BLog.Info("Souls", $"Jack is a wisp by choice, draining {DrainPerSecond:0.0} Souls a second.");
+            IsLost = SoulRules.IsLost(Souls, bodiless: true);
         }
 
         private void BecomeWisp(CharacterControl body)
@@ -115,6 +146,7 @@ namespace Isekai
             _drain.Reset();
             float speed = body.TryGetComponent(out CharacterMotor motor) ? motor.MaxSpeed : 0f;
             _wisp = Wisp.Spawn(body.transform.position, speed);
+            _detached = false;
             Follow(_wisp.transform);
             BLog.Info("Souls", $"Jack's body died (death {Ledger.Deaths}): he is a wisp, draining {DrainPerSecond:0.0} Souls a second.");
             // Dying with no Souls left ends it at once.
@@ -125,6 +157,7 @@ namespace Isekai
         {
             if (_wisp != null) RemoveWisp();
             _wisp = null;
+            _detached = false;
             Follow(body.transform);
         }
 
@@ -133,6 +166,7 @@ namespace Isekai
         {
             if (_wisp != null) RemoveWisp();
             _wisp = null;
+            _detached = false;
             _appliedBody = null;
             Follow(body.transform);
         }
@@ -153,15 +187,19 @@ namespace Isekai
             IsLost = SoulRules.IsLost(pile.Get(ResourceType.Souls), bodiless: true);
         }
 
-        // Touching the Anchor with the Souls to pay revives the body beside it.
-        private void TryRevive(CharacterControl body)
+        /// <summary>
+        /// R over the Anchor after a death: with the Souls to pay, the dead body revives beside it. False when the wisp is
+        /// not over the Anchor, the Souls are short, or he left a living body (<see cref="RegionPossession"/> gives him a new one).
+        /// </summary>
+        public bool TryRevive()
         {
+            CharacterControl body = Player.Character;
+            if (_wisp == null || _detached || body == null || !body.IsDead || !WispAtAnchor) return false;
             Building anchor = Anchor;
-            if (anchor == null || !Touches(anchor, _wisp.transform.position)) return;
             Stockpile pile = Stockpile;
-            if (pile == null || !SoulRules.CanRevive(pile.Get(ResourceType.Souls), Ledger.Level, anchorStands: true)) return;
+            if (pile == null || !SoulRules.CanRevive(pile.Get(ResourceType.Souls), Ledger.Level, anchorStands: true)) return false;
             int cost = Ledger.ReviveCost;
-            if (!pile.TrySpend(ResourceType.Souls, cost)) return;
+            if (!pile.TrySpend(ResourceType.Souls, cost)) return false;
 
             Bounds bounds = BoundsOf(anchor);
             Vector3 spot = new(bounds.center.x, bounds.min.y - 0.75f, body.transform.position.z);
@@ -169,6 +207,7 @@ namespace Isekai
             body.GetComponent<Damageable>().Revive(1f);
             EndWisp(body);
             BLog.Info("Souls", $"Jack revives at the Anchor for {cost} Souls.");
+            return true;
         }
 
         /// <summary>Spends Souls to raise soul level; its stats follow at once.</summary>

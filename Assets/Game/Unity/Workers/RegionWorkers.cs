@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 namespace Isekai
 {
-    /// <summary>Anchor panel and worker summoning for this Region.</summary>
+    /// <summary>Anchor panel (worker count, worker and Demon King icon buttons with their Soul costs) and worker summoning for this Region.</summary>
     [RegionSystem]
     public sealed class RegionWorkers : MonoBehaviour, IRegionEndListener
     {
@@ -37,49 +37,37 @@ namespace Isekai
             if (Current == this) Current = null;
         }
 
+        // Icons first (docs/ui-rules.md): the worker count beside a worker, and two icon buttons with their Soul costs.
         private void Start()
         {
             VisualElement root = GamePanels.Mount(this, PanelName, null, out PanelRenderer panel);
-            var box = new VisualElement
-            {
-                style =
-                {
-                    position = Position.Absolute,
-                    right = 6,
-                    top = 6,
-                    width = 280,
-                    backgroundColor = new Color(0f, 0f, 0f, 0.6f),
-                    borderBottomColor = GameStyle.Border,
-                    borderBottomWidth = 1,
-                    borderTopColor = GameStyle.Border,
-                    borderTopWidth = 1,
-                    borderLeftColor = GameStyle.Border,
-                    borderLeftWidth = 1,
-                    borderRightColor = GameStyle.Border,
-                    borderRightWidth = 1,
-                    paddingBottom = 6,
-                    paddingTop = 6,
-                    paddingLeft = 8,
-                    paddingRight = 8,
-                },
-            };
-            box.Add(GameStyle.Label("Anchor", TextRole.Title));
-            _status = GameStyle.Label(string.Empty, TextRole.Muted);
-            _status.style.marginTop = 2;
-            _status.AddTooltip(TooltipText.Get(TooltipKey.HudWorkers));
-            box.Add(_status);
-            _summon = new Button(() => TrySummonWorker()) { text = SummonText() };
-            _summon.style.marginTop = 6;
-            _summon.AddTooltip(TooltipText.Get(TooltipKey.HudWorkers));
-            box.Add(_summon);
-            _summonKing = new Button(() => RegionPossession.Current?.TrySummonDemonKing()) { text = SummonKingText() };
-            _summonKing.style.marginTop = 4;
-            _summonKing.AddTooltip(TooltipText.Get(TooltipKey.HudSummonKing));
-            box.Add(_summonKing);
+            var box = new VisualElement { style = { position = Position.Absolute, right = 4, top = 4, alignItems = Align.FlexEnd } };
+            box.AddToClassList("isekai-panel");
+            var count = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center } };
+            Sprite anchorIcon = GameIcons.Of(FindAnchor() != null ? FindAnchor().Asset : null);
+            if (anchorIcon != null) count.Add(GameStyle.Icon(anchorIcon, "large"));
+            count.Add(GameStyle.Icon(WorkerIcon()));
+            _status = GameStyle.Label(string.Empty, TextRole.Body);
+            _status.AddToClassList("isekai-number");
+            count.Add(_status);
+            count.AddTooltip(TooltipText.Get(TooltipKey.HudWorkers), "Anchor");
+            box.Add(count);
+            var buttons = new VisualElement { style = { flexDirection = FlexDirection.Row, marginTop = 2 } };
+            var worker = new IconButton(WorkerIcon(), "Summon worker", () => TrySummonWorker()) { Tooltip = TooltipText.Get(TooltipKey.HudWorkers) };
+            _summon = worker;
+            buttons.Add(worker);
+            var king = new IconButton(GameIcons.Of(Resources.Load<GameObject>(RegionPossession.KingPrefab)), "Summon Demon King",
+                () => RegionPossession.Current?.TrySummonDemonKing()) { Tooltip = TooltipText.Get(TooltipKey.HudSummonKing) };
+            king.style.marginLeft = 2;
+            _summonKing = king;
+            buttons.Add(king);
+            box.Add(buttons);
             root.Add(box);
             UIPanels.Created(panel);
             Refresh();
         }
+
+        private Sprite WorkerIcon() => GameIcons.Worker != null ? GameIcons.Worker : GameIcons.Of(WorkerPrefab());
 
         private void Update()
         {
@@ -123,43 +111,22 @@ namespace Isekai
             GameObject prefab = WorkerPrefab();
 
             bool canSummon = anchor != null && prefab != null && stockpile != null && stockpile.CanAfford(s_workerCost);
-            _summon.text = SummonText();
+            ((IconButton)_summon).SetCosts(s_workerCost, stockpile);
             _summon.SetEnabled(canSummon);
             if (_summonKing != null)
             {
-                _summonKing.text = SummonKingText();
+                ((IconButton)_summonKing).SetCosts(KingCost(), stockpile);
                 _summonKing.SetEnabled(anchor != null);   // too few Souls: the click is refused and says so
             }
-
-            if (prefab == null)
-            {
-                _status.text = "Worker prefab missing.";
-                return;
-            }
-
-            if (anchor == null)
-            {
-                _status.text = "No Anchor available.";
-                return;
-            }
-
-            if (stockpile == null)
-            {
-                _status.text = "No stockpile.";
-                return;
-            }
-
-            _status.text = $"Workers: {WorkerBrain.All.Count}";
+            string count = prefab == null || anchor == null || stockpile == null ? "-" : WorkerBrain.All.Count.ToString();
+            if (_status.text != count) _status.text = count;
         }
 
-        private static string SummonKingText()
+        private static ResourceCost[] KingCost()
         {
             RegionSouls souls = RegionSouls.Current;
-            int cost = SoulRules.SummonKingCost(souls != null ? souls.Ledger.Level : SoulTuning.StartingLevel);
-            return $"Summon Demon King ({cost} Souls)";
+            return new[] { new ResourceCost(ResourceType.Souls, SoulRules.SummonKingCost(souls != null ? souls.Ledger.Level : SoulTuning.StartingLevel)) };
         }
-
-        private static string SummonText() => $"Summon worker ({s_workerCost[0].Amount} {s_workerCost[0].Type})";
 
         private static Vector3 SpawnAt(Building anchor)
         {

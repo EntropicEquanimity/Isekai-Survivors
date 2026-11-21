@@ -565,6 +565,9 @@ namespace Isekai
                     break;
             }
             Vector2 toward = target - at;
+            // Over the demon or the Anchor it flew to: R takes the body (nothing happens on touch alone).
+            bool overDemon = demon != null && target == demon.transform.position && toward.sqrMagnitude < 0.6f * 0.6f;
+            if (overDemon || (souls.WispAtAnchor && souls.ReviveBlocker() == null)) BodyKey.Press();
             _walker.Clear();
             _hasGoal = false;
             _input.Move = toward.sqrMagnitude > 0.04f ? toward.normalized : Vector2.zero;   // a wisp flies straight over walls

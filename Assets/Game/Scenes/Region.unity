@@ -526,9 +526,9 @@ MonoBehaviour:
     x: 640
     y: 360
   _mode: 0
-  _output: 0
+  _output: 1
   _letterboxColor: {r: 0, g: 0, b: 0, a: 1}
-  _smoothScrolling: 0
+  _smoothScrolling: 1
   _minFill: 0
   _configured: 1
 --- !u!1001 &388239036

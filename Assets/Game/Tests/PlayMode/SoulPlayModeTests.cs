@@ -71,7 +71,7 @@ namespace Isekai.Tests
             yield return TestWait.Until(() => _pile.Get(ResourceType.Souls) < 100, "Souls drain", 5f);
             var hud = Object.FindAnyObjectByType<SoulsHud>();
             yield return TestWait.Until(() => hud.DrainText.Contains("Souls/s"), "the HUD shows the drain");
-            StringAssert.Contains("Touch the Anchor", hud.StatusText);
+            StringAssert.Contains("over the Anchor", hud.StatusText);
             Assert.IsFalse(_defeat.IsDefeated, "a bodiless Jack with Souls left is not lost");
         }
 
@@ -90,12 +90,20 @@ namespace Isekai.Tests
         }
 
         [UnityTest]
-        public IEnumerator Reaching_the_Anchor_revives_Jack_for_the_revive_cost()
+        public IEnumerator Pressing_R_over_the_Anchor_revives_Jack_for_the_revive_cost_and_touching_alone_does_not()
         {
             _pile.Add(ResourceType.Souls, 100);
             BodyAtAnchor();
             KillBody();
-            yield return TestWait.Until(() => !_body.IsDead && !_souls.IsBodiless, "Jack revives at the Anchor");
+            yield return TestWait.Until(() => _souls.IsBodiless, "the wisp appears");
+            Assert.IsTrue(_souls.WispAtAnchor);
+            yield return new WaitForSeconds(0.3f);
+            Assert.IsTrue(_souls.IsBodiless, "over the Anchor, nothing happens until R");
+            yield return TestWait.Until(() =>
+            {
+                if (_souls.IsBodiless) BodyKey.Press();
+                return !_body.IsDead && !_souls.IsBodiless;
+            }, "Jack revives at the Anchor");
 
             Assert.AreEqual(100 - SoulRules.ReviveCost(1), _pile.Get(ResourceType.Souls), "22 Souls at soul level 1");
             Assert.AreEqual(1, SoulRun.Ledger.Deaths);
@@ -131,7 +139,11 @@ namespace Isekai.Tests
 
             BodyAtAnchor();
             KillBody();
-            yield return TestWait.Until(() => !_body.IsDead && !_souls.IsBodiless, "Jack revives");
+            yield return TestWait.Until(() =>
+            {
+                if (_souls.IsBodiless) BodyKey.Press();
+                return !_body.IsDead && !_souls.IsBodiless;
+            }, "Jack revives");
             Assert.AreEqual(150 - SoulRules.ReviveCost(2), _pile.Get(ResourceType.Souls), "the cost rose with soul level");
         }
 

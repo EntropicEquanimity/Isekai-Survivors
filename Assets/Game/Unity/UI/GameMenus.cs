@@ -30,6 +30,7 @@ namespace Isekai
         private static void Install()
         {
             SaveSystem.MaxSlots = 1;   // one Run at a time
+            _ = RegionBuffs.Ids;   // first use of Blondie Roguelike's boons costs ~0.2 s: pay it at boot, not on New Run
             MainMenuButtons.Add(NewRunText, TutorialRun.StartNewRunFromMenu, MainMenuItem.Continue);
             MainMenuButtons.Add(TutorialText, () => MenuHooks.StartTutorial?.Invoke(), MainMenuItem.Continue);
             MainMenuButtons.Add(CreditsText, () => MenuHooks.OpenCredits?.Invoke(), MainMenuItem.Settings);
@@ -50,19 +51,22 @@ namespace Isekai
             if (!UIRoot.HasInstance) return;
             StyleSheet sheet = Resources.Load<StyleSheet>(StyleSheetPath);
             if (sheet != null) UIRoot.Instance.AddStyleSheet(sheet);
+            if (GameStyle.HudSheet != null) UIRoot.Instance.AddStyleSheet(GameStyle.HudSheet);   // the text roles of the game's own menus
+            UIRoot.Instance.Root?.AddToClassList("isekai-menu");
         }
 
-        // New Run forgets the Run that was in progress and its save; Continue brings the saved Run back before the Planet
-        // screen starts, so the screen finds it.
+        // New Run forgets the Run that was in progress and its save; Continue asks for the saved Run, which the Planet
+        // screen restores when it opens (behind the fade: reading it here froze the main menu).
         private static void OnPlayRequested(PlayRequested request)
         {
             if (request.Slot < 0)
             {
                 RunSession.Clear();
                 RunSave.Delete();
+                RunSession.LoadoutPending = true;   // the Planet screen opens on the loadout (Anchor, Soul paths)
                 return;
             }
-            if (SaveSystem.Load(request.Slot)) RunSave.Restore();
+            RunSave.RestoreWhenPlanetOpens(request.Slot);   // read behind the fade, not on the main menu
         }
 
         /// <summary>Asks whether to give the Run up; on yes it ends as lost and the game goes to the main menu.</summary>
