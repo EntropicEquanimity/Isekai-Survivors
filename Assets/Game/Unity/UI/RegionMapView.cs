@@ -39,6 +39,7 @@ namespace Isekai
         private readonly Color32[] _pixels;
         private readonly MapCanvas _canvas;
         private readonly int _width, _height;
+        private int _scale = 1;
 
         public Texture2D Texture => _texture;
 
@@ -59,6 +60,14 @@ namespace Isekai
             Redraw();
         }
 
+        /// <summary>Shows the map at the biggest whole scale that fits <paramref name="room"/>.</summary>
+        public void Fit(Vector2 room)
+        {
+            _scale = Mathf.Max(1, Mathf.FloorToInt(Mathf.Min(room.x / _width, room.y / _height)));
+            style.width = _width * _scale;
+            style.height = _height * _scale;
+        }
+
         /// <summary>Releases the texture.</summary>
         public void Dispose() => Object.Destroy(_texture);
 
@@ -76,7 +85,7 @@ namespace Isekai
             if (panel == null) return false;
             Vector2 inPanel = RuntimePanelUtils.ScreenToPanel(panel, new Vector2(screen.x, Screen.height - screen.y));
             Vector2 local = this.WorldToLocal(inPanel);
-            float x = local.x - resolvedStyle.borderLeftWidth, y = local.y - resolvedStyle.borderTopWidth;
+            float x = (local.x - resolvedStyle.borderLeftWidth) / _scale, y = (local.y - resolvedStyle.borderTopWidth) / _scale;
             if (x < 0f || y < 0f || x >= _width || y >= _height) return false;
             world = _canvas.ToWorld(new Vector2(x, _height - y));
             return true;

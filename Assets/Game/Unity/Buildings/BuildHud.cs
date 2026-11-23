@@ -14,10 +14,6 @@ namespace Isekai
     [RequireComponent(typeof(BuildMode))]
     public sealed class BuildHud : MonoBehaviour
     {
-        private const string PanelName = "Build HUD";
-
-        [SerializeField] private PanelSettings _panelSettings;
-
         private BuildMode _mode;
         private readonly List<IconButton> _buttons = new();
         private Label _help;
@@ -33,26 +29,21 @@ namespace Isekai
 
         private void Start()
         {
-            VisualElement root = GamePanels.Mount(this, PanelName, _panelSettings, out PanelRenderer panel);
-            BuildList(root);
+            BuildList();
 
-            _selection = new VisualElement
-            {
-                style = { position = Position.Absolute, bottom = 4, left = new Length(35, LengthUnit.Percent), maxWidth = new Length(40, LengthUnit.Percent) },
-            };
+            _selection = new VisualElement { style = { display = DisplayStyle.None } };
             _selection.AddToClassList("isekai-panel");
             var head = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center } };
-            _selectionIcon = GameStyle.Icon(null, "large");
+            _selectionIcon = GameStyle.Icon(null, 32);
             head.Add(_selectionIcon);
-            _selectionText = GameStyle.Label(string.Empty, TextRole.Body);
-            _selectionText.AddToClassList("isekai-number");
-            head.Add(_selectionText);
+            VisualElement health = GameStyle.IconNumber(GameIcons.Named("Health"), "0", out _selectionText, "hp");
+            health.style.marginLeft = 6;
+            head.Add(health);
             _selectionTip = head.AddTooltip(string.Empty);
             _portalPanel = new PortalPanel { name = "portal-panel" };
             _selection.Add(head);
             _selection.Add(_portalPanel);
-            root.Add(_selection);
-            UIPanels.Created(panel);
+            HudStack.Add(HudCorner.BottomCentre, _selection, 1);
 
             _mode.Changed += Redraw;
             Redraw();
@@ -60,9 +51,9 @@ namespace Isekai
 
         // A row of icon buttons bottom-left (docs/ui-rules.md): hotkey, the Building's icon, its costs as numbers with
         // resource icons; the name and role are in the tooltip. One short line under it: why a placement is refused.
-        private void BuildList(VisualElement root)
+        private void BuildList()
         {
-            var box = new VisualElement { style = { position = Position.Absolute, left = 4, bottom = 4, alignItems = Align.FlexStart } };
+            var box = new VisualElement { style = { alignItems = Align.FlexStart } };
             box.AddToClassList("isekai-panel");
             var row = new VisualElement { style = { flexDirection = FlexDirection.Row } };
             for (int i = 0; i < _mode.Catalogue.Count; i++)
@@ -81,7 +72,7 @@ namespace Isekai
             _help.style.marginTop = 2;
             _help.AddTooltip(TooltipText.Get(TooltipKey.HudBuildHelp));
             box.Add(_help);
-            root.Add(box);
+            HudStack.Add(HudCorner.BottomLeft, box, 0);
         }
 
         private void OnDestroy()
@@ -119,8 +110,9 @@ namespace Isekai
             }
             string help = _mode.Picked != null
                 ? (_mode.Placement.IsOk ? "Click: place. Shift: keep placing. Right click: cancel." : _mode.Placement.Reason)
-                : "H: controls";
+                : string.Empty;
             if (_help.text != help) _help.text = help;
+            _help.style.display = help.Length > 0 ? DisplayStyle.Flex : DisplayStyle.None;
 
             Building selected = _mode.Selected;
             _selection.style.display = selected != null ? DisplayStyle.Flex : DisplayStyle.None;
@@ -130,12 +122,12 @@ namespace Isekai
             {
                 _shownSelection = selected;
                 Sprite icon = GameIcons.Of(selected.Asset);
-                _selectionIcon.style.backgroundImage = icon != null ? new StyleBackground(icon) : new StyleBackground(StyleKeyword.None);
+                GameStyle.SetIcon(_selectionIcon, icon, 32);
                 _selectionTip.Header = name;
             }
             // Numbers beside the icon: health, and how far it is built while it goes up.
             var info = new StringBuilder();
-            info.Append(Mathf.CeilToInt(selected.Damageable.Unit.Health)).Append(" hp");
+            info.Append(Mathf.CeilToInt(selected.Damageable.Unit.Health));
             if (!selected.IsBuilt) info.Append("  ").Append(Mathf.FloorToInt(selected.Progress * 100f)).Append('%');
             _selectionText.text = info.ToString();
             _selectionTip.Content = selected.IsBuilt ? null : "Going up: it gains health as it is built.";

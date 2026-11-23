@@ -1,4 +1,3 @@
-using Blondie.Core;
 using Blondie.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -6,49 +5,27 @@ using UnityEngine.UIElements;
 namespace Isekai
 {
     /// <summary>
-    /// Shown only while no Anchor stands: a button that raises a new one of the Run's kind beside Jack, with its price and,
-    /// when it can't be raised, why (not corrupted enough, not enough Resources).
+    /// Shown only while no Anchor stands: one icon button that raises a new one of the Run's kind beside Jack, with its price.
+    /// What it does and why it can't be raised are in its tooltip; a refused click also says why over the world.
     /// </summary>
     [RegionSystem]
     public sealed class AnchorRaisePanel : MonoBehaviour
     {
-        private const string PanelName = "Anchor Raise";
-
         private VisualElement _box;
-        private Label _status;
-        private Button _raise;
+        private IconButton _raise;
         private float _nextRefresh;
 
         private void Start()
         {
-            VisualElement root = GamePanels.Mount(this, PanelName, null, out PanelRenderer panel);
-            _box = new VisualElement
+            _box = new VisualElement { style = { display = DisplayStyle.None } };
+            _box.AddToClassList("isekai-panel");
+            _box.AddToClassList("isekai-panel--alarm");
+            _raise = new IconButton(GameIcons.Of(AnchorCatalog.Chosen), "Raise a " + AnchorTuning.Name(AnchorCatalog.Chosen), Raise)
             {
-                style =
-                {
-                    position = Position.Absolute,
-                    right = 6,
-                    top = 130,
-                    width = 280,
-                    backgroundColor = new Color(0f, 0f, 0f, 0.6f),
-                    paddingBottom = 6,
-                    paddingTop = 6,
-                    paddingLeft = 8,
-                    paddingRight = 8,
-                    display = DisplayStyle.None,
-                },
+                Tooltip = TooltipText.Get(TooltipKey.HudAnchorRaise),
             };
-            _box.Add(GameStyle.Label("No Anchor", TextRole.Title));
-            _status = GameStyle.Label(string.Empty, TextRole.Muted);
-            _status.style.marginTop = 2;
-            _status.AddTooltip(TooltipText.Get(TooltipKey.HudAnchorRaise));
-            _box.Add(_status);
-            _raise = new Button(Raise) { text = "Raise a new Anchor" };
-            _raise.style.marginTop = 6;
-            _raise.AddTooltip(TooltipText.Get(TooltipKey.HudAnchorRaise));
             _box.Add(_raise);
-            root.Add(_box);
-            UIPanels.Created(panel);
+            HudStack.Add(HudCorner.TopRight, _box, 3);
         }
 
         private void Update()
@@ -60,7 +37,8 @@ namespace Isekai
 
         private void Raise()
         {
-            RegionAnchor.Current?.TryRaise(out _);
+            if (RegionAnchor.Current != null && RegionAnchor.Current.TryRaise(out string reason) == null && !string.IsNullOrEmpty(reason) && Camera.main != null)
+                FloatingText.Spawn(Camera.main.transform.position + new Vector3(0f, 1f, 10f), reason, Color.red, 3f);
             Refresh();
         }
 
@@ -70,9 +48,7 @@ namespace Isekai
             _box.style.display = none ? DisplayStyle.Flex : DisplayStyle.None;
             if (!none) return;
             BuildingAsset asset = AnchorCatalog.Asset(AnchorCatalog.Chosen);
-            string name = AnchorTuning.Name(AnchorCatalog.Chosen);
-            _raise.text = asset != null ? $"Raise a {name} ({asset.PriceText})" : $"Raise a {name}";
-            _status.text = "No revive until a new Anchor goes up, on corrupted ground beside Jack.";
+            if (asset != null) _raise.SetCosts(asset.Costs, RegionEconomy.Current != null ? RegionEconomy.Current.Stockpile : null);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Blondie.Combat;
 using Blondie.Core;
@@ -14,14 +15,14 @@ namespace Isekai
     [RegionSystem]
     public sealed class RegionTutorial : MonoBehaviour, IRegionEndListener
     {
-        private const string PanelName = "Tutorial HUD";
         private const string MarkerObject = "Tutorial Marker";
 
         private readonly TutorialProgress _progress = new();
         private VisualElement _box;
         private Label _step;
         private Label _prompt;
-        private Label _checks;
+        private VisualElement _checks;
+        private readonly List<(VisualElement row, VisualElement box, Label label)> _checkRows = new();
         private Button _skip;
         private GameObject _marker;
         private SpriteRenderer _markerRenderer;
@@ -119,13 +120,31 @@ namespace Isekai
             RefreshChecks();
         }
 
+        // One row per thing a step waits for: a small box, filled once it is done, and its name.
         private void RefreshChecks()
         {
             if (_checks == null) return;
-            string text = _progress.Checklist();
-            if (_checks.text == text) return;
-            _checks.text = text;
-            _checks.style.display = string.IsNullOrEmpty(text) ? DisplayStyle.None : DisplayStyle.Flex;
+            IReadOnlyList<(string Label, bool Done)> list = _progress.Checklist();
+            while (_checkRows.Count < list.Count)
+            {
+                var row = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center } };
+                var box = new VisualElement();
+                box.AddToClassList("isekai-pip");
+                row.Add(box);
+                Label label = GameStyle.Label(string.Empty, TextRole.Body);
+                row.Add(label);
+                _checks.Add(row);
+                _checkRows.Add((row, box, label));
+            }
+            for (int i = 0; i < _checkRows.Count; i++)
+            {
+                (VisualElement row, VisualElement box, Label label) = _checkRows[i];
+                row.style.display = i < list.Count ? DisplayStyle.Flex : DisplayStyle.None;
+                if (i >= list.Count) continue;
+                if (label.text != list[i].Label) label.text = list[i].Label;
+                box.EnableInClassList("isekai-pip--on", list[i].Done);
+                label.style.opacity = list[i].Done ? 0.55f : 1f;
+            }
         }
 
         void IRegionEndListener.OnRegionEnded(RegionEnd end)
@@ -235,8 +254,8 @@ namespace Isekai
             if (!force && index == _shownStep) return;
             _shownStep = index;
             TutorialStepDef now = _progress.Current;
-            _step.text = $"Step {index + 1}/{TutorialSteps.Count}";
-            _prompt.text = now.Prompt;
+            _step.text = $"{index + 1}/{TutorialSteps.Count}";
+            _prompt.text = now.Prompt.Replace("{body}", BodyKey.Name);   // the key as it is bound now
             CaptureRiderBaselines(now.Id);
         }
 
@@ -257,47 +276,19 @@ namespace Isekai
 
         private void BuildPanel()
         {
-            VisualElement root = GamePanels.Mount(this, PanelName, null, out PanelRenderer panel, sortingOrder: 75f);
-            var box = new VisualElement
-            {
-                style =
-                {
-                    position = Position.Absolute,
-                    left = 6,
-                    top = 22,
-                    width = 300,
-                    backgroundColor = new Color(0f, 0f, 0f, 0.7f),
-                    paddingLeft = 6,
-                    paddingRight = 6,
-                    paddingTop = 5,
-                    paddingBottom = 5,
-                },
-            };
-
-            box.style.borderTopWidth = 1;
-            box.style.borderBottomWidth = 1;
-            box.style.borderLeftWidth = 1;
-            box.style.borderRightWidth = 1;
-            box.style.borderTopColor = GameStyle.Border;
-            box.style.borderBottomColor = GameStyle.Border;
-            box.style.borderLeftColor = GameStyle.Border;
-            box.style.borderRightColor = GameStyle.Border;
-
-            box.Add(GameStyle.Label("Guided first Region", TextRole.Accent));
+            var box = new VisualElement { style = { maxWidth = 420 } };
+            box.AddToClassList("isekai-panel");
             _step = GameStyle.Label(string.Empty, TextRole.Muted);
             _prompt = GameStyle.Label(string.Empty, TextRole.Body);
             _prompt.style.whiteSpace = WhiteSpace.Normal;
-            _checks = GameStyle.Label(string.Empty, TextRole.Warning);
-            _checks.style.marginBottom = 4;
-            _checks.style.display = DisplayStyle.None;
+            _checks = new VisualElement { style = { marginBottom = 4 } };
             _skip = new Button(SkipTutorial) { text = "Skip tutorial" };
             box.Add(_step);
             box.Add(_prompt);
             box.Add(_checks);
             box.Add(_skip);
-            root.Add(box);
             _box = box;
-            UIPanels.Created(panel);
+            HudStack.Add(HudCorner.TopLeft, box, 1);
         }
 
         private void BuildMarker()
@@ -529,7 +520,6 @@ namespace Isekai
         private void HideTutorial()
         {
             if (_box != null) _box.style.display = DisplayStyle.None;   // the whole box, not an empty frame with its title
-            if (_checks != null) _checks.style.display = DisplayStyle.None;
             if (_step != null) _step.style.display = DisplayStyle.None;
             if (_prompt != null) _prompt.style.display = DisplayStyle.None;
             if (_skip != null) _skip.style.display = DisplayStyle.None;

@@ -48,7 +48,7 @@ namespace Isekai
             for (int i = 0; i < s_renderers.Count; i++)
             {
                 SpriteRenderer renderer = s_renderers[i];
-                if (renderer == null) continue;
+                if (renderer == null || HealthBar.IsPart(renderer)) continue;   // a bar is a marker over the unit, not its art
                 renderer.sharedMaterial = material;
             }
             s_renderers.Clear();

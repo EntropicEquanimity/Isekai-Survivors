@@ -20,8 +20,6 @@ namespace Isekai
 
         private static readonly Color WonColour = GameStyle.Warning;
         private static readonly Color LostColour = new(0.92f, 0.32f, 0.26f);
-        private static readonly Color ButtonColour = new(78f / 255f, 18f / 255f, 20f / 255f);
-        private static readonly Color ButtonHoverColour = new(122f / 255f, 28f / 255f, 26f / 255f);
 
         private VisualElement _overlay;
         private Label _title;
@@ -45,7 +43,7 @@ namespace Isekai
         public string RowText(RunStat stat)
         {
             if (!_rowOf.TryGetValue(stat, out VisualElement row)) return null;
-            return string.Join(" ", ((Label)row[0]).text, ((Label)row[1]).text);
+            return row.viewDataKey;
         }
 
         /// <summary>Whether a figure's row explains itself on hover.</summary>
@@ -59,7 +57,7 @@ namespace Isekai
                 var texts = new List<string>();
                 if (_buttons != null)
                     foreach (VisualElement b in _buttons.Children())
-                        if (b is UnityEngine.UIElements.Button button) texts.Add(button.text);
+                        if (b is IconButton button) texts.Add(button.Name);
                 return texts;
             }
         }
@@ -86,26 +84,18 @@ namespace Isekai
                 {
                     position = Position.Absolute, left = 0, right = 0, top = 0, bottom = 0,
                     alignItems = Align.Center, justifyContent = Justify.Center,
-                    backgroundColor = new Color(0.03f, 0.01f, 0.015f, 0.86f),
+                    backgroundColor = new Color(0.03f, 0.01f, 0.015f, 0.94f),
                     display = DisplayStyle.None,
                 },
             };
-            var box = new VisualElement
-            {
-                style =
-                {
-                    minWidth = 420, paddingTop = 16, paddingBottom = 16, paddingLeft = 24, paddingRight = 24,
-                    backgroundColor = new Color(18f / 255f, 7f / 255f, 9f / 255f, 1f),
-                    alignItems = Align.Stretch,
-                },
-            };
-            SetBorder(box, GameStyle.Border, 2);
+            _overlay.AddToClassList("isekai-menu");   // it fills the screen
+            var box = new VisualElement { style = { alignItems = Align.Center } };
             _title = GameStyle.Label(string.Empty, TextRole.Title);
             _title.style.unityTextAlign = TextAnchor.MiddleCenter;
             _subtitle = GameStyle.Label(string.Empty, TextRole.Muted);
             _subtitle.style.unityTextAlign = TextAnchor.MiddleCenter;
             _subtitle.style.marginBottom = 12;
-            _rows = new VisualElement();
+            _rows = new VisualElement { style = { flexDirection = FlexDirection.Row, flexWrap = Wrap.Wrap, justifyContent = Justify.Center, maxWidth = 1100 } };
             _buttons = new VisualElement { style = { flexDirection = FlexDirection.Row, justifyContent = Justify.Center, marginTop = 16 } };
             box.Add(_title);
             box.Add(_subtitle);
@@ -129,10 +119,11 @@ namespace Isekai
             if (_overlay != null) Draw();   // otherwise Start draws it
         }
 
-        /// <summary>New Run: a new Run on a new Planet starts straight away, on its map.</summary>
+        /// <summary>New Run: a new Run on a new Planet starts straight away, on its loadout.</summary>
         public void NewRun()
         {
             RunSession.StartNew();
+            RunSession.LoadoutPending = true;   // every New Run chooses its Anchor and Soul paths first
             RunSession.GoToPlanet();
         }
 
@@ -157,45 +148,31 @@ namespace Isekai
             _rowOf.Clear();
             foreach (RunSummaryRow row in s.Rows)
             {
-                var line = new VisualElement { style = { flexDirection = FlexDirection.Row, justifyContent = Justify.SpaceBetween, paddingTop = 2, paddingBottom = 2 } };
-                Label label = GameStyle.Label(row.Label, TextRole.Muted);
-                Label value = GameStyle.Label(row.Value, TextRole.Body);
-                value.style.marginLeft = 24;
-                line.Add(label);
-                line.Add(value);
+                // An icon and a number; what it is, and what it means, on hover.
+                VisualElement line = GameStyle.IconNumber(IconOf(row.Stat), row.Value, out Label value, row.Label);
+                line.style.marginLeft = line.style.marginRight = 16;
+                line.style.marginTop = line.style.marginBottom = 8;
+                if (line[0] != value && IconOf(row.Stat) != null) GameStyle.SetIcon(line[0], IconOf(row.Stat), 32);
+                line.viewDataKey = row.Label + " " + row.Value;
                 line.userData = line.AddTooltip(RunStatTips.Text(row.Stat), RunStatTips.Header(row.Stat));
                 _rows.Add(line);
                 _rowOf[row.Stat] = line;
             }
             _buttons.Clear();
-            _buttons.Add(MenuStyled("New Run", NewRun));
-            _buttons.Add(MenuStyled("Main menu", ToMainMenu));
+            _buttons.Add(new IconButton(GameIcons.Named("NewRun"), "New Run", NewRun, box: 48));
+            _buttons.Add(new IconButton(GameIcons.Named("Menu"), "Main menu", ToMainMenu, box: 48));
             _overlay.style.display = DisplayStyle.Flex;
         }
 
-        // A button in the menus' colours (IsekaiMenus.uss: dark red, brighter on hover).
-        private static UnityEngine.UIElements.Button MenuStyled(string text, System.Action onClick)
+        private static Sprite IconOf(RunStat stat) => stat switch
         {
-            var button = new UnityEngine.UIElements.Button(onClick) { text = text, name = text };
-            button.style.backgroundColor = ButtonColour;
-            button.style.color = new Color(238f / 255f, 224f / 255f, 214f / 255f);
-            button.style.fontSize = GameStyle.FontSize;
-            button.style.marginLeft = 6;
-            button.style.marginRight = 6;
-            button.style.paddingLeft = 14;
-            button.style.paddingRight = 14;
-            button.style.paddingTop = 6;
-            button.style.paddingBottom = 6;
-            SetBorder(button, GameStyle.Border, 1);
-            button.RegisterCallback<PointerEnterEvent>(_ => button.style.backgroundColor = ButtonHoverColour);
-            button.RegisterCallback<PointerLeaveEvent>(_ => button.style.backgroundColor = ButtonColour);
-            return button;
-        }
-
-        private static void SetBorder(VisualElement e, Color colour, float width)
-        {
-            e.style.borderTopColor = e.style.borderBottomColor = e.style.borderLeftColor = e.style.borderRightColor = colour;
-            e.style.borderTopWidth = e.style.borderBottomWidth = e.style.borderLeftWidth = e.style.borderRightWidth = width;
-        }
+            RunStat.Regions => GameIcons.Named("Captured"),
+            RunStat.Time => GameIcons.Named("Time"),
+            RunStat.Deaths => GameIcons.Named("Death"),
+            RunStat.Souls => GameIcons.Of(ResourceType.Souls),
+            RunStat.SoulLevel => GameIcons.Named("SoulLevel"),
+            RunStat.RulersSlain => GameIcons.Named("RulerSlain"),
+            _ => GameIcons.Named("RulerEscaped"),
+        };
     }
 }

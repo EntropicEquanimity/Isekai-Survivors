@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Isekai
 {
@@ -41,7 +42,7 @@ namespace Isekai
             new(TutorialStepId.WatchCorruptionSpread, "Hold ground until corruption spreads."),
             new(TutorialStepId.LearnVigilance, "Stay hidden. Kills and sightings raise Vigilance."),
             new(TutorialStepId.StopWitnessRider, "A witness can send a rider. Stop the rider before the Seat."),
-            new(TutorialStepId.RecoverFromDeath, "Press R to leave Jack's body (or let it die). As a wisp, fly over the Anchor or one of your demons and press R."),
+            new(TutorialStepId.RecoverFromDeath, "Press {body} to leave Jack's body (or let it die). As a wisp, fly over the Anchor or one of your demons and press {body}."),
             new(TutorialStepId.DestroySeat, "Destroy the Seat."),
         };
 
@@ -87,24 +88,27 @@ namespace Isekai
         public bool Has(TutorialFact fact) => (_facts & BitOf(fact)) != 0UL;
 
         /// <summary>
-        /// What the current step still waits for, when it needs more than one thing ("[x] Stone  [ ] Wood"); empty for a
-        /// one-thing step or once complete. Shown under the prompt, so a half-done step never looks stuck.
+        /// What the current step waits for and which of it is done, when it needs more than one thing (Stone, Wood); empty
+        /// for a one-thing step or once complete. Shown under the prompt, so a half-done step never looks stuck.
         /// </summary>
-        public string Checklist()
+        public IReadOnlyList<(string Label, bool Done)> Checklist()
         {
-            if (IsComplete) return string.Empty;
+            if (IsComplete) return Nothing;
             return Current.Id switch
             {
-                TutorialStepId.MoveAndFight => Check("Moved", TutorialFact.Moved) + "  " + Check("Killed a Mortal", TutorialFact.Fought),
-                TutorialStepId.MineStoneAndWood => Check("Stone", TutorialFact.MinedStone) + "  " + Check("Wood", TutorialFact.MinedWood),
-                TutorialStepId.SetPortalOrderAndRally => Check("Order", TutorialFact.PortalOrderSet) + "  " + Check("Rally point", TutorialFact.PortalRallySet),
-                TutorialStepId.StopWitnessRider => Check("Rider sent", TutorialFact.RiderSent) + "  " + Check("Rider stopped", TutorialFact.RiderStopped),
-                TutorialStepId.RecoverFromDeath => Check("Wisp", TutorialFact.BecameWisp) + "  " + Check("New body", TutorialFact.ReturnedFromWisp),
-                _ => string.Empty,
+                TutorialStepId.MoveAndFight => Both("Moved", TutorialFact.Moved, "Killed a Mortal", TutorialFact.Fought),
+                TutorialStepId.MineStoneAndWood => Both("Stone", TutorialFact.MinedStone, "Wood", TutorialFact.MinedWood),
+                TutorialStepId.SetPortalOrderAndRally => Both("Order", TutorialFact.PortalOrderSet, "Rally point", TutorialFact.PortalRallySet),
+                TutorialStepId.StopWitnessRider => Both("Rider sent", TutorialFact.RiderSent, "Rider stopped", TutorialFact.RiderStopped),
+                TutorialStepId.RecoverFromDeath => Both("Wisp", TutorialFact.BecameWisp, "New body", TutorialFact.ReturnedFromWisp),
+                _ => Nothing,
             };
         }
 
-        private string Check(string label, TutorialFact fact) => (Has(fact) ? "[x] " : "[ ] ") + label;
+        private static readonly (string Label, bool Done)[] Nothing = Array.Empty<(string, bool)>();
+
+        private IReadOnlyList<(string Label, bool Done)> Both(string a, TutorialFact factA, string b, TutorialFact factB) =>
+            new[] { (a, Has(factA)), (b, Has(factB)) };
 
         /// <summary>Records a fact and advances while the next step is satisfied. Returns true when at least one step advanced.</summary>
         public bool Note(TutorialFact fact)

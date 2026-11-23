@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Blondie.Core;
+using Blondie.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -13,15 +13,15 @@ namespace Isekai
     [RegionSystem]
     public sealed class RulerCaptureSummaryPanel : MonoBehaviour
     {
-        private const string PanelName = "Ruler Capture Summary";
-
         private VisualElement _box;
         private Label _title;
-        private Label _detail;
+        private VisualElement _icon;
+        private TooltipManipulator _tip;
 
         public static RulerCaptureSummaryPanel Current { get; private set; }
         public string TitleText => _title != null ? _title.text : string.Empty;
-        public string DetailText => _detail != null ? _detail.text : string.Empty;
+        /// <summary>The rest of the story (the tooltip).</summary>
+        public string DetailText => _tip != null ? _tip.Content : string.Empty;
         public bool IsVisible => _box != null && _box.style.display == DisplayStyle.Flex;
 
         private void OnEnable() => Current = this;
@@ -33,38 +33,15 @@ namespace Isekai
 
         private void Start()
         {
-            VisualElement root = GamePanels.Mount(this, PanelName, null, out PanelRenderer panel);
-            _box = new VisualElement
-            {
-                style =
-                {
-                    position = Position.Absolute,
-                    left = 6,
-                    bottom = 6,
-                    width = 360,
-                    backgroundColor = new Color(0f, 0f, 0f, 0.62f),
-                    borderBottomColor = GameStyle.Border,
-                    borderBottomWidth = 1,
-                    borderTopColor = GameStyle.Border,
-                    borderTopWidth = 1,
-                    borderLeftColor = GameStyle.Border,
-                    borderLeftWidth = 1,
-                    borderRightColor = GameStyle.Border,
-                    borderRightWidth = 1,
-                    paddingBottom = 6,
-                    paddingTop = 6,
-                    paddingLeft = 8,
-                    paddingRight = 8,
-                    display = DisplayStyle.None,
-                },
-            };
+            _box = new VisualElement { style = { display = DisplayStyle.None, flexDirection = FlexDirection.Row, alignItems = Align.Center } };
+            _box.AddToClassList("isekai-panel");
+            _icon = GameStyle.Icon(null, 32);
+            _box.Add(_icon);
             _title = GameStyle.Label(string.Empty, TextRole.Warning);
-            _detail = GameStyle.Label(string.Empty, TextRole.Muted);
-            _detail.style.marginTop = 2;
+            _title.style.marginLeft = 6;
             _box.Add(_title);
-            _box.Add(_detail);
-            root.Add(_box);
-            UIPanels.Created(panel);
+            _tip = _box.AddTooltip(string.Empty);
+            HudStack.Add(HudCorner.TopLeft, _box, 2);
         }
 
         public void ShowSlain(string rulerName)
@@ -72,7 +49,8 @@ namespace Isekai
             if (_box == null) return;
             _box.style.display = DisplayStyle.Flex;
             _title.text = string.IsNullOrEmpty(rulerName) ? "Ruler slain" : $"Ruler slain: {rulerName}";
-            _detail.text = "The Region's ruler fell with the Seat.";
+            _tip.Content = "The Region's ruler fell with the Seat.";
+            GameStyle.SetIcon(_icon, GameIcons.Named("RulerSlain"), 32);
         }
 
         public void ShowEscaped(string rulerName, string destinationName, IReadOnlyList<TraitId> traits)
@@ -81,7 +59,8 @@ namespace Isekai
             _box.style.display = DisplayStyle.Flex;
             string who = string.IsNullOrEmpty(rulerName) ? "The ruler" : rulerName;
             _title.text = $"{who} escaped to {destinationName}";
-            _detail.text = TraitsText(traits);
+            _tip.Content = TraitsText(traits);
+            GameStyle.SetIcon(_icon, GameIcons.Named("RulerEscaped"), 32);
         }
 
         private static string TraitsText(IReadOnlyList<TraitId> traits)

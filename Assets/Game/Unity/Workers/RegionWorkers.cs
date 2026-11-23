@@ -9,7 +9,6 @@ namespace Isekai
     [RegionSystem]
     public sealed class RegionWorkers : MonoBehaviour, IRegionEndListener
     {
-        private const string PanelName = "Anchor Workers";
         private const string WorkerResourcePath = "Worker";
 
         private static readonly ResourceCost[] s_workerCost = { new(ResourceType.Souls, 25) };
@@ -40,34 +39,30 @@ namespace Isekai
         // Icons first (docs/ui-rules.md): the worker count beside a worker, and two icon buttons with their Soul costs.
         private void Start()
         {
-            VisualElement root = GamePanels.Mount(this, PanelName, null, out PanelRenderer panel);
-            var box = new VisualElement { style = { position = Position.Absolute, right = 4, top = 4, alignItems = Align.FlexEnd } };
+            var box = new VisualElement { style = { alignItems = Align.FlexEnd } };
             box.AddToClassList("isekai-panel");
             var count = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center } };
-            Sprite anchorIcon = GameIcons.Of(FindAnchor() != null ? FindAnchor().Asset : null);
-            if (anchorIcon != null) count.Add(GameStyle.Icon(anchorIcon, "large"));
-            count.Add(GameStyle.Icon(WorkerIcon()));
-            _status = GameStyle.Label(string.Empty, TextRole.Body);
-            _status.AddToClassList("isekai-number");
+            count.Add(GameStyle.Icon(GameIcons.Of(AnchorCatalog.Chosen), 32));
+            VisualElement worker1 = GameStyle.UnitIcon(GameIcons.Of(WorkerPrefab()), 40, out _);
+            worker1.style.marginLeft = 6;
+            count.Add(worker1);
+            _status = GameStyle.Number("0");
             count.Add(_status);
             count.AddTooltip(TooltipText.Get(TooltipKey.HudWorkers), "Anchor");
             box.Add(count);
             var buttons = new VisualElement { style = { flexDirection = FlexDirection.Row, marginTop = 2 } };
-            var worker = new IconButton(WorkerIcon(), "Summon worker", () => TrySummonWorker()) { Tooltip = TooltipText.Get(TooltipKey.HudWorkers) };
+            var worker = new IconButton(GameIcons.Of(WorkerPrefab()), "Summon worker", () => TrySummonWorker(), box: 56, lit: true) { Tooltip = TooltipText.Get(TooltipKey.HudWorkers) };
             _summon = worker;
             buttons.Add(worker);
             var king = new IconButton(GameIcons.Of(Resources.Load<GameObject>(RegionPossession.KingPrefab)), "Summon Demon King",
-                () => RegionPossession.Current?.TrySummonDemonKing()) { Tooltip = TooltipText.Get(TooltipKey.HudSummonKing) };
+                () => RegionPossession.Current?.TrySummonDemonKing(), box: 56, lit: true) { Tooltip = TooltipText.Get(TooltipKey.HudSummonKing) };
             king.style.marginLeft = 2;
             _summonKing = king;
             buttons.Add(king);
             box.Add(buttons);
-            root.Add(box);
-            UIPanels.Created(panel);
+            HudStack.Add(HudCorner.TopRight, box, 2);
             Refresh();
         }
-
-        private Sprite WorkerIcon() => GameIcons.Worker != null ? GameIcons.Worker : GameIcons.Of(WorkerPrefab());
 
         private void Update()
         {

@@ -9,13 +9,12 @@ namespace Isekai
 {
     /// <summary>
     /// The controls card, bottom right: every key the Region uses, with today's Soul prices for bodies. H shows or hides
-    /// it; it starts shown until the player hides it once (remembered between sessions).
+    /// it; it starts closed (docs/ui-rules.md: minimal text), and the choice is remembered between sessions.
     /// </summary>
     [RegionSystem]
     public sealed class ControlsHud : MonoBehaviour
     {
-        private const string PanelName = "Controls HUD";
-        private const string HiddenKey = "Isekai.Controls.Hidden";
+        private const string OpenKey = "Isekai.Controls.Open";
         public const Key ToggleKey = Key.H;
 
         private VisualElement _card;
@@ -32,32 +31,17 @@ namespace Isekai
 
         private void Start()
         {
-            VisualElement root = GamePanels.Mount(this, PanelName, null, out PanelRenderer panel);
-            var column = new VisualElement
-            {
-                style = { position = Position.Absolute, right = 4, bottom = 4, alignItems = Align.FlexEnd },
-            };
-            _card = new VisualElement
-            {
-                style =
-                {
-                    width = 230, backgroundColor = new Color(0f, 0f, 0f, 0.7f),
-                    paddingLeft = 5, paddingRight = 5, paddingTop = 4, paddingBottom = 4,
-                    borderTopWidth = 1, borderBottomWidth = 1, borderLeftWidth = 1, borderRightWidth = 1,
-                    borderTopColor = GameStyle.Border, borderBottomColor = GameStyle.Border,
-                    borderLeftColor = GameStyle.Border, borderRightColor = GameStyle.Border,
-                },
-            };
-            _card.Add(GameStyle.Label("Controls", TextRole.Accent));
+            var column = new VisualElement { style = { alignItems = Align.FlexEnd } };
+            _card = new VisualElement { style = { maxWidth = 460 } };
+            _card.AddToClassList("isekai-panel");
             _body = GameStyle.Label(string.Empty, TextRole.Body);
             _body.style.whiteSpace = WhiteSpace.Normal;
             _card.Add(_body);
             _hint = GameStyle.Label("H: controls", TextRole.Muted);
             column.Add(_card);
             column.Add(_hint);
-            root.Add(column);
-            UIPanels.Created(panel);
-            SetOpen(!LoadHidden());
+            HudStack.Add(HudCorner.BottomRight, column, 0);
+            SetOpen(LoadOpen());
         }
 
         private void Update()
@@ -76,14 +60,13 @@ namespace Isekai
         public void Toggle()
         {
             SetOpen(!IsOpen);
-            SaveHidden(!IsOpen);
+            SaveOpen(IsOpen);
         }
 
         private void SetOpen(bool open)
         {
             if (_card == null) return;
             _card.style.display = open ? DisplayStyle.Flex : DisplayStyle.None;
-            _hint.text = open ? "H: hide controls" : "H: controls";
             _nextRefresh = 0f;
         }
 
@@ -109,15 +92,15 @@ namespace Isekai
             return text.ToString();
         }
 
-        private static bool LoadHidden()
+        private static bool LoadOpen()
         {
-            try { return PlayerPrefs.GetInt(HiddenKey, 0) == 1; }
+            try { return PlayerPrefs.GetInt(OpenKey, 0) == 1; }
             catch { return false; }
         }
 
-        private static void SaveHidden(bool hidden)
+        private static void SaveOpen(bool open)
         {
-            try { PlayerPrefs.SetInt(HiddenKey, hidden ? 1 : 0); }
+            try { PlayerPrefs.SetInt(OpenKey, open ? 1 : 0); }
             catch { /* preferences unavailable: the choice lasts this session */ }
         }
     }

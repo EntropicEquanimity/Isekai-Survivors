@@ -1,4 +1,4 @@
-using Blondie.Core;
+using System.Collections.Generic;
 using Blondie.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -6,52 +6,47 @@ using UnityEngine.UIElements;
 namespace Isekai
 {
     /// <summary>
-    /// A plain readout of the Region's stockpile in the top-left corner, and a prompt at the bottom centre while the
-    /// Character is mining ("Mining Stone: 42 left"). Phase 9 replaces it with the real HUD.
+    /// The Region's stockpile in the top-left corner, an icon and a number per Resource, and at the bottom centre what the
+    /// Character is mining (its icon and how much is left).
     /// </summary>
     public sealed class StockpileHud : MonoBehaviour
     {
-        private const string PanelName = "Stockpile HUD";
+        private static readonly ResourceType[] Shown = { ResourceType.Wood, ResourceType.Stone, ResourceType.Souls };
 
-        [SerializeField] private PanelSettings _panelSettings;
-
-        private Label _wood;
-        private Label _stone;
-        private Label _souls;
-        private Label _prompt;
+        private readonly Dictionary<ResourceType, Label> _amounts = new();
+        private VisualElement _prompt;
+        private VisualElement _promptIcon;
+        private Label _promptLeft;
         private Stockpile _stockpile;
         private Miner _miner;
+        private ResourceNode _promptFor;
 
         private void Start()
         {
-            VisualElement root = GamePanels.Mount(this, PanelName, _panelSettings, out PanelRenderer panel);
-            var row = new VisualElement
+            var row = new VisualElement();
+            row.AddToClassList("isekai-panel");
+            row.style.flexDirection = FlexDirection.Row;
+            foreach (ResourceType type in Shown)
             {
-                style = { position = Position.Absolute, left = 6, top = 4, flexDirection = FlexDirection.Row, alignItems = Align.Center },
-            };
-            _wood = AddResource(row, ResourceType.Wood);
-            _stone = AddResource(row, ResourceType.Stone);
-            _souls = AddResource(row, ResourceType.Souls);
-            root.Add(row);
-            _prompt = new Label
-            {
-                pickingMode = PickingMode.Ignore,
-                style = { position = Position.Absolute, left = 0, right = 0, bottom = 120, unityTextAlign = TextAnchor.MiddleCenter, color = Color.white },
-            };
-            root.Add(_prompt);
-            UIPanels.Created(panel);
+                VisualElement pair = GameStyle.IconNumber(GameIcons.Of(type), "0", out Label amount);
+                pair.style.marginRight = 8;
+                pair.AddTooltip(TooltipText.Get(TooltipProvider.KeyForResource(type)), type.ToString());
+                _amounts[type] = amount;
+                row.Add(pair);
+            }
+            HudStack.Add(HudCorner.TopLeft, row, 0);
+
+            _prompt = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, display = DisplayStyle.None } };
+            _prompt.AddToClassList("isekai-panel");
+            _promptIcon = GameStyle.Icon(null);
+            _promptLeft = GameStyle.Number("0");
+            _prompt.Add(_promptIcon);
+            _prompt.Add(_promptLeft);
+            HudStack.Add(HudCorner.BottomCentre, _prompt, 0);
         }
 
-        /// <summary>The mining prompt shown now (empty when there's nothing to mine).</summary>
-        public string Prompt => _prompt != null ? _prompt.text : string.Empty;
-
-        private static Label AddResource(VisualElement row, ResourceType type)
-        {
-            var label = new Label { style = { color = Color.white, marginRight = 12 } };
-            label.AddTooltip(TooltipText.Get(TooltipProvider.KeyForResource(type)), type.ToString());
-            row.Add(label);
-            return label;
-        }
+        /// <summary>What the mining prompt says, in words (empty when there's nothing to mine).</summary>
+        public string Prompt => _promptFor != null ? $"Mining {_promptFor.Type}: {_promptFor.Remaining} left" : string.Empty;
 
         private void Update()
         {
@@ -62,11 +57,11 @@ namespace Isekai
         {
             UpdatePrompt();
             Stockpile current = RegionEconomy.Current != null ? RegionEconomy.Current.Stockpile : null;
-            if (current == _stockpile && _wood != null && _wood.text.Length > 0) return;
+            if (current == _stockpile) return;
             if (_stockpile != null) _stockpile.Changed -= OnChanged;
             _stockpile = current;
             if (_stockpile != null) _stockpile.Changed += OnChanged;
-            Redraw();
+            foreach (ResourceType type in Shown) Show(type);
         }
 
         private void UpdatePrompt()
@@ -74,8 +69,15 @@ namespace Isekai
             if (_prompt == null) return;
             _miner = Player.Character != null ? Player.Character.GetComponent<Miner>() : null;
             ResourceNode node = _miner != null ? _miner.Node ?? _miner.InReach : null;
-            string text = node == null ? string.Empty : $"Mining {node.Type}: {node.Remaining} left";
-            if (_prompt.text != text) _prompt.text = text;
+            if (node != _promptFor)
+            {
+                _promptFor = node;
+                _prompt.style.display = node != null ? DisplayStyle.Flex : DisplayStyle.None;
+                if (node != null) GameStyle.SetIcon(_promptIcon, GameIcons.Of(node.Type));
+            }
+            if (node == null) return;
+            string left = node.Remaining.ToString();
+            if (_promptLeft.text != left) _promptLeft.text = left;
         }
 
         private void OnDestroy()
@@ -83,22 +85,11 @@ namespace Isekai
             if (_stockpile != null) _stockpile.Changed -= OnChanged;
         }
 
-        private void OnChanged(ResourceType type, int amount) => Redraw();
+        private void OnChanged(ResourceType type, int amount) => Show(type);
 
-        private void Redraw()
+        private void Show(ResourceType type)
         {
-            if (_wood == null || _stone == null || _souls == null) return;
-            if (_stockpile == null)
-            {
-                _wood.text = "Wood 0";
-                _stone.text = "Stone 0";
-                _souls.text = "Souls 0";
-                return;
-            }
-
-            _wood.text = $"Wood {_stockpile.Get(ResourceType.Wood)}";
-            _stone.text = $"Stone {_stockpile.Get(ResourceType.Stone)}";
-            _souls.text = $"Souls {_stockpile.Get(ResourceType.Souls)}";
+            if (_amounts.TryGetValue(type, out Label label)) label.text = (_stockpile != null ? _stockpile.Get(type) : 0).ToString();
         }
     }
 }

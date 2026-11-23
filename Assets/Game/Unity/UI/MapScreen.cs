@@ -21,17 +21,17 @@ namespace Isekai
         private const string MenuName = "MapScreen";
         private const float RedrawSeconds = 0.12f;
 
-        [SerializeField] private PanelSettings _panelSettings;
         [SerializeField] private Key _toggleKey = Key.M;
 
         private ScrollZoom _zoom;
         private VisualElement _shade;
         private VisualElement _content;
         private Label _title;
-        private Button _regionTab, _planetTab;
+        private IconButton _regionTab, _planetTab;
+        private VisualElement _regionPage, _planetPage;
+        private PlanetMapView _planetMap;
+        private PlanetRun _planetMapRun;
         private RegionMapView _regionMap;
-        private PanelSettings _ownSettings;
-        private VisualElement _legend;
         private float _redrawAt;
 
         private static readonly string[] SpawnCircleIcon = { "..###..", ".#...#.", "#..#..#", ".#...#.", "..###.." };
@@ -51,36 +51,33 @@ namespace Isekai
             {
                 _zoom.InWhileBlocked += Close;
             }
-            // Its own panel, sorted above the HUDs that share the game's panel settings.
-            if (_panelSettings != null)
-            {
-                _ownSettings = Instantiate(_panelSettings);
-                _ownSettings.name = PanelName;
-                _ownSettings.sortingOrder = _panelSettings.sortingOrder + 50;
-            }
-            VisualElement root = GamePanels.Mount(this, PanelName, _ownSettings, out PanelRenderer panel, 90f);
+            VisualElement root = GamePanels.Mount(this, PanelName, null, out PanelRenderer panel, 90f);
             _shade = new VisualElement
             {
                 style =
                 {
                     position = Position.Absolute, left = 0, right = 0, top = 0, bottom = 0, display = DisplayStyle.None,
-                    backgroundColor = GameStyle.Backdrop, alignItems = Align.Center, justifyContent = Justify.Center,
+                    backgroundColor = GameStyle.Backdrop, alignItems = Align.Center, paddingTop = 12, paddingBottom = 12, paddingLeft = 16, paddingRight = 16,
                 },
             };
             var header = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, marginBottom = 6 } };
             _title = GameStyle.Label("", TextRole.Title);
             _title.style.marginRight = 16;
-            _regionTab = new Button(() => Show(Tab.Region)) { text = "Region" };
-            _planetTab = new Button(() => Show(Tab.Planet)) { text = "Planet" };
+            _regionTab = new IconButton(GameIcons.Named("Region"), "Region", () => Show(Tab.Region));
+            _planetTab = new IconButton(GameIcons.Named("Planet"), "Planet", () => Show(Tab.Planet));
+            _planetTab.style.marginLeft = 4;
             header.Add(_title);
             header.Add(_regionTab);
             header.Add(_planetTab);
-            _content = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.FlexStart } };
+            _content = new VisualElement { style = { flexGrow = 1, alignSelf = Align.Stretch } };
+            _regionPage = new VisualElement { style = { flexGrow = 1, alignItems = Align.Center, justifyContent = Justify.Center } };
+            _planetPage = new VisualElement { style = { flexGrow = 1 } };
+            _content.Add(_regionPage);
+            _content.Add(_planetPage);
+            _regionPage.RegisterCallback<GeometryChangedEvent>(_ => FitRegion());
+            _shade.AddToClassList("isekai-menu");
             _shade.Add(header);
             _shade.Add(_content);
-            Label hint = GameStyle.Label("Scroll in, M or Escape to return", TextRole.Muted);
-            hint.style.marginTop = 6;
-            _shade.Add(hint);
             root.Add(_shade);
             UIPanels.Created(panel);
         }
@@ -88,7 +85,6 @@ namespace Isekai
         private void OnDestroy()
         {
             _regionMap?.Dispose();
-            if (_ownSettings != null) Destroy(_ownSettings);
             if (_zoom == null) return;
             _zoom.InWhileBlocked -= Close;
         }
@@ -137,29 +133,50 @@ namespace Isekai
             if (tab == Tab.Planet && RunSession.Run == null) tab = Tab.Region;
             if (tab == Tab.Region && HordeDirector.Current == null) tab = Tab.Planet;
             Current = tab;
-            _content.Clear();
-            _regionTab.SetEnabled(tab != Tab.Region);
-            _planetTab.SetEnabled(RunSession.Run != null && tab != Tab.Planet);
-            string region = RunSession.Run?.Current?.Name ?? "This Region";
+            // Both pages stay built; a tab only shows one of them (a rebuild on a click flashes).
+            _regionPage.style.display = tab == Tab.Region ? DisplayStyle.Flex : DisplayStyle.None;
+            _planetPage.style.display = tab == Tab.Planet ? DisplayStyle.Flex : DisplayStyle.None;
+            _regionTab.Picked = tab == Tab.Region;
+            _planetTab.Picked = tab == Tab.Planet;
+            _planetTab.SetEnabled(RunSession.Run != null);
             if (tab == Tab.Planet)
             {
                 _title.text = "The Planet";
-                if (RunSession.Run != null) _content.Add(new PlanetMapView(RunSession.Run, new Vector2(880f, 380f), null));
+                if (RunSession.Run == null) return;
+                if (_planetMap == null || _planetMapRun != RunSession.Run)
+                {
+                    _planetMap?.RemoveFromHierarchy();
+                    _planetMapRun = RunSession.Run;
+                    _planetMap = new PlanetMapView(RunSession.Run, null);
+                    _planetPage.Add(_planetMap);
+                }
+                else _planetMap.Refresh();
                 return;
             }
-            _title.text = region;
+            _title.text = RunSession.Run?.Current?.Name ?? "This Region";
             if (_regionMap == null && HordeDirector.Current != null && HordeDirector.Current.Grid.IsCreated)
+            {
                 _regionMap = new RegionMapView(HordeDirector.Current.Grid);
+                _regionPage.Add(_regionMap);
+                _regionPage.Add(Legend());
+                FitRegion();
+            }
             if (_regionMap == null) return;
             _regionMap.Redraw();
             _redrawAt = Time.unscaledTime + RedrawSeconds;
-            _content.Add(_regionMap);
-            _content.Add(_legend ??= Legend());
+        }
+
+        // The legend strip under the map keeps 48 px of the page.
+        private void FitRegion()
+        {
+            if (_regionMap == null || float.IsNaN(_regionPage.contentRect.width) || _regionPage.contentRect.width < 1f) return;
+            _regionMap.Fit(new Vector2(_regionPage.contentRect.width, _regionPage.contentRect.height - 48f));
         }
 
         private static VisualElement Legend()
         {
-            var legend = new VisualElement { style = { marginLeft = 12, width = 220 } };
+            // Marks only, in one strip: what each is comes up on hover.
+            var legend = new VisualElement { style = { flexDirection = FlexDirection.Row, flexWrap = Wrap.Wrap, justifyContent = Justify.Center, height = 48, alignItems = Align.Center } };
             Row(legend, Swatch(RegionMapView.You, 6, true), "You", TooltipKey.LegendYou);
             Row(legend, Swatch(RegionMapView.Demon, 4, false), "Demons", TooltipKey.LegendDemons);
             Row(legend, Swatch(RegionMapView.Attacker, 4, false), "Mortals, attacking", TooltipKey.LegendMortalsAttacking);
@@ -188,22 +205,16 @@ namespace Isekai
 
         private static void Row(VisualElement parent, VisualElement mark, string text, TooltipKey tooltip)
         {
-            var row = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, height = 22 } };
-            var slot = new VisualElement { style = { width = 22, alignItems = Align.Center, justifyContent = Justify.Center } };
+            var slot = new VisualElement { style = { width = 32, height = 32, alignItems = Align.Center, justifyContent = Justify.Center } };
             slot.Add(mark);
-            row.Add(slot);
-            Label label = GameStyle.Label(text);
-            label.style.marginLeft = 6;
-            row.Add(label);
-            string tip = TooltipText.Get(tooltip);
-            label.AddTooltip(tip, text);
-            mark.AddTooltip(tip, text);
-            parent.Add(row);
+            slot.AddTooltip(TooltipText.Get(tooltip), text);
+            parent.Add(slot);
         }
 
         private static VisualElement Swatch(Color32 colour, int size, bool outlined, bool hollow = false)
         {
-            var box = new VisualElement { style = { width = size, height = size } };
+            size *= 2;
+            var box = new VisualElement { pickingMode = PickingMode.Ignore, style = { width = size, height = size } };
             if (hollow)
             {
                 box.style.borderTopWidth = box.style.borderBottomWidth = box.style.borderLeftWidth = box.style.borderRightWidth = 1;
@@ -221,13 +232,13 @@ namespace Isekai
         private static VisualElement IconImage(string icon, Color32 colour)
         {
             Texture2D tex = RegionMapView.IconTexture(RegionMapView.Icons[icon], colour);
-            return new VisualElement { style = { width = tex.width, height = tex.height, backgroundImage = Background.FromTexture2D(tex) } };
+            return new VisualElement { pickingMode = PickingMode.Ignore, style = { width = tex.width, height = tex.height, backgroundImage = Background.FromTexture2D(tex) } };
         }
 
         private static VisualElement IconImage(string[] icon, Color32 colour)
         {
             Texture2D tex = RegionMapView.IconTexture(icon, colour);
-            return new VisualElement { style = { width = tex.width, height = tex.height, backgroundImage = Background.FromTexture2D(tex) } };
+            return new VisualElement { pickingMode = PickingMode.Ignore, style = { width = tex.width, height = tex.height, backgroundImage = Background.FromTexture2D(tex) } };
         }
 
         void IRegionEndListener.OnRegionEnded(RegionEnd end)

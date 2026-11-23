@@ -63,6 +63,10 @@ namespace Isekai
         public Vector3 RaidTarget => _raid;
 
         public IReadOnlyList<DemonBrain> Units => _units;
+
+        /// <summary>The prefab of a demon this Portal can bring.</summary>
+        public GameObject PrefabOf(DemonType type) => type == DemonType.BoneDemon && _boneDemonPrefab != null ? _boneDemonPrefab : _unitPrefab;
+
         public Production Production => _production;
 
         /// <summary>The order, rally point, raid target, policy or roster changed.</summary>
@@ -118,7 +122,7 @@ namespace Isekai
         {
             _units.RemoveAll(u => u == null || !u.isActiveAndEnabled);
             if (!_production.Tick(Time.deltaTime, _units.Count)) return;
-            GameObject prefab = _roster == DemonType.BoneDemon && _boneDemonPrefab != null ? _boneDemonPrefab : _unitPrefab;
+            GameObject prefab = PrefabOf(_roster);
             Vector3 at = transform.position + (Vector3)_exit;
             GameObject go = Pools.Spawn(prefab, at, Quaternion.identity);
             var unit = go.GetComponent<DemonBrain>();
