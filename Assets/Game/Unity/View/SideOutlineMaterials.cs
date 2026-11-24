@@ -53,23 +53,12 @@ namespace Isekai
             }
         }
 
-        private static Material LoadTemplate(Side side)
-        {
-#if UNITY_EDITOR
-            return UnityEditor.AssetDatabase.LoadAssetAtPath<Material>(PathFor(side));
-#else
-            return null;
-#endif
-        }
+        // In Resources, so a built player has them (and with them the outline shader) too.
+        private static Material LoadTemplate(Side side) => Resources.Load<Material>("Outlines/Outline_" + side);
 
-        private static string PathFor(Side side) => side switch
-        {
-            Side.Yours => "Assets/Game/Materials/Outline_Yours.mat",
-            Side.Mortals => "Assets/Game/Materials/Outline_Mortals.mat",
-            Side.Neutral => "Assets/Game/Materials/Outline_Neutral.mat",
-            Side.Hostile => "Assets/Game/Materials/Outline_Hostile.mat",
-            Side.Rogue => "Assets/Game/Materials/Outline_Rogue.mat",
-            _ => "Assets/Game/Materials/Outline_Neutral.mat",
-        };
+        private static Material s_unlit;
+
+        /// <summary>A plain sprite material the 2D lights don't touch (health bars, popups).</summary>
+        public static Material Unlit => s_unlit != null ? s_unlit : s_unlit = Resources.Load<Material>("Outlines/Unlit");
     }
 }

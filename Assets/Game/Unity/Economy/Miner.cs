@@ -1,12 +1,11 @@
 using Blondie.Core;
-using Blondie.UI;
 using UnityEngine;
 
 namespace Isekai
 {
     /// <summary>
     /// Lets the Character mine: walking up to a <see cref="ResourceNode"/> (Stone, a rock in the way) starts hitting it,
-    /// at the MiningSpeed stat (units per second), into the Region's stockpile, with a "+1 Stone" popup per unit.
+    /// at the MiningSpeed stat (units per second), into the Region's stockpile, with a "+1" and the Resource's icon per unit (<see cref="ResourcePopup"/>).
     /// No key: being in reach is enough. Workers will take this over later.
     /// </summary>
     public sealed class Miner : MonoBehaviour, IRegionEndListener
@@ -51,7 +50,7 @@ namespace Isekai
             if (mined <= 0) return 0;
             RegionEconomy economy = RegionEconomy.Current;
             if (economy != null) economy.Stockpile.Add(node.Type, mined);
-            FloatingText.Spawn(transform.position + Vector3.up, $"+{mined} {node.Type}", Color.white);
+            ResourcePopup.Spawn(transform.position + Vector3.up, node.Type, mined);
             return mined;
         }
 

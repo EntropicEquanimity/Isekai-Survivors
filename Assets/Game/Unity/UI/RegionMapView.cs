@@ -15,6 +15,7 @@ namespace Isekai
     public sealed class RegionMapView : VisualElement
     {
         public const int PixelsPerCell = 2;
+        private const int Border = 1;
 
         private static readonly Color32 Outside = new(8, 9, 12, 255);
         public static readonly Color32 Roamer = new(185, 55, 55, 255);
@@ -39,6 +40,7 @@ namespace Isekai
         private readonly Color32[] _pixels;
         private readonly MapCanvas _canvas;
         private readonly int _width, _height;
+        private int _scale = 1;
 
         public Texture2D Texture => _texture;
 
@@ -49,14 +51,22 @@ namespace Isekai
             _pixels = new Color32[_width * _height];
             _canvas = new MapCanvas(grid, _pixels);
             _texture = new Texture2D(_width, _height, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp, name = "Region Map" };
-            style.width = _width;
-            style.height = _height;
+            style.width = _width + 2 * Border;
+            style.height = _height + 2 * Border;
             style.flexShrink = 0;
             style.backgroundImage = Background.FromTexture2D(_texture);
-            style.borderTopWidth = style.borderBottomWidth = style.borderLeftWidth = style.borderRightWidth = 1;
+            style.borderTopWidth = style.borderBottomWidth = style.borderLeftWidth = style.borderRightWidth = Border;
             style.borderTopColor = style.borderBottomColor = style.borderLeftColor = style.borderRightColor = GameStyle.Border;
             pickingMode = PickingMode.Ignore;
             Redraw();
+        }
+
+        /// <summary>Shows the map at the biggest whole scale that fits <paramref name="room"/>.</summary>
+        public void Fit(Vector2 room)
+        {
+            _scale = Mathf.Max(1, Mathf.FloorToInt(Mathf.Min((room.x - 2 * Border) / _width, (room.y - 2 * Border) / _height)));
+            style.width = _width * _scale + 2 * Border;
+            style.height = _height * _scale + 2 * Border;
         }
 
         /// <summary>Releases the texture.</summary>
@@ -76,7 +86,7 @@ namespace Isekai
             if (panel == null) return false;
             Vector2 inPanel = RuntimePanelUtils.ScreenToPanel(panel, new Vector2(screen.x, Screen.height - screen.y));
             Vector2 local = this.WorldToLocal(inPanel);
-            float x = local.x - resolvedStyle.borderLeftWidth, y = local.y - resolvedStyle.borderTopWidth;
+            float x = (local.x - resolvedStyle.borderLeftWidth) / _scale, y = (local.y - resolvedStyle.borderTopWidth) / _scale;
             if (x < 0f || y < 0f || x >= _width || y >= _height) return false;
             world = _canvas.ToWorld(new Vector2(x, _height - y));
             return true;

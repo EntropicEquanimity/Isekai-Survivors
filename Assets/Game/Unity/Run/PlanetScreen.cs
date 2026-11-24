@@ -22,15 +22,16 @@ namespace Isekai
 
         private PlanetMapView _map;
         private SoulPathPicks _picks;
-        private bool _announced;
 
         // The loadout's controls, built once and updated in place (a rebuild on every click flashed the screen).
         private readonly Dictionary<AnchorKind, IconButton> _anchorTiles = new();
         private readonly Dictionary<SoulPath, IconButton> _pathTiles = new();
         private Label _anchorAbout;
         private Label _pathCount;
-        private VisualElement _pathAbout;
-        private Button _confirm;
+        private Label[] _pathAbout;
+        private IconButton _confirm;
+        private VisualElement _loadoutPage, _mapPage, _mapHead, _mapSlot;
+        private PlanetRun _shownRun;
 
         /// <summary>The Planet map (built even while the loadout shows, so the Run can be steered from code).</summary>
         public PlanetMapView Map => _map;
@@ -91,14 +92,30 @@ namespace Isekai
             return true;
         }
 
-        // On the map: what the loadout chose (fixed for the Run).
+        // On the map: what the loadout chose (fixed for the Run), as icons.
         private static VisualElement LoadoutSummary()
         {
-            string anchor = RunSession.Anchor is { } kept ? AnchorTuning.Name(kept) : "none";
-            string paths = RunSession.Paths.Count > 0 ? string.Join(", ", RunSession.Paths.Select(SoulPaths.Name)) : "none";
-            Label line = GameStyle.Label($"Anchor: {anchor}   Soul paths: {paths}", TextRole.Muted);
-            line.style.marginBottom = 6;
-            return line;
+            var row = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center } };
+            if (RunSession.Anchor is { } anchor) row.Add(Chosen(GameIcons.Of(anchor), AnchorTuning.Name(anchor), AnchorAbout(anchor)));
+            foreach (SoulPath path in RunSession.Paths) row.Add(Chosen(GameIcons.Of(path), SoulPaths.Name(path), SoulPaths.About(path)));
+            return row;
+        }
+
+        private static VisualElement Chosen(Sprite icon, string name, string about)
+        {
+            var slot = new VisualElement { style = { marginLeft = 4, marginRight = 4 } };
+            if (icon != null) slot.Add(GameStyle.Icon(icon, 32));
+            else slot.Add(GameStyle.Label(name));
+            slot.AddTooltip(about, name);
+            return slot;
+        }
+
+        private static VisualElement Stat(Sprite icon, string name, string value, string about)
+        {
+            VisualElement pair = GameStyle.IconNumber(icon, value, out _, name);
+            pair.style.marginLeft = pair.style.marginRight = 10;
+            pair.AddTooltip(about, name);
+            return pair;
         }
 
         private static string AnchorAbout(AnchorKind kind) => kind == AnchorKind.WarThrone
@@ -112,16 +129,24 @@ namespace Isekai
             _anchorTiles.Clear();
             _pathTiles.Clear();
             RunSession.Anchor ??= AnchorKind.Shrine;
-            var panel = new VisualElement { style = { alignItems = Align.Center, maxWidth = new Length(90, LengthUnit.Percent) } };
-            panel.AddToClassList("isekai-menu");
-            panel.Add(GameStyle.Label("Prepare the invasion", TextRole.Title));
+            var page = new VisualElement { style = { flexGrow = 1, alignSelf = Align.Stretch, alignItems = Align.Center, paddingLeft = 24, paddingRight = 24 } };
+            VisualElement title = GameStyle.Label("Prepare the invasion", TextRole.Title);
+            title.style.flexShrink = 0;
+            page.Add(title);
+            // The choices scroll when the window is too small for them; the title and Go always stay.
+            var scroll = new ScrollView(ScrollViewMode.Vertical) { name = "loadout-scroll", horizontalScrollerVisibility = ScrollerVisibility.Hidden, style = { flexGrow = 1, flexShrink = 1, alignSelf = Align.Stretch } };
+            page.Add(scroll);
+            VisualElement panel = scroll.contentContainer;
+            panel.style.flexGrow = 1;
+            panel.style.alignItems = Align.Center;
+            panel.style.justifyContent = Justify.SpaceAround;
 
             panel.Add(Heading("Anchor", "Where Jack's soul is bound: he revives there, and Demon Kings and workers are summoned there."));
-            var anchors = new VisualElement { style = { flexDirection = FlexDirection.Row } };
+            var anchors = new VisualElement { style = { flexDirection = FlexDirection.Row, flexShrink = 0 } };
             foreach (AnchorKind kind in new[] { AnchorKind.Shrine, AnchorKind.WarThrone })
             {
                 AnchorKind k = kind;
-                IconButton tile = Tile(GameIcons.Of(AnchorCatalog.Asset(kind)), AnchorTuning.Name(kind), () => ChooseAnchor(k));
+                IconButton tile = Tile(GameIcons.Of(kind), AnchorTuning.Name(kind), () => ChooseAnchor(k));
                 tile.name = "Anchor " + AnchorTuning.Name(kind);
                 tile.Tooltip = AnchorAbout(kind);
                 _anchorTiles[kind] = tile;
@@ -135,10 +160,10 @@ namespace Isekai
 
             var pathsHead = Heading("Soul paths", "Each soul level gives a point in one of the two paths you pick.");
             _pathCount = GameStyle.Label(string.Empty, TextRole.Accent);
-            _pathCount.style.marginLeft = 6;
+            _pathCount.style.marginLeft = 16;
             pathsHead.Add(_pathCount);
             panel.Add(pathsHead);
-            var grid = new VisualElement { style = { flexDirection = FlexDirection.Row, flexWrap = Wrap.Wrap, justifyContent = Justify.Center } };
+            var grid = new VisualElement { style = { flexDirection = FlexDirection.Row, flexWrap = Wrap.Wrap, justifyContent = Justify.Center, flexShrink = 0 } };
             foreach (SoulPath path in SoulPaths.Starting)
             {
                 SoulPath p = path;
@@ -149,21 +174,28 @@ namespace Isekai
                 grid.Add(tile);
             }
             panel.Add(grid);
-            _pathAbout = new VisualElement { style = { alignItems = Align.Center, minHeight = 30 } };
-            panel.Add(_pathAbout);
+            _pathAbout = new Label[Picks.Slots];
+            for (int i = 0; i < _pathAbout.Length; i++)
+            {
+                _pathAbout[i] = GameStyle.Label(" ", TextRole.Body);
+                _pathAbout[i].style.whiteSpace = WhiteSpace.Normal;
+                _pathAbout[i].style.unityTextAlign = TextAnchor.MiddleCenter;
+                panel.Add(_pathAbout[i]);
+            }
 
-            _confirm = new Button(() => ConfirmLoadout()) { text = "Go", name = "Confirm loadout", style = { marginTop = 8, minWidth = 120 } };
-            _confirm.AddTooltip("To the Planet: choose where to land.");
-            panel.Add(_confirm);
+            _confirm = new IconButton(GameIcons.Named("Go"), "Go", () => ConfirmLoadout(), box: 48) { name = "Confirm loadout", Tooltip = "To the Planet: choose where to land." };
+            _confirm.style.marginTop = 6;
+            page.Add(_confirm);
             RefreshLoadout();
-            return panel;
+            return page;
         }
 
         // A square tile: the icon large, its short name under it (the rules allow a name under an icon).
         private static IconButton Tile(Sprite icon, string name, System.Action clicked)
         {
-            var tile = new IconButton(icon, name, clicked, iconSize: "huge", column: true) { style = { width = 96, marginLeft = 3, marginRight = 3, marginTop = 3, marginBottom = 3 } };
-            if (icon != null) tile.Add(GameStyle.Label(name, TextRole.Muted));
+            var tile = new IconButton(icon, name, clicked, box: 96, column: true);
+            tile.AddToClassList("isekai-tile");
+            if (tile.HasIcon) tile.Add(GameStyle.Label(name, TextRole.Muted));
             return tile;
         }
 
@@ -184,72 +216,91 @@ namespace Isekai
             SoulPathPicks picks = Picks;
             foreach (KeyValuePair<SoulPath, IconButton> tile in _pathTiles) tile.Value.Picked = picks.Has(tile.Key);
             _pathCount.text = $"{picks.Picked.Count}/{picks.Slots}";
-            _pathAbout.Clear();
-            foreach (SoulPath path in picks.Picked)
-            {
-                Label about = GameStyle.Label($"{SoulPaths.Name(path)}: {SoulPaths.About(path)}", TextRole.Body);
-                about.style.whiteSpace = WhiteSpace.Normal;
-                about.style.unityTextAlign = TextAnchor.MiddleCenter;
-                _pathAbout.Add(about);
-            }
+            for (int i = 0; i < _pathAbout.Length; i++)
+                _pathAbout[i].text = i < picks.Picked.Count ? $"{SoulPaths.Name(picks.Picked[i])}: {SoulPaths.About(picks.Picked[i])}" : " ";
             _confirm.SetEnabled(picks.IsFull);
         }
 
+        // Two pages, built once: the loadout and the map. Build shows the one that is due and refreshes it; only a new Run's
+        // map is made anew.
         private void Build()
         {
-            VisualElement root = GamePanels.Mount(this, PanelName, _panelSettings, out PanelRenderer panel);
-            root.Clear();
             PlanetRun run = RunSession.Run;
             RunSave.Save();   // the Planet screen is where a Run is saved: between Regions, never inside one (on the loadout too, so Continue returns to it)
-            var column = new VisualElement
+            if (_mapPage == null) BuildPages();
+            if (_shownRun != run)
             {
-                pickingMode = PickingMode.Ignore,
-                style = { position = Position.Absolute, left = 0, right = 0, top = 0, bottom = 0, alignItems = Align.Center, justifyContent = Justify.Center },
-            };
-            _map = new PlanetMapView(run, new Vector2(880f, 336f), region => RunSession.GoToRegion(region));
-            _confirm = null;
-            if (ShowingLoadout)
+                _shownRun = run;
+                _map?.RemoveFromHierarchy();
+                _map = new PlanetMapView(run, region => RunSession.GoToRegion(region));
+                _mapSlot.Add(_map);
+            }
+            bool loadout = ShowingLoadout;
+            if (loadout && _loadoutPage.childCount == 0) _loadoutPage.Add(Loadout());
+            _loadoutPage.style.display = loadout ? DisplayStyle.Flex : DisplayStyle.None;
+            _mapPage.style.display = loadout ? DisplayStyle.None : DisplayStyle.Flex;
+            if (loadout)
             {
-                column.Add(Loadout());
-                root.Add(column);
-                Announce(panel);
+                RefreshLoadout();
                 return;
             }
-            string title = run.State switch
+            if (PickingOpen(run)) RunSession.Anchor ??= AnchorKind.Shrine;   // a Run steered past the loadout still has an Anchor
+            _map.Refresh();
+            FillHead(run);
+        }
+
+        private void BuildPages()
+        {
+            VisualElement root = GamePanels.Mount(this, PanelName, _panelSettings, out PanelRenderer panel);
+            _loadoutPage = Page(root);
+            _mapPage = Page(root);
+            _mapHead = new VisualElement { style = { alignItems = Align.Center, flexShrink = 0 } };
+            _mapPage.Add(_mapHead);
+            _mapSlot = new VisualElement { style = { flexGrow = 1, alignSelf = Align.Stretch } };
+            _mapPage.Add(_mapSlot);
+            UIPanels.Created(panel);
+        }
+
+        private static VisualElement Page(VisualElement root)
+        {
+            var page = new VisualElement { style = { position = Position.Absolute, left = 0, right = 0, top = 0, bottom = 0, paddingTop = 12, paddingBottom = 12, backgroundColor = GameStyle.Backdrop } };
+            page.AddToClassList("isekai-menu");
+            root.Add(page);
+            return page;
+        }
+
+        // The few lines over the map: what to do, the Run in icons and numbers, what the loadout chose, and the ways on once
+        // the Run is over.
+        private void FillHead(PlanetRun run)
+        {
+            _mapHead.Clear();
+            _mapHead.Add(GameStyle.Label(run.State switch
             {
                 PlanetRunState.Won => "The Planet is yours!",
                 PlanetRunState.Lost => "The Run is lost",
                 _ => run.CapturedInOrder.Count == 0 ? "Choose where to land" : "Choose your next Region",
-            };
-            Label heading = GameStyle.Label(title, TextRole.Title);
-            heading.style.marginBottom = 4;
-            column.Add(heading);
-            int secs = Mathf.FloorToInt(run.RunSeconds);
-            string buffs = string.Join(", ", run.Buffs.Select(b => RegionBuffs.Get(b)?.Name).Where(n => n != null));
-            Label stats = GameStyle.Label($"Run time {secs / 60}:{secs % 60:00}   Captured {run.CapturedInOrder.Count}   Bonus Stone {run.BonusStone}" +
-                                          (buffs.Length > 0 ? $"   Buffs: {buffs}" : ""), TextRole.Muted);
-            stats.style.marginBottom = 6;
-            column.Add(stats);
-            if (PickingOpen(run)) RunSession.Anchor ??= AnchorKind.Shrine;   // a Run steered past the loadout still has an Anchor
-            column.Add(LoadoutSummary());
-            column.Add(_map);
+            }, TextRole.Title));
+            var stats = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, flexWrap = Wrap.Wrap, justifyContent = Justify.Center } };
+            stats.Add(Stat(GameIcons.Named("Time"), "Run time", RunSummary.FormatTime(run.RunSeconds), RunStatTips.Text(RunStat.Time)));
+            stats.Add(Stat(GameIcons.Named("Captured"), "Regions captured", $"{run.CapturedInOrder.Count}", RunStatTips.Text(RunStat.Regions)));
+            stats.Add(Stat(GameIcons.Of(ResourceType.Stone), "Bonus Stone", "+" + run.BonusStone, "Stone every Region starts with, from the Regions captured."));
+            string buffs = string.Join("\n", run.Buffs.Select(RegionBuffs.Describe));
+            if (buffs.Length > 0) stats.Add(Stat(GameIcons.Named("Level"), "Buffs", $"{run.Buffs.Count()}", buffs));
+            stats.Add(LoadoutSummary());
+            _mapHead.Add(stats);
+            if (!run.IsOver) return;
             var buttons = new VisualElement { style = { flexDirection = FlexDirection.Row, marginTop = 8 } };
-            if (run.IsOver)
-            {
-                buttons.Add(new Button(() => { RunSession.StartNew(); RunSession.LoadoutPending = true; _picks = null; Build(); }) { text = "New Run" });
-                if (GameSetup.IsRunning) buttons.Add(new Button(GameSetup.GoToMainMenu) { text = "Main Menu" });
-            }
-            column.Add(buttons);
-            root.Add(column);
-            Announce(panel);
+            buttons.Add(new IconButton(GameIcons.Named("NewRun"), "New Run", StartAnotherRun, box: 48));
+            if (GameSetup.IsRunning) buttons.Add(new IconButton(GameIcons.Named("Menu"), "Main menu", GameSetup.GoToMainMenu, box: 48));
+            _mapHead.Add(buttons);
         }
 
-        // Announced once: announcing again makes Pixel Perfect swap the panel's settings, which rebuilds it (a flash).
-        private void Announce(PanelRenderer panel)
+        private void StartAnotherRun()
         {
-            if (_announced) return;
-            _announced = true;
-            UIPanels.Created(panel);
+            RunSession.StartNew();
+            RunSession.LoadoutPending = true;
+            _picks = null;
+            Build();
         }
     }
 }

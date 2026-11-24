@@ -24,13 +24,13 @@ namespace Isekai
 
         private static readonly string[] PresetNames = { "Default", "Deuteranopia", "Protanopia", "Tritanopia", "High contrast" };
 
-        /// <summary>The game's keys, for the Controls tab (read only).</summary>
+        /// <summary>The game's fixed keys, for the Controls tab (read only). The body key is a real binding there (<see cref="BodyKey"/>).</summary>
         public static readonly (string Action, string Keys)[] GameKeys =
         {
             ("Pause", "Esc"),
             ("Map", "M"),
             ("Build", "1-9, hold Shift to keep placing"),
-            ("Possess a demon", "P"),
+            ("Controls card", "H"),
             ("Raise soul level", "L"),
             ("Debug menu", "F1"),
         };

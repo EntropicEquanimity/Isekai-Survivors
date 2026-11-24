@@ -209,7 +209,7 @@ namespace Isekai
             {
                 RegionEconomy economy = RegionEconomy.Current;
                 if (economy != null) economy.Stockpile.Add(_carriedType, _carriedAmount);
-                FloatingText.Spawn(transform.position + Vector3.up, $"+{_carriedAmount} {_carriedType}", Color.white);
+                ResourcePopup.Spawn(transform.position + Vector3.up, _carriedType, _carriedAmount);
                 _carriedAmount = 0;
                 _state = WorkerState.Idle;
                 return;

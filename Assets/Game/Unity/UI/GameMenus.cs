@@ -52,7 +52,7 @@ namespace Isekai
             StyleSheet sheet = Resources.Load<StyleSheet>(StyleSheetPath);
             if (sheet != null) UIRoot.Instance.AddStyleSheet(sheet);
             if (GameStyle.HudSheet != null) UIRoot.Instance.AddStyleSheet(GameStyle.HudSheet);   // the text roles of the game's own menus
-            UIRoot.Instance.Root?.AddToClassList("isekai-menu");
+            UIRoot.Instance.Root?.AddToClassList("isekai-root");
         }
 
         // New Run forgets the Run that was in progress and its save; Continue asks for the saved Run, which the Planet

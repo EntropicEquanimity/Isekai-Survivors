@@ -1,58 +1,37 @@
-using Blondie.Core;
 using Blondie.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Isekai
 {
-    /// <summary>A small day-night clock: phase and time left until the next change.</summary>
+    /// <summary>The time of day at the top right: a sun or a moon and the time left until it changes.</summary>
     [RegionSystem]
     public sealed class DayNightHud : MonoBehaviour
     {
-        private const string PanelName = "Day Night HUD";
-
-        private Label _phase;
-        private Label _countdown;
+        private VisualElement _icon;
+        private Label _name;
+        private Label _left;
+        private TooltipManipulator _tip;
         private string _key;
 
-        public string PhaseText => _phase != null ? _phase.text : string.Empty;
-        public string CountdownText => _countdown != null ? _countdown.text : string.Empty;
+        /// <summary>"Day" or "Night" (the tooltip's header).</summary>
+        public string PhaseText { get; private set; } = "Day";
+
+        /// <summary>The countdown, in words.</summary>
+        public string CountdownText { get; private set; } = string.Empty;
 
         private void Start()
         {
-            VisualElement root = GamePanels.Mount(this, PanelName, null, out PanelRenderer panel);
-            var box = new VisualElement
-            {
-                style =
-                {
-                    position = Position.Absolute,
-                    right = 6,
-                    top = 60,
-                    minWidth = 138,
-                    backgroundColor = new Color(0f, 0f, 0f, 0.62f),
-                    paddingBottom = 4,
-                    paddingLeft = 5,
-                    paddingRight = 5,
-                    paddingTop = 4,
-                },
-            };
-            SetBorder(box.style);
-
-            _phase = GameStyle.Label("Day", TextRole.Accent);
-            box.Add(_phase);
-
-            _countdown = GameStyle.Label("Until night: 00:00", TextRole.Muted);
-            box.Add(_countdown);
-            box.AddTooltip(TooltipText.Get(TooltipKey.HudDayNight));
-
-            root.Add(box);
-            UIPanels.Created(panel);
-        }
-
-        private static void SetBorder(IStyle style)
-        {
-            style.borderTopWidth = style.borderBottomWidth = style.borderLeftWidth = style.borderRightWidth = 1;
-            style.borderTopColor = style.borderBottomColor = style.borderLeftColor = style.borderRightColor = GameStyle.Border;
+            var box = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center } };
+            box.AddToClassList("isekai-panel");
+            _icon = GameStyle.Icon(GameIcons.Named("Day"));
+            _name = GameStyle.Label("Day", TextRole.Accent);
+            _left = GameStyle.Number("00:00");
+            box.Add(_icon);
+            box.Add(_name);
+            box.Add(_left);
+            _tip = box.AddTooltip(TooltipText.Get(TooltipKey.HudDayNight), "Day");
+            HudStack.Add(HudCorner.TopRight, box, 1);
         }
 
         private void Update()
@@ -63,7 +42,7 @@ namespace Isekai
         private void Tick()
         {
             RegionDayNight dayNight = RegionDayNight.Current;
-            if (dayNight == null || _phase == null) return;
+            if (dayNight == null || _left == null) return;
 
             bool night = dayNight.IsNight;
             int whole = Mathf.Max(0, Mathf.CeilToInt(dayNight.SecondsUntilChange));
@@ -71,10 +50,15 @@ namespace Isekai
             if (key == _key) return;
             _key = key;
 
-            int minutes = whole / 60;
-            int seconds = whole % 60;
-            _phase.text = night ? "Night" : "Day";
-            _countdown.text = $"Until {(night ? "day" : "night")}: {minutes:00}:{seconds:00}";
+            string time = $"{whole / 60:00}:{whole % 60:00}";
+            PhaseText = night ? "Night" : "Day";
+            CountdownText = $"Until {(night ? "day" : "night")}: {time}";
+            Sprite icon = GameIcons.Named(PhaseText);
+            GameStyle.SetIcon(_icon, icon);
+            _name.text = PhaseText;
+            _name.style.display = icon != null ? DisplayStyle.None : DisplayStyle.Flex;   // no art: the word
+            _left.text = time;
+            _tip.Header = PhaseText;
         }
     }
 }

@@ -143,6 +143,7 @@ namespace Isekai.Tests
             yield return TestWait.Until(() => SceneManager.GetActiveScene().name == RunSession.PlanetScene && Object.FindAnyObjectByType<PlanetScreen>()?.Map != null, "on the new Run's Planet map", Timeout);
 
             Assert.IsTrue(RunSession.HasRun, "a Run is in progress");
+            Assert.IsTrue(Object.FindAnyObjectByType<PlanetScreen>().ShowingLoadout, "on its loadout, like every New Run");
             Assert.AreNotSame(lost, RunSession.Run);
             Assert.AreEqual(PlanetRunState.Choosing, RunSession.Run.State);
             Assert.AreEqual(0, RunSession.Run.CapturedInOrder.Count);

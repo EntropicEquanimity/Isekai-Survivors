@@ -7,55 +7,72 @@ using UnityEngine.UIElements;
 namespace Isekai
 {
     /// <summary>
-    /// The soul readout at the top centre: soul level with a button (and the L key) to raise it for Souls, and while Jack
-    /// is bodiless, in red, how many Souls drain a second and what stops him reviving. Phase 9 replaces it with the real HUD.
+    /// The soul readout at the top centre, icons and numbers (words in the tooltips): the soul level with the button (and L)
+    /// that raises it, and while Jack is bodiless, in red, the Souls that drain each second and his two ways back: the key
+    /// with the Anchor and its price, and the key with a demon and its price. A way back that is blocked is dimmed.
     /// </summary>
     [RegionSystem]
     public sealed class SoulsHud : MonoBehaviour
     {
-        private const string PanelName = "Souls HUD";
-
         private Label _level;
-        private Label _drain;
-        private Label _status;
-        private Button _raise;
+        private IconButton _raise;
+        private VisualElement _bodiless;
+        private Label _drain, _reviveKey, _reviveCost, _possessKey, _possessCost;
+        private VisualElement _revive;
+        private TooltipManipulator _reviveTip;
         private string _key;
 
-        /// <summary>The line about the drain: empty while Jack has a body.</summary>
-        public string DrainText => _drain != null ? _drain.text : string.Empty;
+        /// <summary>What the drain readout says, in words: empty while Jack has a body.</summary>
+        public string DrainText { get; private set; } = string.Empty;
 
-        /// <summary>What stops or allows the revive: empty while Jack has a body.</summary>
-        public string StatusText => _status != null ? _status.text : string.Empty;
+        /// <summary>What the ways back say, in words: empty while Jack has a body.</summary>
+        public string StatusText { get; private set; } = string.Empty;
 
-        /// <summary>The soul level line.</summary>
-        public string LevelText => _level != null ? _level.text : string.Empty;
+        /// <summary>The soul level, in words.</summary>
+        public string LevelText { get; private set; } = string.Empty;
 
         private void Start()
         {
-            VisualElement root = GamePanels.Mount(this, PanelName, null, out PanelRenderer panel);
-            var column = new VisualElement
-            {
-                style = { position = Position.Absolute, left = 0, right = 0, top = 4, alignItems = Align.Center },
-            };
-            root.Add(column);
-            _drain = Line(column, new Color(1f, 0.35f, 0.35f));
-            _status = Line(column, new Color(1f, 0.8f, 0.5f));
-            _level = Line(column, Color.white);
-            _raise = new Button(RaiseLevel);
-            _drain.AddTooltip(TooltipText.Get(TooltipKey.HudSoulDrain));
-            _status.AddTooltip(TooltipText.Get(TooltipKey.HudSouls));
-            _level.AddTooltip(TooltipText.Get(TooltipKey.HudSoulLevel));
-            _raise.AddTooltip(TooltipText.Get(TooltipKey.HudSoulRaise));
-            column.Add(_raise);
-            UIPanels.Created(panel);
+            var column = new VisualElement { style = { alignItems = Align.Center } };
+            column.AddToClassList("isekai-panel");
+
+            var row = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center } };
+            VisualElement level = GameStyle.IconNumber(GameIcons.Named("SoulLevel"), "1", out _level, "Soul level");
+            level.AddTooltip(TooltipText.Get(TooltipKey.HudSoulLevel), "Soul level");
+            level.style.marginRight = 6;
+            row.Add(level);
+            _raise = new IconButton(GameIcons.Named("Level"), "Raise soul level", RaiseLevel, box: 16, key: "L") { Tooltip = TooltipText.Get(TooltipKey.HudSoulRaise) };
+            row.Add(_raise);
+            column.Add(row);
+
+            _bodiless = new VisualElement { style = { alignItems = Align.Center, display = DisplayStyle.None } };
+            VisualElement drain = GameStyle.IconNumber(GameIcons.Named("Drain"), "0", out _drain, "Drain");
+            _drain.AddToClassList("isekai-number--short");
+            drain.AddTooltip(TooltipText.Get(TooltipKey.HudSoulDrain), "Bodiless");
+            _bodiless.Add(drain);
+            var ways = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center } };
+            _revive = Way(GameIcons.Of(AnchorCatalog.Chosen), "Anchor", out _reviveKey, out _reviveCost);
+            _reviveTip = _revive.AddTooltip(string.Empty, "Revive at the Anchor");
+            ways.Add(_revive);
+            VisualElement possess = Way(GameIcons.Of(Resources.Load<GameObject>(RegionPossession.KingPrefab)), "Demon", out _possessKey, out _possessCost, unit: true);
+            possess.AddTooltip("Fly onto one of your demons and press the key to take its body.", "Possess a demon");
+            ways.Add(possess);
+            _bodiless.Add(ways);
+            column.Add(_bodiless);
+            HudStack.Add(HudCorner.TopCentre, column, 0);
         }
 
-        private static Label Line(VisualElement parent, Color color)
+        // "R [where] 22 [souls]".
+        private static VisualElement Way(Sprite where, string name, out Label key, out Label cost, bool unit = false)
         {
-            var label = new Label { style = { color = color, unityFontStyleAndWeight = FontStyle.Bold } };
-            label.style.display = DisplayStyle.None;
-            parent.Add(label);
-            return label;
+            var way = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, marginLeft = 6, marginRight = 6 } };
+            key = new Label(BodyKey.Name) { pickingMode = PickingMode.Ignore };
+            key.AddToClassList("isekai-key");
+            way.Add(key);
+            if (where != null) way.Add(unit ? GameStyle.UnitIcon(where, 32, out _) : GameStyle.Icon(where, 32));
+            else way.Add(new Label(name) { pickingMode = PickingMode.Ignore });
+            way.Add(GameStyle.IconNumber(GameIcons.Of(ResourceType.Souls), "0", out cost));
+            return way;
         }
 
         private void Update()
@@ -69,30 +86,34 @@ namespace Isekai
             if (souls == null || _level == null) return;
             if (Keyboard.current != null && Keyboard.current[Key.L].wasPressedThisFrame) RaiseLevel();
 
-            int level = souls.Ledger.Level, cost = souls.Ledger.LevelUpCost, have = souls.Souls;
+            int level = souls.Ledger.Level, cost = souls.Ledger.LevelUpCost, have = souls.Souls, possess = PossessCost();
             float drain = souls.DrainPerSecond;
             string blocker = souls.ReviveBlocker();
-            string key = $"{level}/{cost}/{have}/{drain:0.0}/{blocker}/{souls.IsBodiless}/{souls.IsLost}";
+            string key = $"{level}/{cost}/{have}/{drain:0.0}/{blocker}/{souls.IsBodiless}/{souls.IsLost}/{possess}/{BodyKey.Name}";
             if (key == _key) return;
             _key = key;
 
-            _level.text = $"Soul level {level}";
-            _level.style.display = DisplayStyle.Flex;
-            _raise.text = $"Raise soul level: {cost} Souls (L)";
+            LevelText = $"Soul level {level}";
+            _level.text = level.ToString();
+            _raise.SetCosts(new[] { new ResourceCost(ResourceType.Souls, cost) }, RegionEconomy.Current != null ? RegionEconomy.Current.Stockpile : null);
             _raise.SetEnabled(have >= cost);
 
             bool bodiless = souls.IsBodiless;
-            SetLine(_drain, bodiless ? $"BODILESS: -{drain:0.0} Souls/s ({have} left)" : null);
-            // Possessing a demon is always a way back, so its hint stays even when the revive is blocked (no Anchor, too few Souls).
-            string possess = $"{BodyKey.Name} over a demon: possess it ({PossessCost()} Souls)";
-            SetLine(_status, !bodiless ? null
-                : blocker != null ? $"{blocker}. {possess}" : $"{BodyKey.Name} over the Anchor: revive ({souls.Ledger.ReviveCost} Souls). {possess}");
-        }
-
-        private static void SetLine(Label label, string text)
-        {
-            label.text = text ?? string.Empty;
-            label.style.display = string.IsNullOrEmpty(text) ? DisplayStyle.None : DisplayStyle.Flex;
+            _bodiless.style.display = bodiless ? DisplayStyle.Flex : DisplayStyle.None;
+            DrainText = bodiless ? $"BODILESS: -{drain:0.0} Souls/s ({have} left)" : string.Empty;
+            // Possessing a demon is always a way back, so it stays shown even when the revive is blocked (no Anchor, too few Souls).
+            string possessText = $"{BodyKey.Name} over a demon: possess it ({possess} Souls)";
+            StatusText = !bodiless ? string.Empty
+                : blocker != null ? $"{blocker}. {possessText}" : $"{BodyKey.Name} over the Anchor: revive ({souls.Ledger.ReviveCost} Souls). {possessText}";
+            if (!bodiless) return;
+            _drain.text = $"-{drain:0.0}/s";
+            _reviveKey.text = _possessKey.text = BodyKey.Name;
+            _reviveCost.text = souls.Ledger.ReviveCost.ToString();
+            _possessCost.text = possess.ToString();
+            _revive.style.opacity = blocker != null ? 0.45f : 1f;
+            _reviveTip.Content = blocker ?? "Fly onto the Anchor and press the key to come back there.";
+            _possessCost.EnableInClassList("isekai-number--short", have < possess);
+            _reviveCost.EnableInClassList("isekai-number--short", have < souls.Ledger.ReviveCost);
         }
 
         private static int PossessCost() => RegionPossession.Current != null ? RegionPossession.Current.Cost() : 0;

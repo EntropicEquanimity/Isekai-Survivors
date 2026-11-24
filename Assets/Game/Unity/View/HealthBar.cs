@@ -12,6 +12,7 @@ namespace Isekai
     public sealed class HealthBar : MonoBehaviour
     {
         private const int SortingOrder = 20;
+        private const string BarName = "Health Bar";
         private static Sprite s_pixel;
 
         [Tooltip("Bar width in art pixels.")]
@@ -29,6 +30,9 @@ namespace Isekai
         private Transform _fillPart;
         private bool _subscribed;
         private float _ppu = 32f;   // the art's pixels per unit, read when the bar is built
+
+        /// <summary>Whether a renderer is part of a health bar (not of the art it hangs over).</summary>
+        public static bool IsPart(Renderer renderer) => renderer.transform.parent != null && renderer.transform.parent.name == BarName;
 
         public bool IsShown => _bar != null && _bar.gameObject.activeSelf;
 
@@ -93,7 +97,7 @@ namespace Isekai
         {
             _ppu = ArtPixelsPerUnit();
             float top = ArtTop();
-            _bar = new GameObject("Health Bar").transform;
+            _bar = new GameObject(BarName).transform;
             _bar.SetParent(transform, false);
             _bar.localPosition = new Vector3(_width % 2 == 0 ? 0f : 0.5f / _ppu, top + (_gap + _height * 0.5f) / _ppu, 0f);
             Part("Back", _back, 0).localScale = new Vector3(_width / _ppu, _height / _ppu, 1f);
@@ -108,6 +112,7 @@ namespace Isekai
             r.sprite = Pixel;
             r.color = color;
             r.sortingOrder = SortingOrder + order;
+            if (SideOutlineMaterials.Unlit != null) r.sharedMaterial = SideOutlineMaterials.Unlit;   // readable at night
             return go.transform;
         }
 

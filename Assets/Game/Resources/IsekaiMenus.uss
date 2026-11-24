@@ -29,15 +29,15 @@
 
 /* ── Layout fixes for Blondie Game Setup's windows ──
    The footer (Reset, Back) and the tabs never shrink: a tall settings page used to squash them while the scroll view
-   took the room. The settings window fills most of the screen instead of a fixed box. */
+   took the room. The settings window is the size of the screen instead of a fixed box. */
 .blondie-gs-footer,
 .blondie-gs-footer .blondie-gs-button,
 .blondie-gs-tabs { flex-shrink: 0; }
 .blondie-gs-body { min-height: 0; }
 
 .blondie-pixel .blondie-root .blondie-gs-window--wide {
-    width: 92%;
-    height: 90%;
+    width: 100%;
+    height: 100%;
     max-width: none;
     max-height: none;
     padding: 24px 32px;
@@ -100,11 +100,11 @@
 
 /* Room for the bigger text: taller rows, wider controls. */
 .blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-row { min-height: 48px; padding: 4px 12px; }
-.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-row-control { width: 560px; }
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-row-control { width: 580px; }
 .blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-value { min-width: 260px; }
 .blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-slider-value { width: 80px; }
 .blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-arrow { width: 44px; padding: 6px 0; }
-.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-binding { width: 220px; }
+.blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-binding { width: 260px; padding: 8px 6px; }
 .blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-button { padding: 8px 22px; }
 .blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-menu-buttons { min-width: 420px; }
 .blondie-pixel .blondie-root.blondie-gs-text-1 .blondie-gs-toggle .unity-toggle__checkmark { width: 28px; height: 28px; }
@@ -112,7 +112,7 @@
 .blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-row,
 .blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-row { min-height: 64px; padding: 6px 14px; }
 .blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-row-control,
-.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-row-control { width: 720px; }
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-row-control { width: 800px; }
 .blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-value,
 .blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-value { min-width: 340px; }
 .blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-slider-value,
@@ -120,7 +120,7 @@
 .blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-arrow,
 .blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-arrow { width: 56px; padding: 8px 0; }
 .blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-binding,
-.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-binding { width: 300px; }
+.blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-binding { width: 380px; padding: 10px 6px; }
 .blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-button,
 .blondie-pixel .blondie-root.blondie-gs-text-3 .blondie-gs-button { padding: 10px 28px; }
 .blondie-pixel .blondie-root.blondie-gs-text-2 .blondie-gs-menu-buttons,

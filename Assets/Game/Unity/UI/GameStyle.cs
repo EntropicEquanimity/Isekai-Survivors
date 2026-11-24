@@ -40,14 +40,53 @@ namespace Isekai
 
         private static StyleSheet s_hudSheet;
 
-        /// <summary>An icon: a sprite drawn into a square (<c>isekai-icon</c>; add <c>--large</c> or <c>--huge</c> for 32 or 48 px).</summary>
-        public static VisualElement Icon(Sprite sprite, string size = null)
+        /// <summary>An icon: a sprite drawn at the biggest whole scale that fits a square of <paramref name="box"/> UI pixels (never shrunk: pixel art only comes in whole scales).</summary>
+        public static VisualElement Icon(Sprite sprite, int box = 16)
         {
             var icon = new VisualElement { pickingMode = PickingMode.Ignore };
             icon.AddToClassList("isekai-icon");
-            if (size != null) icon.AddToClassList("isekai-icon--" + size);
-            if (sprite != null) icon.style.backgroundImage = new StyleBackground(sprite);
+            SetIcon(icon, sprite, box);
             return icon;
+        }
+
+        /// <summary>Changes what an <see cref="Icon"/> shows; null hides it.</summary>
+        public static void SetIcon(VisualElement icon, Sprite sprite, int box = 16)
+        {
+            icon.style.display = sprite != null ? DisplayStyle.Flex : DisplayStyle.None;
+            if (sprite == null) return;
+            int scale = Mathf.Max(1, Mathf.FloorToInt(box / Mathf.Max(sprite.rect.width, sprite.rect.height)));
+            icon.style.width = sprite.rect.width * scale;
+            icon.style.height = sprite.rect.height * scale;
+            icon.style.backgroundImage = new StyleBackground(sprite);
+        }
+
+        /// <summary>A unit's art as an icon, on a light patch (demons are dark, and so are the panels).</summary>
+        public static VisualElement UnitIcon(Sprite sprite, int box, out VisualElement icon)
+        {
+            var patch = new VisualElement { pickingMode = PickingMode.Ignore, style = { minWidth = box, minHeight = box, alignItems = Align.Center, justifyContent = Justify.Center } };
+            patch.AddToClassList("isekai-lit");
+            icon = Icon(sprite, box);
+            patch.Add(icon);
+            return patch;
+        }
+
+        /// <summary>A number beside an icon.</summary>
+        public static Label Number(string text)
+        {
+            var number = new Label(text) { pickingMode = PickingMode.Ignore };
+            number.AddToClassList("isekai-number");
+            return number;
+        }
+
+        /// <summary>An icon with a number after it (the name stands in for a missing icon).</summary>
+        public static VisualElement IconNumber(Sprite icon, string text, out Label number, string name = null)
+        {
+            var pair = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center } };
+            if (icon != null) pair.Add(Icon(icon));
+            else if (name != null) pair.Add(new Label(name) { pickingMode = PickingMode.Ignore });
+            number = Number(text);
+            pair.Add(number);
+            return pair;
         }
 
         public static Color ColourOf(TextRole role) => role switch

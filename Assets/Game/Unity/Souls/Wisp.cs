@@ -42,6 +42,8 @@ namespace Isekai
         {
             _renderer = gameObject.AddComponent<SpriteRenderer>();
             _renderer.sortingOrder = 20;
+            Material yours = SideOutlineMaterials.MaterialFor(Side.Yours);   // outlined, and bright at night like the rest of your side
+            if (yours != null) _renderer.sharedMaterial = yours;
             Sprite[] frames = LoadFrames();
             if (frames.Length > 0) _renderer.sprite = frames[0];
         }
