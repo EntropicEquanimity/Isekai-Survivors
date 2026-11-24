@@ -32,6 +32,7 @@ namespace Isekai
         private Vector3 _witnessSpot;
         private bool _sawWisp;
         private int _shownStep = -1;
+        private string _shownKey;
         private int _ridersSentAtStep;
         private int _ridersKilledAtStep;
         private int _ridersArrivedAtStep;
@@ -251,12 +252,14 @@ namespace Isekai
         {
             if (_progress.IsComplete || _step == null || _prompt == null) return;
             int index = _progress.StepIndex;
-            if (!force && index == _shownStep) return;
+            if (!force && index == _shownStep && _shownKey == BodyKey.Name) return;
+            bool newStep = index != _shownStep;
             _shownStep = index;
+            _shownKey = BodyKey.Name;
             TutorialStepDef now = _progress.Current;
             _step.text = $"{index + 1}/{TutorialSteps.Count}";
-            _prompt.text = now.Prompt.Replace("{body}", BodyKey.Name);   // the key as it is bound now
-            CaptureRiderBaselines(now.Id);
+            _prompt.text = now.Prompt.Replace("{body}", _shownKey);   // the key as it is bound now
+            if (newStep || force) CaptureRiderBaselines(now.Id);
         }
 
         private void CaptureRiderBaselines(TutorialStepId step)

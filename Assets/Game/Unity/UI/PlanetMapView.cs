@@ -9,7 +9,7 @@ namespace Isekai
 {
     /// <summary>
     /// Draws a <see cref="PlanetRun"/> over whatever room it is given: Regions as icons in rings around the Capital, joined by
-    /// their links, with the Region's name under each and the icon's frame saying its state (captured green, open yellow, the
+    /// their links, with the Region's name under each (one with no room for it keeps it in the tooltip) and the icon's frame saying its state (captured green, open yellow, the
     /// current one blue, the rest grey; the Capital has its own icon). In pick mode clicking an available Region calls back;
     /// hovering explains it.
     /// </summary>
@@ -20,14 +20,18 @@ namespace Isekai
         private static readonly Color Locked = new(0.35f, 0.33f, 0.36f);
         private static readonly Color CurrentColor = new(0.35f, 0.6f, 1f);
 
-        private const float NodeWidth = 220f;   // room for a name at the biggest text size
-        private const float EdgeX = 110f, EdgeY = 70f;
+        private const float MaxWidth = 260f;      // a longer name wraps
+        private const float IconMiddle = 21f;     // from a place's top to the middle of its icon
+        private const float Edge = 4f;
+
 
         private readonly PlanetRun _run;
         private readonly Action<RegionInfo> _onPick;
         private readonly Dictionary<string, VisualElement> _places = new();
         private readonly Dictionary<string, IconButton> _nodes = new();
         private readonly Dictionary<string, VisualElement> _escaped = new();
+        private readonly Dictionary<string, Label> _names = new();
+        private float _edgeX, _edgeTop, _edgeBottom;
 
         public PlanetMapView(PlanetRun run, Action<RegionInfo> onPick)
         {
@@ -40,7 +44,7 @@ namespace Isekai
             foreach (RegionInfo region in run.Planet.Regions)
             {
                 RegionInfo r = region;
-                var place = new VisualElement { pickingMode = PickingMode.Ignore, style = { position = Position.Absolute, width = NodeWidth, alignItems = Align.Center } };
+                var place = new VisualElement { pickingMode = PickingMode.Ignore, style = { position = Position.Absolute, maxWidth = MaxWidth, alignItems = Align.Center } };
                 string name = r.IsCapital ? "Capital" : r.Name;
                 var node = new IconButton(GameIcons.Named(r.IsCapital ? "Capital" : "Region"), name, () => Pick(r)) { name = "region-" + r.Id };
                 node.AddToClassList("isekai-region");
@@ -50,8 +54,11 @@ namespace Isekai
                 {
                     Label label = GameStyle.Label(name);
                     label.pickingMode = PickingMode.Ignore;
-                    label.style.whiteSpace = WhiteSpace.NoWrap;
+                    label.style.whiteSpace = WhiteSpace.Normal;
+                    label.style.unityTextAlign = TextAnchor.UpperCenter;
+                    label.style.flexShrink = 1;
                     under.Add(label);
+                    _names[r.Id] = label;
                 }
                 VisualElement escaped = GameStyle.Icon(GameIcons.Named("RulerEscaped"));
                 under.Add(escaped);
@@ -60,6 +67,7 @@ namespace Isekai
                 _places[r.Id] = place;
                 _escaped[r.Id] = escaped;
                 Add(place);
+                place.RegisterCallback<GeometryChangedEvent>(e => { if (e.oldRect.size != e.newRect.size) Arrange(); });   // another text size
             }
             RegisterCallback<GeometryChangedEvent>(_ => Arrange());
             Refresh();
@@ -84,16 +92,47 @@ namespace Isekai
             MarkDirtyRepaint();
         }
 
+        // Places every Region. The margins leave room for the biggest place as it is laid out now, so no name is cut at the
+        // map's edge; then names that would cover another are taken off.
         private void Arrange()
         {
+            if (float.IsNaN(contentRect.width) || contentRect.width < 1f) return;
+            float widest = 0f, tallest = 0f;
+            foreach (VisualElement place in _places.Values)
+            {
+                if (float.IsNaN(place.layout.width)) return;
+                widest = Mathf.Max(widest, place.layout.width);
+                tallest = Mathf.Max(tallest, place.layout.height);
+            }
+            _edgeX = widest * 0.5f + Edge;
+            _edgeTop = IconMiddle + Edge;
+            _edgeBottom = Mathf.Max(_edgeTop, tallest - IconMiddle + Edge);
             foreach (RegionInfo r in _run.Planet.Regions)
             {
                 Vector2 at = PointOf(r);
                 VisualElement place = _places[r.Id];
-                place.style.left = Mathf.Round(at.x - NodeWidth * 0.5f);
-                place.style.top = Mathf.Round(at.y - 21f);   // the icon's middle sits on the point
+                place.style.left = Mathf.Round(at.x - place.layout.width * 0.5f);
+                place.style.top = Mathf.Round(at.y - IconMiddle);
             }
             MarkDirtyRepaint();
+            schedule.Execute(Declutter);   // once the new places are laid out
+        }
+
+        // Shows the names in order of what matters now (where you are, where you can go, what you hold, the Capital, the rest),
+        // each only if it covers no icon and no name already shown. The rest are in the tooltips.
+        private void Declutter()
+        {
+            var taken = new List<Rect>();
+            foreach (IconButton node in _nodes.Values) taken.Add(node.worldBound);
+            var open = new HashSet<RegionInfo>(_run.Available());
+            foreach (RegionInfo r in _run.Planet.Regions.OrderBy(r => _run.Current == r ? 0 : open.Contains(r) ? 1 : _run.IsCaptured(r) ? 2 : r.IsCapital ? 3 : 4))
+            {
+                if (!_names.TryGetValue(r.Id, out Label name)) continue;
+                Rect rect = name.worldBound;
+                bool room = !taken.Any(t => t.Overlaps(rect));
+                name.style.visibility = room ? Visibility.Visible : Visibility.Hidden;
+                if (room) taken.Add(rect);
+            }
         }
 
         private void Pick(RegionInfo region)
@@ -120,11 +159,13 @@ namespace Isekai
             return $"  -  Escaped ruler: {who} ({traits})";
         }
 
+        // Where a Region's icon sits: the rings as an ellipse filling the room inside the margins.
         private Vector2 PointOf(RegionInfo r)
         {
-            Vector2 half = contentRect.size * 0.5f;
-            float reachX = Mathf.Max(0f, half.x - EdgeX), reachY = Mathf.Max(0f, half.y - EdgeY);
-            return new Vector2(Mathf.Round(half.x + Mathf.Cos(r.Angle) * r.Radius * reachX), Mathf.Round(half.y + Mathf.Sin(r.Angle) * r.Radius * reachY));
+            float halfX = Mathf.Max(0f, contentRect.width * 0.5f - _edgeX);
+            float top = _edgeTop, bottom = Mathf.Max(top, contentRect.height - _edgeBottom);
+            float halfY = (bottom - top) * 0.5f;
+            return new Vector2(Mathf.Round(contentRect.width * 0.5f + Mathf.Cos(r.Angle) * r.Radius * halfX), Mathf.Round(top + halfY + Mathf.Sin(r.Angle) * r.Radius * halfY));
         }
 
         private void DrawLinks(MeshGenerationContext context)

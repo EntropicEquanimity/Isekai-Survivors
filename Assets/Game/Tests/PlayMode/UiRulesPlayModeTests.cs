@@ -17,11 +17,25 @@ namespace Isekai.Tests
     public class UiRulesPlayModeTests
     {
         private readonly List<RenderTexture> _screens = new();
+        private IKeyValueStore _store;
+
+        // The developer's own choices (the controls card left open, a rebound key) must not decide these tests.
+        [UnitySetUp]
+        public IEnumerator OwnSettings()
+        {
+            _store = KeyValueStorage.Current;
+            KeyValueStorage.Current = new MemoryKeyValueStore();
+            GameInput.ResetBindings();
+            yield return null;
+        }
 
         [UnityTearDown]
         public IEnumerator Restore()
         {
             TextSize.Index = TextSize.Medium;
+            GameInput.ResetBindings();
+            KeyValueStorage.Current = _store;
+            GameInput.LoadBindings();
             foreach (PanelRenderer p in Object.FindObjectsByType<PanelRenderer>(FindObjectsInactive.Exclude))
                 if (p.panelSettings != null && p.panelSettings.targetTexture != null) p.panelSettings.targetTexture = null;
             foreach (RenderTexture t in _screens) t.Release();
@@ -32,12 +46,15 @@ namespace Isekai.Tests
         }
 
         // Every panel laid out as on a 1920x1080 screen, whatever size the test runner's is.
-        private IEnumerator FullHd()
+        private IEnumerator FullHd() => Screen(1920, 1080);
+
+        private IEnumerator Screen(int width, int height)
         {
+            var seen = new HashSet<PanelSettings>();
             foreach (PanelRenderer p in Object.FindObjectsByType<PanelRenderer>(FindObjectsInactive.Exclude))
             {
-                if (p.panelSettings == null || p.panelSettings.targetTexture != null) continue;
-                var screen = new RenderTexture(1920, 1080, 24);
+                if (p.panelSettings == null || !seen.Add(p.panelSettings)) continue;
+                var screen = new RenderTexture(width, height, 24);
                 _screens.Add(screen);
                 p.panelSettings.targetTexture = screen;
             }
@@ -139,6 +156,107 @@ namespace Isekai.Tests
             VisualElement first = Panels().SelectMany(p => p.Query<IconButton>(className: "isekai-tile").ToList()).First();
             screen.TogglePath(SoulPath.Reaper);
             Assert.AreSame(first, Panels().SelectMany(p => p.Query<IconButton>(className: "isekai-tile").ToList()).First(), "a click rebuilds nothing");
+        }
+
+        [UnityTest]
+        public IEnumerator On_a_small_window_the_loadout_scrolls_and_Go_stays_on_screen()
+        {
+            RunSession.StartNew(5);
+            RunSession.LoadoutPending = true;
+            SceneManager.LoadScene(RunSession.PlanetScene);
+            yield return TestWait.Until(() => Object.FindAnyObjectByType<PlanetScreen>()?.Map != null, "the Planet screen shows", 20f);
+            foreach ((int w, int h) in new[] { (1280, 720), (1600, 900), (1920, 1080) })
+            foreach (int size in new[] { 1, 2 })
+            {
+                yield return Screen(w, h);
+                yield return Size(size);
+                string at = $"{w}x{h} text size {size}";
+                IconButton go = Panels().SelectMany(p => p.Query<IconButton>("Confirm loadout").ToList()).Single();
+                Assert.GreaterOrEqual(go.worldBound.yMin, 0f, at);
+                Assert.LessOrEqual(go.worldBound.yMax, h + 0.5f, at + ": Go is on screen");
+                Assert.GreaterOrEqual(go.worldBound.height, 48f, at + ": Go keeps its size");
+                ScrollView scroll = Panels().SelectMany(p => p.Query<ScrollView>("loadout-scroll").ToList()).Single();
+                List<IconButton> tiles = scroll.Query<IconButton>(className: "isekai-tile").ToList();
+                for (int i = 0; i < tiles.Count; i++)
+                {
+                    Assert.GreaterOrEqual(tiles[i].worldBound.height, 96f, $"{at}: {tiles[i].Name} is not squashed");
+                    Assert.IsTrue(tiles[i].worldBound.xMin >= -0.5f && tiles[i].worldBound.xMax <= w + 0.5f, $"{at}: {tiles[i].Name} is inside the window");
+                    for (int j = i + 1; j < tiles.Count; j++) Assert.IsFalse(tiles[i].worldBound.Overlaps(tiles[j].worldBound), $"{at}: {tiles[i].Name} and {tiles[j].Name}");
+                }
+                scroll.ScrollTo(tiles[^1]);
+                yield return null;
+                yield return null;
+                Assert.IsTrue(scroll.worldBound.yMax + 1f >= tiles[^1].worldBound.yMax, at + ": the last tile can be reached");
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator Planet_map_names_never_overlap_or_leave_the_screen_and_every_Region_can_be_clicked()
+        {
+            RunSession.StartNew(5);
+            SceneManager.LoadScene(RunSession.PlanetScene);
+            yield return TestWait.Until(() => Object.FindAnyObjectByType<PlanetScreen>()?.Map != null, "the Planet screen shows", 20f);
+            PlanetMapView map = Object.FindAnyObjectByType<PlanetScreen>().Map;
+            foreach ((int w, int h) in new[] { (1280, 720), (1600, 900), (1920, 1080) })
+            foreach (int size in new[] { 1, 2 })
+            {
+                yield return Screen(w, h);
+                yield return Size(size);
+                for (int i = 0; i < 6; i++) yield return null;
+                string at = $"{w}x{h} text size {size}";
+                List<Label> names = map.Query<Label>(className: "isekai-role-body").ToList().Where(l => Shown(l) && l.resolvedStyle.visibility == Visibility.Visible).ToList();
+                Assert.GreaterOrEqual(names.Count, 6, at + ": at least the Regions you can land on are named");
+                for (int i = 0; i < names.Count; i++)
+                {
+                    Assert.IsTrue(names[i].worldBound.xMin >= 0f && names[i].worldBound.xMax <= w && names[i].worldBound.yMax <= h, $"{at}: {names[i].text} is on screen");
+                    for (int j = i + 1; j < names.Count; j++) Assert.IsFalse(names[i].worldBound.Overlaps(names[j].worldBound), $"{at}: {names[i].text} and {names[j].text}");
+                }
+                foreach (RegionInfo open in RunSession.Run.Available())
+                    Assert.IsTrue(names.Any(n => n.text == open.Name), $"{at}: {open.Name} can be entered, so it is named");
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator The_mining_prompt_takes_no_clicks_and_a_popups_icon_stays_in_its_number()
+        {
+            yield return InRegion();
+            VisualElement prompt = HudStack.Column(HudCorner.BottomCentre).Q("mining-prompt");
+            Assert.AreEqual(PickingMode.Ignore, prompt.pickingMode);
+            Assert.IsTrue(prompt.Query<VisualElement>().ToList().All(e => e.pickingMode == PickingMode.Ignore), "nor does anything in it");
+
+            Label number = ResourcePopup.Spawn(Player.Character.transform.position, ResourceType.Stone, 3);
+            Assert.IsNotNull(number);
+            Assert.AreEqual("+3", number.text);
+            Assert.IsNotNull(number.Q(className: "isekai-icon"), "the icon is inside the number, so it can't drift from it");
+        }
+
+        [UnityTest]
+        public IEnumerator The_Region_map_is_drawn_at_a_whole_scale()
+        {
+            yield return InRegion();
+            var map = Object.FindAnyObjectByType<MapScreen>();
+            map.OpenRegion();
+            for (int i = 0; i < 6; i++) yield return null;
+            float scale = map.RegionMap.contentRect.width / map.RegionMap.Texture.width;
+            Assert.GreaterOrEqual(scale, 1f);
+            Assert.AreEqual(Mathf.Round(scale), scale, 0.0001f);
+            Assert.AreEqual(scale, map.RegionMap.contentRect.height / map.RegionMap.Texture.height, 0.0001f);
+            map.Close();
+        }
+
+        [UnityTest]
+        public IEnumerator The_soul_HUD_and_the_key_name_follow_a_rebind()
+        {
+            yield return InRegion();
+            Assert.AreEqual("R", BodyKey.Name);
+            UnityEngine.InputSystem.InputAction body = GameInput.Find(BodyKey.ActionName);
+            UnityEngine.InputSystem.InputActionRebindingExtensions.ApplyBindingOverride(body, 0, "<Keyboard>/f");
+            EventCenter.Publish<BindingsChanged>();
+            Assert.AreEqual("F", BodyKey.Name);
+            RegionPossession.Current.Act();
+            yield return null;
+            yield return null;
+            StringAssert.Contains("F over a demon", Object.FindAnyObjectByType<SoulsHud>().StatusText);
         }
 
         [UnityTest]

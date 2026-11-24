@@ -17,16 +17,22 @@ namespace Isekai
         public const string ActionName = "Change Body";
 
         private static bool s_pressed;
+        private static string s_name;   // looked up once: asking the Input System builds a string each time
 
-        static BodyKey() => StaticReset.Register(() => s_pressed = false);
+        static BodyKey() => StaticReset.Register(() =>
+        {
+            s_pressed = false;
+            s_name = null;
+        });
 
         /// <summary>The key as the player sees it now ("R" until rebound).</summary>
         public static string Name
         {
             get
             {
+                if (s_name != null) return s_name;
                 string text = InputBindings.BindingText(ActionName, InputScheme.KeyboardMouse);
-                return string.IsNullOrEmpty(text) ? "R" : text;
+                return s_name = string.IsNullOrEmpty(text) ? "R" : text;
             }
         }
 
@@ -34,6 +40,7 @@ namespace Isekai
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void InstallAction()
         {
+            EventCenter.Subscribe<BindingsChanged>(_ => s_name = null);
             if (GameInput.Find(ActionName) != null) return;
             InputActionAsset actions = DefaultActions.Create();
             InputActionMap map = actions.FindActionMap(GameAction.PlayerMap);

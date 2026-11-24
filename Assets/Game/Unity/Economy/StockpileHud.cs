@@ -36,7 +36,7 @@ namespace Isekai
             }
             HudStack.Add(HudCorner.TopLeft, row, 0);
 
-            _prompt = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, display = DisplayStyle.None } };
+            _prompt = new VisualElement { name = "mining-prompt", pickingMode = PickingMode.Ignore, style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, display = DisplayStyle.None } };
             _prompt.AddToClassList("isekai-panel");
             _promptIcon = GameStyle.Icon(null);
             _promptLeft = GameStyle.Number("0");

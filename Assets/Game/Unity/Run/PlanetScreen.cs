@@ -129,11 +129,20 @@ namespace Isekai
             _anchorTiles.Clear();
             _pathTiles.Clear();
             RunSession.Anchor ??= AnchorKind.Shrine;
-            var panel = new VisualElement { style = { flexGrow = 1, alignSelf = Align.Stretch, alignItems = Align.Center, justifyContent = Justify.SpaceAround, paddingLeft = 24, paddingRight = 24, paddingTop = 24, paddingBottom = 24 } };
-            panel.Add(GameStyle.Label("Prepare the invasion", TextRole.Title));
+            var page = new VisualElement { style = { flexGrow = 1, alignSelf = Align.Stretch, alignItems = Align.Center, paddingLeft = 24, paddingRight = 24 } };
+            VisualElement title = GameStyle.Label("Prepare the invasion", TextRole.Title);
+            title.style.flexShrink = 0;
+            page.Add(title);
+            // The choices scroll when the window is too small for them; the title and Go always stay.
+            var scroll = new ScrollView(ScrollViewMode.Vertical) { name = "loadout-scroll", horizontalScrollerVisibility = ScrollerVisibility.Hidden, style = { flexGrow = 1, flexShrink = 1, alignSelf = Align.Stretch } };
+            page.Add(scroll);
+            VisualElement panel = scroll.contentContainer;
+            panel.style.flexGrow = 1;
+            panel.style.alignItems = Align.Center;
+            panel.style.justifyContent = Justify.SpaceAround;
 
             panel.Add(Heading("Anchor", "Where Jack's soul is bound: he revives there, and Demon Kings and workers are summoned there."));
-            var anchors = new VisualElement { style = { flexDirection = FlexDirection.Row } };
+            var anchors = new VisualElement { style = { flexDirection = FlexDirection.Row, flexShrink = 0 } };
             foreach (AnchorKind kind in new[] { AnchorKind.Shrine, AnchorKind.WarThrone })
             {
                 AnchorKind k = kind;
@@ -154,7 +163,7 @@ namespace Isekai
             _pathCount.style.marginLeft = 16;
             pathsHead.Add(_pathCount);
             panel.Add(pathsHead);
-            var grid = new VisualElement { style = { flexDirection = FlexDirection.Row, flexWrap = Wrap.Wrap, justifyContent = Justify.Center } };
+            var grid = new VisualElement { style = { flexDirection = FlexDirection.Row, flexWrap = Wrap.Wrap, justifyContent = Justify.Center, flexShrink = 0 } };
             foreach (SoulPath path in SoulPaths.Starting)
             {
                 SoulPath p = path;
@@ -175,9 +184,10 @@ namespace Isekai
             }
 
             _confirm = new IconButton(GameIcons.Named("Go"), "Go", () => ConfirmLoadout(), box: 48) { name = "Confirm loadout", Tooltip = "To the Planet: choose where to land." };
-            panel.Add(_confirm);
+            _confirm.style.marginTop = 6;
+            page.Add(_confirm);
             RefreshLoadout();
-            return panel;
+            return page;
         }
 
         // A square tile: the icon large, its short name under it (the rules allow a name under an icon).

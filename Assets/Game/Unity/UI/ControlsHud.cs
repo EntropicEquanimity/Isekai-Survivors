@@ -94,14 +94,13 @@ namespace Isekai
 
         private static bool LoadOpen()
         {
-            try { return PlayerPrefs.GetInt(OpenKey, 0) == 1; }
-            catch { return false; }
+            return KeyValueStorage.Current.GetInt(OpenKey, 0) == 1;
         }
 
         private static void SaveOpen(bool open)
         {
-            try { PlayerPrefs.SetInt(OpenKey, open ? 1 : 0); }
-            catch { /* preferences unavailable: the choice lasts this session */ }
+            KeyValueStorage.Current.SetInt(OpenKey, open ? 1 : 0);
+            KeyValueStorage.Current.Save();
         }
     }
 }

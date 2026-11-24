@@ -85,6 +85,13 @@
 .isekai-hud .isekai-region { border-width: 3px; padding: 4px; }
 
 .isekai-icon { -unity-background-scale-mode: stretch-to-fill; flex-shrink: 0; }
+/* ── Scrollbars in the menus' colours, no arrow buttons ── */
+.isekai-hud .unity-scroller--vertical { width: 16px; border-width: 0; }
+.isekai-hud .unity-scroller__low-button, .isekai-hud .unity-scroller__high-button { display: none; }
+.isekai-hud .unity-scroller--vertical > .unity-scroller__slider { margin: 0; }
+.isekai-hud .unity-scroller .unity-base-slider__tracker { background-color: rgb(6, 2, 3); border-color: rgb(42, 13, 15); border-radius: 0; }
+.isekai-hud .unity-scroller .unity-base-slider__dragger { background-color: rgb(78, 18, 20); border-color: rgb(138, 32, 28); border-width: 1px; border-radius: 0; }
+
 .isekai-lit { background-color: rgb(176, 148, 130); }
 .isekai-hud .isekai-key { color: rgb(255, 122, 38); margin-right: 4px; }
 .isekai-hud .isekai-number { margin-left: 3px; margin-right: 3px; }
